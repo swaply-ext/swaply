@@ -1,6 +1,6 @@
 # Proyecto Fullstack para Inetum 
 
-# 📘 Guía de Estilo de Programación - Proyecto Spring Boot
+# Guía de Estilo de Programación - Proyecto Spring Boot
 
 Este documento define las convenciones y buenas prácticas que debemos seguir al programar en la aplicación **Spring Boot** para mantener un código limpio, consistente y fácil de mantener.
 
