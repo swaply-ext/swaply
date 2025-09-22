@@ -1,0 +1,91 @@
+/* You can add global styles to this file, and also import other style files */
+/* Tipografia i colors globals */
+:root {
+  --principal-color-1: #023047; /* Blau fosc */
+  --principal-color-2: #3CB57C; /* Verd menta */
+
+  --secundary-color-1: #FCFCFC; /* Blanc suau */
+  --secundary-color-2: #BFBFBF; /* Gris clar */
+  --secundary-color-3: #292929; /* Gris fosc */
+
+  --font-primary: 'Quicksand', sans-serif;
+  --font-secondary: 'Inter', sans-serif;
+}
+
+body {
+  font-family: var(--font-primary);
+  background-color: var(--principal-color-1);
+}
+
+h1 {
+  color: var(--principal-color-2);
+  font-family: var(--font-primary);
+  font-weight: 700; /* Quicksand bold */
+  text-align: center;
+  margin-top: 3%;
+  margin: 3%;
+}
+.text {
+  text-align: center;
+  color: white;
+  margin-top: 1%;
+}
+/* Contenidor per al text principal */
+.info-box {
+  text-align: center;
+  max-width: 500px; /* com el del teu company */
+  width: 90%;
+  margin: 50px auto; /* centrat i amb espai amunt i avall */
+  padding: 20px;
+
+  border: 1px solid #315465; 
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+  background-color: #315465; /* mateix color de fons */
+  color: #fcfcfc; /* text blanc */
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+
+  font-family: var(--font-secondary); /* seguim fent servir la teva font */
+}
+
+
+/* Botó personalitzat */
+.btn-mic {
+  background-color: var(--principal-color-2);
+  color: var(--principal-color-1);
+  font-family: var(--font-secondary);
+  border: none;
+  transition: background-color 0.3s ease;
+  border-radius: 8%;
+  padding: 5px 10px;  
+  cursor: pointer;    
+  margin-top: 5%;
+}
+
+.btn-mic:hover {
+  background-color: var(--secundary-color-2);
+  color: var(--secundary-color-3);
+}
+
+/* Popup de cookies */
+.cookies-popup {
+  text-align: center;
+  background-color: var(--secundary-color-1);
+  color: var(--principal-color-1);
+  font-family: var(--font-secondary);
+
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}

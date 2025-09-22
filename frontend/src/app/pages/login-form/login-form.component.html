@@ -1,0 +1,11 @@
+<div class="login-container" id="login">
+    <h2>INICIAR SESIÓN</h2>
+
+    <form>
+        <app-email-input></app-email-input>
+        <app-password-input></app-password-input>
+        <app-terms-checkbox (checkedChange)="accepted = $event"></app-terms-checkbox>
+        <app-login-button (submit)="login()"></app-login-button>
+
+    </form>
+</div>
