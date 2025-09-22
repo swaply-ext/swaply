@@ -1,0 +1,26 @@
+<h1>Habilidades que quiero aprender</h1>
+
+<div class="info-box">
+  <label for="category">Categoría:</label><br>
+  <select id="category" [(ngModel)]="selectedCategory" class="form-control mb-2">
+    <option value="" disabled selected>Elige una categoría</option>
+    <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+  </select>
+
+  <input type="text" placeholder="Escribe tu preferencia" [(ngModel)]="newInterest" class="form-control mb-2" />
+
+  <button (click)="addInterest()" class="btn-mic">Agregar preferencia</button>
+</div>
+<!-- Aqui comento com es veuria un bucle amb la variable imprimint les categories i les preferencies que aquesta variable haurem de cridar e enviar la BD
+<div class="info-box" *ngFor="let cat of categories">
+  <h3>{{ cat }}</h3>
+  <ul>
+    <li *ngFor="let interest of interestsByCategory[cat]; let i = index">
+      {{ interest }}
+      <button class="btn-mic btn-sm" (click)="removeInterest(cat, i)">Eliminar</button>
+    </li>
+  </ul>
+  <p *ngIf="!interestsByCategory[cat] || interestsByCategory[cat].length === 0">No hay preferencias agregadas.</p>
+</div>
+-->
+
