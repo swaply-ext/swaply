@@ -18,7 +18,6 @@
     <div class="subcategories" *ngIf="selectedCategory">
       <div class="subcategory-list">
         <div *ngFor="let category of categories">
-        
           <div *ngIf="selectedCategory === category.id">
             <div class="subcategory-item" *ngFor="let subcategory of 
             category.subcategories">
