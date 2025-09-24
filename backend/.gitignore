@@ -69,3 +69,10 @@ backend/.vscode/
 
 src/main/resources/application.yml
 target/classes/application.yml
+src/main/resources/application.yaml
+target/classes/application.yaml
+
+backend/src/main/resources/application.yml
+backend/target/classes/application.yml
+backend/src/main/resources/application.yaml
+backend/target/classes/application.yaml
