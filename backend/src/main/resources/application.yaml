@@ -1,7 +1,0 @@
-spring:
-  cloud:
-    azure:
-      cosmos:
-        endpoint: ${COSMOSDB_URI}
-        key: ${COSMOSDB_KEY}
-        database: ${COSMOSDB_NAME}
