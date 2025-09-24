@@ -67,9 +67,41 @@ button {
   transition: background-color 0.2s, transform 0.1s;
 }
 
+.button-group {
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  gap: 0; 
+  margin-top: 10px;
+}
+
+
 button:hover {
   background-color: #27925a;
   transform: scale(1.02);
+}
+
+.back-button {
+  background-color: transparent !important;
+  color: var(--principal-color-2); 
+  font-size: 1.2rem;
+  padding: 0.6rem 0.8rem;
+  cursor: pointer;
+  border-right: none; /* para que no se duplique con el borde del verify */
+  border-radius: 8px 0 0 8px; /* solo la izquierda redondeada */
+  height: 100%; /* mismo alto que el botón de continuar */
+}
+
+.back-button::before {
+  content: "<"; 
+  margin-right: 0.3rem;
+  color: var(--principal-color-2); 
+  font-weight: bold; 
+  font-size: x-large;
+}
+
+.back-button:hover {
+  color: var(--principal-color-2);
 }
 
 #message {
