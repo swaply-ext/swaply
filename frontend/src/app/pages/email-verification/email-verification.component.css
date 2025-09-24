@@ -68,12 +68,17 @@ button {
 }
 
 .button-group {
-  display: flex;
-  justify-content: center; 
-  align-items: center;
-  gap: 0; 
-  margin-top: 10px;
+  position: relative; /* referencia para los elementos absolutos */
+  width: 100%;
+  height: 50px; /* altura según tu botón */
 }
+
+#button-verify {
+  position: absolute;
+  left: 50%;       /* mueve el borde izquierdo al centro */
+  transform: translateX(-50%); /* centra el botón respecto a su propio ancho */
+}
+
 
 
 button:hover {
@@ -82,14 +87,18 @@ button:hover {
 }
 
 .back-button {
+  position: absolute;
+  left: 120px; 
+  top: 40%;   
+  transform: translateY(-50%); 
   background-color: transparent !important;
   color: var(--principal-color-2); 
-  font-size: 1.2rem;
+  font-size: 1.5rem;
   padding: 0.6rem 0.8rem;
+  font-weight: bold;
   cursor: pointer;
-  border-right: none; /* para que no se duplique con el borde del verify */
-  border-radius: 8px 0 0 8px; /* solo la izquierda redondeada */
-  height: 100%; /* mismo alto que el botón de continuar */
+  border-right: none; 
+  height: 100%; 
 }
 
 .back-button::before {
