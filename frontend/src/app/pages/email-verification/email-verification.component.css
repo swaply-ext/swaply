@@ -51,10 +51,10 @@
   transition: all 0.2s;
 }
 
-.code-inputs input:focus {
+/* .code-inputs input:focus {
   box-shadow: 0 0 5px #2fa16f;
   background-color: #e6f4ea;
-}
+} */
 
 button {
   padding: 12px 25px;
@@ -83,7 +83,6 @@ button {
 
 button:hover {
   background-color: #27925a;
-  transform: scale(1.02);
 }
 
 .back-button {
