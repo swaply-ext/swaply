@@ -1,4 +1,4 @@
-/*package  example;
+package  example;
 
 import com.swaply.backend.domain.model.Cancion;
 import com.swaply.backend.domain.repository.CancionRepository;
@@ -43,4 +43,3 @@ public class CancionController {
         repo.deleteById(id);
     }
 }
-*/
