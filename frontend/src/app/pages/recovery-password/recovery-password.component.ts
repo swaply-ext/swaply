@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-recovery-password',
@@ -13,7 +14,7 @@ import { Router } from '@angular/router';
 export class RecoveryPasswordComponent {
   email: string = '';
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private location: Location) {}
 
   enviarCodigo() {
     if (!this.email) {
@@ -27,6 +28,6 @@ export class RecoveryPasswordComponent {
   }
   
   volverAtras() {
-  this.router.navigate(['/']); 
-}
+    this.location.back();
+  }
 }

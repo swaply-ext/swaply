@@ -1,41 +1,48 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-email-verification',
-  standalone: true,
-  imports: [CommonModule, FormsModule],
   templateUrl: './email-verification.component.html',
   styleUrls: ['./email-verification.component.css']
 })
 export class EmailVerificationComponent {
-  // Array de 6 dígitos
   code: string[] = ['', '', '', '', '', ''];
 
-  // Se ejecuta cuando se ingresa un dígito
-  onInput(event: Event, index: number): void {
+  constructor(private location: Location) {}
+
+  // Al escribir un dígito
+  onInput(event: Event, index: number) {
     const input = event.target as HTMLInputElement;
-    const value = input.value;
+    const value = input.value.replace(/\D/g, ''); // solo números
+    input.value = value; // limitar a 1 carácter
+    this.code[index] = value;
 
-    // Limitar a un solo carácter
-    if (value.length > 1) {
-      input.value = value.charAt(0);
-    }
-    this.code[index] = input.value;
-
-    // Saltar automáticamente al siguiente input
-    if (value && index < this.code.length - 1) {
-      const nextInput = document.getElementById(`digit-${index + 1}`) as HTMLInputElement;
-      nextInput?.focus();
+    if (value && index < 5) {
+      const next = document.getElementById(`code-${index+1}`) as HTMLInputElement;
+      next?.focus();
     }
   }
 
-  // Verificar el código al presionar el botón
+  // Al presionar Backspace
+  onKeyDown(event: KeyboardEvent, index: number) {
+    const input = event.target as HTMLInputElement;
+    if (event.key === 'Backspace' && !input.value && index > 0) {
+      const prev = document.getElementById(`code-${index-1}`) as HTMLInputElement;
+      prev?.focus();
+    }
+  }
+
   verifyCode(): void {
     const fullCode = this.code.join('');
-    console.log('Código ingresado:', fullCode);
-    // Aquí podrías añadir la lógica de verificación con tu backend
+    if (fullCode.length < 6) {
+      alert('Introduce los 6 dígitos antes de continuar.');
+      return;
+    }
     alert(`Código ingresado: ${fullCode}`);
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 }
