@@ -4,6 +4,7 @@ import { EmailInputComponent } from '../../components/email-input/email-input.co
 import { PasswordInputComponent } from '../../components/password-input/password-input.component';
 import { TermsCheckboxComponent } from '../../components/terms-checkbox/terms-checkbox.component';
 import { LoginButtonComponent } from '../../components/login-button/login-button.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'login-form',
@@ -12,7 +13,8 @@ import { LoginButtonComponent } from '../../components/login-button/login-button
     EmailInputComponent,
     PasswordInputComponent,
     TermsCheckboxComponent,
-    LoginButtonComponent
+    LoginButtonComponent,
+    RouterLink
   ],
   templateUrl: './login-form.component.html',
   styleUrls: ['./login-form.component.css']
