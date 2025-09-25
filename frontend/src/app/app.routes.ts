@@ -7,6 +7,7 @@ import { LoginFormComponent } from './pages/login-form/login-form.component';
 import { RecoveryPasswordComponent } from './pages/recovery-password/recovery-password.component';
 import { EmailVerificationComponent } from './pages/email-verification/email-verification.component';
 import { NewPasswordComponent } from './pages/new-password/new-password.component'; // <-- añadimos aquí
+import { PersonalInformationComponent } from './pages/personal-information/personal-information.component'
 
 // Creamos una ruta para la verificación de correo
 // Ahora usamos el componente real EmailVerificationComponent
@@ -18,5 +19,6 @@ export const appRoutes: Routes = [
   { path: 'verify', component: EmailVerificationComponent }, // ruta para la verificación de correo
   { path: 'login', component: LoginFormComponent }, // ruta para el login
   { path: 'recovery-password', component: RecoveryPasswordComponent }, // ruta para la recuperación de contraseña
-  { path: 'new-password', component: NewPasswordComponent } // <-- nueva ruta para cambiar contraseña
+  { path: 'new-password', component: NewPasswordComponent }, // <-- nueva ruta para cambiar contraseña
+  { path: 'personal-information', component: PersonalInformationComponent }, // 
 ];
