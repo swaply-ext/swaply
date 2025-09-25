@@ -1,4 +1,4 @@
-/*package  com.swaply.backend.interfaces.rest;
+/*package  example;
 
 import com.swaply.backend.domain.model.Cancion;
 import com.swaply.backend.domain.repository.CancionRepository;
