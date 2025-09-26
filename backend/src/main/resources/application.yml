@@ -1,0 +1,14 @@
+cosmos:
+        endpoint: https://swaply-db.documents.azure.com:443/
+        key-secret: cosmos-readwrite-key
+
+keyVault:
+        endpoint: https://swaply-key.vault.azure.net/
+
+
+
+main:
+    allow-bean-definition-overriding: true
+
+server:
+  port: 8081
