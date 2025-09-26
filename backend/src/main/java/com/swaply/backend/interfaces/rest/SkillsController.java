@@ -16,9 +16,9 @@ public class SkillsController {
 
     @PostMapping("/guardar")
     public String guardarSkills(@RequestBody SkillsRequest request) {
-        System.out.println("Skills rebudes del frontend:");
+        System.out.println("Skills recibidas!");
         System.out.println(request.getSkills()); // Imprimeix les skills rebudes
         // Aquí pots guardar-les a la BD si vols
-        return "Skills rebudes correctament!";
+        return "Skills recibidas correctamente!";
     }
 }
