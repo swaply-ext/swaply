@@ -14,7 +14,7 @@ public class SkillsController {
         public void setSkills(List<String> skills) { this.skills = skills; }
     }
 
-    @PostMapping
+    @PostMapping("/guardar")
     public String guardarSkills(@RequestBody SkillsRequest request) {
         System.out.println("Skills rebudes del frontend:");
         System.out.println(request.getSkills()); // Imprimeix les skills rebudes
