@@ -5,7 +5,6 @@ import { PasswordInputComponent } from '../../components/password-input/password
 import { TermsCheckboxComponent } from '../../components/terms-checkbox/terms-checkbox.component';
 import { LoginButtonComponent } from '../../components/login-button/login-button.component';
 import { RouterLink } from '@angular/router';
-import { EmailVerificationComponent } from '../email-verification/email-verification.component';
 
 @Component({
   selector: 'login-form',
@@ -21,15 +20,28 @@ import { EmailVerificationComponent } from '../email-verification/email-verifica
   styleUrls: ['./login-form.component.css']
 })
 export class LoginFormComponent {
-  accepted = false; 
+  email: string = '';
+  password: string = '';
+  accepted: boolean = false;
 
   constructor(private router: Router) {}
 
- 
   login() {
-    console.log('Iniciando sesión...')
+    if (!this.accepted) {
+      alert('Debes aceptar los términos');
+      return;
+    }
+
+    if (!this.email || !this.password) {
+      alert('Debes rellenar todos los campos');
+      return;
+    }
+
+    console.log('Datos de login:', {
+      email: this.email,
+      password: this.password
+    });
 
     this.router.navigate(['/verify']);
-
   }
 }
