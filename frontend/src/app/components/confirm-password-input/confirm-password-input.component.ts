@@ -13,7 +13,6 @@ import { FormsModule } from '@angular/forms';
              [(ngModel)]="confirmPassword"
              (ngModelChange)="confirmPasswordChange.emit($event)"
              placeholder="Confirmar Contraseña">
-      <span class="material-icons">lock</span>
     </div>
   `
 })

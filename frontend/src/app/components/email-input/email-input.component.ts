@@ -9,10 +9,12 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./email-input.component.css'],
   template: `
     <div class="input-container">
-      <input type="email"
-             [(ngModel)]="email"
-             (ngModelChange)="emailChange.emit($event)"
-             placeholder="Email">
+      <input 
+        type="email" 
+        [(ngModel)]="email" 
+        (ngModelChange)="emailChange.emit($event)" 
+        placeholder="Email"
+      >
       <span class="material-icons">email</span>
     </div>
   `
