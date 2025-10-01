@@ -6,6 +6,12 @@ import { TermsCheckboxComponent } from '../../components/terms-checkbox/terms-ch
 import { LoginButtonComponent } from '../../components/login-button/login-button.component';
 import { RouterLink } from '@angular/router';
 
+interface User {
+  email: string;
+  password: string;
+  acceptedTerms: boolean;
+}
+
 @Component({
   selector: 'login-form',
   standalone: true,
@@ -20,28 +26,31 @@ import { RouterLink } from '@angular/router';
   styleUrls: ['./login-form.component.css']
 })
 export class LoginFormComponent {
-  email: string = '';
-  password: string = '';
-  accepted: boolean = false;
+  email = '';
+  password = '';
+  accepted = false;
+
+  // Array local de usuarios registrados (puedes copiar del registro para probar)
+  registeredUsers: User[] = [
+    { email: 'test@example.com', password: '123456', acceptedTerms: true }
+  ];
 
   constructor(private router: Router) {}
 
   login() {
-    if (!this.accepted) {
-      alert('Debes aceptar los términos');
+    if (!this.accepted) { alert('Debes aceptar los términos'); return; }
+    if (!this.email || !this.password) { alert('Debes rellenar todos los campos'); return; }
+
+    const foundUser = this.registeredUsers.find(
+      user => user.email === this.email && user.password === this.password
+    );
+
+    if (!foundUser) {
+      alert('Usuario o contraseña incorrectos');
       return;
     }
 
-    if (!this.email || !this.password) {
-      alert('Debes rellenar todos los campos');
-      return;
-    }
-
-    console.log('Datos de login:', {
-      email: this.email,
-      password: this.password
-    });
-
+    console.log('Usuario logueado:', foundUser);
     this.router.navigate(['/verify']);
   }
 }

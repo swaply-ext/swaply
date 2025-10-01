@@ -7,6 +7,12 @@ import { ConfirmPasswordInputComponent } from '../../components/confirm-password
 import { TermsCheckboxComponent } from '../../components/terms-checkbox/terms-checkbox.component';
 import { ActionButtonsComponent } from '../../components/action-buttons/action-buttons.component';
 
+interface User {
+  email: string;
+  password: string;
+  acceptedTerms: boolean;
+}
+
 @Component({
   selector: 'app-register-form',
   standalone: true,
@@ -22,39 +28,32 @@ import { ActionButtonsComponent } from '../../components/action-buttons/action-b
   styleUrls: ['./register-form.component.css']
 })
 export class RegisterFormComponent {
- email: string = '';
- confirmEmail: string = '';
- password: string = '';
- confirmPassword: string = '';
- accepted: boolean = false; 
+  email = '';
+  confirmEmail = '';
+  password = '';
+  confirmPassword = '';
+  accepted = false;
 
- constructor(private router: Router) {}
+  // Array local para guardar usuarios registrados
+  registeredUsers: User[] = [];
+
+  constructor(private router: Router) {}
 
   register() {
-    if (!this.accepted) {
-      alert('Debes aceptar los términos');
-      return;
-    }
+    if (!this.accepted) { alert('Debes aceptar los términos'); return; }
+    if (!this.email || !this.password) { alert('Debes rellenar todos los campos'); return; }
+    if (this.email !== this.confirmEmail) { alert('Los correos no coinciden'); return; }
+    if (this.password !== this.confirmPassword) { alert('Las contraseñas no coinciden'); return; }
 
-    if (!this.email || !this.password) { 
-      alert('Debes rellenar todos los campos');
-      return;
-    }
-
-    if (this.email !== this.confirmEmail) {
-      alert('Los correos no coinciden');
-      return;
-    }
-
-    if (this.password !== this.confirmPassword) {
-      alert('Las contraseñas no coinciden');
-      return;
-    }
-
-    console.log('Datos del registro:', {
+    const newUser: User = {
       email: this.email,
-      password: this.password
-    });
+      password: this.password,
+      acceptedTerms: this.accepted
+    };
+
+    // Guardar usuario localmente
+    this.registeredUsers.push(newUser);
+    console.log('Usuarios registrados:', this.registeredUsers);
 
     this.router.navigateByUrl('/verify');
   }
