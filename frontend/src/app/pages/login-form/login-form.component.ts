@@ -37,8 +37,7 @@ export class LoginFormComponent {
   registeredUsers: User[] = [
     { email: 'test@example.com', password: '123456', acceptedTerms: true }
   ];
-
-
+//o
  
   constructor(private router: Router) {}
 
