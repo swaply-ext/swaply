@@ -30,11 +30,11 @@ export class LoginFormComponent {
   password = '';
   accepted = false;
 
-  // Array local de usuarios registrados (puedes copiar del registro para probar)
   registeredUsers: User[] = [
     { email: 'test@example.com', password: '123456', acceptedTerms: true }
   ];
 
+  
   constructor(private router: Router) {}
 
   login() {
