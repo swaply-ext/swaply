@@ -5,6 +5,7 @@ import { PasswordInputComponent } from '../../components/password-input/password
 import { TermsCheckboxComponent } from '../../components/terms-checkbox/terms-checkbox.component';
 import { LoginButtonComponent } from '../../components/login-button/login-button.component';
 import { RouterLink } from '@angular/router';
+import { EmailVerificationComponent } from '../email-verification/email-verification.component';
 
 @Component({
   selector: 'login-form',
@@ -28,6 +29,7 @@ export class LoginFormComponent {
   login() {
     console.log('Iniciando sesión...')
 
-    this.router.navigateByUrl('/verify');
+    this.router.navigate(['/verify']);
+
   }
 }

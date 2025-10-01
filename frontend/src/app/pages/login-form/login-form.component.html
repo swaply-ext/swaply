@@ -5,7 +5,10 @@
         <app-email-input></app-email-input>
         <app-password-input></app-password-input>
         <app-terms-checkbox (checkedChange)="accepted = $event"></app-terms-checkbox>
-        <div> No recuerdas tu contraseña? Pulsa <a routerLink=""><strong>aquí</strong></a></div>
+        <div> 
+            No recuerdas tu contraseña? Pulsa 
+            <a routerLink="/verify"><strong>aquí</strong></a>
+        </div>
         <app-login-button (submit)="login()"></app-login-button>
 
     </form>
