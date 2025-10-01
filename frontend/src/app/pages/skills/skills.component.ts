@@ -64,8 +64,8 @@ export class SkillsComponent {
 
       this.http.post('http://localhost:8081/api/skills/guardar', { skills: selectedSkills })
       .subscribe({
-        next: response => console.log('Resposta del backend:', response),
-        error: err => console.error('Error enviant skills:', err)
+        next: response => console.log('Resputesta del backend:', response),
+        error: err => console.error('Error enviando skills:', err)
       });
   }
 }

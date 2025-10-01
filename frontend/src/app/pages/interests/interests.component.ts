@@ -2,11 +2,13 @@ import { NgFor, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule, NgModel } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-interests',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, HttpClientModule],
   templateUrl: './interests.component.html',
   styleUrls: ['./interests.component.css']
 })
@@ -49,6 +51,8 @@ export class InterestsComponent {
   ];
 
   selectedCategory: string | null = null;
+    
+  constructor(private http: HttpClient) {}    
   
   // Funció per seleccionar una categoria
   selectCategory(categoryId: string): void {
@@ -63,7 +67,10 @@ export class InterestsComponent {
       .filter(subcategory => subcategory.selected)
       .map(subcategory => subcategory.name);
     
-    console.log('Interessos seleccionats:', selectedInterests);
-    // Aquí pots afegir la lògica per enviar les dades al servidor
+    this.http.post('http://localhost:8081/api/interests/guardar', { interests: selectedInterests })
+    .subscribe({
+        next:response => console.log('Resposta del backend:', response),
+        error: err => console.error('Error enviando intereses:', err)
+    });
   }
 }

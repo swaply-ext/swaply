@@ -7,7 +7,7 @@ import java.util.List;
 @RequestMapping("/api/skills")
 public class SkillsController {
 
-    // Aquesta classe rep el JSON del frontend
+    // Aquesta classe rep el JSOOOOOOOOOOOOON del frontend
     public static class SkillsRequest {
         private List<String> skills;
         public List<String> getSkills() { return skills; }
@@ -17,8 +17,7 @@ public class SkillsController {
     @PostMapping("/guardar")
     public String guardarSkills(@RequestBody SkillsRequest request) {
         System.out.println("Skills recibidas!");
-        System.out.println(request.getSkills()); // Imprimeix les skills rebudes
-        // Aquí pots guardar-les a la BD si vols
+        System.out.println(request.getSkills()); 
         return "Skills recibidas correctamente!";
     }
 }
