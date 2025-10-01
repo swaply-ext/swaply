@@ -1,13 +1,12 @@
 <div class="register-container" id="regist">
-    <h2>REGISTRARSE</h2>
+  <h2>REGISTRARSE</h2>
 
-    <form>
-        <app-email-input></app-email-input>
-        <app-confirm-email-input></app-confirm-email-input>
-        <app-password-input></app-password-input>
-        <app-confirm-password-input></app-confirm-password-input>
-        <app-terms-checkbox (checkedChange)="accepted = $event"></app-terms-checkbox>
-        <app-action-buttons (submit)="register()"></app-action-buttons>
-
-    </form>
+  <form>
+    <app-email-input (emailChange)="email = $event"></app-email-input>
+    <app-confirm-email-input (confirmEmailChange)="confirmEmail = $event"></app-confirm-email-input>
+    <app-password-input (passwordChange)="password = $event"></app-password-input>
+    <app-confirm-password-input (confirmPasswordChange)="confirmPassword = $event"></app-confirm-password-input>
+    <app-terms-checkbox (checkedChange)="accepted = $event"></app-terms-checkbox>
+    <app-action-buttons (submit)="register()"></app-action-buttons>
+  </form>
 </div>

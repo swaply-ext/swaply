@@ -22,18 +22,39 @@ import { ActionButtonsComponent } from '../../components/action-buttons/action-b
   styleUrls: ['./register-form.component.css']
 })
 export class RegisterFormComponent {
-  accepted = false; 
+ email: string = '';
+ confirmEmail: string = '';
+ password: string = '';
+ confirmPassword: string = '';
+ accepted: boolean = false; 
 
-  constructor(private router: Router) {}
+ constructor(private router: Router) {}
 
- 
   register() {
     if (!this.accepted) {
       alert('Debes aceptar los términos');
       return;
     }
 
-    console.log('Registrando usuario...')
+    if (!this.email || !this.password) { 
+      alert('Debes rellenar todos los campos');
+      return;
+    }
+
+    if (this.email !== this.confirmEmail) {
+      alert('Los correos no coinciden');
+      return;
+    }
+
+    if (this.password !== this.confirmPassword) {
+      alert('Las contraseñas no coinciden');
+      return;
+    }
+
+    console.log('Datos del registro:', {
+      email: this.email,
+      password: this.password
+    });
 
     this.router.navigateByUrl('/verify');
   }
