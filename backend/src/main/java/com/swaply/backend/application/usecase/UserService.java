@@ -2,6 +2,7 @@ package com.swaply.backend.application.usecase;
 
 import com.azure.spring.data.cosmos.core.CosmosTemplate;
 import com.swaply.backend.application.dto.UserDTO;
+import com.swaply.backend.application.mapper.UserMapper;
 import com.swaply.backend.domain.model.User;
 import com.swaply.backend.domain.repository.UserRepository;
 
@@ -16,9 +17,13 @@ import java.util.stream.StreamSupport;
 public class UserService /*implements UserRepository*/ {
 
     private final CosmosTemplate cosmosTemplate;
+    private final UserRepository userRepo;
+    private final UserMapper userMapper;
 
-    public UserService(CosmosTemplate cosmosTemplate) {
+    public UserService(CosmosTemplate cosmosTemplate, UserRepository userRepo, UserMapper userMapper) {
         this.cosmosTemplate = cosmosTemplate;
+        this.userRepo = userRepo;
+        this.userMapper = userMapper;
     }
 
     public UserDTO createUser(UserDTO dto) {
@@ -35,13 +40,14 @@ public class UserService /*implements UserRepository*/ {
         String container = cosmosTemplate.getContainerName(User.class);
         User saved = cosmosTemplate.upsertAndReturnEntity(container, user);
 
-        return new UserDTO(saved.getUsername(), saved.getEmail());
+        return userMapper.entityToDTO(user);
     }
 
     public List<UserDTO> getAllUsers() {
         return StreamSupport
                 .stream(cosmosTemplate.findAll(User.class).spliterator(), false)
-                .map(u -> new UserDTO(u.getUsername(), u.getEmail()))
+                .filter(user -> "User".equals(user.getType())) // Filtrar por tipo "User"
+                .map(userMapper::entityToDTO)
                 .collect(Collectors.toList());
     }
 }
