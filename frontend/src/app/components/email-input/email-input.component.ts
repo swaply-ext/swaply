@@ -8,17 +8,7 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule],
   styleUrls: ['./email-input.component.css'],
-  template: `
-    <div class="input-container">
-      <input
-        type="email"
-        [(ngModel)]="email"
-        (ngModelChange)="emailChange.emit($event)"
-        placeholder="Email"
-      >
-      <span class="material-icons">email</span>
-    </div>
-  `
+  templateUrl: './email-input.component.html'
 })
 export class EmailInputComponent {
   email = '';

@@ -8,14 +8,7 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule],
   styleUrls: ['./confirm-password-input.component.css'],
-  template: `
-    <div class="input-container">
-      <input type="password"
-             [(ngModel)]="confirmPassword"
-             (ngModelChange)="confirmPasswordChange.emit($event)"
-             placeholder="Confirmar Contraseña">
-    </div>
-  `
+  templateUrl: './confirm-password-input.component.html'
 })
 export class ConfirmPasswordInputComponent {
   confirmPassword = '';

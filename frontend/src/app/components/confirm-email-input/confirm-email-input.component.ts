@@ -8,15 +8,7 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule],
   styleUrls: ['./confirm-email-input.component.css'],
-  template: `
-    <div class="input-container">
-      <input type="email"
-             [(ngModel)]="confirmEmail"
-             (ngModelChange)="confirmEmailChange.emit($event)"
-             placeholder="Confirmar Email">
-      <span class="material-icons">email</span>
-    </div>
-  `
+  templateUrl: './confirm-email-input.component.html'
 })
 export class ConfirmEmailInputComponent {
   confirmEmail = '';
