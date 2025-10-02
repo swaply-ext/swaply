@@ -33,7 +33,7 @@ build/
 ### VS Code ###
 backend/.vscode/
 
-backend/src/main/resources/application.ymlHELP.md
+HELP.md
 target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
