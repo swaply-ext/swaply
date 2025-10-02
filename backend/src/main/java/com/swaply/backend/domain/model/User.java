@@ -1,6 +1,8 @@
 package com.swaply.backend.domain.model;
 
 import com.azure.spring.data.cosmos.core.mapping.Container;
+import com.azure.spring.data.cosmos.core.mapping.PartitionKey;
+
 import org.springframework.data.annotation.Id;
 
 
@@ -11,6 +13,9 @@ public class User {
 
     @Id
     private String id;
+    
+    @PartitionKey
+    private String type;
 
     private String username;
 

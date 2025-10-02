@@ -1,40 +1,48 @@
 package com.swaply.backend.application.usecase;
 
-import com.swaply.backend.domain.model.User;
+import com.azure.spring.data.cosmos.core.CosmosTemplate;
 import com.swaply.backend.application.dto.UserDTO;
-import com.swaply.backend.domain.repository.UserInterface;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.swaply.backend.domain.model.User;
 import org.springframework.stereotype.Service;
-import java.util.stream.StreamSupport;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class UserService {
 
-    private final UserInterface repo;
+    private final CosmosTemplate cosmosTemplate;
 
-    public UserService(UserInterface repo) {
-        this.repo = repo;
+    public UserService(CosmosTemplate cosmosTemplate) {
+        this.cosmosTemplate = cosmosTemplate;
     }
 
     public UserDTO createUser(UserDTO dto) {
         User user = new User();
+        // Genera un id si no te llega uno (Cosmos exige 'id')
+        user.setId(UUID.randomUUID().toString());
         user.setUsername(dto.getUsername());
         user.setEmail(dto.getEmail());
 
-        User saved = repo.save(user);
+        // Opción A: si te basta con persistir (no necesitas el objeto devuelto)
+        // cosmosTemplate.upsert(user); // <-- devuelve void
+
+        // Opción B: si quieres la entidad final (e.g. con ETag/Id definitivo)
+        String container = cosmosTemplate.getContainerName(User.class);
+        User saved = cosmosTemplate.upsertAndReturnEntity(container, user);
+
         return new UserDTO(saved.getUsername(), saved.getEmail());
     }
-    
+
     public List<UserDTO> getAllUsers() {
-        return StreamSupport.stream(repo.findAll().spliterator(), false)
-        .map(u -> new UserDTO(u.getUsername(), u.getEmail()))
-        .collect(Collectors.toList());
+        return StreamSupport
+                .stream(cosmosTemplate.findAll(User.class).spliterator(), false)
+                .map(u -> new UserDTO(u.getUsername(), u.getEmail()))
+                .collect(Collectors.toList());
     }
+}
     // return repo.findAll()
     //         .stream()
     //         .map(u -> new UserDTO(u.getName(), u.getEmail()))
@@ -63,4 +71,3 @@ public class UserService {
     // public void eliminarUsuario(String id) {
     //     repo.deleteById(id);
     // }
-}

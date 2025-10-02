@@ -1,14 +1,24 @@
-cosmos:
-        endpoint: https://swaply-db.documents.azure.com:443/
-        key-secret: cosmos-readwrite-key
-
-keyVault:
-        endpoint: https://swaply-key.vault.azure.net/
-
-
-
-main:
-    allow-bean-definition-overriding: true
-
 server:
   port: 8082
+
+keyvault:
+  url: https://swaply-key.vault.azure.net/
+
+
+secrets:
+  cosmos-endpoint: cosmos-endpoint 
+  cosmos-key: cosmos-readwrite-key            # nombre del secreto en Key Vault
+
+cosmos:
+  database: "swaplydb"
+  connection-mode: GATEWAY
+logging:
+  level:
+    com.azure.identity: INFO
+    com.azure: WARN
+
+# spring:
+#   security:
+#     user:
+#       name: user
+#       password: password
