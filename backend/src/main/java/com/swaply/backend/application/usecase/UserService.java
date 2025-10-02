@@ -3,6 +3,8 @@ package com.swaply.backend.application.usecase;
 import com.azure.spring.data.cosmos.core.CosmosTemplate;
 import com.swaply.backend.application.dto.UserDTO;
 import com.swaply.backend.domain.model.User;
+import com.swaply.backend.domain.repository.UserRepository;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,7 +13,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
-public class UserService {
+public class UserService /*implements UserRepository*/ {
 
     private final CosmosTemplate cosmosTemplate;
 

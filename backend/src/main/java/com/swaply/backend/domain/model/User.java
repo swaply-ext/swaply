@@ -16,9 +16,8 @@ public class User {
     
     @PartitionKey
     private String type;
-
+    
     private String username;
-
     private String fullName;
     private String email;
     private String passwordHash;
