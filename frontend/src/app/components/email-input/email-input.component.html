@@ -1,4 +1,9 @@
 <div class="input-container">
-  <input type="email" placeholder="Correo electrónico">
-  <span class="material-icons">email</span>
-</div>
+      <input
+        type="email"
+        [(ngModel)]="email"
+        (ngModelChange)="emailChange.emit($event)"
+        placeholder="Email"
+      >
+      <span class="material-icons">email</span>
+    </div>

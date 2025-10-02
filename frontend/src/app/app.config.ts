@@ -10,10 +10,15 @@ export const appConfig: ApplicationConfig = {
 import { Routes } from '@angular/router';
 import { SkillsComponent } from './pages/skills/skills.component';
 import { InterestsComponent } from './pages/interests/interests.component';
+import { provideHttpClient } from '@angular/common/http';
 
 export const appRoutes: Routes = [
   { path: 'skills', component: SkillsComponent },
   { path: 'interests', component: InterestsComponent },
-  { path: '', redirectTo: '/skills', pathMatch: 'full' } // ruta per defecte
+  { path: '', redirectTo: '/skills', pathMatch: 'full' }
 ];
 
+export const appConfig = {
+  providers: [provideHttpClient()],
+  imports: []
+};

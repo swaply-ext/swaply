@@ -1,26 +1,39 @@
-<h1>Habilidades que quiero aprender</h1>
-
-<div class="info-box">
-  <label for="category">Categoría:</label><br>
-  <select id="category" [(ngModel)]="selectedCategory" class="form-control mb-2">
-    <option value="" disabled selected>Elige una categoría</option>
-    <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
-  </select>
-
-  <input type="text" placeholder="Escribe tu preferencia" [(ngModel)]="newInterest" class="form-control mb-2" />
-
-  <button (click)="addInterest()" class="btn-mic">Agregar preferencia</button>
+<div class="container">
+  <h1>Selecciona tus intereses</h1>
+  
+  <div class="categories">
+    <div class="category-selector">
+      <h3>Categorías</h3>
+      <div class="category-buttons">
+        <button 
+          *ngFor="let category of categories" 
+          [class.selected]="selectedCategory === category.id"
+          (click)="selectCategory(category.id)">
+          {{ category.name }}
+        </button>
+      </div>
+    </div>
+    
+    <div class="subcategories" *ngIf="selectedCategory">
+      <h3>Subcategorías</h3>
+      <div class="subcategory-list">
+        <div *ngFor="let category of categories">
+          <div *ngIf="selectedCategory === category.id">
+            <div class="subcategory-item" *ngFor="let subcategory of 
+            category.subcategories">
+              <label>
+                <input type="checkbox" [(ngModel)]="subcategory.
+                selected">
+                {{ subcategory.name }}
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="actions">
+    <button (click)="submitInterests()" class="submit-button">Guardar intereses</button>
+  </div>
 </div>
-<!-- Aqui comento com es veuria un bucle amb la variable imprimint les categories i les preferencies que aquesta variable haurem de cridar e enviar la BD
-<div class="info-box" *ngFor="let cat of categories">
-  <h3>{{ cat }}</h3>
-  <ul>
-    <li *ngFor="let interest of interestsByCategory[cat]; let i = index">
-      {{ interest }}
-      <button class="btn-mic btn-sm" (click)="removeInterest(cat, i)">Eliminar</button>
-    </li>
-  </ul>
-  <p *ngIf="!interestsByCategory[cat] || interestsByCategory[cat].length === 0">No hay preferencias agregadas.</p>
-</div>
--->
-
