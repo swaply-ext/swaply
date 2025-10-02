@@ -1,11 +1,19 @@
 <div class="login-container" id="login">
-    <h2>INICIAR SESIÓN</h2>
+  <h2>INICIAR SESIÓN</h2>
 
-    <form>
-        <app-email-input></app-email-input>
-        <app-password-input></app-password-input>
-        <app-terms-checkbox (checkedChange)="accepted = $event"></app-terms-checkbox>
-        <app-login-button (submit)="login()"></app-login-button>
 
-    </form>
+  <form>
+    <app-email-input (emailChange)="email = $event"></app-email-input>
+    <app-password-input (passwordChange)="password = $event"></app-password-input>
+    <app-terms-checkbox (checkedChange)="accepted = $event"></app-terms-checkbox>
+
+
+    <div>
+      ¿No recuerdas tu contraseña? Pulsa
+      <a routerLink="/verify"><strong>aquí</strong></a>
+    </div>
+
+
+    <app-login-button (submit)="login()"></app-login-button>
+  </form>
 </div>

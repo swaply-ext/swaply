@@ -1,14 +1,38 @@
-<h1>Mis habilidades</h1>
-
-<div class="info-box">
-  <label for="category">Selecciona tus habilidades:</label><br>
-  <select id="category" [(ngModel)]="selectedCategory" class="form-control mb-2">
-    <option value="" disabled selected>Elige una categoría</option>
-    <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
-  </select>
-
-  <input type="text" placeholder="Escribe tu habilidad" [(ngModel)]="newSkill" class="form-control mb-2" />
-
-  <button (click)="addSkill()" class="btn-mic">Agregar habilidad</button>
+<div class="container">
+  <h1>Selecciona tus habilidades</h1>
+  
+  <div class="categories">
+    <div class="category-selector">
+      <h3>Categorías</h3>
+      <div class="category-buttons">
+        <button 
+          *ngFor="let category of categories" 
+          [class.selected]="selectedCategory === category.id"
+          (click)="selectCategory(category.id)">
+          {{ category.name }}
+        </button>
+      </div>
+    </div>
+    
+    <div class="subcategories" *ngIf="selectedCategory">
+      <div class="subcategory-list">
+        <div *ngFor="let category of categories">
+          <div *ngIf="selectedCategory === category.id">
+            <div class="subcategory-item" *ngFor="let subcategory of 
+            category.subcategories">
+              <label>
+                <input type="checkbox" [(ngModel)]="subcategory.
+                selected">
+                {{ subcategory.name }}
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="actions">
+    <button (click)="submitSkills()" class="submit-button">Guardar habilidades</button>
+  </div>
 </div>
-
