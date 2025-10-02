@@ -21,14 +21,12 @@ export class EmailVerificationComponent {
     input.value = value; 
     this.code[index] = value;
 
-    
     if (value && index < 5) {
       const next = document.getElementById(`code-${index + 1}`) as HTMLInputElement;
       next?.focus();
     }
   }
 
-  
   onKeyDown(event: KeyboardEvent, index: number) {
     const input = event.target as HTMLInputElement;
     if (event.key === 'Backspace' && !input.value && index > 0) {
@@ -46,9 +44,10 @@ export class EmailVerificationComponent {
     }
 
     if (fullCode === this.validCode) {
-      alert('Código correcto, acceso permitido');
-      this.router.navigate(['/']); 
+      
+      this.router.navigate(['/confirmation']);
     } else {
+      
       alert('Código incorrecto');
     }
   }
