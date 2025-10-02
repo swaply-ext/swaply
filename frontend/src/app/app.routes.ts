@@ -6,8 +6,11 @@ import { RegisterFormComponent } from './pages/register-form/register-form.compo
 import { LoginFormComponent } from './pages/login-form/login-form.component';
 import { RecoveryPasswordComponent } from './pages/recovery-password/recovery-password.component';
 import { EmailVerificationComponent } from './pages/email-verification/email-verification.component';
-import { NewPasswordComponent } from './pages/new-password/new-password.component'; // <-- añadimos aquí
+import { NewPasswordComponent } from './pages/new-password/new-password.component'; 
 import { PersonalInformationComponent } from './pages/personal-information/personal-information.component'
+import { ConfirmationComponent } from './pages/confirmation/confirmation.component'; 
+import { ConfirmPasswordComponent } from './pages/confirm-password/confirm-password.component';
+import { ErrorAuthComponent } from './pages/error-auth/error-auth.component'; 
 
 // Creamos una ruta para la verificación de correo
 // Ahora usamos el componente real EmailVerificationComponent
@@ -20,5 +23,8 @@ export const appRoutes: Routes = [
   { path: 'login', component: LoginFormComponent }, // ruta para el login
   { path: 'recovery-password', component: RecoveryPasswordComponent }, // ruta para la recuperación de contraseña
   { path: 'new-password', component: NewPasswordComponent }, // <-- nueva ruta para cambiar contraseña
-  { path: 'personal-information', component: PersonalInformationComponent }, // 
+  { path: 'personal-information', component: PersonalInformationComponent }, // ruta para información personal
+  { path: 'confirmation', component: ConfirmationComponent }, // <-- ruta para pantalla de confirmación antes de Home
+  { path: 'confirm-password', component: ConfirmPasswordComponent }, // <-- ruta para pantalla de confirmación de cambio de contraseña
+  { path: 'error-auth', component: ErrorAuthComponent }, // <-- ruta para pantalla de error de autenticación
 ];
