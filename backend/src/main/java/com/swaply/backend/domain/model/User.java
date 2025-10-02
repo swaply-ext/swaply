@@ -2,6 +2,7 @@ package com.swaply.backend.domain.model;
 
 import com.azure.spring.data.cosmos.core.mapping.Container;
 import com.azure.spring.data.cosmos.core.mapping.PartitionKey;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.springframework.data.annotation.Id;
 
@@ -15,6 +16,7 @@ public class User {
     private String id;
     
     @PartitionKey
+    @JsonProperty("/type")
     private String type;
     
     private String username;
@@ -167,4 +169,12 @@ public class User {
     public void setBlockedUsers(List<String> blockedUsers) {
         this.blockedUsers = blockedUsers;
     } */
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 }
