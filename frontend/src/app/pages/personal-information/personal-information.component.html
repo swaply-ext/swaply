@@ -2,11 +2,11 @@
     <h2>REGISTRARSE</h2>
 
     <form>
-        <app-name-input></app-name-input>
-        <app-surname-input></app-surname-input>
-        <app-birth-date></app-birth-date>
-        <app-phone-input></app-phone-input>
-        <app-address-input></app-address-input>
-        <app-next-button (submit)="submit()"></app-next-button>
+        <app-name-input (nameChange)="name = $event"></app-name-input>
+        <app-surname-input (surnameChange)="surname = $event"></app-surname-input>
+        <app-birth-date (birthDateChange)="birthDate = $event"></app-birth-date>
+        <app-phone-input (phoneChange)="phone = $event"></app-phone-input>
+        <app-address-input (addressChange)="address = $event" (postalChange)="cp = $event"></app-address-input>
+        <app-next-button (submit)=" registerData()"></app-next-button>
     </form>
 </div>

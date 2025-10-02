@@ -1,4 +1,7 @@
 <div class="input-container">
-  <input type="text" placeholder="Apellidos">
+  <input type="text" 
+    [(ngModel)]="surname" 
+    (ngModelChange)="surnameChange.emit($event)" 
+    placeholder="Apellidos">
   <span class="material-icons">account_circle</span>
 </div>

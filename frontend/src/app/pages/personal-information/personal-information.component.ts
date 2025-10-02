@@ -7,6 +7,17 @@ import { BirthDateComponent } from "../../components/birth-date/birth-date.compo
 import { PhoneInputComponent } from "../../components/phone-input/phone-input.component";
 import { AddressInputComponent } from "../../components/address-input/address-input.component"
 
+
+interface UserData {
+  name: string;
+  surname: string;
+  birthDate: Date;
+  phone: number;
+  adress: string;
+  cp: number;
+}
+
+
 @Component({
   selector: 'app-personal-information',
   imports: [
@@ -20,18 +31,43 @@ import { AddressInputComponent } from "../../components/address-input/address-in
   templateUrl: './personal-information.component.html',
   styleUrl: './personal-information.component.css'
 })
+
 export class PersonalInformationComponent {
-  accepted = false;
+  name = '';
+  surname = '';
+  birthDate = new Date();
+  address = '';
+  phone = 0;
+  cp = 0;
 
-  constructor(private router: Router) { }
+   // Array local para guardar usuarios registrados
+  registeredUsers: UserData[] = [];
 
-  submit() {
-    if (!this.accepted) {
-      alert('Debes aceptar los términos');
-      return;
-    }
+  constructor(private router: Router) {}
 
-    console.log('Registrando usuario...')
+   registerData() {
+    if (!this.name) { alert('Debes introducir un nombre válido'); return; }
+    if (!this.surname) { alert('Debes introducir un apellido válido'); return; }
+    if (!this.birthDate) { alert('Debes introducir una fecha de nacimiento válida'); return; }
+    if (!this.phone) { alert('Debes introducir un número de teléfono válido'); return; }
+    if (!this.address) { alert('Debes introducir una dirección válida'); return; }
+    if (!this.cp) { alert('Debes introducir un código postal válido'); return; }
+
+
+    const newUserData: UserData = {
+      name: this.name,
+      surname: this.surname,
+      birthDate: this.birthDate,
+      phone: this.phone,
+      adress: this.address,
+      cp: this.cp,
+    };
+
+
+    // Guardar usuario localmente
+    this.registeredUsers.push(newUserData);
+    console.log('Datos de usuarios registrados:', this.registeredUsers);
+
 
     this.router.navigateByUrl('/verify');
   }
