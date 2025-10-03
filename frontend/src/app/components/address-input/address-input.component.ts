@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class AddressInputComponent {
   address = '';
-  cp = null;
+  postalCode = null;
   @Output() addressChange = new EventEmitter<string>();
   @Output() postalChange = new EventEmitter<number>();
 }

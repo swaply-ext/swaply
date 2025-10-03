@@ -14,7 +14,7 @@ interface UserData {
   birthDate: Date;
   phone: number;
   adress: string;
-  cp: number;
+  postalCode: number;
 }
 
 
@@ -35,10 +35,11 @@ interface UserData {
 export class PersonalInformationComponent {
   name = '';
   surname = '';
-  birthDate = new Date();
+  birthDate: Date | undefined;
   address = '';
   phone = 0;
-  cp = 0;
+  postalCode = 0;
+
 
    // Array local para guardar usuarios registrados
   registeredUsers: UserData[] = [];
@@ -46,12 +47,18 @@ export class PersonalInformationComponent {
   constructor(private router: Router) {}
 
    registerData() {
-    if (!this.name) { alert('Debes introducir un nombre válido'); return; }
-    if (!this.surname) { alert('Debes introducir un apellido válido'); return; }
-    if (!this.birthDate) { alert('Debes introducir una fecha de nacimiento válida'); return; }
-    if (!this.phone) { alert('Debes introducir un número de teléfono válido'); return; }
-    if (!this.address) { alert('Debes introducir una dirección válida'); return; }
-    if (!this.cp) { alert('Debes introducir un código postal válido'); return; }
+    if (!this.name || this.validateName(this.name)) { alert('Debes introducir un nombre válido'); return; }
+
+    if (!this.surname || this.validateName(this.surname)) { alert('Debes introducir un apellido válido'); return; }
+
+    if (!this.birthDate || (new Date(this.birthDate) > new Date()) || this.isToday(new Date(this.birthDate))) { alert('Debes introducir una fecha de nacimiento válida'); return; }
+
+    if (!this.phone || this.validatePhone(this.phone)) { alert('Debes introducir un número de teléfono válido'); return; }
+
+    if (!this.postalCode || this.validatePostal(this.postalCode)) { alert('Debes introducir un código postal válido'); return; }
+
+    if (!this.address || this.validateAddress(this.address)) { alert('Debes introducir una dirección válida'); return; }
+    
 
 
     const newUserData: UserData = {
@@ -60,7 +67,7 @@ export class PersonalInformationComponent {
       birthDate: this.birthDate,
       phone: this.phone,
       adress: this.address,
-      cp: this.cp,
+      postalCode: this.postalCode,
     };
 
 
@@ -70,5 +77,67 @@ export class PersonalInformationComponent {
 
 
     this.router.navigateByUrl('/verify');
+  }
+
+  private validateName(name: string): boolean {
+    const minLength = 3;
+    const maxLength = 30;
+    const number = /[0-9]/;
+    const special = /[!@#$%^&*?/]/;
+
+    if (name.length < minLength) return true;
+    if (name.length > maxLength) return true;
+    if (number.test(name)) return true;
+    if (special.test(name)) return true;
+    else return false;
+  }
+
+  private validateAddress(address: string): boolean {
+    const minLength = 3;
+    const maxLength = 50;
+    const number = /[0-9]/;
+    const special = /[!@#$%^&*?]/;
+
+    if (address.length < minLength) return true;
+    if (address.length > maxLength) return true;
+    if (number.test(address)) return true;
+    if (special.test(address)) return true;
+    else return false;
+  }
+
+  private isToday(date: Date): boolean{
+    const today =new Date();
+    return (date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
+    );
+  }
+
+  private validatePhone(phone: number): boolean {
+    const length = 9;
+    const uppercase = /[A-Z]/;
+    const lowercase = /[a-z]/;
+    const special = /[!@#$%^&*?/]/;
+    const numString = phone.toString();
+
+    if (numString.length != length) return true;
+    if (uppercase.test(numString)) return true;
+    if (lowercase.test(numString)) return true;
+    if (special.test(numString)) return true;
+    else return false;
+  }
+
+  private validatePostal(postalCode: number): boolean {
+    const length = 5;
+    const uppercase = /[A-Z]/;
+    const lowercase = /[a-z]/;
+    const special = /[!@#$%^&*?/]/;
+    const numString = postalCode.toString();
+
+    if (numString.length != length) return true;
+    if (uppercase.test(numString)) return true;
+    if (lowercase.test(numString)) return true;
+    if (special.test(numString)) return true;
+    else return false;
   }
 }
