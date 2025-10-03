@@ -30,6 +30,7 @@ export const appRoutes: Routes = [
   { path: 'confirmation', component: ConfirmationComponent }, // <-- ruta para pantalla de confirmación antes de Home
   { path: 'confirm-password', component: ConfirmPasswordComponent }, // <-- ruta para pantalla de confirmación de cambio de contraseña
   { path: 'error-auth', component: ErrorAuthComponent }, // <-- ruta para pantalla de error de autenticación
+  { path: 'navbar', component: AppNavbarComponent }, // <-- ruta para el menú de navegación (temporal)
   { path: 'panel-skills', component: SkillsPanelComponent }, // <-- ruta para el panel de habilidades
   { path: 'loading', component: LoadingScreenComponent }, // <-- ruta para la pantalla de carga
 ];
