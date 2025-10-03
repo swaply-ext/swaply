@@ -62,7 +62,7 @@ export class SkillsComponent {
       .filter(subcategory => subcategory.selected)
       .map(subcategory => subcategory.name);
 
-      this.http.post('http://localhost:8081/api/skills/guardar', { skills: selectedSkills })
+      this.http.post('http://localhost:8081/api/skills/save', { skills: selectedSkills })
       .subscribe({
         next: response => console.log('Resputesta del backend:', response),
         error: err => console.error('Error enviando skills:', err)

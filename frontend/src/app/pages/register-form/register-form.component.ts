@@ -82,9 +82,9 @@ constructor(private router: Router, private http: HttpClient) {}
     this.registeredUsers.push(newUser);
     console.log('Usuarios registrados:', this.registeredUsers);
     
-    this.http.post('http://localhost:8081/api/register/guardar', { users: this.registeredUsers })
+    this.http.post('http://localhost:8081/api/register/save', { users: this.registeredUsers })
     .subscribe({
-      next: response => console.log('Resposta del backend:', response),
+      next: response => console.log('Respuesta del backend:', response),
       error: err => console.error('Error enviando usuarios:', err)
     });
 
