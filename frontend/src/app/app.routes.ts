@@ -12,6 +12,7 @@ import { ConfirmationComponent } from './pages/confirmation/confirmation.compone
 import { ConfirmPasswordComponent } from './pages/confirm-password/confirm-password.component';
 import { ErrorAuthComponent } from './pages/error-auth/error-auth.component'; 
 import { SkillsPanelComponent } from './components/skills-panel/skills-panel.component';
+import { LoadingScreenComponent } from './pages/loading-screen/loading-screen.component';
 
 // Creamos una ruta para la verificación de correo
 // Ahora usamos el componente real EmailVerificationComponent
@@ -29,4 +30,5 @@ export const appRoutes: Routes = [
   { path: 'confirm-password', component: ConfirmPasswordComponent }, // <-- ruta para pantalla de confirmación de cambio de contraseña
   { path: 'error-auth', component: ErrorAuthComponent }, // <-- ruta para pantalla de error de autenticación
   { path: 'panel-skills', component: SkillsPanelComponent }, // <-- ruta para el panel de habilidades
+  { path: 'loading', component: LoadingScreenComponent }, // <-- ruta para la pantalla de carga
 ];
