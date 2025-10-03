@@ -11,6 +11,7 @@ import { PersonalInformationComponent } from './pages/personal-information/perso
 import { ConfirmationComponent } from './pages/confirmation/confirmation.component'; 
 import { ConfirmPasswordComponent } from './pages/confirm-password/confirm-password.component';
 import { ErrorAuthComponent } from './pages/error-auth/error-auth.component'; 
+import { AppNavbarComponent } from './components/app-navbar/app-navbar.component';
 import { SkillsPanelComponent } from './components/skills-panel/skills-panel.component';
 import { LoadingScreenComponent } from './pages/loading-screen/loading-screen.component';
 
