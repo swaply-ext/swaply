@@ -11,6 +11,7 @@ import { PersonalInformationComponent } from './pages/personal-information/perso
 import { ConfirmationComponent } from './pages/confirmation/confirmation.component'; 
 import { ConfirmPasswordComponent } from './pages/confirm-password/confirm-password.component';
 import { ErrorAuthComponent } from './pages/error-auth/error-auth.component'; 
+import { AppNavbarComponent } from './components/app-navbar/app-navbar.component'; //menu nav no es una pagina, esta provisional
 import { SkillsPanelComponent } from './components/skills-panel/skills-panel.component';
 import { LoadingScreenComponent } from './pages/loading-screen/loading-screen.component';
 
@@ -29,6 +30,7 @@ export const appRoutes: Routes = [
   { path: 'confirmation', component: ConfirmationComponent }, // <-- ruta para pantalla de confirmación antes de Home
   { path: 'confirm-password', component: ConfirmPasswordComponent }, // <-- ruta para pantalla de confirmación de cambio de contraseña
   { path: 'error-auth', component: ErrorAuthComponent }, // <-- ruta para pantalla de error de autenticación
+  { path: 'navbar', component: AppNavbarComponent }, // <-- ruta para el menú de navegación (temporal)
   { path: 'panel-skills', component: SkillsPanelComponent }, // <-- ruta para el panel de habilidades
   { path: 'loading', component: LoadingScreenComponent }, // <-- ruta para la pantalla de carga
 ];
