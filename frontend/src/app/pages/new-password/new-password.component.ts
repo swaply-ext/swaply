@@ -3,6 +3,7 @@ import { PasswordInputComponent } from '../../components/password-input/password
 import { ConfirmPasswordInputComponent } from '../../components/confirm-password-input/confirm-password-input.component';
 import { Location } from '@angular/common';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-new-password',
@@ -22,7 +23,10 @@ export class NewPasswordComponent {
   message: string = '';
   passwordHistory: string[] = [];
 
-  constructor(private location: Location) {}
+  constructor(
+    private location: Location,
+     private router: Router
+    ) {}
 
   validatePassword(password: string): { valid: boolean; message: string } {
     const minLength = 8;
@@ -59,6 +63,10 @@ export class NewPasswordComponent {
     console.log(this.message);
     console.log('Historial de contraseñas:', this.passwordHistory);
     console.log('Contraseña actual:', this.previousPassword);
+
+    this.router.navigate(['/confirm-password']);
+;
+
   }
   goBack(): void {
     this.location.back(); 

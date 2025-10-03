@@ -1,0 +1,38 @@
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: 'Quicksand', sans-serif;
+  background-color: var(--principal-color-1);
+}
+
+.spinner {
+  width: 160px;
+  height: 160px;
+  border: 6px solid rgba(255, 255, 255, 0.2);
+  border-top: 6px solid var(--principal-color-2);
+  border-radius: 50%;
+  margin: 0 auto 2.5rem auto;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 480px) {
+  .loading-container {
+    padding: 1.5rem;
+  }
+
+  .spinner {
+    width: 60px;
+    height: 60px;
+    border-width: 5px;
+  }
+
+  .loading-container p {
+    font-size: 1rem;
+  }
+}
