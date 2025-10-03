@@ -7,6 +7,17 @@ import { BirthDateComponent } from "../../components/birth-date/birth-date.compo
 import { PhoneInputComponent } from "../../components/phone-input/phone-input.component";
 import { AddressInputComponent } from "../../components/address-input/address-input.component"
 
+
+interface UserData {
+  name: string;
+  surname: string;
+  birthDate: Date;
+  phone: number;
+  adress: string;
+  postalCode: number;
+}
+
+
 @Component({
   selector: 'app-personal-information',
   imports: [
@@ -20,19 +31,113 @@ import { AddressInputComponent } from "../../components/address-input/address-in
   templateUrl: './personal-information.component.html',
   styleUrl: './personal-information.component.css'
 })
+
 export class PersonalInformationComponent {
-  accepted = false;
+  name = '';
+  surname = '';
+  birthDate: Date | undefined;
+  address = '';
+  phone = 0;
+  postalCode = 0;
 
-  constructor(private router: Router) { }
 
-  submit() {
-    if (!this.accepted) {
-      alert('Debes aceptar los términos');
-      return;
-    }
+   // Array local para guardar usuarios registrados
+  registeredUsers: UserData[] = [];
 
-    console.log('Registrando usuario...')
+  constructor(private router: Router) {}
+
+   registerData() {
+    if (!this.name || this.validateName(this.name)) { alert('Debes introducir un nombre válido'); return; }
+
+    if (!this.surname || this.validateName(this.surname)) { alert('Debes introducir un apellido válido'); return; }
+
+    if (!this.birthDate || (new Date(this.birthDate) > new Date()) || this.isToday(new Date(this.birthDate))) { alert('Debes introducir una fecha de nacimiento válida'); return; }
+
+    if (!this.phone || this.validatePhone(this.phone)) { alert('Debes introducir un número de teléfono válido'); return; }
+
+    if (!this.postalCode || this.validatePostal(this.postalCode)) { alert('Debes introducir un código postal válido'); return; }
+
+    if (!this.address || this.validateAddress(this.address)) { alert('Debes introducir una dirección válida'); return; }
+    
+
+
+    const newUserData: UserData = {
+      name: this.name,
+      surname: this.surname,
+      birthDate: this.birthDate,
+      phone: this.phone,
+      adress: this.address,
+      postalCode: this.postalCode,
+    };
+
+
+    // Guardar usuario localmente
+    this.registeredUsers.push(newUserData);
+    console.log('Datos de usuarios registrados:', this.registeredUsers);
+
 
     this.router.navigateByUrl('/verify');
+  }
+
+  private validateName(name: string): boolean {
+    const minLength = 3;
+    const maxLength = 30;
+    const number = /[0-9]/;
+    const special = /[!@#$%^&*?/]/;
+
+    if (name.length < minLength) return true;
+    if (name.length > maxLength) return true;
+    if (number.test(name)) return true;
+    if (special.test(name)) return true;
+    else return false;
+  }
+
+  private validateAddress(address: string): boolean {
+    const minLength = 3;
+    const maxLength = 50;
+    const number = /[0-9]/;
+    const special = /[!@#$%^&*?]/;
+
+    if (address.length < minLength) return true;
+    if (address.length > maxLength) return true;
+    if (number.test(address)) return true;
+    if (special.test(address)) return true;
+    else return false;
+  }
+
+  private isToday(date: Date): boolean{
+    const today =new Date();
+    return (date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
+    );
+  }
+
+  private validatePhone(phone: number): boolean {
+    const length = 9;
+    const uppercase = /[A-Z]/;
+    const lowercase = /[a-z]/;
+    const special = /[!@#$%^&*?/]/;
+    const numString = phone.toString();
+
+    if (numString.length != length) return true;
+    if (uppercase.test(numString)) return true;
+    if (lowercase.test(numString)) return true;
+    if (special.test(numString)) return true;
+    else return false;
+  }
+
+  private validatePostal(postalCode: number): boolean {
+    const length = 5;
+    const uppercase = /[A-Z]/;
+    const lowercase = /[a-z]/;
+    const special = /[!@#$%^&*?/]/;
+    const numString = postalCode.toString();
+
+    if (numString.length != length) return true;
+    if (uppercase.test(numString)) return true;
+    if (lowercase.test(numString)) return true;
+    if (special.test(numString)) return true;
+    else return false;
   }
 }

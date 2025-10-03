@@ -27,4 +27,5 @@ export const appRoutes: Routes = [
   { path: 'confirmation', component: ConfirmationComponent }, // <-- ruta para pantalla de confirmación antes de Home
   { path: 'confirm-password', component: ConfirmPasswordComponent }, // <-- ruta para pantalla de confirmación de cambio de contraseña
   { path: 'error-auth', component: ErrorAuthComponent }, // <-- ruta para pantalla de error de autenticación
+
 ];
