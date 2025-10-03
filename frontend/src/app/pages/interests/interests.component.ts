@@ -13,7 +13,6 @@ import { HttpClientModule } from '@angular/common/http';
   styleUrls: ['./interests.component.css']
 })
 export class InterestsComponent {
-  // Utilitzem les mateixes categories que a skills
   categories = [
     {
       name: 'DEPORTES',
@@ -54,22 +53,19 @@ export class InterestsComponent {
     
   constructor(private http: HttpClient) {}    
   
-  // Funció per seleccionar una categoria
   selectCategory(categoryId: string): void {
     this.selectedCategory = categoryId;
   }
   
-  // Funció per enviar el formulari
   submitInterests(): void {
-    // Recollim les subcategories seleccionades
     const selectedInterests = this.categories
       .flatMap(category => category.subcategories)
       .filter(subcategory => subcategory.selected)
       .map(subcategory => subcategory.name);
     
-    this.http.post('http://localhost:8081/api/interests/guardar', { interests: selectedInterests })
+    this.http.post('http://localhost:8081/api/interests/save', { interests: selectedInterests })
     .subscribe({
-        next:response => console.log('Resposta del backend:', response),
+        next:response => console.log('Respuesta del backend:', response),
         error: err => console.error('Error enviando intereses:', err)
     });
   }

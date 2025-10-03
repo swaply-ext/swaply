@@ -5,6 +5,8 @@ import { PasswordInputComponent } from '../../components/password-input/password
 import { TermsCheckboxComponent } from '../../components/terms-checkbox/terms-checkbox.component';
 import { LoginButtonComponent } from '../../components/login-button/login-button.component';
 import { RouterLink } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 
 interface User {
   email: string;
@@ -20,7 +22,8 @@ interface User {
     PasswordInputComponent,
     TermsCheckboxComponent,
     LoginButtonComponent,
-    RouterLink
+    RouterLink,
+    HttpClientModule
   ],
   templateUrl: './login-form.component.html',
   styleUrls: ['./login-form.component.css']
@@ -34,7 +37,7 @@ export class LoginFormComponent {
     { email: 'test@example.com', password: '123456', acceptedTerms: true }
   ];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private http: HttpClient) {}
 
   login() {
     if (!this.accepted) { 
@@ -57,6 +60,12 @@ export class LoginFormComponent {
     }
 
     console.log('Usuario logueado:', foundUser);
+
+    this.http.post('http://localhost:8081/api/login/save', { user: foundUser })
+     .subscribe({
+      next: response => console.log('Respuesta del backend:', response),
+      error: err => console.error('Error enviando login:', err)
+    });
     
     this.router.navigate(['/']);
   }
