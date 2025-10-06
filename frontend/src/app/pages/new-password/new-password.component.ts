@@ -25,8 +25,8 @@ export class NewPasswordComponent {
 
   constructor(
     private location: Location,
-     private router: Router
-    ) {}
+    private router: Router
+  ) {}
 
   validatePassword(password: string): { valid: boolean; message: string } {
     const minLength = 8;
@@ -48,13 +48,19 @@ export class NewPasswordComponent {
     return { valid: true, message: '' };
   }
 
-   submitNewPassword(): void {
+  submitNewPassword(): void {
     const validation = this.validatePassword(this.newPassword);
+
     if (!validation.valid) {
+      if (validation.message === 'Las contraseñas no coinciden.') {
+        alert(validation.message);
+      } else {
+        console.log(validation.message);
+      }
       this.message = validation.message;
-      console.log(this.message);
       return;
     }
+
     if (this.previousPassword) {
       this.passwordHistory.push(this.previousPassword);
     }
@@ -65,9 +71,8 @@ export class NewPasswordComponent {
     console.log('Contraseña actual:', this.previousPassword);
 
     this.router.navigate(['/confirm-password']);
-;
-
   }
+
   goBack(): void {
     this.location.back(); 
   }
