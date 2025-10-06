@@ -38,13 +38,13 @@ export class RecoveryPasswordComponent {
       alert(' El correo no está registrado.');
       return;
     }
-    this.http.post('http://localhost:8081/api/recovery-pass', { email: this.email })
+    this.http.post('http://localhost:8081/api/recovery-pass', { email: this.email }) //enviamos el "email" del input a back para que le envien un correo de verificacion i / o email para restablecer contra
     .subscribe({
       next: response => console.log('Respuesta del backend:', response),
       error: err => console.error('Error enviando dato:', err)
     });
 
-    console.log('Código de recuperación enviado a', foundUser.email); //aqui iria la logica de envio de email con codigo
+    console.log('Código de recuperación enviado a', foundUser.email); 
     this.router.navigate(['/verify']);
   }
 
