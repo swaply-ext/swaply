@@ -18,8 +18,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Configura Cosmos + repos. Al extender AbstractCosmosConfiguration y exponer un
- * CosmosClientBuilder, Spring Data Cosmos (v5.x) registra automáticamente el bean cosmosTemplate.
+ * Configura Cosmos + repos. Al extender AbstractCosmosConfiguration y exponer
+ * un
+ * CosmosClientBuilder, Spring Data Cosmos (v5.x) registra automáticamente el
+ * bean cosmosTemplate.
  */
 @Configuration
 @EnableCosmosRepositories(basePackages = "com.swaply.backend.domain.repository")
@@ -52,35 +54,39 @@ public class CosmosDBConfig extends AbstractCosmosConfiguration {
         // 1) Intenta leer de Key Vault
         try {
             KeyVaultSecret endpointSecret = secretClient.getSecret(endpointSecretName);
-            KeyVaultSecret keySecret      = secretClient.getSecret(keySecretName);
+            KeyVaultSecret keySecret = secretClient.getSecret(keySecretName);
             endpoint = endpointSecret.getValue();
-            key      = keySecret.getValue();
-            log.info("Cosmos endpoint/key recuperados de Key Vault.");
+            key = keySecret.getValue();
         } catch (ResourceNotFoundException rnfe) {
             log.warn("Secreto no encontrado en Key Vault ({} / {}). Intentando fallback.",
-                     endpointSecretName, keySecretName, rnfe);
+                    endpointSecretName, keySecretName, rnfe);
         } catch (Exception ex) {
             log.warn("No se pudo leer secretos de Key Vault. Intentando fallback.", ex);
         }
 
         // 2) Fallback por propiedades
-        if (isBlank(endpoint) && !isBlank(endpointProp)) endpoint = endpointProp;
-        if (isBlank(key)      && !isBlank(keyProp))      key      = keyProp;
+        if (isBlank(endpoint) && !isBlank(endpointProp))
+            endpoint = endpointProp;
+        if (isBlank(key) && !isBlank(keyProp))
+            key = keyProp;
 
         // 3) Fallback por variables de entorno
-        if (isBlank(endpoint)) endpoint = System.getenv("COSMOS_ENDPOINT");
-        if (isBlank(key))      key      = System.getenv("COSMOS_KEY");
+        if (isBlank(endpoint))
+            endpoint = System.getenv("COSMOS_ENDPOINT");
+        if (isBlank(key))
+            key = System.getenv("COSMOS_KEY");
 
         // 4) Validación final
         if (isBlank(endpoint) || isBlank(key)) {
             throw new BeanCreationException(
-                "No se pudo obtener endpoint/key de Cosmos ni desde Key Vault ni desde fallback " +
-                "(props/env). Revisa: secretos en Key Vault, permisos RBAC, y/o define cosmos.endpoint/cosmos.key " +
-                "o COSMOS_ENDPOINT/COSMOS_KEY."
-            );
+                    "No se pudo obtener endpoint/key de Cosmos ni desde Key Vault ni desde fallback " +
+                            "(props/env). Revisa: secretos en Key Vault, permisos RBAC, y/o define cosmos.endpoint/cosmos.key "
+                            +
+                            "o COSMOS_ENDPOINT/COSMOS_KEY.");
         }
 
         return new CosmosClientBuilder()
+                .gatewayMode()
                 .endpoint(endpoint)
                 .key(key)
                 .consistencyLevel(ConsistencyLevel.SESSION);

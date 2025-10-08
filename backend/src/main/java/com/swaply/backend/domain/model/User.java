@@ -9,14 +9,13 @@ import org.springframework.data.annotation.Id;
 
 import java.util.UUID;
 
-@Container(containerName = "swaply")
+@Container(containerName = "swaply-container")
 public class User {
 
     @Id
     private String id;
     
     @PartitionKey
-    @JsonProperty("/type")
     private String type;
     
     private String username;

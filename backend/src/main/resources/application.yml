@@ -1,17 +1,20 @@
+
+
 server:
   port: 8081
 
 keyvault:
   url: https://swaply-key.vault.azure.net/
 
-
 secrets:
-  cosmos-endpoint: cosmos-endpoint 
-  cosmos-key: cosmos-readwrite-key            # nombre del secreto en Key Vault
+  cosmos-endpoint: cosmos-endpoint
+  cosmos-key: cosmos-readwrite-key
 
 cosmos:
   database: "swaplydb"
-  connection-mode: GATEWAY
+
+
+
 logging:
   level:
     com.azure.identity: INFO
