@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-personal-info',
+  selector: 'app-profile-info',
   imports: [],
-  templateUrl: './personal-info.component.html',
-  styleUrl: './personal-info.component.css'
+  templateUrl: './profile-info.component.html',
+  styleUrl: './profile-info.component.css'
 })
-export class PersonalInfoComponent {
+export class ProfileInfoComponent {
   name = 'Full Name';
   username = '@username';
   location = 'Ubicación';
