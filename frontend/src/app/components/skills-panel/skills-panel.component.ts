@@ -1,35 +1,25 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-skills-panel',
   templateUrl: './skills-panel.component.html',
   styleUrls: ['./skills-panel.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule]
 })
 export class SkillsPanelComponent {
   open = false;
-  showInput = false;
-  newSkill = '';
-  skills = ['JavaScript', 'Angular', 'TypeScript', 'CSS', 'HTML', 'Node.js'];
+  skills = ['Cantar', 'Bailar', 'Programar', 'Dibujar', 'Cocinar'];
+
+  constructor(private router: Router) {}
 
   togglePanel() {
     this.open = !this.open;
-    if (!this.open) this.showInput = false;
   }
 
-  toggleInput() {
-    this.showInput = !this.showInput;
-    this.newSkill = '';
-  }
-
-  saveSkill() {
-    if (this.newSkill.trim()) {
-      this.skills.push(this.newSkill.trim());
-      this.newSkill = '';
-      this.showInput = false;
-    }
+  goToSkills() {
+    this.router.navigate(['/skills']);
   }
 }

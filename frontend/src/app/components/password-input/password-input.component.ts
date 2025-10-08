@@ -1,7 +1,6 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
 
 @Component({
   selector: 'app-password-input',
@@ -11,9 +10,8 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './password-input.component.html'
 })
 export class PasswordInputComponent {
-  password = '';
+  @Input() password: string = '';
   @Output() passwordChange = new EventEmitter<string>();
+
+  @Input() hasError: boolean = false;
 }
-
-
-

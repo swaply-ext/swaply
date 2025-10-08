@@ -20,12 +20,6 @@
   font-size: 1.5rem;
 }
 
-.header-buttons {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-}
-
 .toggle-btn {
   background: none;
   border: none;
@@ -62,57 +56,9 @@
 
 .skill-card {
   padding: 0.6rem;
-  background-color: #e0f2f1;
+  background-color: #bfbfbf;
   border-radius: 6px;
   text-align: center;
   font-weight: 500;
   color: #000;
-}
-
-.add-skill-form {
-  margin-top: 1rem;
-  display: flex;
-  gap: 0.5rem;
-  justify-content: center;
-}
-
-.add-skill-form input {
-  padding: 0.6rem;
-  border: 1px solid #bfbfbf;
-  border-radius: 6px;
-  font-size: 1rem;
-  flex: 1;
-}
-
-.add-skill-form input:focus {
-  outline: none;
-  border-color: var(--principal-color-2, #2a9d8f);
-  box-shadow: 0 0 0 2px rgba(42, 157, 143, 0.2);
-}
-
-.add-skill-form button {
-  padding: 0.6rem 1rem;
-  background-color: var(--principal-color-2, #2a9d8f);
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
-}
-
-.add-skill-form button:hover {
-  background-color: #21867a;
-  transform: scale(1.03);
-}
-
-@media (max-width: 480px) {
-  .add-skill-form {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .add-skill-form input,
-  .add-skill-form button {
-    width: 100%;
-  }
 }
