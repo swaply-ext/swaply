@@ -11,7 +11,6 @@ import { FormsModule } from '@angular/forms';
 })
 export class PasswordInputComponent {
   @Input() password: string = '';
-  @Output() passwordChange = new EventEmitter<string>();
-
   @Input() hasError: boolean = false;
+  @Output() passwordChange = new EventEmitter<string>();
 }

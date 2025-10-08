@@ -1,12 +1,32 @@
 <div class="register-container" id="regist">
   <h2>REGISTRARSE</h2>
 
-
   <form>
-    <app-email-input (emailChange)="email = $event"></app-email-input>
-    <app-confirm-email-input (confirmEmailChange)="confirmEmail = $event"></app-confirm-email-input>
-    <app-password-input (passwordChange)="password = $event"></app-password-input>
-    <app-confirm-password-input (confirmPasswordChange)="confirmPassword = $event"></app-confirm-password-input>
+    <app-email-input
+  [(email)]="email"
+  [hasError]="hasErrorAll">
+</app-email-input>
+
+<app-confirm-email-input
+  [(confirmEmail)]="confirmEmail"
+  [hasError]="hasErrorAll">
+</app-confirm-email-input>
+
+<app-password-input
+  [(password)]="password"
+  [hasError]="hasErrorAll">
+</app-password-input>
+
+<app-confirm-password-input
+  [(confirmPassword)]="confirmPassword"
+  [hasError]="hasErrorAll">
+</app-confirm-password-input>
+
+<small *ngIf="showError" class="error-message">
+  El correo o la contraseña no coinciden.
+</small>
+
+
     <app-terms-checkbox (checkedChange)="accepted = $event"></app-terms-checkbox>
     <app-action-buttons (submit)="register()"></app-action-buttons>
   </form>
