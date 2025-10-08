@@ -35,7 +35,7 @@ export const appRoutes: Routes = [
   { path: 'navbar', component: AppNavbarComponent }, // ruta para el menú de navegación (temporal)
   { path: 'skills-panel', component: SkillsPanelComponent }, // ruta para el panel de habilidades
   { path: 'loading', component: LoadingScreenComponent }, // ruta para la pantalla de carga
-  { path: 'interests-panel', component: InterestsPanelComponent }, // ruta para el panel de habilidades
+  { path: 'interests-panel', component: InterestsPanelComponent }, // ruta para el panel de intereses
   { path: 'profile-info', component: ProfileInfoComponent } // ruta para la información personal (temporal)
 
 ];
