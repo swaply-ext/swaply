@@ -1,0 +1,13 @@
+<div class="interests-panel-container">
+  <div class="header">
+    <button class="toggle-btn" (click)="togglePanel()">
+      {{ open ? '▲' : '▼' }}
+    </button>
+    <h1>Intereses</h1>
+    <button class="add-btn-circle" (click)="goToInterests()">+</button>
+  </div>
+
+  <div *ngIf="open" class="interest-grid">
+    <button *ngFor="let interest of interests" class="interest-card">{{ interest }}</button>
+  </div>
+</div>
