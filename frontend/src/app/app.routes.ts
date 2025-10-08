@@ -15,6 +15,7 @@ import { AppNavbarComponent } from './components/app-navbar/app-navbar.component
 import { SkillsPanelComponent } from './components/skills-panel/skills-panel.component';
 import { LoadingScreenComponent } from './pages/loading-screen/loading-screen.component';
 import { InterestsPanelComponent } from './components/interests-panel/interests-panel.component';
+import { ProfileInfoComponent } from './components/profile-info/profile-info.component';
 
 // Creamos una ruta para la verificación de correo
 // Ahora usamos el componente real EmailVerificationComponent
@@ -34,5 +35,7 @@ export const appRoutes: Routes = [
   { path: 'navbar', component: AppNavbarComponent }, // ruta para el menú de navegación (temporal)
   { path: 'skills-panel', component: SkillsPanelComponent }, // ruta para el panel de habilidades
   { path: 'loading', component: LoadingScreenComponent }, // ruta para la pantalla de carga
-  { path: 'interests-panel', component: InterestsPanelComponent } // ruta para el panel de habilidades
+  { path: 'interests-panel', component: InterestsPanelComponent }, // ruta para el panel de habilidades
+  { path: 'profile-info', component: ProfileInfoComponent } // ruta para la información personal (temporal)
+
 ];
