@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { NextButtonComponent } from '../../components/next-button/next-button.component'
+import { NextButtonComponent } from '../../components/next-button/next-button.component';
 import { NameInputComponent } from "../../components/name-input/name-input.component";
 import { SurnameInputComponent } from "../../components/surname-input/surname-input.component";
 import { BirthDateComponent } from "../../components/birth-date/birth-date.component";
 import { PhoneInputComponent } from "../../components/phone-input/phone-input.component";
-import { AddressInputComponent } from "../../components/address-input/address-input.component"
+import { AddressInputComponent } from "../../components/address-input/address-input.component";
+import { HttpClient } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 
 
 interface UserData {
@@ -26,7 +28,8 @@ interface UserData {
     SurnameInputComponent,
     BirthDateComponent,
     PhoneInputComponent,
-    AddressInputComponent
+    AddressInputComponent,
+    HttpClientModule
 ],
   templateUrl: './personal-information.component.html',
   styleUrl: './personal-information.component.css'
@@ -44,7 +47,7 @@ export class PersonalInformationComponent {
    // Array local para guardar usuarios registrados
   registeredUsers: UserData[] = [];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private http: HttpClient) {}
 
    registerData() {
     if (!this.name || this.validateName(this.name)) { alert('Debes introducir un nombre válido'); return; }
@@ -73,7 +76,13 @@ export class PersonalInformationComponent {
 
     // Guardar usuario localmente
     this.registeredUsers.push(newUserData);
-    console.log('Datos de usuarios registrados:', this.registeredUsers);
+    console.log('Datos de usuarios registrados:', this.registeredUsers); //revisar nombre de objetos, creo que pablo y eloy utilizan "user" y yo "userData" (funciona igual)
+
+    this.http.post('http://localhost:8081/api/personal-info/save', { users: this.registeredUsers })
+    .subscribe({
+      next: response => console.log('Respuesta del backend:', response),
+      error: err => console.error('Error enviando usuarios:', err)
+    });
 
 
     this.router.navigateByUrl('/verify');
