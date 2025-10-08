@@ -14,6 +14,7 @@ import { ErrorAuthComponent } from './pages/error-auth/error-auth.component';
 import { AppNavbarComponent } from './components/app-navbar/app-navbar.component'; //menu nav no es una pagina, esta provisional
 import { SkillsPanelComponent } from './components/skills-panel/skills-panel.component';
 import { LoadingScreenComponent } from './pages/loading-screen/loading-screen.component';
+import { PersonalInfoComponent } from './components/personal-info/personal-info.component';
 
 // Creamos una ruta para la verificación de correo
 // Ahora usamos el componente real EmailVerificationComponent
@@ -33,4 +34,5 @@ export const appRoutes: Routes = [
   { path: 'navbar', component: AppNavbarComponent }, // <-- ruta para el menú de navegación (temporal)
   { path: 'panel-skills', component: SkillsPanelComponent }, // <-- ruta para el panel de habilidades
   { path: 'loading', component: LoadingScreenComponent }, // <-- ruta para la pantalla de carga
+  { path: 'personal-info', component: PersonalInfoComponent }, // <-- ruta para la información personal (temporal)
 ];
