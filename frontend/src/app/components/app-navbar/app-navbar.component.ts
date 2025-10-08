@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-app-navbar',
+  selector: 'app-navbar',
   imports: [],
   standalone: true,
   templateUrl: './app-navbar.component.html',

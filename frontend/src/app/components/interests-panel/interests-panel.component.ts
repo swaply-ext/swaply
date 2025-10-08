@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 })
 export class InterestsPanelComponent {
   open = false;
-  interests = ['Cantar', 'Bailar', 'Programar', 'Dibujar', 'Cocinar'];
+  interests = ['Cantar', 'Bailar', 'Programar', 'Dibujar'];
 
   constructor(private router: Router) {}
 

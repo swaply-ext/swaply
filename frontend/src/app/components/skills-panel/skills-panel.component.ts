@@ -11,8 +11,7 @@ import { Router } from '@angular/router';
 })
 export class SkillsPanelComponent {
   open = false;
-  skills = ['Cantar', 'Bailar', 'Programar', 'Dibujar', 'Cocinar'];
-
+  skills = ['Cantar', 'Bailar', 'Programar', 'Dibujar'];
   constructor(private router: Router) {}
 
   togglePanel() {

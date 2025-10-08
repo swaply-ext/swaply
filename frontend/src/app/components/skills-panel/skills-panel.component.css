@@ -1,5 +1,5 @@
 .skills-panel-container {
-  max-width: 600px;
+  max-width: 350px;
   margin: 2rem auto;
   padding: 1rem;
   border: 1px solid #315465;
@@ -29,13 +29,13 @@
 }
 
 .add-btn-circle {
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   border: none;
   background-color: var(--principal-color-2, #2a9d8f);
   color: #315465;
-  font-size: 2rem;
+  font-size: 1.7rem;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -51,7 +51,7 @@
 .skills-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-  gap: 0.5rem;
+  gap: 0.51rem;
 }
 
 .skill-card {
@@ -61,4 +61,7 @@
   text-align: center;
   font-weight: 500;
   color: #000;
-}
+  outline: none;
+  border: none;
+  text-decoration: none;
+} 
