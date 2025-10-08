@@ -4,6 +4,8 @@ import { ConfirmPasswordInputComponent } from '../../components/confirm-password
 import { Location } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-new-password',
@@ -11,7 +13,8 @@ import { Router } from '@angular/router';
   imports: [
     CommonModule,
     PasswordInputComponent,
-    ConfirmPasswordInputComponent
+    ConfirmPasswordInputComponent,
+    HttpClientModule
   ],
   templateUrl: './new-password.component.html',
   styleUrls: ['./new-password.component.css']
@@ -25,7 +28,8 @@ export class NewPasswordComponent {
 
   constructor(
     private location: Location,
-     private router: Router
+     private router: Router,
+      private http: HttpClient
     ) {}
 
   validatePassword(password: string): { valid: boolean; message: string } {
@@ -63,9 +67,13 @@ export class NewPasswordComponent {
     console.log(this.message);
     console.log('Historial de contraseñas:', this.passwordHistory);
     console.log('Contraseña actual:', this.previousPassword);
-
+    //API evniar nueva pass a backend
+    this.http.post('http://localhost:8081/api/new-password/save', { NewPasswordComponent: this.newPassword }) //envia el codigo de verificacion al endpoint de back y loc comprueban
+    .subscribe({
+      next: response => console.log('Respuesta del backend:', response),
+      error: err => console.error('Error enviando dato:', err)
+      });
     this.router.navigate(['/confirm-password']);
-;
 
   }
   goBack(): void {
