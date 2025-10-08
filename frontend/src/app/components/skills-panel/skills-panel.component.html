@@ -4,15 +4,10 @@
       {{ open ? '▲' : '▼' }}
     </button>
     <h1>Habilidades</h1>
-    <button class="add-btn-circle" (click)="toggleInput()">+</button>
+    <button class="add-btn-circle" (click)="goToSkills()">+</button>
   </div>
 
   <div *ngIf="open" class="skills-grid">
     <div *ngFor="let skill of skills" class="skill-card">{{ skill }}</div>
-  </div>
-
-  <div *ngIf="showInput" class="add-skill-form">
-    <input type="text" [(ngModel)]="newSkill" placeholder="Nueva habilidad..." />
-    <button (click)="saveSkill()">Añadir</button>
   </div>
 </div>
