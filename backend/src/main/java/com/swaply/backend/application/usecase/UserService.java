@@ -1,9 +1,9 @@
 package com.swaply.backend.application.usecase;
 
 import com.azure.spring.data.cosmos.core.CosmosTemplate;
-import com.swaply.backend.application.dto.UserDTO;
-import com.swaply.backend.application.mapper.UserMapper;
-import com.swaply.backend.domain.model.User;
+import com.swaply.backend.application.dto.RegisterDTO;
+import com.swaply.backend.application.mapper.RegisterMapper;
+import com.swaply.backend.domain.model.Register;
 import com.swaply.backend.domain.repository.UserRepository;
 
 import org.springframework.stereotype.Service;
@@ -18,38 +18,32 @@ public class UserService /*implements UserRepository*/ {
 
     private final CosmosTemplate cosmosTemplate;
     private final UserRepository userRepo;
-    private final UserMapper userMapper;
 
-    public UserService(CosmosTemplate cosmosTemplate, UserRepository userRepo, UserMapper userMapper) {
+    
+
+    public UserService(CosmosTemplate cosmosTemplate, UserRepository userRepo) {
         this.cosmosTemplate = cosmosTemplate;
         this.userRepo = userRepo;
-        this.userMapper = userMapper;
+
     }
 
-    public UserDTO createUser(UserDTO dto) {
-        User user = new User();
+    public RegisterDTO register(RegisterDTO dto) {
+        Register entity = RegisterMapper.toEntity(dto);
         // Genera un id si no te llega uno (Cosmos exige 'id')
-        user.setId(UUID.randomUUID().toString());
-        user.setUsername(dto.getUsername());
-        user.setEmail(dto.getEmail());
+        entity.setId(UUID.randomUUID().toString());
+        entity.setEmail(dto.getEmail());
+        entity.setType("user");
+        entity.setPassword(dto.getPassword());
 
         // Opción A: si te basta con persistir (no necesitas el objeto devuelto)
         // cosmosTemplate.upsert(user); // <-- devuelve void
 
         // Opción B: si quieres la entidad final (e.g. con ETag/Id definitivo)
-        String container = cosmosTemplate.getContainerName(User.class);
-        User saved = cosmosTemplate.upsertAndReturnEntity(container, user);
-
-        return userMapper.entityToDTO(user);
+        String container = cosmosTemplate.getContainerName(Register.class);
+        Register saved = cosmosTemplate.upsertAndReturnEntity(container, entity);
+        return RegisterMapper.toDTO(entity);
     }
 
-    public List<UserDTO> getAllUsers() {
-        return StreamSupport
-                .stream(cosmosTemplate.findAll(User.class).spliterator(), false)
-                .filter(user -> "User".equals(user.getType())) // Filtrar por tipo "User"
-                .map(userMapper::entityToDTO)
-                .collect(Collectors.toList());
-    }
 }
     // return repo.findAll()
     //         .stream()
