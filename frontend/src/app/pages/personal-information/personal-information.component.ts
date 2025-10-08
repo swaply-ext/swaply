@@ -6,6 +6,7 @@ import { SurnameInputComponent } from "../../components/surname-input/surname-in
 import { BirthDateComponent } from "../../components/birth-date/birth-date.component";
 import { PhoneInputComponent } from "../../components/phone-input/phone-input.component";
 import { AddressInputComponent } from "../../components/address-input/address-input.component";
+import { UsernameInputComponent } from "../../components/username-input/username-input.component";
 import { HttpClient } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -13,6 +14,7 @@ import { HttpClientModule } from '@angular/common/http';
 interface UserData {
   name: string;
   surname: string;
+  username: string;
   birthDate: Date;
   phone: number;
   adress: string;
@@ -29,6 +31,7 @@ interface UserData {
     BirthDateComponent,
     PhoneInputComponent,
     AddressInputComponent,
+    UsernameInputComponent,
     HttpClientModule
 ],
   templateUrl: './personal-information.component.html',
@@ -38,6 +41,7 @@ interface UserData {
 export class PersonalInformationComponent {
   name = '';
   surname = '';
+  username = '';
   birthDate: Date | undefined;
   address = '';
   phone = 0;
@@ -54,6 +58,8 @@ export class PersonalInformationComponent {
 
     if (!this.surname || this.validateName(this.surname)) { alert('Debes introducir un apellido válido'); return; }
 
+    if (!this.username || this.validateUsername(this.username)) { alert('Debes introducir un nombre de usuario válido'); return; }
+
     if (!this.birthDate || (new Date(this.birthDate) > new Date()) || this.isToday(new Date(this.birthDate))) { alert('Debes introducir una fecha de nacimiento válida'); return; }
 
     if (!this.phone || this.validatePhone(this.phone)) { alert('Debes introducir un número de teléfono válido'); return; }
@@ -67,6 +73,7 @@ export class PersonalInformationComponent {
     const newUserData: UserData = {
       name: this.name,
       surname: this.surname,
+      username: this.username,
       birthDate: this.birthDate,
       phone: this.phone,
       adress: this.address,
@@ -147,6 +154,17 @@ export class PersonalInformationComponent {
     if (uppercase.test(numString)) return true;
     if (lowercase.test(numString)) return true;
     if (special.test(numString)) return true;
+    else return false;
+  }
+
+  private validateUsername (username: string): boolean {
+    const minLength = 3;
+    const maxLength = 30;
+    const special = /[!@#$%^&*?/]/;
+
+    if (username.length < minLength) return true;
+    if (username.length > maxLength) return true;
+    if (special.test(username)) return true;
     else return false;
   }
 }
