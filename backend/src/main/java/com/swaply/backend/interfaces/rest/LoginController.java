@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.swaply.backend.application.usecase.UserService;
+import com.swaply.backend.application.usecase.AccountService;
 import com.swaply.backend.domain.model.Login;
 import com.swaply.backend.interfaces.rest.LoginController.LoginRequest;
 import com.swaply.backend.application.dto.LoginDTO;
@@ -30,9 +30,9 @@ public class LoginController {
         }
     }
 
-    private final UserService service;
+    private final AccountService service;
 
-    public LoginController(@Autowired UserService service) {
+    public LoginController(@Autowired AccountService service) {
         this.service = service;
     }
 

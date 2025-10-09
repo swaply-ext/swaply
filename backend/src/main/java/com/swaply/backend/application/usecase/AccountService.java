@@ -17,12 +17,12 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
-public class UserService /* implements UserRepository */ {
+public class AccountService /* implements UserRepository */ {
 
     private final CosmosTemplate cosmosTemplate;
     private final UserRepository userRepo;
 
-    public UserService(CosmosTemplate cosmosTemplate, UserRepository userRepo) {
+    public AccountService(CosmosTemplate cosmosTemplate, UserRepository userRepo) {
         this.cosmosTemplate = cosmosTemplate;
         this.userRepo = userRepo;
 

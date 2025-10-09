@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.swaply.backend.application.usecase.UserService;
+import com.swaply.backend.application.usecase.AccountService;
 import com.swaply.backend.application.dto.RegisterDTO;
 
 import java.util.ArrayList;
@@ -27,9 +27,9 @@ public class RegisterController {
         }
     }
 
-    private final UserService service;
+    private final AccountService service;
 
-    public RegisterController(@Autowired UserService service) {
+    public RegisterController(@Autowired AccountService service) {
         this.service = service;
     }
 
