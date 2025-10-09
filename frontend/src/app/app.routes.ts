@@ -17,6 +17,7 @@ import { LoadingScreenComponent } from './pages/loading-screen/loading-screen.co
 import { InterestsPanelComponent } from './components/interests-panel/interests-panel.component';
 import { ProfileInfoComponent } from './components/profile-info/profile-info.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { PublicProfileComponent } from './pages/public-profile/public-profile.component';
 
 // Creamos una ruta para la verificación de correo
 // Ahora usamos el componente real EmailVerificationComponent
@@ -38,5 +39,6 @@ export const appRoutes: Routes = [
   { path: 'loading', component: LoadingScreenComponent }, // ruta para la pantalla de carga
   { path: 'interests-panel', component: InterestsPanelComponent }, // ruta para el panel de intereses
   { path: 'profile-info', component: ProfileInfoComponent }, // ruta para la información personal (temporal)
-  { path: 'profile', component: ProfileComponent } // ruta para el perfil de usuario
+  { path: 'profile', component: ProfileComponent }, // ruta para el perfil de usuario
+  { path: 'public-profile', component: PublicProfileComponent } // ruta para el perfil público
 ];

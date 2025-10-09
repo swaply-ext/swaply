@@ -184,3 +184,19 @@
     font-size: 1rem;
   }
 }
+
+.icon-group.public {
+  margin-left: 50px; 
+}
+
+.icon-group.public span {
+  margin-left: 1px;
+}
+
+.icon-group:not(.public) {
+  margin-left: 50px; 
+}
+
+.icon-group:not(.public) .material-icons {
+  margin-left: 3px; 
+}
