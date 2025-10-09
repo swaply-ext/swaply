@@ -2,12 +2,9 @@ package com.swaply.backend.domain.model;
 
 import com.azure.spring.data.cosmos.core.mapping.Container;
 import com.azure.spring.data.cosmos.core.mapping.PartitionKey;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.springframework.data.annotation.Id;
 
-
-import java.util.UUID;
 
 @Container(containerName = "swaply-container")
 public class User {
@@ -16,7 +13,7 @@ public class User {
     private String id;
     
     @PartitionKey
-    private String type;
+    private String type = "User";
     
     private String username;
     private String fullName;
@@ -171,9 +168,5 @@ public class User {
 
     public String getType() {
         return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 }

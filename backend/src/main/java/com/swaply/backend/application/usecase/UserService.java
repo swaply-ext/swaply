@@ -9,9 +9,7 @@ import com.swaply.backend.domain.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 public class UserService /*implements UserRepository*/ {
@@ -27,45 +25,36 @@ public class UserService /*implements UserRepository*/ {
     }
 
     public UserDTO createUser(UserDTO dto) {
-        User user = new User();
         // Genera un id si no te llega uno (Cosmos exige 'id')
-        user.setId(UUID.randomUUID().toString());
-        user.setUsername(dto.getUsername());
-        user.setEmail(dto.getEmail());
-
         // Opción A: si te basta con persistir (no necesitas el objeto devuelto)
         // cosmosTemplate.upsert(user); // <-- devuelve void
 
         // Opción B: si quieres la entidad final (e.g. con ETag/Id definitivo)
         String container = cosmosTemplate.getContainerName(User.class);
-        User saved = cosmosTemplate.upsertAndReturnEntity(container, user);
+        User saved = cosmosTemplate.upsertAndReturnEntity(container, userMapper.dtoToEntity(dto));
 
-        return userMapper.entityToDTO(user);
+        return dto;
     }
 
     public List<UserDTO> getAllUsers() {
-        return StreamSupport
-                .stream(cosmosTemplate.findAll(User.class).spliterator(), false)
-                .filter(user -> "User".equals(user.getType())) // Filtrar por tipo "User"
-                .map(userMapper::entityToDTO)
-                .collect(Collectors.toList());
+        return userRepo.findByType("User") // Encuentra todos los objetos de tipo User en el repo
+                .stream() // Crea una secuencia de elementos iterables
+                .map(userMapper::entityToDTO) // Convertir cada objeto User a su correspondiente UserDTO usando el método entityToDTO del userMapper
+                .collect(Collectors.toList()); // Crea un List<DTO> con todos los objetos 
     }
+
+    public UserDTO getUserByID(String id){
+        return userMapper.entityToDTO(userRepo.findById(id).orElse(null)); //Devuelve el usuario cuyo ID coincida
+    }
+
+    /*public UserDTO updateUser(UserDTO updateduser){
+        
+    }*/
 }
     // return repo.findAll()
     //         .stream()
     //         .map(u -> new UserDTO(u.getName(), u.getEmail()))
     //         .collect(Collectors.toList());
-
-    // public List<User> getAll() {
-    //     // Convertimos el Iterable<User> que devuelve repo.findAll() en un Stream secuencial
-    //     return StreamSupport.stream(repo.findAll().spliterator(), false)
-        
-    //         // Filtramos los usuarios cuyo campo 'id' sea exactamente igual a "User"
-    //         .filter(user -> "User".equals(user.getId()))
-            
-    //         // Recolectamos los elementos filtrados en una lista y la devolvemos
-    //         .collect(Collectors.toList());
-    // }
 
     // public Optional<User> obtenerPorId(String id) {
     //     return repo.findById(id);

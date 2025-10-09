@@ -8,10 +8,10 @@ import org.springframework.http.ResponseEntity;
 
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/users")
+//Prefijo que van a llevar todos los endpoints - Lucas
+@RequestMapping("/api/users") 
 public class UserController {
 
     private final UserService service;
@@ -19,15 +19,25 @@ public class UserController {
         this.service = service;
     }
 
+    /*Las peticiones del tipo Post se utilizan para crear objetos en la BBDD 
+      ResponseEntity<Tipo_De_Objeto_Que_Quieras> se utiliza para personalizar los códigos de respuestas que nos devuelve el servidor - Lucas */
     @PostMapping("/new")
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO user) {
         return ResponseEntity.ok(service.createUser(user));
     }
 
+    //Las peticiones del tipo Get se utilizan para recibir objetos en la BBDD - Lucas
     @GetMapping("/getAll")
     public ResponseEntity<List<UserDTO>> getAll() {
         return ResponseEntity.ok(service.getAllUsers());
     }
+
+    @GetMapping("/getUserById/{id}")
+    public ResponseEntity<UserDTO> getUserById(@PathVariable String id) {
+        return ResponseEntity.ok(service.getUserByID(id));
+    }
+
+
 
     // @GetMapping("/{id}")
     // public Optional<UserDTO> obtenerPorId(@PathVariable String id) {
