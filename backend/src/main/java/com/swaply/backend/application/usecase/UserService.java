@@ -49,7 +49,6 @@ public class UserService /* implements UserRepository */ {
         Login entity = LoginMapper.toEntity(dto);
         entity.setEmail(dto.getEmail());
         entity.setPassword(dto.getPassword());
-        entity.setAcceptedTerms(dto.isAcceptedTerms());
 
         return dto;
 

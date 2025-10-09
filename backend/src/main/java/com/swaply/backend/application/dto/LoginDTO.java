@@ -11,7 +11,6 @@ public class LoginDTO {
     private String type = "user";
     private String email;
     private String password;
-    private Boolean acceptedTerms;
 
     public LoginDTO() {
         // Constructor vacío necesario para Jackson
@@ -37,12 +36,5 @@ public class LoginDTO {
         this.password = password;
     }
 
-    public boolean isAcceptedTerms() {
-        return acceptedTerms;
-    }
-
-    public void setAcceptedTerms(Boolean acceptedTerms) {
-        this.acceptedTerms = acceptedTerms;
-    }
 
 }

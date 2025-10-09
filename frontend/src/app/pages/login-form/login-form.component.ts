@@ -11,7 +11,7 @@ import { HttpClientModule } from '@angular/common/http';
 interface User {
   email: string;
   password: string;
-  acceptedTerms: boolean;
+
 }
 
 @Component({
@@ -48,8 +48,7 @@ export class LoginFormComponent {
 
     const newUser: User = {
       email: this.email,
-      password: this.password,
-      acceptedTerms: this.accepted
+      password: this.password
     };
 
 

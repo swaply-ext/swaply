@@ -42,11 +42,4 @@ public class Login {
         this.password = password;
     }
 
-    public Boolean getAcceptedTerms() {
-        return this.acceptedTerms;
-    }
-    public void setAcceptedTerms(Boolean acceptedTerms) {
-        this.acceptedTerms = acceptedTerms;
-    }
-
 }
