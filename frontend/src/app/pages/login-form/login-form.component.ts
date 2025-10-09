@@ -33,7 +33,6 @@ export class LoginFormComponent {
   password = '';
   accepted = false;
 
-  registeredUsers: User[] = [];
 
   constructor(private router: Router, private http: HttpClient) { }
 
@@ -54,10 +53,9 @@ export class LoginFormComponent {
     };
 
 
-    this.registeredUsers.push(newUser);
-    console.log('Usuario logueado:', this.registeredUsers);
+    console.log('Usuario logueado:', newUser);
 
-    this.http.post('http://localhost:8081/api/login/check', { users: this.registeredUsers })
+    this.http.post('http://localhost:8081/api/login/check', { users: newUser })
       .subscribe({
         next: response => console.log('Respuesta del backend:', response),
         error: err => console.error('Error enviando login:', err)

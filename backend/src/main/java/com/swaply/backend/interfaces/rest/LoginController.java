@@ -19,13 +19,13 @@ import java.util.List;
 public class LoginController {
 
     public static class LoginRequest {
-        private List<LoginDTO> users;
+        private LoginDTO users;
 
-        public List<LoginDTO> getUsers() {
+        public LoginDTO getUsers() {
             return users;
         }
 
-        public void setUsers(List<LoginDTO> users) {
+        public void setUsers(LoginDTO users) {
             this.users = users;
         }
     }
@@ -37,21 +37,18 @@ public class LoginController {
     }
 
     @PostMapping("/check")
-    public ResponseEntity<List<LoginDTO>> guardarRegister(@RequestBody LoginRequest request) {
+    public ResponseEntity<Boolean> guardarRegister(@RequestBody LoginRequest request) {
 
-        // Ya no habrá NPE: la lista está validada e inicializada.
-        List<LoginDTO> creados = new ArrayList<>();
-        for (LoginDTO user : request.getUsers()) {
-            // ⚠️ No loguees contraseñas en real
-            LoginDTO creado = service.login(user);
-            creados.add(creado);
-        }
+        
+        
+        LoginDTO login = request.getUsers();
+        login = service.login(login);
+        String email = login.getEmail();
+        String password = login.getPassword();
 
-        System.out.println(creados.get(0).getEmail());
-        System.out.println(creados.get(0).getPassword());
+        System.out.println("Email: " + email + " Password: " + password);
 
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(creados);
+        return ResponseEntity.ok(true);
     }
 
 }
