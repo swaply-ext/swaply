@@ -6,9 +6,6 @@ import com.azure.spring.data.cosmos.core.mapping.PartitionKey;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 
-import java.time.OffsetDateTime;
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

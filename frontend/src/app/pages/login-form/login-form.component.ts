@@ -54,7 +54,7 @@ export class LoginFormComponent {
 
     console.log('Usuario logueado:', newUser);
 
-    this.http.post('http://localhost:8081/api/login/check', { users: newUser })
+    this.http.post('http://localhost:8081/api/login/check', newUser )
       .subscribe({
         next: response => console.log('Respuesta del backend:', response),
         error: err => console.error('Error enviando login:', err)

@@ -19,7 +19,7 @@ public class UserService /*implements UserRepository*/ {
     private final CosmosTemplate cosmosTemplate;
     private final UserRepository userRepo;
     private final UserMapper userMapper;
-
+    
     public UserService(CosmosTemplate cosmosTemplate, UserRepository userRepo, UserMapper userMapper) {
         this.cosmosTemplate = cosmosTemplate;
         this.userRepo = userRepo;

@@ -1,5 +1,6 @@
 package com.swaply.backend.application.usecase;
 
+import com.azure.cosmos.implementation.User;
 import com.azure.spring.data.cosmos.core.CosmosTemplate;
 import com.swaply.backend.application.dto.LoginDTO;
 import com.swaply.backend.application.dto.RegisterDTO;
@@ -9,12 +10,11 @@ import com.swaply.backend.domain.model.Login;
 import com.swaply.backend.domain.model.Register;
 import com.swaply.backend.domain.repository.UserRepository;
 
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 public class AccountService /* implements UserRepository */ {
@@ -28,29 +28,32 @@ public class AccountService /* implements UserRepository */ {
 
     }
 
+
+
     public RegisterDTO register(RegisterDTO dto) {
         Register entity = RegisterMapper.toEntity(dto);
-        // Genera un id si no te llega uno (Cosmos exige 'id')
         entity.setId(UUID.randomUUID().toString());
         entity.setEmail(dto.getEmail());
-        entity.setType("user");
         entity.setPassword(dto.getPassword());
+        System.out.println("Recibido email: " + entity.getEmail());
 
-        // Opción A: si te basta con persistir (no necesitas el objeto devuelto)
-        // cosmosTemplate.upsert(user); // <-- devuelve void
+        Register saved = cosmosTemplate.upsertAndReturnEntity(
+        cosmosTemplate.getContainerName(Register.class),
+        entity
+    );
+    return RegisterMapper.toDTO(saved);
+}
 
-        // Opción B: si quieres la entidad final (e.g. con ETag/Id definitivo)
-        String container = cosmosTemplate.getContainerName(Register.class);
-        Register saved = cosmosTemplate.upsertAndReturnEntity(container, entity);
-        return RegisterMapper.toDTO(entity);
-    }
 
-    public LoginDTO login(LoginDTO dto) {
+    public ResponseEntity<Boolean> login(LoginDTO dto) {
         Login entity = LoginMapper.toEntity(dto);
         entity.setEmail(dto.getEmail());
         entity.setPassword(dto.getPassword());
+        String email = entity.getEmail();
+        String password = entity.getPassword();
 
-        return dto;
+        System.out.println("Email: " + email + " Password: " + password);
+        return ResponseEntity.ok(true);
 
     }
 
