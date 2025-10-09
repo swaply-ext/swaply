@@ -1,8 +1,11 @@
 package com.swaply.backend.application.usecase;
 
 import com.azure.spring.data.cosmos.core.CosmosTemplate;
+import com.swaply.backend.application.dto.LoginDTO;
 import com.swaply.backend.application.dto.RegisterDTO;
+import com.swaply.backend.application.mapper.LoginMapper;
 import com.swaply.backend.application.mapper.RegisterMapper;
+import com.swaply.backend.domain.model.Login;
 import com.swaply.backend.domain.model.Register;
 import com.swaply.backend.domain.repository.UserRepository;
 
@@ -14,12 +17,10 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
-public class UserService /*implements UserRepository*/ {
+public class UserService /* implements UserRepository */ {
 
     private final CosmosTemplate cosmosTemplate;
     private final UserRepository userRepo;
-
-    
 
     public UserService(CosmosTemplate cosmosTemplate, UserRepository userRepo) {
         this.cosmosTemplate = cosmosTemplate;
@@ -44,32 +45,43 @@ public class UserService /*implements UserRepository*/ {
         return RegisterMapper.toDTO(entity);
     }
 
+    public LoginDTO login(LoginDTO dto) {
+        Login entity = LoginMapper.toEntity(dto);
+        entity.setEmail(dto.getEmail());
+        entity.setPassword(dto.getPassword());
+        entity.setAcceptedTerms(dto.isAcceptedTerms());
+
+        return dto;
+
+    }
+
 }
-    // return repo.findAll()
-    //         .stream()
-    //         .map(u -> new UserDTO(u.getName(), u.getEmail()))
-    //         .collect(Collectors.toList());
+// return repo.findAll()
+// .stream()
+// .map(u -> new UserDTO(u.getName(), u.getEmail()))
+// .collect(Collectors.toList());
 
-    // public List<User> getAll() {
-    //     // Convertimos el Iterable<User> que devuelve repo.findAll() en un Stream secuencial
-    //     return StreamSupport.stream(repo.findAll().spliterator(), false)
-        
-    //         // Filtramos los usuarios cuyo campo 'id' sea exactamente igual a "User"
-    //         .filter(user -> "User".equals(user.getId()))
-            
-    //         // Recolectamos los elementos filtrados en una lista y la devolvemos
-    //         .collect(Collectors.toList());
-    // }
+// public List<User> getAll() {
+// // Convertimos el Iterable<User> que devuelve repo.findAll() en un Stream
+// secuencial
+// return StreamSupport.stream(repo.findAll().spliterator(), false)
 
-    // public Optional<User> obtenerPorId(String id) {
-    //     return repo.findById(id);
-    // }
+// // Filtramos los usuarios cuyo campo 'id' sea exactamente igual a "User"
+// .filter(user -> "User".equals(user.getId()))
 
-    // public User actualizarUsuario(String id, User userActualizado) {
-    //     userActualizado.setId(id);
-    //     return repo.save(userActualizado);
-    // }
+// // Recolectamos los elementos filtrados en una lista y la devolvemos
+// .collect(Collectors.toList());
+// }
 
-    // public void eliminarUsuario(String id) {
-    //     repo.deleteById(id);
-    // }
+// public Optional<User> obtenerPorId(String id) {
+// return repo.findById(id);
+// }
+
+// public User actualizarUsuario(String id, User userActualizado) {
+// userActualizado.setId(id);
+// return repo.save(userActualizado);
+// }
+
+// public void eliminarUsuario(String id) {
+// repo.deleteById(id);
+// }

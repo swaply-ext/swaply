@@ -37,16 +37,16 @@ export class LoginFormComponent {
     { email: 'test@example.com', password: '123456', acceptedTerms: true }
   ];
 
-  constructor(private router: Router, private http: HttpClient) {}
+  constructor(private router: Router, private http: HttpClient) { }
 
   login() {
-    if (!this.accepted) { 
-      alert('Debes aceptar los términos'); 
-      return; 
+    if (!this.accepted) {
+      alert('Debes aceptar los términos');
+      return;
     }
-    if (!this.email || !this.password) { 
-      alert('Debes rellenar todos los campos'); 
-      return; 
+    if (!this.email || !this.password) {
+      alert('Debes rellenar todos los campos');
+      return;
     }
 
     const foundUser = this.registeredUsers.find(
@@ -61,12 +61,12 @@ export class LoginFormComponent {
 
     console.log('Usuario logueado:', foundUser);
 
-    this.http.post('http://localhost:8081/api/login/save', { user: foundUser })
-     .subscribe({
-      next: response => console.log('Respuesta del backend:', response),
-      error: err => console.error('Error enviando login:', err)
-    });
-    
+    this.http.post('http://localhost:8081/api/login/check', { user: foundUser })
+      .subscribe({
+        next: response => console.log('Respuesta del backend:', response),
+        error: err => console.error('Error enviando login:', err)
+      });
+
     this.router.navigate(['/']);
   }
 }
