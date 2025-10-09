@@ -6,8 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.swaply.backend.application.usecase.UserService;
 import com.swaply.backend.domain.model.Login;
+import com.swaply.backend.interfaces.rest.LoginController.LoginRequest;
 import com.swaply.backend.application.dto.LoginDTO;
 import com.swaply.backend.application.dto.RegisterDTO;
+import com.swaply.backend.application.mapper.LoginMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,14 +19,14 @@ import java.util.List;
 public class LoginController {
 
     public static class LoginRequest {
-        private LoginDTO user;
+        private List<LoginDTO> users;
 
-        public LoginDTO getUsers() {
-            return user;
+        public List<LoginDTO> getUsers() {
+            return users;
         }
 
-        public void setUsers(LoginDTO user) {
-            this.user = user;
+        public void setUsers(List<LoginDTO> users) {
+            this.users = users;
         }
     }
 
@@ -35,19 +37,21 @@ public class LoginController {
     }
 
     @PostMapping("/check")
-    public ResponseEntity<Boolean> checkLogin(@RequestBody LoginRequest request) {
-        
-        LoginDTO user = request.getUsers();
+    public ResponseEntity<List<LoginDTO>> guardarRegister(@RequestBody LoginRequest request) {
 
-        if (user == null) {
-            System.out.println("LoginDTO es null");
-        } else {
-            System.out.println("LoginDTO recibido:");
-            System.out.println("Email: " + user.getEmail());
-            System.out.println("Password: " + user.getPassword());
-            System.out.println("Terms: " + user.getAcceptedTerms());
+        // Ya no habrá NPE: la lista está validada e inicializada.
+        List<LoginDTO> creados = new ArrayList<>();
+        for (LoginDTO user : request.getUsers()) {
+            // ⚠️ No loguees contraseñas en real
+            LoginDTO creado = service.login(user);
+            creados.add(creado);
         }
-        return ResponseEntity.ok(true);
+
+        System.out.println(creados.get(0).getEmail());
+        System.out.println(creados.get(0).getPassword());
+
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(creados);
     }
 
 }

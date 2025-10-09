@@ -33,9 +33,7 @@ export class LoginFormComponent {
   password = '';
   accepted = false;
 
-  registeredUsers: User[] = [
-    { email: 'test@example.com', password: '123456', acceptedTerms: true }
-  ];
+  registeredUsers: User[] = [];
 
   constructor(private router: Router, private http: HttpClient) { }
 
@@ -49,19 +47,17 @@ export class LoginFormComponent {
       return;
     }
 
-    const foundUser = this.registeredUsers.find(
-      user => user.email === this.email && user.password === this.password
-    );
+    const newUser: User = {
+      email: this.email,
+      password: this.password,
+      acceptedTerms: this.accepted
+    };
 
-    if (!foundUser) {
-      // 🔹 Si no encuentra usuario, redirige al error
-      this.router.navigate(['/error-auth']);
-      return;
-    }
 
-    console.log('Usuario logueado:', foundUser);
+    this.registeredUsers.push(newUser);
+    console.log('Usuario logueado:', this.registeredUsers);
 
-    this.http.post('http://localhost:8081/api/login/check', { user: foundUser })
+    this.http.post('http://localhost:8081/api/login/check', { users: this.registeredUsers })
       .subscribe({
         next: response => console.log('Respuesta del backend:', response),
         error: err => console.error('Error enviando login:', err)
