@@ -4,7 +4,6 @@ import com.azure.spring.data.cosmos.repository.CosmosRepository;
 import com.swaply.backend.domain.model.Register;
 import java.util.Optional;
 
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Repository;
 
 @Repository

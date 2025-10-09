@@ -12,7 +12,6 @@ import { HttpClientModule } from '@angular/common/http';
 interface User {
   email: string;
   password: string;
-  acceptedTerms: boolean;
 }
 
 @Component({
@@ -37,7 +36,7 @@ export class RegisterFormComponent {
   confirmPassword = '';
   accepted = false;
 
-  registeredUsers: User[] = [];
+
 
 constructor(private router: Router, private http: HttpClient) {}
 
@@ -76,13 +75,11 @@ constructor(private router: Router, private http: HttpClient) {}
     const newUser: User = {
       email: this.email,
       password: this.password,
-      acceptedTerms: this.accepted
     };
 
-    this.registeredUsers.push(newUser);
-    console.log('Usuarios registrados:', this.registeredUsers);
+    console.log('Usuarios registrados:', newUser);
     
-    this.http.post('http://localhost:8081/api/register/save', { users: this.registeredUsers })
+    this.http.post('http://localhost:8081/api/register/save',  newUser )
     .subscribe({
       next: response => console.log('Respuesta del backend:', response),
       error: err => console.error('Error enviando usuarios:', err)
