@@ -45,7 +45,6 @@ export class RegisterFormComponent {
   constructor(private router: Router, private http: HttpClient) {}
 
   register() {
-    
     this.showError = false;
 
     if (!this.accepted) {

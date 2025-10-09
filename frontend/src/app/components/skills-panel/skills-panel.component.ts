@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
   imports: [CommonModule]
 })
 export class SkillsPanelComponent {
+  @Input() isPublic: boolean = false; // true si es vista pública
+
   open = false;
   skills = ['Cantar', 'Bailar', 'Programar', 'Dibujar', 'Cocinar'];
 
