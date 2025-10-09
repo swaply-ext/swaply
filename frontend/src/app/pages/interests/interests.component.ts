@@ -1,72 +1,77 @@
 import { NgFor, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule, NgModel } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
 
 @Component({
-  selector: 'app-interests',
-  standalone: true,
-  imports: [FormsModule, CommonModule, HttpClientModule],
-  templateUrl: './interests.component.html',
-  styleUrls: ['./interests.component.css']
+  selector: 'app-interests',
+  standalone: true,
+  imports: [FormsModule, CommonModule, HttpClientModule],
+  templateUrl: './interests.component.html',
+  styleUrls: ['./interests.component.css']
 })
-export class InterestsComponent {
-  categories = [
-    {
-      name: 'DEPORTES',
-      id: 'sports',
-      subcategories: [
-        { name: 'FÚTBOL', id: 'football', selected: false },
-        { name: 'PÁDEL', id: 'padel', selected: false },
-        { name: 'BÁSQUET', id: 'basketball', selected: false },
-        { name: 'BOXEO', id: 'boxing', selected: false },
-        { name: 'VÓLEY', id: 'volleyball', selected: false }
-      ]
-    },
-    {
-      name: 'MÚSICA',
-      id: 'music',
-      subcategories: [
-        { name: 'GUITARRA', id: 'guitar', selected: false },
-        { name: 'PIANO', id: 'piano', selected: false },
-        { name: 'VIOLÍN', id: 'violin', selected: false },
-        { name: 'BATERÍA', id: 'drums', selected: false },
-        { name: 'SAXO', id: 'saxophone', selected: false }
-      ]
-    },
-    {
-      name: 'OCIO',
-      id: 'leisure',
-      subcategories: [
-        { name: 'COCINA', id: 'cooking', selected: false },
-        { name: 'DIBUJO Y PINTURA', id: 'drawing', selected: false },
-        { name: 'BAILE', id: 'dancing', selected: false },
-        { name: 'MANUALIDADES', id: 'crafts', selected: false },
-        { name: 'OCIO DIGITAL', id: 'digital', selected: false }
-      ]
-    }
-  ];
+export class InterestsComponent {
+  categories = [
+    {
+      name: 'DEPORTES',
+      id: 'sports',
+      subcategories: [
+        { name: 'FÚTBOL', id: 'football', selected: false },
+        { name: 'PÁDEL', id: 'padel', selected: false },
+        { name: 'BÁSQUET', id: 'basketball', selected: false },
+        { name: 'BOXEO', id: 'boxing', selected: false },
+        { name: 'VÓLEY', id: 'volleyball', selected: false }
+      ]
+    },
+    {
+      name: 'MÚSICA',
+      id: 'music',
+      subcategories: [
+        { name: 'GUITARRA', id: 'guitar', selected: false },
+        { name: 'PIANO', id: 'piano', selected: false },
+        { name: 'VIOLÍN', id: 'violin', selected: false },
+        { name: 'BATERÍA', id: 'drums', selected: false },
+        { name: 'SAXO', id: 'saxophone', selected: false }
+      ]
+    },
+    {
+      name: 'OCIO',
+      id: 'leisure',
+      subcategories: [
+        { name: 'COCINA', id: 'cooking', selected: false },
+        { name: 'DIBUJO Y PINTURA', id: 'drawing', selected: false },
+        { name: 'BAILE', id: 'dancing', selected: false },
+        { name: 'MANUALIDADES', id: 'crafts', selected: false },
+        { name: 'OCIO DIGITAL', id: 'digital', selected: false }
+      ]
+    }
+  ];
 
-  selectedCategory: string | null = null;
-    
-  constructor(private http: HttpClient) {}    
-  
-  selectCategory(categoryId: string): void {
-    this.selectedCategory = categoryId;
-  }
-  
-  submitInterests(): void {
-    const selectedInterests = this.categories
-      .flatMap(category => category.subcategories)
-      .filter(subcategory => subcategory.selected)
-      .map(subcategory => subcategory.name);
-    
-    this.http.post('http://localhost:8081/api/interests/save', { interests: selectedInterests })
-    .subscribe({
-        next:response => console.log('Respuesta del backend:', response),
+  selectedCategory: string | null = null;
+
+  constructor(private http: HttpClient) {}
+
+  selectCategory(categoryId: string): void {
+    this.selectedCategory = categoryId;
+  }
+
+  getSelectedSubcategories() {
+    const selected = this.categories.find(cat => cat.id === this.selectedCategory);
+    return selected ? selected.subcategories : [];
+  }
+
+  submitInterests(): void {
+    const selectedInterests = this.categories
+      .flatMap(category => category.subcategories)
+      .filter(subcategory => subcategory.selected)
+      .map(subcategory => subcategory.name);
+
+    this.http.post('http://localhost:8081/api/interests/save', { interests: selectedInterests })
+      .subscribe({
+        next: response => console.log('Respuesta del backend:', response),
         error: err => console.error('Error enviando intereses:', err)
-    });
-  }
+      });
+  }
 }
