@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -11,7 +11,8 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './confirm-email-input.component.html'
 })
 export class ConfirmEmailInputComponent {
-  confirmEmail = '';
+  @Input() confirmEmail = '';
+  @Input() hasError: boolean = false;
   @Output() confirmEmailChange = new EventEmitter<string>();
 }
 

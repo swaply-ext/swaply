@@ -1,12 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-profile-info',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './profile-info.component.html',
-  styleUrl: './profile-info.component.css'
+  styleUrls: ['./profile-info.component.css']
 })
 export class ProfileInfoComponent {
+@Input() isPublic: boolean = false; // true si es vista pública
+
   fullName = 'Juan Pérez';
   username = 'juanperez123';
   ubicacion = 'Madrid, España';

@@ -1,5 +1,5 @@
 .interests-panel-container {
-  max-width: 600px;
+  max-width: 500px;
   margin: 2rem auto;
   padding: 1rem;
   border: 1px solid #315465;
@@ -13,6 +13,7 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 1rem;
+  gap: 1rem;
 }
 
 .header h1 {
@@ -61,4 +62,15 @@
   text-align: center;
   font-weight: 500;
   color: #000;
+  border: none;
+}
+
+.header {
+  position: relative;
+}
+
+.header h1 {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }

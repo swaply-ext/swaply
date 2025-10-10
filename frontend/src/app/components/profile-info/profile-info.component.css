@@ -1,93 +1,96 @@
 .profile-card {
-  display: flex;
-  align-items: flex-start;
-  gap: 3.5rem;
-
-  color: #d9f7e7;
+  width: 90vw;
+  max-width: 2000px;
+  min-width: 300px;
+  margin: 0 auto;
+  box-sizing: border-box;
   padding: 1.5rem 2rem;
   border-radius: 12px;
-
-  width: 100%;
-  max-width: 1000px;
-  top: 170px;
-  font-family: "Quicksand";
+  color: #d9f7e7;
+  font-family: "Quicksand", sans-serif;
+  display: flex;
+  align-items: flex-start;
+  gap: 3rem;
   position: relative;
 }
-
+ 
 .avatar {
   width: 100px;
   height: 100px;
   border-radius: 50%;
   background-color: #ccc;
+  flex-shrink: 0;
 }
-
+ 
 .info {
   flex: 1;
   margin-top: 0.2rem;
 }
-
+ 
 .name {
   color: #3CB57C;
   font-size: 1.9rem;
   margin: 0;
   font-weight: bold;
+  white-space: nowrap;  /* fuerza que esté en una línea */
+  overflow: hidden;     /* recorta si es demasiado largo */
+  text-overflow: ellipsis; /* añade "..." si no cabe */
 }
-
+ 
 .username {
   color: #3CB57C;
   font-size: 0.95rem;
   margin: 0.2rem 0;
   font-weight: bold;
 }
-
+ 
 .location {
   font-size: 1rem;
-  opacity: 0.8;
+  color: #ffffff;
 }
-
+ 
 .actions {
-  position: absolute;
-  top: 1.3rem;
-  right: 1.5rem;
   display: flex;
   gap: 0.8rem;
 }
-
+ 
 .actions i {
-  color: #3CB57C;
   font-size: 1.2rem;
   cursor: pointer;
   transition: transform 0.2s ease, color 0.2s ease;
 }
-
+ 
 .actions i:hover {
   transform: scale(1.1);
-  color: #6affb9;
 }
-
+ 
 .description {
-  position: absolute;
-  bottom: 30px;
-  left: 750px;
-  width: 50%;
-  right: 2rem;
+  width: 100%;
+  margin-top: 2rem; /* más espacio para escritorio */
   font-size: 1rem;
-  line-height: 1.4;
-  opacity: 0.9;
+  color: #ffffff;
 }
+ 
 .username-row {
   display: flex;
+  justify-content: space-between; /* username a la izquierda, iconos a la derecha */
   align-items: center;
-  gap: 1.5rem; 
+  gap: 1rem;
   margin: 0.2rem 0;
+  flex-wrap: nowrap; /* evitar que los iconos bajen en escritorio */
 }
-
+ 
 .username-row .username {
   margin: 0;
-  color: #3CB57C;
   font-size: 1.15rem;
+  flex-shrink: 0; /* que no se encoja */
 }
-
+ 
+.username-row .icon-group {
+  display: flex;
+  gap: 1.5rem; /* separación entre iconos */
+}
+ 
 .username-row i,
 .username-row .material-icons {
   color: #3CB57C;
@@ -95,9 +98,105 @@
   cursor: pointer;
   transition: transform 0.2s ease, color 0.2s ease;
 }
-
+ 
 .username-row i:hover,
 .username-row .material-icons:hover {
   transform: scale(1.1);
   color: #6affb9;
+}
+ 
+/* Media Queries */
+@media (max-width: 1024px) {
+  .profile-card {
+    gap: 1.5rem;
+    padding: 1rem 1.5rem;
+  }
+ 
+  .description {
+    margin-top: 1.5rem;
+    font-size: 0.95rem;
+  }
+ 
+  .name {
+    font-size: 1.6rem;
+  }
+ 
+  .username-row .username {
+    font-size: 1rem;
+  }
+}
+ 
+@media (max-width: 768px) {
+  .profile-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+ 
+  .avatar {
+    width: 80px;
+    height: 80px;
+  }
+ 
+  .info {
+    margin-top: 1rem;
+  }
+ 
+  .actions {
+    justify-content: center;
+    margin-top: 1rem;
+  }
+ 
+  .description {
+    margin-top: 1.5rem;
+  }
+ 
+  .username-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+ 
+  .username-row .icon-group {
+    justify-content: center;
+  }
+}
+ 
+@media (max-width: 480px) {
+  .avatar {
+    width: 70px;
+    height: 70px;
+  }
+ 
+  .name {
+    font-size: 1.4rem;
+  }
+ 
+  .username-row .username {
+    font-size: 0.9rem;
+  }
+ 
+  .description {
+    font-size: 0.85rem;
+  }
+ 
+  .actions i {
+    font-size: 1rem;
+  }
+}
+
+.icon-group.public {
+  margin-left: 50px; 
+}
+
+.icon-group.public span {
+  margin-left: 1px;
+}
+
+.icon-group:not(.public) {
+  margin-left: 50px; 
+}
+
+.icon-group:not(.public) .material-icons {
+  margin-left: 3px; 
 }
