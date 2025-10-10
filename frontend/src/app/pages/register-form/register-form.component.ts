@@ -41,7 +41,7 @@ export class RegisterFormComponent {
   showError = false;
   hasErrorAll = false;
 
-  registeredUsers: User[] = [];
+
 
   constructor(private router: Router, private http: HttpClient, private registerDataService: RegisterDataService) {}
 
