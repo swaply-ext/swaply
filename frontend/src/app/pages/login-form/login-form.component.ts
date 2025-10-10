@@ -7,13 +7,15 @@ import { LoginButtonComponent } from '../../components/login-button/login-button
 import { RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
-
+import { ActionButtonsComponent } from '../../components/action-buttons/action-buttons.component';
+import { LoginRegisterButtonsComponent } from '../../components/login-register-buttons/login-register-buttons.component';
+ 
 interface User {
   email: string;
   password: string;
-  acceptedTerms: boolean;
+ 
 }
-
+ 
 @Component({
   selector: 'login-form',
   standalone: true,
@@ -21,8 +23,8 @@ interface User {
     EmailInputComponent,
     PasswordInputComponent,
     TermsCheckboxComponent,
-    LoginButtonComponent,
     RouterLink,
+    LoginRegisterButtonsComponent,
     HttpClientModule
   ],
   templateUrl: './login-form.component.html',
@@ -32,41 +34,38 @@ export class LoginFormComponent {
   email = '';
   password = '';
   accepted = false;
-
-  registeredUsers: User[] = [
-    { email: 'test@example.com', password: '123456', acceptedTerms: true }
-  ];
-
-  constructor(private router: Router, private http: HttpClient) {}
-
+ 
+ 
+  constructor(private router: Router, private http: HttpClient) { }
+ 
   login() {
-    if (!this.accepted) { 
-      alert('Debes aceptar los términos'); 
-      return; 
-    }
-    if (!this.email || !this.password) { 
-      alert('Debes rellenar todos los campos'); 
-      return; 
-    }
-
-    const foundUser = this.registeredUsers.find(
-      user => user.email === this.email && user.password === this.password
-    );
-
-    if (!foundUser) {
-      // 🔹 Si no encuentra usuario, redirige al error
-      this.router.navigate(['/error-auth']);
+    if (!this.accepted) {
+      alert('Debes aceptar los términos');
       return;
     }
-
-    console.log('Usuario logueado:', foundUser);
-
-    this.http.post('http://localhost:8081/api/login/save', { user: foundUser })
-     .subscribe({
-      next: response => console.log('Respuesta del backend:', response),
-      error: err => console.error('Error enviando login:', err)
-    });
-    
+    if (!this.email || !this.password) {
+      alert('Debes rellenar todos los campos');
+      return;
+    }
+ 
+    const newUser: User = {
+      email: this.email,
+      password: this.password
+    };
+ 
+ 
+    console.log('Usuario logueado:', newUser);
+ 
+    this.http.post('http://localhost:8081/api/login/check', newUser )
+      .subscribe({
+        next: response => console.log('Respuesta del backend:', response),
+        error: err => console.error('Error enviando login:', err)
+      });
+ 
     this.router.navigate(['/']);
   }
+
+  register() {
+  this.router.navigate(['/register']);
+}
 }
