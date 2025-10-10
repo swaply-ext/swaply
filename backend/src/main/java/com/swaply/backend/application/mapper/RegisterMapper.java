@@ -16,7 +16,7 @@ public class RegisterMapper {
         entity.setId(dto.getId());
         entity.setEmail(dto.getEmail());
         entity.setType("user");
-        entity.setPassword(dto.getPassword());
+        entity.setPasswordHash(dto.getPasswordHash());
         entity.setName(dto.getName());
         entity.setSurname(dto.getSurname());
         entity.setBirthDate(dto.getBirthDate());
@@ -31,7 +31,7 @@ public class RegisterMapper {
         dto.setId(entity.getId());
         dto.setEmail(entity.getEmail());
         dto.setType(entity.getType());
-        dto.setPassword(entity.getPassword());
+        dto.setPasswordHash(entity.getPasswordHash());
         dto.setName(entity.getName());
         dto.setSurname(entity.getSurname());
         dto.setBirthDate(entity.getBirthDate());

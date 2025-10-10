@@ -23,7 +23,7 @@ public class Register {
     private String type;
 
     private String email;
-    private String password;
+    private String passwordHash;
     private String name;
     private String surname;
     private String username;
@@ -56,12 +56,12 @@ public class Register {
       this.email = email;
     }
 
-    public String getPassword() {
-      return this.password;
+    public String getPasswordHash() {
+      return this.passwordHash;
     }
 
-    public void setPassword(String password) {
-      this.password = password;
+    public void setPasswordHash(String passwordHash) {
+      this.passwordHash = passwordHash;
     }
 
     public String getName() {

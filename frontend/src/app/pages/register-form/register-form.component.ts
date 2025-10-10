@@ -11,7 +11,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 interface User {
   email: string;
-  password: string;
+  passwordHash: string;
 }
 
 @Component({
@@ -74,7 +74,7 @@ constructor(private router: Router, private http: HttpClient) {}
 
     const newUser: User = {
       email: this.email,
-      password: this.password,
+      passwordHash: this.password,
     };
 
     console.log('Usuarios registrados:', newUser);
