@@ -16,7 +16,7 @@ public class LoginController {
     }
 
     @PostMapping("/check")
-    public ResponseEntity<ResponseEntity<Boolean>> guardarRegister(@RequestBody LoginDTO dto) {
+    public ResponseEntity<ResponseEntity<Boolean>> checkLogin(@RequestBody LoginDTO dto) {
         return ResponseEntity.ok(service.login(dto));
     }
 
