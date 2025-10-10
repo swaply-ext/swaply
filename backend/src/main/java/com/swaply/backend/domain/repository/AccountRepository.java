@@ -1,10 +1,10 @@
 package com.swaply.backend.domain.repository;
 
 import com.azure.spring.data.cosmos.repository.CosmosRepository;
-import com.swaply.backend.domain.model.User;
+import com.swaply.backend.domain.model.Register;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends CosmosRepository<User, String> {
-    User findByEmail(String email);
+public interface AccountRepository extends CosmosRepository<Register, String> {
+    Register findByEmail(String email);
 }
