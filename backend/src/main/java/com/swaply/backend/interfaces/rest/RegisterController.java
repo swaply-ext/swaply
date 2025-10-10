@@ -28,4 +28,10 @@ public class RegisterController {
     //     return ResponseEntity.ok(service.register(dto, request));
     // }
 
+
+    @PostMapping("/email")
+    public ResponseEntity generateCode(@RequestBody String email) {
+        return ResponseEntity.ok(service.code(email));
+    }
+
 }

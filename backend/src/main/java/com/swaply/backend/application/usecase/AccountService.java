@@ -14,6 +14,7 @@ import com.swaply.backend.domain.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -30,19 +31,27 @@ public class AccountService /* implements UserRepository */ {
 
 
 
-    public RegisterDTO register(RegisterDTO dto) {
+    public ResponseEntity<Boolean> register(RegisterDTO dto) {
         Register entity = RegisterMapper.toEntity(dto);
         entity.setId(UUID.randomUUID().toString());
-        entity.setEmail(dto.getEmail());
-        entity.setPassword(dto.getPassword());
         System.out.println("Recibido email: " + entity.getEmail());
-
+        
         Register saved = cosmosTemplate.upsertAndReturnEntity(
-        cosmosTemplate.getContainerName(Register.class),
-        entity
-    );
-    return RegisterMapper.toDTO(saved);
-}
+            cosmosTemplate.getContainerName(Register.class),
+            entity
+        );
+            return ResponseEntity.ok(true);
+    }
+
+
+    public ResponseEntity<Integer> code(String email){
+        // if (email in){
+        //     return ResponseEntity.ok(0);
+        // }
+        Random random = new Random();
+        int codigo = 100000 + random.nextInt(900000); // Asegura que sea de 6 dígitos
+        return ResponseEntity.ok(codigo);
+    }
 
 
     public ResponseEntity<Boolean> login(LoginDTO dto) {
