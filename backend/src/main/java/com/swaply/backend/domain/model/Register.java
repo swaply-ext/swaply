@@ -4,6 +4,9 @@ package com.swaply.backend.domain.model;
 import com.azure.spring.data.cosmos.core.mapping.Container;
 import com.azure.spring.data.cosmos.core.mapping.PartitionKey;
 import lombok.*;
+
+import java.util.Date;
+
 import org.springframework.data.annotation.Id;
 
 @Data
@@ -21,8 +24,15 @@ public class Register {
 
     private String email;
     private String password;
+    private String name;
+    private String surname;
+    private String username;
+    private Date birthDate;
+    private int phone;
+    private int postalCode;
+    private String location;
 
-    public String getId() {
+          public String getId() {
       return this.id;
     }
 
@@ -38,7 +48,7 @@ public class Register {
       this.type = type;
     }
 
-    public String getEmail() {
+        public String getEmail() {
       return this.email;
     }
 
@@ -54,4 +64,60 @@ public class Register {
       this.password = password;
     }
 
+    public String getName() {
+      return this.name;
+    }
+
+    public void setName(String name) {
+      this.name = name;
+    }
+
+    public String getSurname() {
+      return this.surname;
+    }
+
+    public void setSurname(String surname) {
+      this.surname = surname;
+    }
+
+    public String getUsername() {
+      return this.username;
+    }
+
+    public void setUsername(String username) {
+      this.username = username;
+    }
+
+    public Date getBirthDate() {
+      return this.birthDate;
+    }
+
+    public void setBirthDate(Date birthDate) {
+      this.birthDate = birthDate;
+    }
+
+    public int getPhone() {
+      return this.phone;
+    }
+
+    public void setPhone(int phone) {
+      this.phone = phone;
+    }
+
+    public int getPostalCode() {
+      return this.postalCode;
+    }
+
+    public void setPostalCode(int postalCode) {
+      this.postalCode = postalCode;
+    }
+
+    public String getLocation() {
+      return this.location;
+    }
+
+    public void setLocation(String location) {
+      this.location = location;
+    }
+    
 }

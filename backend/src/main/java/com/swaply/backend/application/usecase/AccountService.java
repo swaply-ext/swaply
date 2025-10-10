@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Random;
 import java.util.UUID;
 
 @Service
@@ -37,10 +38,8 @@ public class AccountService /* implements UserRepository */ {
     public RegisterDTO register(RegisterDTO dto) {
         Register entity = RegisterMapper.toEntity(dto);
         entity.setId(UUID.randomUUID().toString());
-        entity.setEmail(dto.getEmail());
-        entity.setPassword(dto.getPassword());
         System.out.println("Recibido email: " + entity.getEmail());
-
+        
         Register saved = cosmosTemplate.upsertAndReturnEntity(
                 cosmosTemplate.getContainerName(Register.class),
                 entity);
