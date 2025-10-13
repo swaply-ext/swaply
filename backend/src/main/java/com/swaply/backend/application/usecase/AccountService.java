@@ -65,6 +65,7 @@ public class AccountService /* implements UserRepository */ {
         String formPassword = entity.getPassword();
         PasswordService passwordService = new PasswordService();
 
+
         try {
             UserDTO user = userService.getUserByEmail(formEmail);
 
@@ -83,6 +84,16 @@ public class AccountService /* implements UserRepository */ {
             return ResponseEntity.ok(false);
         }
 
+    }
+
+
+    public boolean isEmailRegistered(String email) {
+        try {
+            userService.getUserByEmail(email);
+        } catch (NullPointerException e) {
+            return false;
+        }
+        return true;
     }
 
 }
