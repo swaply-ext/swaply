@@ -13,6 +13,7 @@ import com.swaply.backend.domain.repository.AccountRepository;
 import com.swaply.backend.domain.repository.UserRepository;
 import com.swaply.backend.interfaces.rest.UserController;
 
+import org.apache.qpid.proton.codec.messaging.SourceType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -47,6 +48,8 @@ public class AccountService /* implements UserRepository */ {
     public RegisterDTO register(RegisterDTO dto) {
         Register entity = RegisterMapper.toEntity(dto);
         entity.setId(UUID.randomUUID().toString());
+        String hash = new PasswordService().hash(entity.getPasswordHash());
+        entity.setPasswordHash(hash);
         System.out.println("Recibido email: " + entity.getEmail());
 
         Register saved = cosmosTemplate.upsertAndReturnEntity(
@@ -59,17 +62,20 @@ public class AccountService /* implements UserRepository */ {
         Login entity = LoginMapper.toEntity(dto);
         String formEmail = entity.getEmail();
         String formPassword = entity.getPassword();
+        PasswordService passwordService = new PasswordService();
 
         try {
             UserDTO user = userService.getUserByEmail(formEmail);
 
-            if (!user.getPasswordHash().equals(formPassword)) {
-                System.out.println("Contraseña incorrecta");
-                return ResponseEntity.ok(false);
+            String hash = user.getPasswordHash();
+
+            if (passwordService.match(formPassword, hash)) {
+                System.out.println("Login correcto");
+                return ResponseEntity.ok(true);
             }
 
-            System.out.println("Login correcto");
-            return ResponseEntity.ok(true);
+            System.out.println("Contraseña incorrecta");
+            return ResponseEntity.ok(false);
 
         } catch (NullPointerException e) {
             System.out.println("Correo no registrado");
