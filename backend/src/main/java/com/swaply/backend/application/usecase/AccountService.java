@@ -35,20 +35,20 @@ public class AccountService /* implements UserRepository */ {
 
     }
 
-     public ResponseEntity<Integer> code(String email){
+    public ResponseEntity<Integer> code(String email) {
         // if (email in){
-        //     return ResponseEntity.ok(0);
+        // return ResponseEntity.ok(0);
         // }
         Random random = new Random();
         int codigo = 100000 + random.nextInt(900000); // Asegura que sea de 6 dígitos
         return ResponseEntity.ok(codigo);
     }
-    
+
     public RegisterDTO register(RegisterDTO dto) {
         Register entity = RegisterMapper.toEntity(dto);
         entity.setId(UUID.randomUUID().toString());
         System.out.println("Recibido email: " + entity.getEmail());
-        
+
         Register saved = cosmosTemplate.upsertAndReturnEntity(
                 cosmosTemplate.getContainerName(Register.class),
                 entity);
@@ -76,7 +76,6 @@ public class AccountService /* implements UserRepository */ {
             return ResponseEntity.ok(false);
         }
 
-        
     }
 
 }
