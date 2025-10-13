@@ -1,14 +1,14 @@
 # Proyecto Fullstack para Inetum 
 
-# Guía de Estilo de Programación - Proyecto Spring Boot
+# Guía de Estilo de Programación - Proyecto Swaply
 
-Este documento define las convenciones y buenas prácticas que debemos seguir al programar en la aplicación **Spring Boot** para mantener un código limpio, consistente y fácil de mantener.
+Este documento define las convenciones y buenas prácticas que debemos seguir al programar en la aplicación **Swaply** para mantener un código limpio, consistente y fácil de mantener.
 
 ---
 
 ## 1. Stack Tecnológico
-- **Lenguaje:** Java 17+  
-- **Framework principal:** Spring Boot  
+- **Lenguaje:** Java 17, Typescript, HTML, CSS  
+- **Frameworks principales:** Spring Boot y Angular 19 
 - **Módulos usados:**  
 - **Arquitectura:** MVC (Modelo - Vista - Controlador)  
 
@@ -33,14 +33,13 @@ package com.example.demo.controller;
 
 ---
 
-## 3. Estándares de Código
-- **Indentación:** 4 espacios (no tabuladores).  
-- **Longitud máxima de línea:** 120 caracteres.  
+## 3. Estándares de Código 
 - **Nombres:**
   - Clases → `PascalCase` (ej. `CancionesController`)  
   - Métodos → `camelCase` (ej. `listarCancion()`)  
   - Variables → `camelCase` (ej. `cancionService`)  
-  - Constantes → `MAYUSCULAS_CON_GUIONES` (ej. `MAX_INTENTOS`)  
+  - Constantes → `MAYUSCULAS_CON_GUIONES` (ej. `MAX_INTENTOS`) 
+  - Componentes de Angular → `minusculas-con-guiones` (ej. `login-form`) 
 - **Anotaciones:** deben ir en líneas separadas sobre el método o clase.  
 - **Comentarios:** solo para explicar lógica compleja.  
 
@@ -67,12 +66,6 @@ Incorrecto:
   - `feature/*` → nuevas funcionalidades  
   - `bugfix/*` → correcciones  
   - `hotfix/*` → arreglos urgentes en producción  
-
-- **Commits (Conventional Commits):**
-  - `feat: agregar CRUD de canciones`
-  - `fix: corregir error en validación de ID`
-  - `refactor: mejorar nombres de métodos en CancionesController`
-  - `docs: actualizar guía de estilo`
 
 ---
 
