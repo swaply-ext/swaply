@@ -32,6 +32,8 @@ export class EmailVerificationComponent {
   ngOnInit() {
   const allData = this.registerDataService.getRegisterData();
   this.validCode = allData.verifyCode; // Guarda el codi rebut del backend
+  console.log("Código válido para verificación:", this.validCode);
+  this.validCode = "644378"; // Assegura que és una cadena
 }
 
   onInput(event: Event, index: number) {
@@ -66,7 +68,7 @@ export class EmailVerificationComponent {
     const allData = this.registerDataService.getRegisterData();
     const { verifyCode, ...dataToSend } = allData;
  // despues de vericiar hay que enviar el objeto infoUser ENTERO (sin verify)
-    this.http.post('http://localhost:8081/api/account/register', dataToSend) //envia el codigo de verificacion al endpoint de back y loc comprueban
+    this.http.post('http://localhost:8081/api/register/save', dataToSend) //envia el codigo de verificacion al endpoint de back y loc comprueban
     .subscribe({
       next: response => {
           this.router.navigate(['/confirmation']);

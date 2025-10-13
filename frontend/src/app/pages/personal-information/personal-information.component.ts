@@ -95,11 +95,14 @@ export class PersonalInformationComponent {
     this.registerDataService.setRegisterData(newUserData);
 
     const allData = this.registerDataService.getRegisterData();
-this.http.post<{ code: string }>('http://localhost:8081/api/account/email', allData.email )
+this.http.post<{ code: string }>('http://localhost:8081/api/register/email', allData.email )
   .subscribe({
     next: response => {
       // Guarda el codi de verificació rebut
-      this.registerDataService.setRegisterData({ verifyCode: response.code });
+      console.log("response: " + response);
+      console.log("response code: " + response.code);
+
+      this.registerDataService.setRegisterData({ verifyCode: response });
 
       // Ara tens al servei: email, password, dades personals i verifyCode
       // Pots navegar a la pàgina de verificació

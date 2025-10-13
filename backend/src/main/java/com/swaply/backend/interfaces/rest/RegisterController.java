@@ -30,8 +30,8 @@ public class RegisterController {
 
 
     @PostMapping("/email")
-    public ResponseEntity generateCode(@RequestBody String email) {
-        return ResponseEntity.ok(service.code(email));
+    public ResponseEntity<String> generateCode(@RequestBody String email) {
+        return service.code(email);
     }
 
 }
