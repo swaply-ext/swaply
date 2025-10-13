@@ -1,11 +1,11 @@
 package com.swaply.backend.interfaces.rest;
 
 import com.swaply.backend.application.usecase.UserService;
+import com.swaply.backend.application.dto.LoginDTO;
 import com.swaply.backend.application.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
-
 
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +15,7 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService service;
+
     public UserController(@Autowired UserService service) {
         this.service = service;
     }
@@ -29,18 +30,25 @@ public class UserController {
         return ResponseEntity.ok(service.getAllUsers());
     }
 
+    @GetMapping("/getByEmail/{email}")
+    public ResponseEntity<UserDTO> getByEmail(@PathVariable String email) {
+        return ResponseEntity.ok(service.getUserByEmail(email));
+    }
+
+
     // @GetMapping("/{id}")
     // public Optional<UserDTO> obtenerPorId(@PathVariable String id) {
-    //     return service.obtenerPorId(id);
+    // return service.obtenerPorId(id);
     // }
 
     // @PutMapping("/{id}")
-    // public UserDTO actualizarUsuario(@PathVariable String id, @RequestBody UserDTO userActualizado) {
-    //     return service.actualizarUsuario(id, userActualizado);
+    // public UserDTO actualizarUsuario(@PathVariable String id, @RequestBody
+    // UserDTO userActualizado) {
+    // return service.actualizarUsuario(id, userActualizado);
     // }
 
     // @DeleteMapping("/{id}")
     // public void eliminarUsuario(@PathVariable String id) {
-    //     service.eliminarUsuario(id);
+    // service.eliminarUsuario(id);
     // }
 }

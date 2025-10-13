@@ -14,7 +14,7 @@ public class SkillsController {
         public void setSkills(List<String> skills) { this.skills = skills; }
     }
 
-    @PostMapping("/guardar")
+    @PostMapping("/save")
     public String guardarSkills(@RequestBody SkillsRequest request) {
         System.out.println("Skills recibidas!");
         System.out.println(request.getSkills()); 
