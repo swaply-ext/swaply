@@ -13,7 +13,7 @@ public class User {
     private String id;
     
     @PartitionKey
-    private String type = "User";
+    private String type = "user";
     
     private String username;
     private String fullName;
