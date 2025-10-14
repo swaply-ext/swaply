@@ -13,5 +13,38 @@ import { ErrorAuthComponent } from '../error-auth/error-auth.component';
 })
 export class CompleteRegistrationComponent {
 
-  page = 1;
+  page = 2;
+  email = '';
+  password = '';
+  name = '';
+  surname = '';
+  username = '';
+  birthDate: Date | undefined;
+  address = '';
+  phone = 0;
+  postalCode = 0;
+
+
+
+
+
+  saveData(data: any){
+    this.email= data.email;
+    this.password= data.password;
+    this.page=2;
+    console.log(this.password);
+  }
+
+   savePersonal(data: any){
+    this.name = data.name;
+    this.surname = data.surname;
+    this.username = data.username;
+    this.birthDate= data.birthDate;
+    this.address = data.address;
+    this.phone = data.phone;
+    this.postalCode = data.postalCode;
+    this.page=3;
+    console.log(this.password);
+  }
+
 }

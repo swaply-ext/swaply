@@ -1,6 +1,6 @@
 <div [ngSwitch]="page">
-<app-register-form *ngSwitchCase="1"></app-register-form>
-<app-personal-information *ngSwitchCase="2"></app-personal-information> 
+<app-register-form *ngSwitchCase="1" (registerData)="saveData($event)"></app-register-form>
+<app-personal-information *ngSwitchCase="2" (registerPersonal)="saveData($event)"></app-personal-information> 
 <app-email-verification *ngSwitchCase="3"></app-email-verification>
 <app-error-auth *ngSwitchDefault=""></app-error-auth> <!-- provisional -->
 </div>

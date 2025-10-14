@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { NextButtonComponent } from '../../components/next-button/next-button.component';
 import { NameInputComponent } from "../../components/name-input/name-input.component";
@@ -53,6 +53,9 @@ export class PersonalInformationComponent {
 
   constructor(private router: Router, private http: HttpClient) {}
 
+  //Creación evento
+  @Output() registerPersonal = new EventEmitter<any>();
+
    registerData() {
     if (!this.name || this.validateName(this.name)) { alert('Debes introducir un nombre válido'); return; }
 
@@ -68,8 +71,20 @@ export class PersonalInformationComponent {
 
     if (!this.address || this.validateAddress(this.address)) { alert('Debes introducir una dirección válida'); return; }
     
+    //Enviar datos a padre
+    const data = {
+      name: this.name,
+      surname: this.surname,
+      username: this.username,
+      birthDate: this.birthDate,
+      phone: this.phone,
+      postalCode: this.postalCode,
+      address: this.address
+    };
 
+    this.registerPersonal.emit(data);
 
+    /*
     const newUserData: UserData = {
       name: this.name,
       surname: this.surname,
@@ -93,6 +108,7 @@ export class PersonalInformationComponent {
 
 
     this.router.navigateByUrl('/verify');
+    */
   }
 
   private validateName(name: string): boolean {

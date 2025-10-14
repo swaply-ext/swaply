@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { EmailInputComponent } from '../../components/email-input/email-input.component';
@@ -40,9 +40,11 @@ export class RegisterFormComponent {
   showError = false;
   hasErrorAll = false;
 
-  registeredUsers: User[] = [];
 
   constructor(private router: Router, private http: HttpClient) {}
+
+  //Creación evento
+  @Output() registerData = new EventEmitter<any>();
 
   register() {
     this.showError = false;
@@ -74,21 +76,32 @@ export class RegisterFormComponent {
       return;
     }
 
+    //Enviar datos a padre
+    const data = {
+      email: this.email,
+      password: this.password
+    };
+
+    this.registerData.emit(data);
+
+/*
     const newUser: User = {
       email: this.email,
       password: this.password,
       acceptedTerms: this.accepted
     };
 
-    this.registeredUsers.push(newUser);
 
-    this.http.post('http://localhost:8081/api/register/save', { users: this.registeredUsers })
+    this.http.post('http://localhost:8081/api/register/save', newUser)
       .subscribe({
         next: response => console.log('Respuesta del backend:', response),
         error: err => console.error('Error enviando usuarios:', err)
       });
 
     this.router.navigateByUrl('/verify');
+
+*/
+
   }
 
   private validateEmail(email: string): boolean {
