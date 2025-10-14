@@ -24,9 +24,14 @@ public class AccountController {
         return ResponseEntity.ok(service.register(dto));
     }
 
-    @PostMapping("/verifyCode")
-    public ResponseEntity<String> verifyCode(@RequestBody String email) {
-        return service.code(email);
+    @PostMapping("/recoveryPassword")
+    public ResponseEntity<String> recoveryPassword(@RequestBody String email) {
+        return service.recoveryPassword(email);
+    }
+
+    @PostMapping("/mailVerify")
+    public ResponseEntity<String> mailVerify(@RequestBody String email) {
+        return service.mailVerify(email);
     }
 
     @PostMapping("/login")

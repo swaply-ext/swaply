@@ -32,13 +32,27 @@ public class AccountService /* implements UserRepository */ {
 
     }
 
-    public ResponseEntity<String> code(String email) {
+    public ResponseEntity<String> mailVerify(String email) {
 
-        // if (isEmailRegistered(email) == true) {
-        //     System.out.println("Correo ya registrado");
-        //     return ResponseEntity.ok("0");
+        if (isEmailRegistered(email)) {
+        System.out.println("Correo ya registrado");
+        return ResponseEntity.ok("0");
 
-        // }
+        }
+
+        Random random = new Random();
+        int codeInt = 100000 + random.nextInt(900000); // Asegura que sea de 6 dígitos
+        String codeString = Integer.toString(codeInt);
+
+        return ResponseEntity.ok(codeString);
+    }
+
+    public ResponseEntity<String> recoveryPassword(String email) {
+
+        if (!isEmailRegistered(email)) {
+        System.out.println("Correo no registrado");
+        return ResponseEntity.ok("0");
+        }
 
         Random random = new Random();
         int codeInt = 100000 + random.nextInt(900000); // Asegura que sea de 6 dígitos
