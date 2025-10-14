@@ -28,7 +28,7 @@ public class UserService {
     }
 
     public List<UserDTO> getAllUsers() {
-        return userRepo.findByType("User")
+        return userRepo.findByType("user")
                 .stream()
                 .map(userMapper::entityToDTO)
                 .collect(Collectors.toList());
