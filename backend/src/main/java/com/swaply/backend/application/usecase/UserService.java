@@ -1,4 +1,5 @@
 package com.swaply.backend.application.usecase;
+
 import com.azure.spring.data.cosmos.core.CosmosTemplate;
 import com.swaply.backend.application.dto.UserDTO;
 import com.swaply.backend.application.mapper.UserMapper;
@@ -28,7 +29,7 @@ public class UserService {
     }
 
     public List<UserDTO> getAllUsers() {
-        return userRepo.findByType("User")
+        return userRepo.findByType("user")
                 .stream()
                 .map(userMapper::entityToDTO)
                 .collect(Collectors.toList());
@@ -46,4 +47,73 @@ public class UserService {
             throw new RuntimeException("User not found");
         }
     }
+
+    public UserDTO updateUser(String id, UserDTO dto) {
+        User existingUser = userRepo.findById(id).orElse(null);
+
+        if (existingUser == null) {
+
+            throw new RuntimeException("User not found!");
+
+        }
+
+        if (!existingUser.getUsername().equals(dto.getUsername())) {
+            existingUser.setUsername(dto.getUsername());
+        }
+
+        if (!existingUser.getFullName().equals(dto.getFullName())) {
+            existingUser.setFullName(dto.getFullName());
+        }
+
+        if (!existingUser.getEmail().equals(dto.getEmail())) {
+            existingUser.setEmail(dto.getEmail());
+        }
+
+        if (!existingUser.getPasswordHash().equals(dto.getPasswordHash())) {
+            existingUser.setPasswordHash(dto.getPasswordHash());
+        }
+
+        if (!existingUser.getLocation().equals(dto.getLocation())) {
+            existingUser.setLocation(dto.getLocation());
+        }
+
+        if (!existingUser.getGender().equals(dto.getGender())) {
+            existingUser.setGender(dto.getGender());
+        }
+
+        if (existingUser.getAge() != dto.getAge()) {
+            existingUser.setAge(dto.getAge());
+        }
+
+        if (!existingUser.getDescription().equals(dto.getDescription())) {
+            existingUser.setDescription((dto.getDescription()));
+        }
+
+        if (!existingUser.getDescription().equals(dto.getDescription())) {
+            existingUser.setDescription((dto.getDescription()));
+        }
+
+        if (!existingUser.getProfilePhotoUrl().equals(dto.getProfilePhotoUrl())) {
+            existingUser.setProfilePhotoUrl((dto.getProfilePhotoUrl()));
+        }
+
+        if (existingUser.isVerified() != dto.isVerified()) {
+            existingUser.setVerified(dto.isVerified());
+        }
+
+        if (existingUser.isPremium() != dto.isPremium()) {
+            existingUser.setPremium(dto.isPremium());
+        }
+
+        if (existingUser.isModerator() != dto.isModerator()) {
+            existingUser.setModerator(dto.isModerator());
+
+        }
+
+
+        User updatedUser = userRepo.save(existingUser);
+        return userMapper.entityToDTO(updatedUser);
+
+    }
+
 }
