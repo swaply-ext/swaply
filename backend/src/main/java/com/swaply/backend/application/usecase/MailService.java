@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 
 import com.swaply.backend.infrastructure.components.MailComponent;
 
+import jakarta.mail.internet.InternetAddress;
+
 @Service
 public class MailService {
 
