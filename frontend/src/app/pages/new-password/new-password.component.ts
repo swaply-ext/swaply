@@ -74,7 +74,7 @@ export class NewPasswordComponent {
     console.log('Historial de contraseñas:', this.passwordHistory);
     console.log('Contraseña actual:', this.previousPassword);
     //API evniar nueva pass a backend
-    this.http.post('http://localhost:8081/api/new-password/save', { NewPasswordComponent: this.newPassword }) //envia el codigo de verificacion al endpoint de back y loc comprueban
+    this.http.post('http://localhost:8081/api/account/NO-SE', { NewPasswordComponent: this.newPassword }) //envia el codigo de verificacion al endpoint de back y loc comprueban
     .subscribe({
       next: response => console.log('Respuesta del backend:', response),
       error: err => console.error('Error enviando dato:', err)

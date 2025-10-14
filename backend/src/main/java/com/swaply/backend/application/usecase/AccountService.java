@@ -1,6 +1,5 @@
 package com.swaply.backend.application.usecase;
 
-import com.azure.cosmos.implementation.User;
 import com.azure.spring.data.cosmos.core.CosmosTemplate;
 import com.swaply.backend.application.dto.LoginDTO;
 import com.swaply.backend.application.dto.RegisterDTO;
@@ -10,10 +9,7 @@ import com.swaply.backend.application.mapper.RegisterMapper;
 import com.swaply.backend.domain.model.Login;
 import com.swaply.backend.domain.model.Register;
 import com.swaply.backend.domain.repository.AccountRepository;
-import com.swaply.backend.domain.repository.UserRepository;
-import com.swaply.backend.interfaces.rest.UserController;
 
-import org.apache.qpid.proton.codec.messaging.SourceType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -37,13 +33,17 @@ public class AccountService /* implements UserRepository */ {
     }
 
     public ResponseEntity<String> code(String email) {
-        // if (email in){
-        // return ResponseEntity.ok(0);
+
+        // if (isEmailRegistered(email) == true) {
+        //     System.out.println("Correo ya registrado");
+        //     return ResponseEntity.ok("0");
+
         // }
+
         Random random = new Random();
         int codeInt = 100000 + random.nextInt(900000); // Asegura que sea de 6 dígitos
-        String codeString = Integer.toString(codeInt); 
-        
+        String codeString = Integer.toString(codeInt);
+
         return ResponseEntity.ok(codeString);
     }
 
@@ -65,27 +65,24 @@ public class AccountService /* implements UserRepository */ {
         String formPassword = entity.getPassword();
         PasswordService passwordService = new PasswordService();
 
-
-        try {
-            UserDTO user = userService.getUserByEmail(formEmail);
-
-            String hash = user.getPasswordHash();
-
-            if (passwordService.match(formPassword, hash)) {
-                System.out.println("Login correcto");
-                return ResponseEntity.ok(true);
-            }
-
-            System.out.println("Contraseña incorrecta");
-            return ResponseEntity.ok(false);
-
-        } catch (NullPointerException e) {
+        if (isEmailRegistered(formEmail) == false) {
             System.out.println("Correo no registrado");
             return ResponseEntity.ok(false);
+
         }
 
-    }
+        UserDTO user = userService.getUserByEmail(formEmail);
+        String hash = user.getPasswordHash();
 
+        if (passwordService.match(formPassword, hash)) {
+            System.out.println("Login correcto");
+            return ResponseEntity.ok(true);
+        }
+
+        System.out.println("Contraseña incorrecta");
+        return ResponseEntity.ok(false);
+
+    }
 
     public boolean isEmailRegistered(String email) {
         try {
@@ -97,32 +94,3 @@ public class AccountService /* implements UserRepository */ {
     }
 
 }
-// return repo.findAll()
-// .stream()
-// .map(u -> new UserDTO(u.getName(), u.getEmail()))
-// .collect(Collectors.toList());
-
-// public List<User> getAll() {
-// // Convertimos el Iterable<User> que devuelve repo.findAll() en un Stream
-// secuencial
-// return StreamSupport.stream(repo.findAll().spliterator(), false)
-
-// // Filtramos los usuarios cuyo campo 'id' sea exactamente igual a "User"
-// .filter(user -> "User".equals(user.getId()))
-
-// // Recolectamos los elementos filtrados en una lista y la devolvemos
-// .collect(Collectors.toList());
-// }
-
-// public Optional<User> obtenerPorId(String id) {
-// return repo.findById(id);
-// }
-
-// public User actualizarUsuario(String id, User userActualizado) {
-// userActualizado.setId(id);
-// return repo.save(userActualizado);
-// }
-
-// public void eliminarUsuario(String id) {
-// repo.deleteById(id);
-// }

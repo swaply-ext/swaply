@@ -20,11 +20,7 @@ interface User {
 export class RecoveryPasswordComponent {
   email: string = '';
 
-  registeredUsers: User[] = [ //aqui hace falta recibir de una consulta a bd los email de users regstradirs
-    { email: 'test@example.com' } //hay uno de ejemplo
-  ];
-
-  constructor(private router: Router, private location: Location, private http: HttpClient) {}
+  constructor(private router: Router, private location: Location, private http: HttpClient) { }
 
   enviarCodigo() {
     if (!this.email) {
@@ -32,20 +28,17 @@ export class RecoveryPasswordComponent {
       return;
     }
 
-    const foundUser = this.registeredUsers.find(u => u.email === this.email);
+    this.http.post('http://localhost:8081/api/account/verifyCode', this.email) //enviamos el "email" del input a back para que le envien un correo de verificacion i / o email para restablecer contra
+      .subscribe({
+        next: response => {
+          console.log('Respuesta del backend:', response);
+          this.router.navigate(['/verify'], {state: {code: response}});
+        },
+        error: err => console.error('Error enviando dato:', err),
+      });
+    // this.router.navigate(['/verify']);
 
-    if (!foundUser) {
-      alert(' El correo no está registrado.');
-      return;
-    }
-    this.http.post('http://localhost:8081/api/recovery-pass', { email: this.email }) //enviamos el "email" del input a back para que le envien un correo de verificacion i / o email para restablecer contra
-    .subscribe({
-      next: response => console.log('Respuesta del backend:', response),
-      error: err => console.error('Error enviando dato:', err)
-    });
-
-    console.log('Código de recuperación enviado a', foundUser.email); 
-    this.router.navigate(['/verify']);
+    console.log('Código de recuperación enviado a', this.email);
   }
 
   volverAtras() {
