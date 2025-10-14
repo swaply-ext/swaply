@@ -23,40 +23,47 @@ public class AccountService /* implements UserRepository */ {
     private final CosmosTemplate cosmosTemplate;
     private final AccountRepository accountRepo;
     private final UserService userService; //
+    private final MailService mailService;
 
     @Autowired
-    public AccountService(CosmosTemplate cosmosTemplate, AccountRepository accountRepo, UserService userService) {
+    public AccountService(CosmosTemplate cosmosTemplate, AccountRepository accountRepo, UserService userService,
+            MailService mailService) {
         this.cosmosTemplate = cosmosTemplate;
         this.accountRepo = accountRepo;
         this.userService = userService;
-
+        this.mailService = mailService;
     }
 
     public ResponseEntity<String> mailVerify(String email) {
 
         if (isEmailRegistered(email)) {
-        System.out.println("Correo ya registrado");
-        return ResponseEntity.ok("0");
+            System.out.println("Correo ya registrado");
+            return ResponseEntity.ok("0");
 
         }
 
         Random random = new Random();
         int codeInt = 100000 + random.nextInt(900000); // Asegura que sea de 6 dígitos
         String codeString = Integer.toString(codeInt);
+
+        mailService.sendEmail(email, codeString);
 
         return ResponseEntity.ok(codeString);
     }
 
     public ResponseEntity<String> recoveryPassword(String email) {
 
+
         if (!isEmailRegistered(email)) {
-        System.out.println("Correo no registrado");
-        return ResponseEntity.ok("0");
+            System.out.println("Correo no registrado");
+            return ResponseEntity.ok("0");
         }
 
         Random random = new Random();
         int codeInt = 100000 + random.nextInt(900000); // Asegura que sea de 6 dígitos
         String codeString = Integer.toString(codeInt);
+
+        mailService.sendEmail(email, codeString);
 
         return ResponseEntity.ok(codeString);
     }

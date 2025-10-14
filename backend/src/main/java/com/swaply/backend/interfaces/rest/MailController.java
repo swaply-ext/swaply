@@ -18,7 +18,7 @@ public class MailController {
     @PostMapping("/sendCode")
     public ResponseEntity<String> sendTestEmail(@RequestBody MailRequest mailRequest) {
         try {
-            mailService.sendEmail(mailRequest.getEmail());
+            mailService.sendEmail(mailRequest.getEmail(), "asdasd" );
             return ResponseEntity.ok("Correo enviado exitosamente a " + mailRequest.getEmail());
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Error al enviar correo: " + e.getMessage());

@@ -90,7 +90,7 @@ export class PersonalInformationComponent {
     this.registerDataService.setRegisterData(newUserData);
 
     const allData = this.registerDataService.getRegisterData();
-    this.http.post<{ code: string }>('http://localhost:8081/api/account/verifyCode', allData.email)
+    this.http.post<{ code: string }>('http://localhost:8081/api/account/mailVerify', allData.email)
       .subscribe({
         next: response => {
           // Guarda el codi de verificació rebut

@@ -22,13 +22,13 @@ public class MailComponent {
         this.javaMailSender = javaMailSender;
     }
 
-    public void sendMessage(String email){
+    public void sendMessage(String email, String msg){
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         try {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setTo(email);
             helper.setSubject("Prueba de correo");
-            helper.setText("<h1>Correo de prueba</h1><br><p>Este es un correo de prueba enviado desde Spring Boot</p>", true);
+            helper.setText("<h1>Correo de prueba</h1><br><p>" + msg + "</p>", true);
             helper.setFrom(sender);
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
