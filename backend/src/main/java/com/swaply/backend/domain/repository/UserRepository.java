@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends CosmosRepository<User, String> {
     List<User> findByType(String type);
     
+    User findByEmail(String email);
 }

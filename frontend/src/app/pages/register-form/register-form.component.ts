@@ -1,17 +1,18 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { EmailInputComponent } from '../../components/email-input/email-input.component';
 import { ConfirmEmailInputComponent } from '../../components/confirm-email-input/confirm-email-input.component';
 import { PasswordInputComponent } from '../../components/password-input/password-input.component';
 import { ConfirmPasswordInputComponent } from '../../components/confirm-password-input/confirm-password-input.component';
 import { TermsCheckboxComponent } from '../../components/terms-checkbox/terms-checkbox.component';
 import { ActionButtonsComponent } from '../../components/action-buttons/action-buttons.component';
-import { HttpClient } from '@angular/common/http';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { RegisterDataService } from '../../services/register-data.service';
 
 interface User {
   email: string;
-  password: string;
+  passwordHash: string;
   acceptedTerms: boolean;
 }
 
@@ -19,6 +20,7 @@ interface User {
   selector: 'app-register-form',
   standalone: true,
   imports: [
+    CommonModule,
     EmailInputComponent,
     ConfirmEmailInputComponent,
     PasswordInputComponent,
@@ -26,7 +28,7 @@ interface User {
     TermsCheckboxComponent,
     ActionButtonsComponent,
     HttpClientModule
-  ],
+    ],
   templateUrl: './register-form.component.html',
   styleUrls: ['./register-form.component.css']
 })
@@ -36,12 +38,16 @@ export class RegisterFormComponent {
   password = '';
   confirmPassword = '';
   accepted = false;
+  showError = false;
+  hasErrorAll = false;
 
-  registeredUsers: User[] = [];
 
-constructor(private router: Router, private http: HttpClient) {}
+
+  constructor(private router: Router, private http: HttpClient, private registerDataService: RegisterDataService) {}
 
   register() {
+    this.showError = false;
+
     if (!this.accepted) {
       alert('Debes aceptar los términos');
       return;
@@ -57,38 +63,26 @@ constructor(private router: Router, private http: HttpClient) {}
       return;
     }
 
-    if (this.email !== this.confirmEmail) {
-      alert('Los correos no coinciden');
-      return;
-    }
-
     const passwordValidation = this.validatePassword(this.password);
     if (!passwordValidation.valid) {
       alert('Contraseña inválida:\n' + passwordValidation.message);
       return;
     }
 
-    if (this.password !== this.confirmPassword) {
-      alert('Las contraseñas no coinciden');
+    if (this.email !== this.confirmEmail || this.password !== this.confirmPassword) {
+      this.showError = true;
+      this.hasErrorAll = true;
       return;
     }
 
-    const newUser: User = {
+    const newUser = {
       email: this.email,
-      password: this.password,
-      acceptedTerms: this.accepted
+      passwordHash: this.password
     };
+    // estem guardant les dades al servei per acumular-los i enviarlos a commponent personal-info
+    this.registerDataService.setRegisterData(newUser);
 
-    this.registeredUsers.push(newUser);
-    console.log('Usuarios registrados:', this.registeredUsers);
-    
-    this.http.post('http://localhost:8081/api/register/save', { users: this.registeredUsers })
-    .subscribe({
-      next: response => console.log('Respuesta del backend:', response),
-      error: err => console.error('Error enviando usuarios:', err)
-    });
-
-    this.router.navigateByUrl('/verify');
+    this.router.navigateByUrl('/personal-information');
   }
 
   private validateEmail(email: string): boolean {
@@ -114,5 +108,3 @@ constructor(private router: Router, private http: HttpClient) {}
     return { valid: true, message: '' };
   }
 }
-
-

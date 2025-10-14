@@ -6,13 +6,16 @@ import { SurnameInputComponent } from "../../components/surname-input/surname-in
 import { BirthDateComponent } from "../../components/birth-date/birth-date.component";
 import { PhoneInputComponent } from "../../components/phone-input/phone-input.component";
 import { AddressInputComponent } from "../../components/address-input/address-input.component";
+import { UsernameInputComponent } from "../../components/username-input/username-input.component";
 import { HttpClient } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
+import { RegisterDataService } from '../../services/register-data.service';
 
 
 interface UserData {
   name: string;
   surname: string;
+  username: string;
   birthDate: Date;
   phone: number;
   adress: string;
@@ -29,15 +32,21 @@ interface UserData {
     BirthDateComponent,
     PhoneInputComponent,
     AddressInputComponent,
+    UsernameInputComponent,
     HttpClientModule
-],
+  ],
+  standalone: true,
+  styleUrls: ['./personal-information.component.css'],
   templateUrl: './personal-information.component.html',
-  styleUrl: './personal-information.component.css'
 })
 
+//recibimos la info de email and password guardamos el objeto userInfo {}
+
 export class PersonalInformationComponent {
+  previousData: any = {};
   name = '';
   surname = '';
+  username = '';
   birthDate: Date | undefined;
   address = '';
   phone = 0;
@@ -47,12 +56,21 @@ export class PersonalInformationComponent {
    // Array local para guardar usuarios registrados
   registeredUsers: UserData[] = [];
 
-  constructor(private router: Router, private http: HttpClient) {}
-
+    constructor(
+    private router: Router,
+    private http: HttpClient,
+    private registerDataService: RegisterDataService
+  ) {}
+  ngOnInit() {
+    this.previousData = this.registerDataService.getRegisterData();
+    console.log('Datos previos recibidos:', this.previousData);
+  }
    registerData() {
     if (!this.name || this.validateName(this.name)) { alert('Debes introducir un nombre válido'); return; }
 
     if (!this.surname || this.validateName(this.surname)) { alert('Debes introducir un apellido válido'); return; }
+
+    if (!this.username || this.validateUsername(this.username)) { alert('Debes introducir un nombre de usuario válido'); return; }
 
     if (!this.birthDate || (new Date(this.birthDate) > new Date()) || this.isToday(new Date(this.birthDate))) { alert('Debes introducir una fecha de nacimiento válida'); return; }
 
@@ -64,25 +82,31 @@ export class PersonalInformationComponent {
     
 
 
-    const newUserData: UserData = {
+    const newUserData = {
       name: this.name,
       surname: this.surname,
+      username: this.username,
       birthDate: this.birthDate,
       phone: this.phone,
       adress: this.address,
-      postalCode: this.postalCode,
+      postalCode: this.postalCode
     };
 
+    this.registerDataService.setRegisterData(newUserData);
 
-    // Guardar usuario localmente
-    this.registeredUsers.push(newUserData);
-    console.log('Datos de usuarios registrados:', this.registeredUsers); //revisar nombre de objetos, creo que pablo y eloy utilizan "user" y yo "userData" (funciona igual)
+    const allData = this.registerDataService.getRegisterData();
+this.http.post<{ code: string }>('http://localhost:8081/api/account/email', allData.email )
+  .subscribe({
+    next: response => {
+      // Guarda el codi de verificació rebut
+      this.registerDataService.setRegisterData({ verifyCode: response.code });
 
-    this.http.post('http://localhost:8081/api/personal-info/save', { users: this.registeredUsers })
-    .subscribe({
-      next: response => console.log('Respuesta del backend:', response),
-      error: err => console.error('Error enviando usuarios:', err)
-    });
+      // Ara tens al servei: email, password, dades personals i verifyCode
+      // Pots navegar a la pàgina de verificació
+      this.router.navigateByUrl('/verify');
+    },
+    error: err => console.error('Error enviant dades:', err)
+  });
 
 
     this.router.navigateByUrl('/verify');
@@ -147,6 +171,17 @@ export class PersonalInformationComponent {
     if (uppercase.test(numString)) return true;
     if (lowercase.test(numString)) return true;
     if (special.test(numString)) return true;
+    else return false;
+  }
+
+  private validateUsername (username: string): boolean {
+    const minLength = 3;
+    const maxLength = 30;
+    const special = /[!@#$%^&*?/]/;
+
+    if (username.length < minLength) return true;
+    if (username.length > maxLength) return true;
+    if (special.test(username)) return true;
     else return false;
   }
 }

@@ -1,16 +1,21 @@
 package com.swaply.backend.application.usecase;
 
+
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
 import com.azure.spring.data.cosmos.core.CosmosTemplate;
 import com.swaply.backend.application.dto.UserDTO;
 import com.swaply.backend.application.mapper.UserMapper;
 import com.swaply.backend.domain.model.User;
 import com.swaply.backend.domain.repository.UserRepository;
-import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
-public class UserService {
+public class UserService /* implements UserRepository */ {
 
     private final CosmosTemplate cosmosTemplate;
     private final UserRepository userRepo;
@@ -117,3 +122,37 @@ public class UserService {
     }
 
 }
+    public UserDTO getUserByEmail(String email) {
+        return userMapper.entityToDTO(userRepo.findByEmail(email));
+    }
+
+}
+// return repo.findAll()
+// .stream()
+// .map(u -> new UserDTO(u.getName(), u.getEmail()))
+// .collect(Collectors.toList());
+
+// public List<User> getAll() {
+// // Convertimos el Iterable<User> que devuelve repo.findAll() en un Stream
+// secuencial
+// return StreamSupport.stream(repo.findAll().spliterator(), false)
+
+// // Filtramos los usuarios cuyo campo 'id' sea exactamente igual a "User"
+// .filter(user -> "User".equals(user.getId()))
+
+// // Recolectamos los elementos filtrados en una lista y la devolvemos
+// .collect(Collectors.toList());
+// }
+
+// public Optional<User> obtenerPorId(String id) {
+// return repo.findById(id);
+// }
+
+// public User actualizarUsuario(String id, User userActualizado) {
+// userActualizado.setId(id);
+// return repo.save(userActualizado);
+// }
+
+// public void eliminarUsuario(String id) {
+// repo.deleteById(id);
+// }
