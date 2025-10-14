@@ -52,10 +52,6 @@ export class PersonalInformationComponent {
   phone = 0;
   postalCode = 0;
 
-
-  // Array local para guardar usuarios registrados
-  registeredUsers: UserData[] = [];
-
   constructor(
     private router: Router,
     private http: HttpClient,
@@ -81,7 +77,6 @@ export class PersonalInformationComponent {
     if (!this.address || this.validateAddress(this.address)) { alert('Debes introducir una dirección válida'); return; }
 
 
-
     const newUserData = {
       name: this.name,
       surname: this.surname,
@@ -101,7 +96,7 @@ export class PersonalInformationComponent {
           // Guarda el codi de verificació rebut
           console.log("response: " + response);
 
-          this.router.navigate(['/verify'], {state: {code: response}});
+          this.router.navigate(['/verify'], { state: { code: response } });
 
 
           // Ara tens al servei: email, password, dades personals i verifyCode

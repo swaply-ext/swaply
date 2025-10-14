@@ -28,7 +28,7 @@ export class RecoveryPasswordComponent {
       return;
     }
 
-    this.http.post('http://localhost:8081/api/account/verifyCode', this.email) //enviamos el "email" del input a back para que le envien un correo de verificacion i / o email para restablecer contra
+    this.http.post('http://localhost:8081/api/account/verifyCode', this.email)
       .subscribe({
         next: response => {
           console.log('Respuesta del backend:', response);
@@ -36,7 +36,6 @@ export class RecoveryPasswordComponent {
         },
         error: err => console.error('Error enviando dato:', err),
       });
-    // this.router.navigate(['/verify']);
 
     console.log('Código de recuperación enviado a', this.email);
   }
