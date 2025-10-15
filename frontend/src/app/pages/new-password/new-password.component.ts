@@ -81,7 +81,7 @@ export class NewPasswordComponent {
     console.log('Historial de contraseñas:', this.passwordHistory);
     console.log('Contraseña actual:', this.previousPassword);
 
-    this.http.post('http://localhost:8081/api/account/NO-SE', { NewPasswordComponent: this.newPassword }) //PROVISIONAL
+    this.http.post('http://localhost:8081/api/account/NO-SE', this.newPassword ) //PROVISIONAL
       .subscribe({
         next: response => console.log('Respuesta del backend:', response),
         error: err => console.error('Error enviando datos:', err)
