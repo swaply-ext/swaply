@@ -10,7 +10,7 @@ public class UserDTO {
     private String id;
     
     @PartitionKey
-    private String type;
+    private String type = "user";
     private String username;
     private String fullName;
     private String email;
@@ -27,11 +27,10 @@ public class UserDTO {
     public UserDTO() {
     }
 
-    public UserDTO(String id, String type, String username, String fullName, String email, String passwordHash,
+    public UserDTO(String id, String username, String fullName, String email, String passwordHash,
             String location, String gender, int age, String description, boolean isVerified, String profilePhotoUrl,
             boolean isPremium, boolean isModerator) {
         this.id = id;
-        this.type = type;
         this.username = username;
         this.fullName = fullName;
         this.email = email;
@@ -50,16 +49,12 @@ public class UserDTO {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getType() {
         return type;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getUsername() {
