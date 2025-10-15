@@ -1,6 +1,5 @@
 package com.swaply.backend.application.usecase;
 
-
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collector;
@@ -29,32 +28,117 @@ public class UserService /* implements UserRepository */ {
     }
 
     public UserDTO createUser(UserDTO dto) {
-        User user = new User();
-        // Genera un id si no te llega uno (Cosmos exige 'id')
-        user.setId(UUID.randomUUID().toString());
-        user.setUsername(dto.getUsername());
-        user.setEmail(dto.getEmail());
-
-        // Opción A: si te basta con persistir (no necesitas el objeto devuelto)
-        // cosmosTemplate.upsert(user); // <-- devuelve void
-
-        // Opción B: si quieres la entidad final (e.g. con ETag/Id definitivo)
         String container = cosmosTemplate.getContainerName(User.class);
-        User saved = cosmosTemplate.upsertAndReturnEntity(container, user);
-
-        return userMapper.entityToDTO(user);
+        User saved = cosmosTemplate.upsertAndReturnEntity(container, userMapper.dtoToEntity(dto));
+        return dto;
     }
 
     public List<UserDTO> getAllUsers() {
         return StreamSupport
                 .stream(cosmosTemplate.findAll(User.class).spliterator(), false)
-                .filter(user -> "user".equals(user.getType())) // Filtrar por tipo "User"
+                .filter(user -> "user".equals(user.getType())) // Filtrar por tipo "user"
                 .map(userMapper::entityToDTO)
                 .collect(Collectors.toList());
     }
 
     public UserDTO getUserByEmail(String email) {
         return userMapper.entityToDTO(userRepo.findByEmail(email));
+    }
+
+    public UserDTO getUserByID(String id) {
+        return userMapper.entityToDTO(userRepo.findById(id).orElse(null));
+    }
+
+    public UserDTO tryToGetUserById(String id) { 
+        if (!isUserExisting(id)) { 
+            return null;
+        }
+        return getUserByID(id); 
+    }
+
+    public boolean isUserExisting(String id) {//método para controlar nulls
+        try {
+            getUserByID(id);
+        } catch (NullPointerException e) {
+            return false;
+        }
+        return true;
+    }
+
+    public void deleteUserById(String id) {
+        User user = userRepo.findById(id).orElse(null);
+        if (user != null) {
+            userRepo.delete(user);
+        } else {
+            throw new RuntimeException("User not found");
+        }
+    }
+
+    public UserDTO updateUser(String id, UserDTO dto) {
+        User existingUser = userRepo.findById(id).orElse(null);
+
+        if (existingUser == null) {
+
+            throw new RuntimeException("User not found!");
+
+        }
+
+        if (!existingUser.getUsername().equals(dto.getUsername())) {
+            existingUser.setUsername(dto.getUsername());
+        }
+
+        if (!existingUser.getFullName().equals(dto.getFullName())) {
+            existingUser.setFullName(dto.getFullName());
+        }
+
+        if (!existingUser.getEmail().equals(dto.getEmail())) {
+            existingUser.setEmail(dto.getEmail());
+        }
+
+        if (!existingUser.getPassword().equals(dto.getPassword())) {
+            existingUser.setPassword(dto.getPassword());
+        }
+
+        if (!existingUser.getLocation().equals(dto.getLocation())) {
+            existingUser.setLocation(dto.getLocation());
+        }
+
+        if (!existingUser.getGender().equals(dto.getGender())) {
+            existingUser.setGender(dto.getGender());
+        }
+
+        if (existingUser.getAge() != dto.getAge()) {
+            existingUser.setAge(dto.getAge());
+        }
+
+        if (!existingUser.getDescription().equals(dto.getDescription())) {
+            existingUser.setDescription((dto.getDescription()));
+        }
+
+        if (!existingUser.getDescription().equals(dto.getDescription())) {
+            existingUser.setDescription((dto.getDescription()));
+        }
+
+        if (!existingUser.getProfilePhotoUrl().equals(dto.getProfilePhotoUrl())) {
+            existingUser.setProfilePhotoUrl((dto.getProfilePhotoUrl()));
+        }
+
+        if (existingUser.isVerified() != dto.isVerified()) {
+            existingUser.setVerified(dto.isVerified());
+        }
+
+        if (existingUser.isPremium() != dto.isPremium()) {
+            existingUser.setPremium(dto.isPremium());
+        }
+
+        if (existingUser.isModerator() != dto.isModerator()) {
+            existingUser.setModerator(dto.isModerator());
+
+        }
+
+        User updatedUser = userRepo.save(existingUser);
+        return userMapper.entityToDTO(updatedUser);
+
     }
 
 }

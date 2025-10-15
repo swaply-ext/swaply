@@ -5,7 +5,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.swaply.backend.application.usecase.AccountService;
 import com.swaply.backend.application.dto.LoginDTO;
+import com.swaply.backend.application.dto.RecoveryCodeResponseDTO;
+import com.swaply.backend.application.dto.RecoveryPasswordDTO;
 import com.swaply.backend.application.dto.RegisterDTO;
+import com.swaply.backend.application.dto.UserDTO;
 
 @RestController
 @RequestMapping("/api/account")
@@ -24,9 +27,14 @@ public class AccountController {
         return ResponseEntity.ok(service.register(dto));
     }
 
+    @PostMapping("/recoveryCode")
+    public ResponseEntity<RecoveryCodeResponseDTO> recoveryCode(@RequestBody String email, RecoveryPasswordDTO dto) {
+        return service.recoveryCode(email, dto);
+    }
+
     @PostMapping("/recoveryPassword")
-    public ResponseEntity<String> recoveryPassword(@RequestBody String email) {
-        return service.recoveryPassword(email);
+    public ResponseEntity<Boolean> recoveryPassword(@RequestBody String newPassword, String email, UserDTO dto, String userId) {
+        return service.recoveryPassword(newPassword, email, dto, userId);
     }
 
     @PostMapping("/mailVerify")
@@ -35,7 +43,7 @@ public class AccountController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Boolean> login(@RequestBody LoginDTO dto) {
+    public ResponseEntity<String> login(@RequestBody LoginDTO dto) {
         return service.login(dto);
     }
 

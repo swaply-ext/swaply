@@ -1,3 +1,8 @@
+<div class="login-logo-wrapper">
+  <img src="assets/logo_swp_invert.png" alt="Logo" class="login-logo">
+</div>
+
+
 <div class="login-container" id="login">
   <h2>INICIAR SESIÓN</h2>
 
@@ -9,11 +14,12 @@
 
 
     <div>
-      ¿No recuerdas tu contraseña? Pulsa
-      <a routerLink="/recovery-password"><strong>aquí</strong></a>
+      <a routerLink="/recovery-password"><strong>He olvidado la contraseña.</strong></a>
     </div>
+    <app-login-register-buttons 
+    (registerClick)="register()"
+    (loginClick)="login()">
+    </app-login-register-buttons>
 
-
-    <app-login-button (submit)="login()"></app-login-button>
   </form>
 </div>

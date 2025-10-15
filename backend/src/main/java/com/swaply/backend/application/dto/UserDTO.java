@@ -10,11 +10,11 @@ public class UserDTO {
     private String id;
     
     @PartitionKey
-    private String type;
+    private String type = "user";
     private String username;
     private String fullName;
     private String email;
-    private String passwordHash;
+    private String password;
     private String location;
     private String gender;
     private int age;
@@ -27,15 +27,14 @@ public class UserDTO {
     public UserDTO() {
     }
 
-    public UserDTO(String id, String type, String username, String fullName, String email, String passwordHash,
+    public UserDTO(String id, String username, String fullName, String email, String password,
             String location, String gender, int age, String description, boolean isVerified, String profilePhotoUrl,
             boolean isPremium, boolean isModerator) {
         this.id = id;
-        this.type = type;
         this.username = username;
         this.fullName = fullName;
         this.email = email;
-        this.passwordHash = passwordHash;
+        this.password = password;
         this.location = location;
         this.gender = gender;
         this.age = age;
@@ -50,16 +49,12 @@ public class UserDTO {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getType() {
         return type;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -86,12 +81,12 @@ public class UserDTO {
         this.email = email;
     }
 
-    public String getPasswordHash() {
-        return passwordHash;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getLocation() {

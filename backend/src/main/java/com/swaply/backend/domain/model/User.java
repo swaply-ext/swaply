@@ -2,7 +2,9 @@ package com.swaply.backend.domain.model;
 
 import com.azure.spring.data.cosmos.core.mapping.Container;
 import com.azure.spring.data.cosmos.core.mapping.PartitionKey;
+
 import org.springframework.data.annotation.Id;
+
 
 @Container(containerName = "swaply-container")
 public class User {
@@ -11,12 +13,12 @@ public class User {
     private String id;
     
     @PartitionKey
-    private String type;
+    private String type = "user";
     
     private String username;
     private String fullName;
     private String email;
-    private String passwordHash;
+    private String password;
     private String location;
     private String gender;
     private int age;
@@ -84,12 +86,12 @@ public class User {
         this.email = email;
     }
 
-    public String getPasswordHash() {
-        return passwordHash;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getLocation() {
@@ -166,9 +168,5 @@ public class User {
 
     public String getType() {
         return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 }
