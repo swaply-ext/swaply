@@ -28,7 +28,7 @@ export class RecoveryPasswordComponent {
       return;
     }
 
-    this.http.post('http://localhost:8081/api/account/recoveryPass', this.email)
+    this.http.post('http://localhost:8081/api/account/recoveryCode', this.email)
       .subscribe({
         next: response => {
           console.log('Respuesta del backend:', response);
