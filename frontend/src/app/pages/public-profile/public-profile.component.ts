@@ -6,10 +6,16 @@ import { SkillsPanelComponent } from '../../components/skills-panel/skills-panel
 import { InterestsPanelComponent } from '../../components/interests-panel/interests-panel.component';
 
 @Component({
-  selector: 'app-profile',
+  selector: 'app-public-profile',
   standalone: true,
-  imports: [CommonModule, AppNavbarComponent, ProfileInfoComponent, SkillsPanelComponent, InterestsPanelComponent],
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css'] 
+  imports: [
+    CommonModule,
+    AppNavbarComponent,
+    ProfileInfoComponent,
+    SkillsPanelComponent,
+    InterestsPanelComponent
+  ],
+  templateUrl: './public-profile.component.html',
+  styleUrls: ['./public-profile.component.css']
 })
-export class ProfileComponent {}
+export class PublicProfileComponent {}

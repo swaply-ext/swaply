@@ -7,15 +7,7 @@ body {
 .profile-panels-container {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  gap: 20px;
-  padding: 0 20px; 
-}
-
-.profile-panels-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: stretch;
+  align-items: stretch; 
   gap: 20px;
   padding: 0 20px;
 }
@@ -37,6 +29,38 @@ body {
   justify-content: flex-end;
 }
 
+.profile-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.profile-actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.favorite-btn mat-icon {
+  color: red;
+}
+
+.chat-btn {
+  background-color: #00839E;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+}
+
+.share-btn mat-icon {
+  color: #012534;
+}
+
 @media (max-width: 900px) {
   .profile-skills,
   .profile-interests {
@@ -46,5 +70,10 @@ body {
     justify-content: center;
     padding: 12px;
     min-height: auto;
+  }
+
+  .profile-actions {
+    flex-direction: column;
+    gap: 8px;
   }
 }

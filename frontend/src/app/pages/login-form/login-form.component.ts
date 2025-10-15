@@ -12,8 +12,7 @@ import { LoginRegisterButtonsComponent } from '../../components/login-register-b
  
 interface User {
   email: string;
-  password: string;
- 
+  password: string; 
 }
  
 @Component({
@@ -34,10 +33,10 @@ export class LoginFormComponent {
   email = '';
   password = '';
   accepted = false;
- 
- 
+
+
   constructor(private router: Router, private http: HttpClient) { }
- 
+
   login() {
     if (!this.accepted) {
       alert('Debes aceptar los términos');
@@ -47,21 +46,21 @@ export class LoginFormComponent {
       alert('Debes rellenar todos los campos');
       return;
     }
- 
+
     const newUser: User = {
       email: this.email,
       password: this.password
     };
- 
- 
+
+
     console.log('Usuario logueado:', newUser);
- 
+
     this.http.post('http://localhost:8081/api/login/check', newUser )
       .subscribe({
         next: response => console.log('Respuesta del backend:', response),
         error: err => console.error('Error enviando login:', err)
       });
- 
+
     this.router.navigate(['/']);
   }
 
