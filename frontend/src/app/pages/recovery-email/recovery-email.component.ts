@@ -11,16 +11,20 @@ interface User {
 }
 
 @Component({
-  selector: 'app-recovery-password',
+  selector: 'app-recovery-email',
   standalone: true,
   imports: [CommonModule, FormsModule, HttpClientModule],
-  templateUrl: './recovery-password.component.html',
-  styleUrls: ['./recovery-password.component.css']
+  templateUrl: './recovery-email.component.html',
+  styleUrls: ['./recovery-email.component.css']
 })
-export class RecoveryPasswordComponent {
+export class RecoveryEmailComponent {
   email: string = '';
 
-  constructor(private router: Router, private location: Location, private http: HttpClient) { }
+  constructor(
+    private router: Router,
+    private location: Location,
+    private http: HttpClient
+  ) {}
 
   enviarCodigo() {
     if (!this.email) {
@@ -28,11 +32,11 @@ export class RecoveryPasswordComponent {
       return;
     }
 
-    this.http.post('http://localhost:8081/api/account/recoveryEmail', this.email)
+    this.http.post('http://localhost:8081/api/account/verifyCode', this.email)
       .subscribe({
         next: response => {
           console.log('Respuesta del backend:', response);
-          this.router.navigate(['/verify'], {state: {code: response}});
+          this.router.navigate(['/verify'], { state: { code: response } });
         },
         error: err => console.error('Error enviando dato:', err),
       });
