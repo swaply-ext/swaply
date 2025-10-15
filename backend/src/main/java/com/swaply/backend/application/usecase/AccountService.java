@@ -65,8 +65,8 @@ public class AccountService /* implements UserRepository */ {
             System.out.println("Correo no registrado");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
-        User entity = RecoveryPasswordMapper.toEntity(dto);
-        String userId = entity.getId();
+        UserDTO user = userService.getUserByEmail(email);
+        String userId = user.getId();
         Random random = new Random();
         int codeInt = 100000 + random.nextInt(900000); // Asegura que sea de 6 dígitos
         String codeString = Integer.toString(codeInt);
