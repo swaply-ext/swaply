@@ -58,7 +58,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-}
+
     @GetMapping("/getByEmail/{email}")
     public ResponseEntity<UserDTO> getByEmail(@PathVariable String email) {
         return ResponseEntity.ok(service.getUserByEmail(email));
