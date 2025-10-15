@@ -3,6 +3,7 @@ package com.swaply.backend.interfaces.rest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.swaply.backend.application.dto.MailDTO;
 import com.swaply.backend.application.usecase.MailService;
 
 @RestController
@@ -16,9 +17,9 @@ public class MailController {
     }
 
     @PostMapping("/sendCode")
-    public ResponseEntity<String> sendTestEmail(@RequestBody MailRequest mailRequest) {
+    public ResponseEntity<String> sendTestEmail(@RequestBody MailDTO mailRequest) {
         try {
-            mailService.sendEmail(mailRequest.getEmail(), "asdasd" );
+            mailService.sendMessage(mailRequest.getEmail(), "asdasd" );
             return ResponseEntity.ok("Correo enviado exitosamente a " + mailRequest.getEmail());
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Error al enviar correo: " + e.getMessage());

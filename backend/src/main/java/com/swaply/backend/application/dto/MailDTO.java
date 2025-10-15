@@ -1,6 +1,6 @@
-package com.swaply.backend.interfaces.rest;
+package com.swaply.backend.application.dto;
 
-public class MailRequest {
+public class MailDTO {
     private String email;
 
     public String getEmail() {

@@ -10,6 +10,7 @@ import com.swaply.backend.domain.model.Login;
 import com.swaply.backend.domain.model.Register;
 import com.swaply.backend.domain.repository.AccountRepository;
 
+import org.apache.qpid.proton.codec.BooleanType.BooleanEncoding;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,7 @@ public class AccountService /* implements UserRepository */ {
 
         if (isEmailRegistered(email)) {
             System.out.println("Correo ya registrado");
-            return ResponseEntity.ok("0");
+            return ResponseEntity.ok("false");
 
         }
 
@@ -46,7 +47,7 @@ public class AccountService /* implements UserRepository */ {
         int codeInt = 100000 + random.nextInt(900000); // Asegura que sea de 6 dígitos
         String codeString = Integer.toString(codeInt);
 
-        mailService.sendEmail(email, codeString);
+        mailService.sendMessage(email, codeString);
 
         return ResponseEntity.ok(codeString);
     }
@@ -56,14 +57,14 @@ public class AccountService /* implements UserRepository */ {
 
         if (!isEmailRegistered(email)) {
             System.out.println("Correo no registrado");
-            return ResponseEntity.ok("0");
+            return ResponseEntity.ok("false");
         }
 
         Random random = new Random();
         int codeInt = 100000 + random.nextInt(900000); // Asegura que sea de 6 dígitos
         String codeString = Integer.toString(codeInt);
 
-        mailService.sendEmail(email, codeString);
+        mailService.sendMessage(email, codeString);
 
         return ResponseEntity.ok(codeString);
     }

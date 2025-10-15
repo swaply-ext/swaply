@@ -35,8 +35,8 @@ public class AccountController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ResponseEntity<Boolean>> login(@RequestBody LoginDTO dto) {
-        return ResponseEntity.ok(service.login(dto));
+    public ResponseEntity<Boolean> login(@RequestBody LoginDTO dto) {
+        return service.login(dto);
     }
 
 }
