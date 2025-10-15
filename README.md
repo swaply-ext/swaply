@@ -81,11 +81,12 @@ Incorrecto:
 
 ---
 
-## 7. Automatización y Git
+## 7. Git
 - **Restricción de ramas:** Develop y Main están protegidas de commits directos.  
 - **Revisión de código:** todos los Pull Requests deben ser revisados por dos personas antes de mergear.  
 
 ---
 
 ## 8. Buenas Prácticas 
-
+- **Contraseñas:** Utilizar Azure Key Vault.
+- **Encapsulación:** Utilizar constantes, variables y funciones para evitar repeticiones en el código y evitar problemas al haber cambios.  
