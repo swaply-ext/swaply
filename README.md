@@ -25,12 +25,6 @@ src/main/java/com/example/demo/
  ├── service/      # Lógica de negocio
  └── DemoApplication.java   # Clase principal
 ```
-
-Ejemplo de controlador:
-```java
-package com.example.demo.controller;
-```
-
 ---
 
 ## 3. Estándares de Código 
@@ -39,8 +33,7 @@ package com.example.demo.controller;
   - Métodos → `camelCase` (ej. `listarCancion()`)  
   - Variables → `camelCase` (ej. `cancionService`)  
   - Constantes → `MAYUSCULAS_CON_GUIONES` (ej. `MAX_INTENTOS`) 
-  - Componentes de Angular → `minusculas-con-guiones` (ej. `login-form`) 
-- **Anotaciones:** deben ir en líneas separadas sobre el método o clase.  
+  - Componentes de Angular → `minusculas-con-guiones` (ej. `login-form`)  
 - **Comentarios:** solo para explicar lógica compleja.  
 
 Correcto:
@@ -70,9 +63,9 @@ Incorrecto:
 ---
 
 ## 5. Testing
-- **Framework:** JUnit 5 + Mockito  
+- **Framework:**  
 - **Carpeta de tests:** `src/test/java/...`  
-- **Cobertura mínima:** 80%  
+- **Cobertura mínima:** 
 - **Buenas prácticas:**
   - Cada clase debe tener su clase de test asociada.  
   - Métodos de test deben describir qué se prueba:  
@@ -84,29 +77,15 @@ Incorrecto:
 ---
 
 ## 6. Documentación
-- **README.md** con pasos para ejecutar el proyecto.  
-- **Javadoc** obligatorio en clases y métodos públicos.  
-Ejemplo:
-```java
-/**
- * Controlador para gestionar canciones.
- * Permite listar, crear, editar y eliminar canciones.
- */
-@Controller
-@RequestMapping("/canciones")
-public class CancionesController {
-```
+- **README.md** con reglas generales del proyecto.    
 
 ---
 
-## 7. Automatización y CI/CD
-- **Linting:** Checkstyle configurado.  
-- **Integración continua:** GitHub Actions / GitLab CI con compilación y tests automáticos.  
-- **Revisión de código:** todos los Pull Requests deben ser revisados antes de mergear.  
+## 7. Automatización y Git
+- **Restricción de ramas:** Develop y Main están protegidas de commits directos.  
+- **Revisión de código:** todos los Pull Requests deben ser revisados por dos personas antes de mergear.  
 
 ---
 
-## 8. Buenas Prácticas
-- Dividir lógica entre capas (no poner lógica de negocio en controladores).  
-- Variables sensibles en `application.properties` deben ir en `.env` o variables de entorno.  
+## 8. Buenas Prácticas 
 
