@@ -1,6 +1,5 @@
 package com.swaply.backend.application.usecase;
 
-
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collector;
@@ -37,13 +36,34 @@ public class UserService /* implements UserRepository */ {
     public List<UserDTO> getAllUsers() {
         return StreamSupport
                 .stream(cosmosTemplate.findAll(User.class).spliterator(), false)
-                .filter(user -> "user".equals(user.getType())) // Filtrar por tipo "User"
+                .filter(user -> "user".equals(user.getType())) // Filtrar por tipo "user"
                 .map(userMapper::entityToDTO)
                 .collect(Collectors.toList());
     }
 
     public UserDTO getUserByID(String id) {
         return userMapper.entityToDTO(userRepo.findById(id).orElse(null));
+
+    }
+
+    public UserDTO getUserByEmail(String email) {
+        return userMapper.entityToDTO(userRepo.findByEmail(email));
+    }
+
+    public UserDTO tryToGetUserById(String id) { //método que devuelve el usuario
+        if (!isUserExisting(id)) { 
+            return null;
+        }
+        return getUserByID(id); 
+    }
+
+    public boolean isUserExisting(String id) { //método para controlar nulls
+        try {
+            getUserByID(id);
+        } catch (NullPointerException e) {
+            return false;
+        }
+        return true;
     }
 
     public void deleteUserById(String id) {
@@ -117,14 +137,9 @@ public class UserService /* implements UserRepository */ {
 
         }
 
-
         User updatedUser = userRepo.save(existingUser);
         return userMapper.entityToDTO(updatedUser);
 
-    }
-
-    public UserDTO getUserByEmail(String email) {
-        return userMapper.entityToDTO(userRepo.findByEmail(email));
     }
 
 }
