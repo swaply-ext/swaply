@@ -31,7 +31,11 @@ public class UserController {
 
     @GetMapping("/getUserById/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable String id) {
-        return ResponseEntity.ok(service.tryToGetUserById(id)); //llamamos al método que controla los nulls
+        try {
+            return ResponseEntity.ok(service.getUserByID(id));
+        } catch (NullPointerException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @DeleteMapping("/deleteUserById/{id}")

@@ -41,23 +41,22 @@ public class UserService /* implements UserRepository */ {
                 .collect(Collectors.toList());
     }
 
-    public UserDTO getUserByID(String id) {
-        return userMapper.entityToDTO(userRepo.findById(id).orElse(null));
-
-    }
-
     public UserDTO getUserByEmail(String email) {
         return userMapper.entityToDTO(userRepo.findByEmail(email));
     }
 
-    public UserDTO tryToGetUserById(String id) { //método que devuelve el usuario
+    public UserDTO getUserByID(String id) {
+        return userMapper.entityToDTO(userRepo.findById(id).orElse(null));
+    }
+
+    public UserDTO tryToGetUserById(String id) { 
         if (!isUserExisting(id)) { 
             return null;
         }
         return getUserByID(id); 
     }
 
-    public boolean isUserExisting(String id) { //método para controlar nulls
+    public boolean isUserExisting(String id) {//método para controlar nulls
         try {
             getUserByID(id);
         } catch (NullPointerException e) {
