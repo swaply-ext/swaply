@@ -7,13 +7,14 @@ import { LoginButtonComponent } from '../../components/login-button/login-button
 import { RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
-
+import { ActionButtonsComponent } from '../../components/action-buttons/action-buttons.component';
+import { LoginRegisterButtonsComponent } from '../../components/login-register-buttons/login-register-buttons.component';
+ 
 interface User {
   email: string;
-  password: string;
-
+  password: string; 
 }
-
+ 
 @Component({
   selector: 'login-form',
   standalone: true,
@@ -21,8 +22,8 @@ interface User {
     EmailInputComponent,
     PasswordInputComponent,
     TermsCheckboxComponent,
-    LoginButtonComponent,
     RouterLink,
+    LoginRegisterButtonsComponent,
     HttpClientModule
   ],
   templateUrl: './login-form.component.html',
@@ -60,4 +61,8 @@ export class LoginFormComponent {
 
     this.router.navigate(['/']);
   }
+
+  register() {
+  this.router.navigate(['/register']);
+}
 }
