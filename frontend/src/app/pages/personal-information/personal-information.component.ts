@@ -10,6 +10,7 @@ import { UsernameInputComponent } from "../../components/username-input/username
 import { HttpClient } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
 import { RegisterDataService } from '../../services/register-data.service';
+import { GenderInputComponent } from '../../components/gender-input/gender-input.component';
 
 
 interface UserData {
@@ -17,6 +18,7 @@ interface UserData {
   surname: string;
   username: string;
   birthDate: Date;
+  gender: string;
   phone: number;
   adress: string;
   postalCode: number;
@@ -30,6 +32,7 @@ interface UserData {
     NameInputComponent,
     SurnameInputComponent,
     BirthDateComponent,
+    GenderInputComponent,
     PhoneInputComponent,
     AddressInputComponent,
     UsernameInputComponent,
@@ -48,9 +51,11 @@ export class PersonalInformationComponent {
   surname = '';
   username = '';
   birthDate: Date | undefined;
+  gender = '';
   address = '';
   phone = 0;
   postalCode = 0;
+  
 
   constructor(
     private router: Router,
@@ -70,6 +75,8 @@ export class PersonalInformationComponent {
 
     if (!this.birthDate || (new Date(this.birthDate) > new Date()) || this.isToday(new Date(this.birthDate))) { alert('Debes introducir una fecha de nacimiento válida'); return; }
 
+    if (!this.gender) { alert('Debes seleccionar un género'); return; }
+    
     if (!this.phone || this.validatePhone(this.phone)) { alert('Debes introducir un número de teléfono válido'); return; }
 
     if (!this.postalCode || this.validatePostal(this.postalCode)) { alert('Debes introducir un código postal válido'); return; }
@@ -82,6 +89,7 @@ export class PersonalInformationComponent {
       surname: this.surname,
       username: this.username,
       birthDate: this.birthDate,
+      gender: this.gender,
       phone: this.phone,
       adress: this.address,
       postalCode: this.postalCode
