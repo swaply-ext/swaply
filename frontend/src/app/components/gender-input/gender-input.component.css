@@ -1,0 +1,35 @@
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.input-container select {
+  padding-left: 10px;
+  padding-right: 35px;
+  height: 35px;
+  font-size: 14px;
+  width: 100%;
+  background-color: #bfbfbf;
+  border-radius: 8px;
+  outline: none;
+  border: none;
+  appearance: none; 
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+
+
+.input-container .material-icons {
+  position: absolute;
+  right: 10px;
+  font-size: 20px;
+  color: #555;
+  pointer-events: none;
+}
+
+.input-container.error select {
+  border: 1px solid red;
+}
