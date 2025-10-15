@@ -53,16 +53,24 @@ export class LoginFormComponent {
     };
 
 
-    this.http.post('http://localhost:8081/api/account/login', newUser )
-      .subscribe({
-        next: response => console.log('Respuesta del backend:', response),
-        error: err => console.error('Error enviando login:', err)
-      });
+    this.http.post<boolean>('http://localhost:8081/api/account/login', newUser)
+    .subscribe({
+      next: (response) => {
+        console.log('Respuesta del backend:', response);
+        if (response === true) {
+          this.router.navigate(['/']);
+      } else {
+        this.router.navigate(['/error-auth']);
+      }
+    },
+      error: err => {
+        console.error('Error enviando login:', err);
+      alert('Error de conexión con el servidor');
+    }
+  });
+}
 
-    this.router.navigate(['/']);
-  }
-
-  register() {
-  this.router.navigate(['/register']);
+register() {
+  this.router.navigate(['/register']); 
 }
 }
