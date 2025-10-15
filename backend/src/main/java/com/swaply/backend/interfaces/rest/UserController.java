@@ -31,7 +31,11 @@ public class UserController {
 
     @GetMapping("/getUserById/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable String id) {
-        return ResponseEntity.ok(service.getUserByID(id));
+        try {
+            return ResponseEntity.ok(service.getUserByID(id));
+        } catch (NullPointerException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @DeleteMapping("/deleteUserById/{id}")
@@ -58,7 +62,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-}
+
     @GetMapping("/getByEmail/{email}")
     public ResponseEntity<UserDTO> getByEmail(@PathVariable String email) {
         return ResponseEntity.ok(service.getUserByEmail(email));
