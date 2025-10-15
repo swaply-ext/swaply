@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
+//import { RecoveryDataService } from '../../services/recovery-data.service';
 
 interface User {
   email: string;
@@ -20,7 +21,7 @@ interface User {
 export class RecoveryPasswordComponent {
   email: string = '';
 
-  constructor(private router: Router, private location: Location, private http: HttpClient) { }
+  constructor(private router: Router, private location: Location, private http: HttpClient) { } //falta el del service 
 
   enviarCodigo() {
     if (!this.email) {
@@ -28,10 +29,12 @@ export class RecoveryPasswordComponent {
       return;
     }
 
-    this.http.post('http://localhost:8081/api/account/recoveryPass', this.email)
+    this.http.post('http://localhost:8081/api/account/recoveryCode', this.email)
       .subscribe({
         next: response => {
+          
           console.log('Respuesta del backend:', response);
+          //this.RecoveryDataService.setRecoveryData(response); fa falta un nou servei
           this.router.navigate(['/verify'], {state: {code: response}});
         },
         error: err => console.error('Error enviando dato:', err),
