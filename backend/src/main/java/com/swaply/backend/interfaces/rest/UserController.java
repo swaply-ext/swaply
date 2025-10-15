@@ -1,7 +1,6 @@
 package com.swaply.backend.interfaces.rest;
 
 import com.swaply.backend.application.usecase.UserService;
-import com.swaply.backend.application.dto.LoginDTO;
 import com.swaply.backend.application.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

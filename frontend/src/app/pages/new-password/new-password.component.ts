@@ -28,9 +28,9 @@ export class NewPasswordComponent {
 
   constructor(
     private location: Location,
-     private router: Router,
-      private http: HttpClient
-    ) {}
+    private router: Router,
+    private http: HttpClient
+  ) { }
 
   validatePassword(password: string): { valid: boolean; message: string } {
     const minLength = 8;
@@ -41,12 +41,19 @@ export class NewPasswordComponent {
     const simpleSeq = /(1234|abcd|password|qwerty)/i;
 
     if (password.length < minLength) return { valid: false, message: `Debe tener al menos ${minLength} caracteres.` };
+
     if (!uppercase.test(password)) return { valid: false, message: 'Debe contener al menos una letra mayúscula.' };
+
     if (!lowercase.test(password)) return { valid: false, message: 'Debe contener al menos una letra minúscula.' };
+
     if (!number.test(password)) return { valid: false, message: 'Debe contener al menos un número.' };
+
     if (!special.test(password)) return { valid: false, message: 'Debe contener al menos un carácter especial (!@#$%^&*?).' };
+
     if (simpleSeq.test(password)) return { valid: false, message: 'No use secuencias simples o información personal.' };
+
     if (password === this.previousPassword) return { valid: false, message: 'La nueva contraseña debe ser diferente de la anterior.' };
+    
     if (password !== this.confirmPassword) return { valid: false, message: 'Las contraseñas no coinciden.' };
 
     return { valid: true, message: '' };
@@ -73,16 +80,16 @@ export class NewPasswordComponent {
     console.log(this.message);
     console.log('Historial de contraseñas:', this.passwordHistory);
     console.log('Contraseña actual:', this.previousPassword);
-    //API evniar nueva pass a backend
-    this.http.post('http://localhost:8081/api/new-password/save', { NewPasswordComponent: this.newPassword }) //envia el codigo de verificacion al endpoint de back y loc comprueban
-    .subscribe({
-      next: response => console.log('Respuesta del backend:', response),
-      error: err => console.error('Error enviando dato:', err)
+
+    this.http.post('http://localhost:8081/api/account/NO-SE', { NewPasswordComponent: this.newPassword }) //PROVISIONAL
+      .subscribe({
+        next: response => console.log('Respuesta del backend:', response),
+        error: err => console.error('Error enviando datos:', err)
       });
     this.router.navigate(['/confirm-password']);
   }
 
   goBack(): void {
-    this.location.back(); 
+    this.location.back();
   }
 }

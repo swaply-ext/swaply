@@ -16,28 +16,31 @@ import { RegisterDataService } from '../../services/register-data.service';
 //get de toda la info del user + codigo de verify enviado por el backend a 
 
 export class EmailVerificationComponent {
-  
+
   code: string[] = ['', '', '', '', '', ''];
+  validCode: any;
 
 
   constructor(
-  private location: Location,
-  private router: Router,
-  private http: HttpClient,
-  private registerDataService: RegisterDataService
-) {}
-
-  validCode = ''; // Eliminar el valor fix
+    private location: Location,
+    private router: Router,
+    private http: HttpClient,
+    private registerDataService: RegisterDataService
+  ) {
+    const navigation = this.router.getCurrentNavigation();
+    this.validCode = navigation?.extras?.state?.['code'];
+    this.validCode = String(this.validCode);
+  }
 
   ngOnInit() {
-  const allData = this.registerDataService.getRegisterData();
-  this.validCode = allData.verifyCode; // Guarda el codi rebut del backend
-}
+    const allData = this.registerDataService.getRegisterData();
+    console.log("Código válido para verificación:", this.validCode);
+  }
 
   onInput(event: Event, index: number) {
     const input = event.target as HTMLInputElement;
-    const value = input.value.replace(/\D/g, ''); 
-    input.value = value; 
+    const value = input.value.replace(/\D/g, '');
+    input.value = value;
     this.code[index] = value;
 
     if (value && index < 5) {
@@ -62,23 +65,24 @@ export class EmailVerificationComponent {
       return;
     }
 
+    console.log('Introducido', fullCode);
     if (fullCode === this.validCode) {
-    const allData = this.registerDataService.getRegisterData();
-    const { verifyCode, ...dataToSend } = allData;
- // despues de vericiar hay que enviar el objeto infoUser ENTERO (sin verify)
-    this.http.post('http://localhost:8081/api/account/register', dataToSend) //envia el codigo de verificacion al endpoint de back y loc comprueban
-    .subscribe({
-      next: response => {
-          this.router.navigate(['/confirmation']);
-        },
-        error: err => {
-          alert('Error enviando datos al backend');
-          console.error('Error enviando datos:', err);
-        }
-      }) // solo activaremos la api si hace falta doble comprobar en front (ya esta), en back si lo enviamos  */
-  
+      const allData = this.registerDataService.getRegisterData();
+      const { verifyCode, ...dataToSend } = allData;
+      // despues de vericiar hay que enviar el objeto infoUser ENTERO (sin verify)
+      this.http.post('http://localhost:8081/api/account/register', dataToSend) //envia el codigo de verificacion al endpoint de back y loc comprueban
+        .subscribe({
+          next: response => {
+            this.router.navigate(['/confirmation']);
+          },
+          error: err => {
+            alert('Error enviando datos al backend');
+            console.error('Error enviando datos:', err);
+          }
+        }) // solo activaremos la api si hace falta doble comprobar en front (ya esta), en back si lo enviamos  */
+
     } else {
-      
+
       alert('Código incorrecto');
     }
   }

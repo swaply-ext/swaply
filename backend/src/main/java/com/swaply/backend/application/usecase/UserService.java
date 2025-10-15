@@ -34,8 +34,9 @@ public class UserService /* implements UserRepository */ {
     }
 
     public List<UserDTO> getAllUsers() {
-        return userRepo.findByType("user")
-                .stream()
+        return StreamSupport
+                .stream(cosmosTemplate.findAll(User.class).spliterator(), false)
+                .filter(user -> "user".equals(user.getType())) // Filtrar por tipo "User"
                 .map(userMapper::entityToDTO)
                 .collect(Collectors.toList());
     }
