@@ -79,11 +79,11 @@ public class AccountService /* implements UserRepository */ {
 
     }
 
-    public ResponseEntity<Boolean> recoveryPassword(String newPassword, String email, UserDTO dto, String userId) {
+    public ResponseEntity<Boolean> recoveryPassword(String newPassword, String email, UserDTO dto, String Id) {
         UserMapper mapper = new UserMapper();
         User entity = mapper.dtoToEntity(dto);
         PasswordService passwordService = new PasswordService();
-        userService.updateUser(userId, dto);
+        userService.updateUser(Id, dto);
         
         
         return ResponseEntity.ok(true);
@@ -93,8 +93,8 @@ public class AccountService /* implements UserRepository */ {
     public RegisterDTO register(RegisterDTO dto) {
         Register entity = RegisterMapper.toEntity(dto);
         entity.setId(UUID.randomUUID().toString());
-        String hash = new PasswordService().hash(entity.getPasswordHash());
-        entity.setPasswordHash(hash);
+        String hash = new PasswordService().hash(entity.getPassword());
+        entity.setPassword(hash);
 
         Register saved = cosmosTemplate.upsertAndReturnEntity(
                 cosmosTemplate.getContainerName(Register.class),
@@ -120,6 +120,7 @@ public class AccountService /* implements UserRepository */ {
 
         if (passwordService.match(formPassword, hash)) {
             System.out.println("Login correcto");
+            System.out.println(userId);
             return ResponseEntity.ok(userId);
         }
 

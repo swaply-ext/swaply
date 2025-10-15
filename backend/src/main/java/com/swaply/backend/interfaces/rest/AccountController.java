@@ -33,8 +33,8 @@ public class AccountController {
     }
 
     @PostMapping("/recoveryPassword")
-    public ResponseEntity<Boolean> recoveryPassword(@RequestBody String newPassword, String email, UserDTO dto, String userId) {
-        return service.recoveryPassword(newPassword, email, dto, userId);
+    public ResponseEntity<Boolean> recoveryPassword(@RequestBody String newPassword, String email, UserDTO dto, String Id) {
+        return service.recoveryPassword(newPassword, email, dto, Id);
     }
 
     @PostMapping("/mailVerify")
