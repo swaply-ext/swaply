@@ -52,20 +52,16 @@ export class PersonalInformationComponent {
   phone = 0;
   postalCode = 0;
 
-
-   // Array local para guardar usuarios registrados
-  registeredUsers: UserData[] = [];
-
-    constructor(
+  constructor(
     private router: Router,
     private http: HttpClient,
     private registerDataService: RegisterDataService
-  ) {}
+  ) { }
   ngOnInit() {
     this.previousData = this.registerDataService.getRegisterData();
     console.log('Datos previos recibidos:', this.previousData);
   }
-   registerData() {
+  registerData() {
     if (!this.name || this.validateName(this.name)) { alert('Debes introducir un nombre válido'); return; }
 
     if (!this.surname || this.validateName(this.surname)) { alert('Debes introducir un apellido válido'); return; }
@@ -79,7 +75,6 @@ export class PersonalInformationComponent {
     if (!this.postalCode || this.validatePostal(this.postalCode)) { alert('Debes introducir un código postal válido'); return; }
 
     if (!this.address || this.validateAddress(this.address)) { alert('Debes introducir una dirección válida'); return; }
-    
 
 
     const newUserData = {
@@ -95,21 +90,22 @@ export class PersonalInformationComponent {
     this.registerDataService.setRegisterData(newUserData);
 
     const allData = this.registerDataService.getRegisterData();
-this.http.post<{ code: string }>('http://localhost:8081/api/account/email', allData.email )
-  .subscribe({
-    next: response => {
-      // Guarda el codi de verificació rebut
-      this.registerDataService.setRegisterData({ verifyCode: response.code });
+    this.http.post<{ code: string }>('http://localhost:8081/api/account/mailVerify', allData.email)
+      .subscribe({
+        next: response => {
+          // Guarda el codi de verificació rebut
+          console.log("response: " + response);
 
-      // Ara tens al servei: email, password, dades personals i verifyCode
-      // Pots navegar a la pàgina de verificació
-      this.router.navigateByUrl('/verify');
-    },
-    error: err => console.error('Error enviant dades:', err)
-  });
+          this.router.navigate(['/verify'], { state: { code: response } });
 
 
-    this.router.navigateByUrl('/verify');
+          // Ara tens al servei: email, password, dades personals i verifyCode
+          // Pots navegar a la pàgina de verificació
+        },
+        error: err => console.error('Error enviant dades:', err)
+      });
+
+
   }
 
   private validateName(name: string): boolean {
@@ -138,8 +134,8 @@ this.http.post<{ code: string }>('http://localhost:8081/api/account/email', allD
     else return false;
   }
 
-  private isToday(date: Date): boolean{
-    const today =new Date();
+  private isToday(date: Date): boolean {
+    const today = new Date();
     return (date.getDate() === today.getDate() &&
       date.getMonth() === today.getMonth() &&
       date.getFullYear() === today.getFullYear()
@@ -174,7 +170,7 @@ this.http.post<{ code: string }>('http://localhost:8081/api/account/email', allD
     else return false;
   }
 
-  private validateUsername (username: string): boolean {
+  private validateUsername(username: string): boolean {
     const minLength = 3;
     const maxLength = 30;
     const special = /[!@#$%^&*?/]/;
