@@ -6,21 +6,23 @@
 
     <div class="username-row">
       <p class="username">{{ username }}</p>
-      <i class="bi bi-share"></i>
-      <i class="bi bi-link"></i>
-      <span class="material-icons">settings</span>
-      <span class="material-icons">share</span>
+
+      <!-- Condición: vista pública o privada -->
+      <div class="icon-group" [class.public]="isPublic">
+        <ng-container *ngIf="isPublic; else privateIcons">
+          <span class="material-icons">chat</span>
+          <span class="material-icons">favorite</span>
+          <span class="material-icons">share</span>
+        </ng-container>
+        <ng-template #privateIcons>
+          <span class="material-icons">settings</span>
+          <span class="material-icons">share</span>
+        </ng-template>
+      </div>
     </div>
 
     <p class="location">{{ ubicacion }}</p>
   </div>
 
-  <div class="actions">
-    <i class="bi bi-share"></i>
-    <i class="bi bi-link"></i>
-  </div>
-
-  <p class="description">
-    {{ description }}
-  </p>
+  <p class="description">{{ description }}</p>
 </div>
