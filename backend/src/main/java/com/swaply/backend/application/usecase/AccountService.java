@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Random;
 import java.util.UUID;
@@ -59,9 +60,8 @@ public class AccountService /* implements UserRepository */ {
     }
 
     public ResponseEntity<RecoveryCodeResponseDTO> recoveryCode(String email) {
-        
-
-        if (!isEmailRegistered(email)) {
+        System.out.println(email);
+        if (isEmailRegistered(email) == false) {
             System.out.println("Correo no registrado");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
@@ -74,14 +74,16 @@ public class AccountService /* implements UserRepository */ {
         mailService.sendMessage(email, codeString);
 
         
-        RecoveryCodeResponseDTO response = new RecoveryCodeResponseDTO(userId, codeString);
-        return ResponseEntity.ok(response);
+        // RecoveryCodeResponseDTO response = new RecoveryCodeResponseDTO(userId, codeString);
+        // System.out.println((response));
+        return ResponseEntity.ok(new RecoveryCodeResponseDTO(userId, codeString));
 
     }
 
     public ResponseEntity<Boolean> recoveryPassword(String newPassword, String Id) {
         UserDTO dto = userService.getUserByID(Id);
-
+        System.out.println(Id);
+        System.out.println(newPassword);
         PasswordService passwordService = new PasswordService();
         newPassword = passwordService.hash(newPassword);
         dto.setPassword(newPassword);

@@ -22,9 +22,9 @@ export class NewPasswordComponent implements OnInit {
     private router: Router,
     private recoveryService: RecoveryDataService,
     private location: Location
-  ) {}
+  ) { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   goBack() {
     this.location.back();
@@ -42,28 +42,32 @@ export class NewPasswordComponent implements OnInit {
     }
 
     const data = this.recoveryService.getRecoveryData();
-    const payload = { id: data.id, password: this.newPassword };
+    const payload = { Id: data.id, newPassword: this.newPassword };
 
-    if (!payload.id) {
+    if (!payload.Id) {
       alert('No user id available. Vuelve a solicitar el código.');
       this.router.navigate(['/recovery-password']);
       return;
     }
 
-    this.http.post<{ success: boolean }>('http://localhost:8081/api/account/new-password', payload)
-      .subscribe({
-        next: res => {
-          if ((res as any).success === true) {
-            this.recoveryService.clear();
-            this.router.navigate(['/confirmation']);
-          } else {
-            alert('Error cambiando la contraseña');
-          }
-        },
-        error: err => {
-          console.error('Error al cambiar contraseña:', err);
-          alert('Error de conexión con el servidor');
+
+    this.http.post<boolean>(
+      'http://localhost:8081/api/account/new-password',
+      { id: data.id, newPassword: this.newPassword }
+    ).subscribe({
+      next: ok => {
+        if (ok) {
+          this.recoveryService.clear();
+          this.router.navigate(['/confirmation']);
+        } else {
+          alert('Error cambiando la contraseña');
         }
-      });
+      },
+      error: err => {
+        console.error('Error al cambiar contraseña:', err);
+        alert('Error de conexión con el servidor');
+      }
+    });
+
   }
 }

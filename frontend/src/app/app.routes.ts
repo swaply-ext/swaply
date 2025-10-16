@@ -19,6 +19,7 @@ import { ProfileInfoComponent } from './components/profile-info/profile-info.com
 import { ProfileComponent } from './pages/profile/profile.component';
 import { PublicProfileComponent } from './pages/public-profile/public-profile.component';
 import { RecoveryEmailComponent } from './pages/recovery-email/recovery-email.component';
+import { PassVerificationComponent } from './pages/pass-verification/pass-verification.component';
 
 // Creamos una ruta para la verificación de correo
 // Ahora usamos el componente real EmailVerificationComponent
@@ -42,5 +43,6 @@ export const appRoutes: Routes = [
   { path: 'profile-info', component: ProfileInfoComponent }, // ruta para la información personal (temporal)
   { path: 'profile', component: ProfileComponent }, // ruta para el perfil de usuario
   { path: 'public-profile', component: PublicProfileComponent }, // ruta para el perfil público
-  { path: 'recovery-email', component: RecoveryEmailComponent } // ruta para la recuperación de correo
+  { path: 'recovery-email', component: RecoveryEmailComponent }, // ruta para la recuperación de correo
+  { path: 'pass-verification', component: PassVerificationComponent}
 ];
