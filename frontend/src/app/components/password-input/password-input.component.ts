@@ -13,4 +13,12 @@ export class PasswordInputComponent {
   @Input() password: string = '';
   @Input() hasError: boolean = false;
   @Output() passwordChange = new EventEmitter<string>();
+
+  showPassword: boolean = false;
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
 }
+}
+
+
