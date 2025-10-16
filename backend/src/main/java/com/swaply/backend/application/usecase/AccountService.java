@@ -58,7 +58,7 @@ public class AccountService /* implements UserRepository */ {
         return ResponseEntity.ok(codeString);
     }
 
-    public ResponseEntity<RecoveryCodeResponseDTO> recoveryCode(String email, RecoveryPasswordDTO dto) {
+    public ResponseEntity<RecoveryCodeResponseDTO> recoveryCode(String email) {
         
 
         if (!isEmailRegistered(email)) {
@@ -79,10 +79,11 @@ public class AccountService /* implements UserRepository */ {
 
     }
 
-    public ResponseEntity<Boolean> recoveryPassword(String newPassword, String email, UserDTO dto, String Id) {
-        UserMapper mapper = new UserMapper();
-        User entity = mapper.dtoToEntity(dto);
+    public ResponseEntity<Boolean> recoveryPassword(String newPassword, String Id) {
+        UserDTO dto = new UserDTO();
         PasswordService passwordService = new PasswordService();
+        newPassword = passwordService.hash(newPassword);
+        dto.setPassword(newPassword);
         userService.updateUser(Id, dto);
         
         
@@ -110,7 +111,7 @@ public class AccountService /* implements UserRepository */ {
 
         if (isEmailRegistered(formEmail) == false) {
             System.out.println("Correo no registrado");
-            return ResponseEntity.ok("false");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 
         }
 
@@ -125,7 +126,7 @@ public class AccountService /* implements UserRepository */ {
         }
 
         System.out.println("Contraseña incorrecta");
-        return ResponseEntity.ok("false");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 
     }
 

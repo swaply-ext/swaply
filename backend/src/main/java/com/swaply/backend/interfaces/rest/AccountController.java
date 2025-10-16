@@ -28,13 +28,13 @@ public class AccountController {
     }
 
     @PostMapping("/recoveryCode")
-    public ResponseEntity<RecoveryCodeResponseDTO> recoveryCode(@RequestBody String email, RecoveryPasswordDTO dto) {
-        return service.recoveryCode(email, dto);
+    public ResponseEntity<RecoveryCodeResponseDTO> recoveryCode(@RequestBody String email) {
+        return service.recoveryCode(email);
     }
 
     @PostMapping("/recoveryPassword")
-    public ResponseEntity<Boolean> recoveryPassword(@RequestBody String newPassword, String email, UserDTO dto, String Id) {
-        return service.recoveryPassword(newPassword, email, dto, Id);
+    public ResponseEntity<Boolean> recoveryPassword(@RequestBody String newPassword, String Id) {
+        return service.recoveryPassword(newPassword, Id);
     }
 
     @PostMapping("/mailVerify")
@@ -46,5 +46,7 @@ public class AccountController {
     public ResponseEntity<String> login(@RequestBody LoginDTO dto) {
         return service.login(dto);
     }
+
+    
 
 }
