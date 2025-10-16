@@ -83,7 +83,6 @@ public class AccountService /* implements UserRepository */ {
         UserDTO userDTO = new UserDTO();
         String newPassword = dto.getNewPassword();
         String Id = dto.getUserId();
-        PasswordService passwordService = new PasswordService();
         newPassword = passwordService.hash(newPassword);
         userDTO.setPassword(newPassword);
         userService.updateUser(Id, userDTO);
