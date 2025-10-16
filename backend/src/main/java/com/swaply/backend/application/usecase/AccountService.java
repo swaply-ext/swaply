@@ -110,7 +110,7 @@ public class AccountService /* implements UserRepository */ {
         String formPassword = entity.getPassword();
         PasswordService passwordService = new PasswordService();
 
-        if (isEmailRegistered(formEmail) == false) {
+        if (!isEmailRegistered(formEmail)) {
             System.out.println("Correo no registrado");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 
