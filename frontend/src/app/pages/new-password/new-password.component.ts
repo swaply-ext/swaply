@@ -1,95 +1,54 @@
-import { Component } from '@angular/core';
+// ...existing code...
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { PasswordInputComponent } from '../../components/password-input/password-input.component';
 import { ConfirmPasswordInputComponent } from '../../components/confirm-password-input/confirm-password-input.component';
-import { Location } from '@angular/common';
-import { CommonModule } from '@angular/common';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { HttpClientModule } from '@angular/common/http';
+import { RecoveryDataService } from '../../services/recovery-data.service.service';
 
 @Component({
   selector: 'app-new-password',
   standalone: true,
-  imports: [
-    CommonModule,
-    PasswordInputComponent,
-    ConfirmPasswordInputComponent,
-    HttpClientModule
-  ],
+  imports: [CommonModule, PasswordInputComponent, ConfirmPasswordInputComponent, HttpClientModule],
   templateUrl: './new-password.component.html',
   styleUrls: ['./new-password.component.css']
 })
-export class NewPasswordComponent {
+export class NewPasswordComponent implements OnInit {
   newPassword: string = '';
-  confirmPassword: string = '';
-  previousPassword: string = '';
-  message: string = '';
-  passwordHistory: string[] = [];
 
   constructor(
-    private location: Location,
+    private http: HttpClient,
     private router: Router,
-    private http: HttpClient
-  ) { }
+    private recoveryService: RecoveryDataService
+  ) {}
 
-  validatePassword(password: string): { valid: boolean; message: string } {
-    const minLength = 8;
-    const uppercase = /[A-Z]/;
-    const lowercase = /[a-z]/;
-    const number = /[0-9]/;
-    const special = /[!@#$%^&*?]/;
-    const simpleSeq = /(1234|abcd|password|qwerty)/i;
+  ngOnInit() {}
 
-    if (password.length < minLength) return { valid: false, message: `Debe tener al menos ${minLength} caracteres.` };
+  saveNewPassword() {
+    const data = this.recoveryService.getRecoveryData();
+    const payload = { id: data.id, password: this.newPassword };
 
-    if (!uppercase.test(password)) return { valid: false, message: 'Debe contener al menos una letra mayúscula.' };
-
-    if (!lowercase.test(password)) return { valid: false, message: 'Debe contener al menos una letra minúscula.' };
-
-    if (!number.test(password)) return { valid: false, message: 'Debe contener al menos un número.' };
-
-    if (!special.test(password)) return { valid: false, message: 'Debe contener al menos un carácter especial (!@#$%^&*?).' };
-
-    if (simpleSeq.test(password)) return { valid: false, message: 'No use secuencias simples o información personal.' };
-
-    if (password === this.previousPassword) return { valid: false, message: 'La nueva contraseña debe ser diferente de la anterior.' };
-    
-    if (password !== this.confirmPassword) return { valid: false, message: 'Las contraseñas no coinciden.' };
-
-    return { valid: true, message: '' };
-  }
-
-  submitNewPassword(): void {
-    const validation = this.validatePassword(this.newPassword);
-
-    if (!validation.valid) {
-      if (validation.message === 'Las contraseñas no coinciden.') {
-        alert(validation.message);
-      } else {
-        console.log(validation.message);
-      }
-      this.message = validation.message;
+    if (!payload.id) {
+      alert('No user id available. Vuelve a solicitar el código.');
+      this.router.navigate(['/recovery-password']);
       return;
     }
 
-    if (this.previousPassword) {
-      this.passwordHistory.push(this.previousPassword);
-    }
-    this.previousPassword = this.newPassword;
-    this.message = '¡Contraseña cambiada correctamente!';
-    console.log(this.message);
-    console.log('Historial de contraseñas:', this.passwordHistory);
-    console.log('Contraseña actual:', this.previousPassword);
-
-    this.http.post('http://localhost:8081/api/account/NO-SE', this.newPassword ) //PROVISIONAL
+    this.http.post<{ success: boolean }>('http://localhost:8081/api/account/new-password', payload)
       .subscribe({
-        next: response => console.log('Respuesta del backend:', response),
-        error: err => console.error('Error enviando datos:', err)
+        next: res => {
+          if ((res as any).success === true) {
+            this.recoveryService.clear();
+            this.router.navigate(['/confirmation']);
+          } else {
+            alert('Error cambiando la contraseña');
+          }
+        },
+        error: err => {
+          console.error('Error al cambiar contraseña:', err);
+          alert('Error de conexión con el servidor');
+        }
       });
-    this.router.navigate(['/confirm-password']);
-  }
-
-  goBack(): void {
-    this.location.back();
   }
 }
