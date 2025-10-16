@@ -22,11 +22,11 @@ public class AccountController {
     public AccountController(@Autowired AccountService service) {
         this.service = service;
     }
-
-    @PostMapping("/register")
-    public ResponseEntity register(@RequestBody RegisterDTO dto) {
-        return ResponseEntity.ok(service.register(dto));
-    }
+    
+        @PostMapping("/register")
+        public ResponseEntity register(@RequestBody RegisterDTO dto) {
+            return ResponseEntity.ok(service.register(dto));
+        }
 
     @PostMapping("/recoveryCode")
     public ResponseEntity<RecoveryCodeResponseDTO> recoveryCode(@RequestBody String email) {
@@ -40,7 +40,14 @@ public class AccountController {
 
     @PostMapping("/mailVerify")
     public ResponseEntity<String> mailVerify(@RequestBody String email) {
-        return service.mailVerify(email);
+
+        try {
+            String code = service.mailVerify(email);
+            return ResponseEntity.ok(code);
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("El usuario ya existe");
+        }
     }
 
     @PostMapping("/login")

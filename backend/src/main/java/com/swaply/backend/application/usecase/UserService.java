@@ -53,6 +53,10 @@ public class UserService /* implements UserRepository */ {
         return userMapper.toDTO(user);
     }
 
+    public boolean existsByEmail(String email) {
+        return userRepo.existsByEmail(email);
+    }
+
     public UserDTO getUserByID(String id) {
         return userMapper.toDTO(userRepo.findById(id).orElse(null));
     }

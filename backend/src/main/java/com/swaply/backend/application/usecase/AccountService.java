@@ -44,11 +44,11 @@ public class AccountService /* implements UserRepository */ {
 
     }
 
-    public ResponseEntity<String> mailVerify(String email) {
+    public String mailVerify(String email) {
 
-        if (isEmailRegistered(email)) {
+        if (userService.existsByEmail(email)) {
             System.out.println("Correo ya registrado");
-            return ResponseEntity.ok("false");
+            throw new RuntimeException("Correo ya registrado");
 
         }
 
@@ -58,7 +58,7 @@ public class AccountService /* implements UserRepository */ {
 
         mailService.sendMessage(email, codeString);
 
-        return ResponseEntity.ok(codeString);
+        return codeString;
     }
 
     public ResponseEntity<RecoveryCodeResponseDTO> recoveryCode(String email) {
@@ -95,7 +95,7 @@ public class AccountService /* implements UserRepository */ {
 
         // 1) Mapear DTO -> Entity (type="user", id ignorado)
         Register entity = registerMapper.toEntity(dto);
-
+        
         // 2) Asignar ID aquí (no en el mapper)
         entity.setId(UUID.randomUUID().toString());
 
