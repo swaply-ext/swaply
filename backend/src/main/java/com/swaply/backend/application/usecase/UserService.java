@@ -5,8 +5,10 @@ import java.util.UUID;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
+import java.lang.reflect.Method;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.azure.spring.data.cosmos.core.CosmosTemplate;
 import com.swaply.backend.application.dto.UserDTO;
@@ -15,6 +17,7 @@ import com.swaply.backend.domain.model.User;
 import com.swaply.backend.domain.repository.UserRepository;
 
 @Service
+
 public class UserService /* implements UserRepository */ {
 
     private final CosmosTemplate cosmosTemplate;
@@ -49,14 +52,14 @@ public class UserService /* implements UserRepository */ {
         return userMapper.entityToDTO(userRepo.findById(id).orElse(null));
     }
 
-    public UserDTO tryToGetUserById(String id) { 
-        if (!isUserExisting(id)) { 
+    public UserDTO tryToGetUserById(String id) {
+        if (!isUserExisting(id)) {
             return null;
         }
-        return getUserByID(id); 
+        return getUserByID(id);
     }
 
-    public boolean isUserExisting(String id) {//método para controlar nulls
+    public boolean isUserExisting(String id) {// método para controlar nulls
         try {
             getUserByID(id);
         } catch (NullPointerException e) {
@@ -74,71 +77,16 @@ public class UserService /* implements UserRepository */ {
         }
     }
 
+    @Transactional
     public UserDTO updateUser(String id, UserDTO dto) {
-        User existingUser = userRepo.findById(id).orElse(null);
+        User user = userRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found!"));
 
-        if (existingUser == null) {
+        // Copia solo propiedades NO nulas desde el DTO sobre la entidad existente
+        userMapper.updateUserFromDto(dto, user);
 
-            throw new RuntimeException("User not found!");
-
-        }
-
-        if (!existingUser.getUsername().equals(dto.getUsername())) {
-            existingUser.setUsername(dto.getUsername());
-        }
-
-        if (!existingUser.getFullName().equals(dto.getFullName())) {
-            existingUser.setFullName(dto.getFullName());
-        }
-
-        if (!existingUser.getEmail().equals(dto.getEmail())) {
-            existingUser.setEmail(dto.getEmail());
-        }
-
-        if (!existingUser.getPassword().equals(dto.getPassword())) {
-            existingUser.setPassword(dto.getPassword());
-        }
-
-        if (!existingUser.getLocation().equals(dto.getLocation())) {
-            existingUser.setLocation(dto.getLocation());
-        }
-
-        if (!existingUser.getGender().equals(dto.getGender())) {
-            existingUser.setGender(dto.getGender());
-        }
-
-        if (existingUser.getAge() != dto.getAge()) {
-            existingUser.setAge(dto.getAge());
-        }
-
-        if (!existingUser.getDescription().equals(dto.getDescription())) {
-            existingUser.setDescription((dto.getDescription()));
-        }
-
-        if (!existingUser.getDescription().equals(dto.getDescription())) {
-            existingUser.setDescription((dto.getDescription()));
-        }
-
-        if (!existingUser.getProfilePhotoUrl().equals(dto.getProfilePhotoUrl())) {
-            existingUser.setProfilePhotoUrl((dto.getProfilePhotoUrl()));
-        }
-
-        if (existingUser.isVerified() != dto.isVerified()) {
-            existingUser.setVerified(dto.isVerified());
-        }
-
-        if (existingUser.isPremium() != dto.isPremium()) {
-            existingUser.setPremium(dto.isPremium());
-        }
-
-        if (existingUser.isModerator() != dto.isModerator()) {
-            existingUser.setModerator(dto.isModerator());
-
-        }
-
-        User updatedUser = userRepo.save(existingUser);
-        return userMapper.entityToDTO(updatedUser);
-
+        user = userRepo.save(user);
+        return userMapper.entityToDTO(user);
     }
 
 }

@@ -1,47 +1,30 @@
+
 package com.swaply.backend.application.mapper;
 
 import com.swaply.backend.application.dto.UserDTO;
 import com.swaply.backend.domain.model.User;
-import org.springframework.stereotype.Component;
+import org.mapstruct.*;
 
-@Component
-public class UserMapper {
+@Mapper(
+    componentModel = "spring",
+    // Por defecto, ignora propiedades nulas al mapear (ideal para partial update)
+    nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
+)
+public interface UserMapper {
 
-    //Pasamos de Entidad a DTO -Lucas
-    public UserDTO entityToDTO(User user) {
-        return new UserDTO(
-            user.getId(),
-            user.getUsername(),
-            user.getFullName(),
-            user.getEmail(),
-            user.getPassword(),
-            user.getLocation(),
-            user.getGender(),
-            user.getAge(),
-            user.getDescription(),
-            user.isVerified(),
-            user.getProfilePhotoUrl(),
-            user.isPremium(),
-            user.isModerator()
-        );
-    }
+    // Entity -> DTO
+    UserDTO entityToDTO(User user);
 
-    //Pasamos de DTO a Entidad -Lucas
-    public User dtoToEntity(UserDTO dto) {
-        User user = new User();
-        user.setId(dto.getId());
-        user.setUsername(dto.getUsername());
-        user.setFullName(dto.getFullName());
-        user.setEmail(dto.getEmail());
-        user.setPassword(dto.getPassword());
-        user.setLocation(dto.getLocation());
-        user.setGender(dto.getGender());
-        user.setAge(dto.getAge());
-        user.setDescription(dto.getDescription());
-        user.setVerified(dto.isVerified());
-        user.setProfilePhotoUrl(dto.getProfilePhotoUrl());
-        user.setPremium(dto.isPremium());
-        user.setModerator(dto.isModerator());
-        return user;
-    }
+    // DTO -> Entity (creación completa; aquí SÍ copia todos los campos)
+    User dtoToEntity(UserDTO dto);
+
+    // UPDATE parcial: copia solo campos NO nulos del DTO sobre la entidad existente
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mappings({
+        // Nunca sobreescribas el id al actualizar una entidad existente
+        @Mapping(target = "id", ignore = true)
+        // Si NO quieres que el password se actualice vía este DTO, descomenta:
+        // @Mapping(target = "password", ignore = true)
+    })
+    void updateUserFromDto(UserDTO dto, @MappingTarget User entity);
 }
