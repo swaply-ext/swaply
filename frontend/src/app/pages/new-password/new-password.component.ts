@@ -1,6 +1,5 @@
-// ...existing code...
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { PasswordInputComponent } from '../../components/password-input/password-input.component';
 import { ConfirmPasswordInputComponent } from '../../components/confirm-password-input/confirm-password-input.component';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
@@ -16,16 +15,32 @@ import { RecoveryDataService } from '../../services/recovery-data.service.servic
 })
 export class NewPasswordComponent implements OnInit {
   newPassword: string = '';
+  confirmPassword: string = '';
 
   constructor(
     private http: HttpClient,
     private router: Router,
-    private recoveryService: RecoveryDataService
+    private recoveryService: RecoveryDataService,
+    private location: Location
   ) {}
 
   ngOnInit() {}
 
-  saveNewPassword() {
+  goBack() {
+    this.location.back();
+  }
+
+  submitNewPassword() {
+    if (!this.newPassword || !this.confirmPassword) {
+      alert('Por favor, completa ambos campos.');
+      return;
+    }
+
+    if (this.newPassword !== this.confirmPassword) {
+      alert('Las contraseñas no coinciden.');
+      return;
+    }
+
     const data = this.recoveryService.getRecoveryData();
     const payload = { id: data.id, password: this.newPassword };
 
