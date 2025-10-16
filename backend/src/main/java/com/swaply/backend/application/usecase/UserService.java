@@ -45,7 +45,12 @@ public class UserService /* implements UserRepository */ {
     }
 
     public UserDTO getUserByEmail(String email) {
-        return userMapper.entityToDTO(userRepo.findByEmail(email));
+        User user = userRepo.findByEmail(email);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+        return userMapper.entityToDTO(user);
+
     }
 
     public UserDTO getUserByID(String id) {

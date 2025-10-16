@@ -31,14 +31,17 @@ public class AccountService /* implements UserRepository */ {
     private final AccountRepository accountRepo;
     private final UserService userService; //
     private final MailService mailService;
+    private final RegisterMapper registerMapper;
+
 
     @Autowired
     public AccountService(CosmosTemplate cosmosTemplate, AccountRepository accountRepo, UserService userService,
-            MailService mailService) {
+            MailService mailService, RegisterMapper registerMapper) {
         this.cosmosTemplate = cosmosTemplate;
         this.accountRepo = accountRepo;
         this.userService = userService;
         this.mailService = mailService;
+        this.registerMapper = registerMapper;
     }
 
     public ResponseEntity<String> mailVerify(String email) {
@@ -59,7 +62,6 @@ public class AccountService /* implements UserRepository */ {
     }
 
     public ResponseEntity<RecoveryCodeResponseDTO> recoveryCode(String email) {
-        
 
         if (!isEmailRegistered(email)) {
             System.out.println("Correo no registrado");
@@ -73,7 +75,6 @@ public class AccountService /* implements UserRepository */ {
 
         mailService.sendMessage(email, codeString);
 
-        
         RecoveryCodeResponseDTO response = new RecoveryCodeResponseDTO(userId, codeString);
         return ResponseEntity.ok(response);
 
@@ -86,22 +87,30 @@ public class AccountService /* implements UserRepository */ {
         newPassword = passwordService.hash(newPassword);
         dto.setPassword(newPassword);
         userService.updateUser(Id, dto);
-        
-        
+
         return ResponseEntity.ok(true);
     }
 
-
     public RegisterDTO register(RegisterDTO dto) {
-        Register entity = RegisterMapper.toEntity(dto);
+
+        // 1) Mapear DTO -> Entity (type="user", id ignorado)
+        Register entity = registerMapper.toEntity(dto);
+
+        // 2) Asignar ID aquí (no en el mapper)
         entity.setId(UUID.randomUUID().toString());
-        String hash = new PasswordService().hash(entity.getPassword());
+
+        PasswordService passwordService = new PasswordService();
+        // 3) Hashear password aquí (no en el mapper)
+        String hash = passwordService.hash(dto.getPassword());
         entity.setPassword(hash);
 
+        // 4) Upsert en Cosmos
         Register saved = cosmosTemplate.upsertAndReturnEntity(
                 cosmosTemplate.getContainerName(Register.class),
                 entity);
-        return RegisterMapper.toDTO(saved);
+
+        // 5) Devolver DTO
+        return registerMapper.toDTO(saved);
     }
 
     public ResponseEntity<String> login(LoginDTO dto) {
