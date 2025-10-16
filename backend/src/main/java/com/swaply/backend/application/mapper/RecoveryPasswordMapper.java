@@ -3,7 +3,6 @@ package com.swaply.backend.application.mapper;
 
 import com.swaply.backend.application.dto.LoginDTO;
 import com.swaply.backend.application.dto.RecoveryPasswordDTO;
-import com.swaply.backend.domain.model.Login;
 import com.swaply.backend.domain.model.User;
 
 

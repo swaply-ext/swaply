@@ -5,10 +5,8 @@ import com.swaply.backend.application.dto.LoginDTO;
 import com.swaply.backend.application.dto.RecoveryPasswordDTO;
 import com.swaply.backend.application.dto.RegisterDTO;
 import com.swaply.backend.application.dto.UserDTO;
-import com.swaply.backend.application.mapper.LoginMapper;
 import com.swaply.backend.application.mapper.RegisterMapper;
 import com.swaply.backend.application.mapper.UserMapper;
-import com.swaply.backend.domain.model.Login;
 import com.swaply.backend.domain.model.Register;
 import com.swaply.backend.domain.model.User;
 import com.swaply.backend.domain.repository.AccountRepository;
@@ -32,16 +30,18 @@ public class AccountService /* implements UserRepository */ {
     private final UserService userService; //
     private final MailService mailService;
     private final RegisterMapper registerMapper;
-
+    private final PasswordService passwordService;
 
     @Autowired
     public AccountService(CosmosTemplate cosmosTemplate, AccountRepository accountRepo, UserService userService,
-            MailService mailService, RegisterMapper registerMapper) {
+            MailService mailService, RegisterMapper registerMapper, PasswordService passwordService) {
         this.cosmosTemplate = cosmosTemplate;
         this.accountRepo = accountRepo;
         this.userService = userService;
         this.mailService = mailService;
         this.registerMapper = registerMapper;
+        this.passwordService = passwordService;
+
     }
 
     public ResponseEntity<String> mailVerify(String email) {
@@ -99,7 +99,6 @@ public class AccountService /* implements UserRepository */ {
         // 2) Asignar ID aquí (no en el mapper)
         entity.setId(UUID.randomUUID().toString());
 
-        PasswordService passwordService = new PasswordService();
         // 3) Hashear password aquí (no en el mapper)
         String hash = passwordService.hash(dto.getPassword());
         entity.setPassword(hash);
@@ -113,30 +112,21 @@ public class AccountService /* implements UserRepository */ {
         return registerMapper.toDTO(saved);
     }
 
-    public ResponseEntity<String> login(LoginDTO dto) {
-        Login entity = LoginMapper.toEntity(dto);
-        String formEmail = entity.getEmail();
-        String formPassword = entity.getPassword();
-        PasswordService passwordService = new PasswordService();
-
-        if (isEmailRegistered(formEmail) == false) {
-            System.out.println("Correo no registrado");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-
-        }
+    public String login(LoginDTO dto) {
+        String formEmail = dto.getEmail();
+        String formPassword = dto.getPassword();
 
         UserDTO user = userService.getUserByEmail(formEmail);
         String hash = user.getPassword();
-        String userId = user.getId();
 
         if (passwordService.match(formPassword, hash)) {
             System.out.println("Login correcto");
-            System.out.println(userId);
-            return ResponseEntity.ok(userId);
+            System.out.println(user.getId());
+            return user.getId();
         }
 
         System.out.println("Contraseña incorrecta");
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        throw new RuntimeException("Contraseña incorrecta");
 
     }
 

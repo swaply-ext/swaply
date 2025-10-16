@@ -45,7 +45,13 @@ public class AccountController {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginDTO dto) {
-        return service.login(dto);
+        try {
+            String userID = service.login(dto);
+            return ResponseEntity.ok(userID);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Mail o password incorrectos.");
+
+        }
     }
 
     @GetMapping("/test")

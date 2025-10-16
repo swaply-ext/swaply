@@ -32,7 +32,7 @@ public class UserService /* implements UserRepository */ {
 
     public UserDTO createUser(UserDTO dto) {
         String container = cosmosTemplate.getContainerName(User.class);
-        User saved = cosmosTemplate.upsertAndReturnEntity(container, userMapper.dtoToEntity(dto));
+        User saved = cosmosTemplate.upsertAndReturnEntity(container, userMapper.toEntity(dto));
         return dto;
     }
 
@@ -40,21 +40,21 @@ public class UserService /* implements UserRepository */ {
         return StreamSupport
                 .stream(cosmosTemplate.findAll(User.class).spliterator(), false)
                 .filter(user -> "user".equals(user.getType())) // Filtrar por tipo "user"
-                .map(userMapper::entityToDTO)
+                .map(userMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     public UserDTO getUserByEmail(String email) {
         User user = userRepo.findByEmail(email);
         if (user == null) {
+            System.out.println("User not found");
             throw new RuntimeException("User not found");
         }
-        return userMapper.entityToDTO(user);
-
+        return userMapper.toDTO(user);
     }
 
     public UserDTO getUserByID(String id) {
-        return userMapper.entityToDTO(userRepo.findById(id).orElse(null));
+        return userMapper.toDTO(userRepo.findById(id).orElse(null));
     }
 
     public UserDTO tryToGetUserById(String id) {
@@ -91,7 +91,7 @@ public class UserService /* implements UserRepository */ {
         userMapper.updateUserFromDto(dto, user);
 
         user = userRepo.save(user);
-        return userMapper.entityToDTO(user);
+        return userMapper.toDTO(user);
     }
 
 }

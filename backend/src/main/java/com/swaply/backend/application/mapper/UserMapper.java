@@ -7,16 +7,16 @@ import org.mapstruct.*;
 
 @Mapper(
     componentModel = "spring",
-    // Por defecto, ignora propiedades nulas al mapear (ideal para partial update)
+   //Si  campo esta vacio "null" en el DTO no lo añade al entity "modelo"
     nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
 )
 public interface UserMapper {
 
     // Entity -> DTO
-    UserDTO entityToDTO(User user);
+    UserDTO toDTO(User user);
 
     // DTO -> Entity (creación completa; aquí SÍ copia todos los campos)
-    User dtoToEntity(UserDTO dto);
+    User toEntity(UserDTO dto);
 
     // UPDATE parcial: copia solo campos NO nulos del DTO sobre la entidad existente
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
