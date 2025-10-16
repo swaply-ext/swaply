@@ -6,11 +6,11 @@
 /* === CENTRADO Y ZOOM DEL PANEL === */
 .interests-screen {
   display: flex;
-  flex-direction: column;   /* apila panel en columna */
-  align-items: center;      /* centra contenido horizontalmente */
-  justify-content: center;  /* centra contenido verticalmente */
-  min-height: 100vh;        /* altura mínima igual al viewport */
-  zoom: 1;                  /* factor de escala (1 = 100%) */
+  flex-direction: column;  
+  align-items: center;      
+  justify-content: center; 
+  min-height: 100vh;        
+  zoom: 1;                  
 }
 
 
@@ -20,26 +20,25 @@
    - Organiza hijos en columna con separación uniforme
    - Redondea las esquinas inferiores */
 .content-box {
-  background-color: rgba(255,255,255,0.05); /* fondo blanco con opacidad baja */
-  padding: 40px;                            /* espacio interior extra */
+  background-color: rgba(255,255,255,0.05); 
+  padding: 40px;                           
   display: flex;
-  flex-direction: column;                   /* apila hijos verticalmente */
-  gap: 32px;                                /* separación entre bloques */
-  border-bottom-left-radius: 12px;          /* esquinas inferiores redondeadas */
-  border-bottom-right-radius: 12px;
-  border-radius: px; 
+  flex-direction: column;                   
+  gap: 32px;                              
+  border-bottom-left-radius: 12px;          
+  border-radius: 35px; 
 }
 
 
 /* === TÍTULO PRINCIPAL DENTRO DEL MARCO === */
-/* selecciona el H1 directo hijo de .content-box para estilizarlo */
+
 .content-box > .main-title {
-  margin: 0 0 24px;    /* elimina margen superior, deja 24px debajo */
-  font-size: 3rem;     /* tamaño de fuente destacado */
-  font-weight: 800;    /* peso de fuente ultrabold */
-  color: #3CB57C;      /* color verde claro */
+  margin: 0 0 24px;    
+  font-size: 3rem;     
+  font-weight: 800;   
+  color: #3CB57C;     
   text-align: center;
-  border-radius: 8px;   /* centra el texto */
+  border-radius: 8px;   
 }
 
 
@@ -50,25 +49,25 @@
    - Flex vertical con gap */
 
 .selection-wrapper {
-  background-color: rgba(255,255,255,0.07); /* tono semitransparente */
-  padding: 24px;                            /* espacio interior uniforme */
-  border-radius: 8px;                       /* esquinas suavemente redondeadas */
+  background-color: rgba(255,255,255,0.07); 
+  padding: 24px;                           
+  border-radius: 8px;                      
   display: flex;
-  flex-direction: column;                   /* organiza hijos en columna */
-  gap: 24px;                                /* separación interna */
+  flex-direction: column;                
+  gap: 24px;                              
 }
 
 
 /* === TÍTULO DE CATEGORÍAS === */
 /* Estilo del subtítulo dentro del wrapper */
 .category-title {
-  margin: 0;              /* elimina márgenes por defecto */
-  text-align: center;     /* centra el texto */
-  color: #3CB57C;         /* verde claro */
-  font-size: 1.32rem;     /* tamaño intermedio */
-  font-weight: 800;       /* ultrabold */
+  margin: 0;              
+  text-align: center;    
+  color: #3CB57C;        
+  font-size: 1.32rem;     
+  font-weight: 800;       
   transition: background 0.2s, transform 0.1s;
-  cursor: pointer; /* animaciones suaves */
+  cursor: pointer; 
 }
 
 
@@ -76,22 +75,22 @@
 /* .grid contiene las dos columnas: categorías y subcategorías */
 .grid {
   display: flex;
-  justify-content: center;     /* centra horizontalmente */
-  align-items: center;         /* centra verticalmente */
+  justify-content: center;     
+  align-items: center;         
   min-height: 300px;
-  transition: all 0.4s ease;   /* animación suave */
+  transition: all 0.4s ease;   
 }
 
 .grid.shifted {
-  justify-content: flex-start; /* mueve las categorías hacia la izquierda */
-  align-items: flex-start;     /* alinea la parte superior */
-  gap: 40px;                   /* separación entre categorías y subcategorías */
+  justify-content: flex-start; 
+  align-items: flex-start;     
+  gap: 40px;                  
 }
 
 .grid.only-categories {
-  justify-content: center;   /* centra horizontalmente */
-  align-items: center;       /* centra verticalmente dentro del panel */
-  min-height: 250px;         /* altura mínima para centrar visualmente */
+  justify-content: center;   
+  align-items: center;      
+  min-height: 250px;       
 }
 
 
@@ -108,35 +107,36 @@
   flex-direction: column;
   gap: 43px;
   transform: scale(1.05);
-  margin-top: 7px; /* 🔹 baja todo el bloque de botones */
-  width: 160px;
+  margin-top: 7px; 
+  width: 180px;
 }
 .category-buttons button {
-  background-color: #3CB57C; /* fondo verde claro */
-  color: #FFFFFF;            /* texto blanco */
-  border: none;              /* sin borde */
-  border-radius: 20px;       /* esquinas muy redondeadas */
-  padding: 15px;             /* área clicable cómoda */
-  font-weight: 650;          /* negrita ligera */
-  cursor: pointer;           /* cambio de cursor al pasar */
-  transition: background 0.2s; /* animación suave */
-  text-transform: uppercase; /* texto en mayúsculas */
+  background-color: #3CB57C; 
+  color: #FFFFFF;            
+  border: none;           
+  border-radius: 20px;       
+  padding: 15px;             
+  font-weight: 650;          
+  cursor: pointer;           
+  transition: background 0.2s; 
+  text-transform: uppercase; 
   
 }
 .category-buttons button.selected,
 .category-buttons button:hover {
-  background-color: #1fa67a; /* color más oscuro al hover/selected */
+  background-color: #1fa67a; 
 }
 
 
 
 /* === COLUMNA DE SUBCATEGORÍAS === */
-/* .subcategory-column ocupa más espacio y añade padding a la izquierda */
+
 .subcategory-column {
-  flex: 2;                   /* ocupa 2 partes del grid */
+  flex: 2;                  
   display: flex;
-  flex-direction: column;    /* apila subcategorías verticalmente */
-  padding-left: 28px;        /* desplaza el bloque ligeramente a la derecha */
+  flex-direction: column;    
+  padding-left: 28px;    
+    
 }
 
 .grid.shifted .subcategory-column {
@@ -146,15 +146,15 @@
 
 /* === LISTA DE SUBCATEGORÍAS COMO GRID PARA ALINEACIÓN PERFECTA === */
 .subcategory-list {
-  background-color: rgba(255,255,255,0.07);  /* fondo semitransparente */
-  padding: 12px;              /* espacio interior */
-  border-radius: 8px;         /* esquinas redondeadas */
-  display: grid;                      /* usa grid en lugar de flex */
-  grid-template-columns: max-content; /* ancho igual al ítem más ancho */
-  row-gap: 30px;                      /* separación vertical entre filas */
-  justify-content: center;            /* centra todo el grid dentro del recuadro */
-   width: 100%;                /* ocupa todo el ancho disponible */
-  align-self: stretch;        /* se estira al alto disponible */
+  background-color: rgba(255,255,255,0.07); 
+  padding: 14px;           
+  display: grid;                      
+  grid-template-columns: max-content; 
+  row-gap: 30px;                      
+  justify-content: center;           
+  width: 100%;              
+  align-self: stretch;
+  border-radius: 8px;          
 
 }
 
@@ -162,12 +162,12 @@
 
 /* === OPCIONES INDIVIDUALES (checkbox + etiqueta) === */
 .subcategory-option {
-  display: flex;         /* alinea checkbox + texto en fila */
-  align-items: center;   /* centra verticalmente casilla y texto */
-  gap: 12px;             /* espacio entre casilla y texto */
-  color: #FFFFFF;            /* texto blanco */
-  font-size: 0.95rem;        /* tamaño legible */
-  cursor: pointer;           /* cursor interactivo */
+  display: flex;         
+  align-items: center;   
+  gap: 12px;             
+  color: #FFFFFF;           
+  font-size: 0.95rem;        
+  cursor: pointer;          
 
 }
 
@@ -175,51 +175,50 @@
 
 /* === CHECKBOX SIN CAMBIOS === */
 .subcategory-option input[type="checkbox"] {
-  width: 12px;               /* ancho de la casilla */
-  height: 18px;              /* alto de la casilla */
-  accent-color: #3CB57C;     /* color del check según paleta */
+  width: 12px;               
+  height: 18px;              
+  accent-color: #3CB57C;     
 }
 
 
 
 
 /* === BOTÓN GUARDAR === */
-/* .actions centra el contenedor del botón */
-/* .submit-button define estilo del botón y animaciones */
+
 .actions {
-  text-align: center;        /* centra horizontalmente el botón */
+  text-align: center;       
 }
 .submit-button {
-  background-color: #3CB57C; /* fondo verde claro */
-  color: #FFFFFF;            /* texto blanco */
-  border: none;              /* sin borde */
-  border-radius: 6px;        /* esquinas suavemente redondeadas */
-  padding: 12px 28px;        /* espacio interior amplio */
-  font-size: 1rem;           /* tamaño de fuente legible */
-  font-weight: 700;          /* negrita */
-  cursor: pointer;           /* cursor interactivo */
-  transition: background 0.2s, transform 0.1s; /* animaciones suaves */
-  text-transform: uppercase; /* texto en mayúsculas */
+  background-color: #3CB57C;
+  color: #FFFFFF;            
+  border: none;              
+  border-radius: 6px;      
+  padding: 12px 28px;       
+  font-size: 1rem;           
+  font-weight: 700;        
+  cursor: pointer;           
+  transition: background 0.2s, transform 0.1s;
+  text-transform: uppercase; 
 }
 .submit-button:hover {
-  background-color: #1fa67a; /* hover color más oscuro */
-  transform: translateY(-2px); /* efecto de elevación */
+  background-color: #1fa67a; 
+  transform: translateY(-2px); 
 }
 
 
 /* === RESPONSIVE === */
-/* Ajustes para pantallas <600px: apila grid y ajusta anchos */
+
 @media (max-width: 600px) {
   .grid {
-    flex-direction: column; /* apila columnas verticalmente */
-    align-items: stretch;   /* ocupa todo el ancho */
+    flex-direction: column; 
+    align-items: stretch;   
   }
   .panel {
-    width: 90%;             /* panel más estrecho */
+    width: 90%;             
   }
   .category-buttons,
   .subcategory-list {
-    margin-top: 0;          /* elimina márgenes verticales extra */
+    margin-top: 0;         
     margin-bottom: 0;
   }
 }
