@@ -1,6 +1,7 @@
 package com.swaply.backend.interfaces.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.swaply.backend.application.usecase.AccountService;
@@ -47,6 +48,10 @@ public class AccountController {
         return service.login(dto);
     }
 
-    
+    @GetMapping("/test")
+    public ResponseEntity<Boolean> test() {
+        service.recoveryPassword("P@ssw0rd", "USR-001");
+        return ResponseEntity.ok(true);
+    }
 
 }

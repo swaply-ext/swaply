@@ -80,7 +80,8 @@ public class AccountService /* implements UserRepository */ {
     }
 
     public ResponseEntity<Boolean> recoveryPassword(String newPassword, String Id) {
-        UserDTO dto = new UserDTO();
+        UserDTO dto = userService.getUserByID(Id);
+
         PasswordService passwordService = new PasswordService();
         newPassword = passwordService.hash(newPassword);
         dto.setPassword(newPassword);
