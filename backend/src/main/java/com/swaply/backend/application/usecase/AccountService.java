@@ -2,7 +2,6 @@ package com.swaply.backend.application.usecase;
 
 import com.azure.spring.data.cosmos.core.CosmosTemplate;
 import com.swaply.backend.application.dto.LoginDTO;
-import com.swaply.backend.application.dto.RecoveryPasswordDTO;
 import com.swaply.backend.application.dto.RegisterDTO;
 import com.swaply.backend.application.dto.UserDTO;
 import com.swaply.backend.application.mapper.RegisterMapper;
@@ -10,8 +9,8 @@ import com.swaply.backend.application.mapper.UserMapper;
 import com.swaply.backend.domain.model.Register;
 import com.swaply.backend.domain.model.User;
 import com.swaply.backend.domain.repository.AccountRepository;
-import com.swaply.backend.application.mapper.RecoveryPasswordMapper;
 import com.swaply.backend.application.dto.RecoveryCodeResponseDTO;
+import com.swaply.backend.application.dto.RecoveryPasswordRecieveDTO;
 
 import org.apache.qpid.proton.codec.BooleanType.BooleanEncoding;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,13 +79,14 @@ public class AccountService /* implements UserRepository */ {
 
     }
 
-    public ResponseEntity<Boolean> recoveryPassword(String newPassword, String Id) {
-        UserDTO dto = new UserDTO();
-
+    public ResponseEntity<Boolean> recoveryPassword(RecoveryPasswordRecieveDTO dto) {
+        UserDTO userDTO = new UserDTO();
+        String newPassword = dto.getNewPassword();
+        String Id = dto.getUserId();
         PasswordService passwordService = new PasswordService();
         newPassword = passwordService.hash(newPassword);
-        dto.setPassword(newPassword);
-        userService.updateUser(Id, dto);
+        userDTO.setPassword(newPassword);
+        userService.updateUser(Id, userDTO);
 
         return ResponseEntity.ok(true);
     }

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import com.swaply.backend.application.usecase.AccountService;
 import com.swaply.backend.application.dto.LoginDTO;
 import com.swaply.backend.application.dto.RecoveryCodeResponseDTO;
-import com.swaply.backend.application.dto.RecoveryPasswordDTO;
+import com.swaply.backend.application.dto.RecoveryPasswordRecieveDTO;
 import com.swaply.backend.application.dto.RegisterDTO;
 import com.swaply.backend.application.dto.UserDTO;
 
@@ -34,8 +34,8 @@ public class AccountController {
     }
 
     @PostMapping("/recoveryPassword")
-    public ResponseEntity<Boolean> recoveryPassword(@RequestBody String newPassword, String Id) {
-        return service.recoveryPassword(newPassword, Id);
+    public ResponseEntity<Boolean> recoveryPassword(@RequestBody RecoveryPasswordRecieveDTO dto) {
+        return service.recoveryPassword(dto);
     }
 
     @PostMapping("/mailVerify")
@@ -59,12 +59,6 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Mail o password incorrectos.");
 
         }
-    }
-
-    @GetMapping("/test")
-    public ResponseEntity<Boolean> test() {
-        service.recoveryPassword("P@ssw0rd", "USR-001");
-        return ResponseEntity.ok(true);
     }
 
 }
