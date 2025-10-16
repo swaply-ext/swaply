@@ -10,15 +10,16 @@ import { HttpClientModule } from '@angular/common/http';
 import { ActionButtonsComponent } from '../../components/action-buttons/action-buttons.component';
 import { LoginRegisterButtonsComponent } from '../../components/login-register-buttons/login-register-buttons.component';
  
+// Interfaz que define la estructura del objeto usuario
 interface User {
   email: string;
   password: string; 
 }
  
 @Component({
-  selector: 'login-form',
+  selector: 'login-form', // Nombre del componente en el HTML
   standalone: true,
-  imports: [
+  imports: [              // Componentes y módulos que se usan en la plantilla
     EmailInputComponent,
     PasswordInputComponent,
     TermsCheckboxComponent,
@@ -26,18 +27,20 @@ interface User {
     LoginRegisterButtonsComponent,
     HttpClientModule
   ],
-  templateUrl: './login-form.component.html',
-  styleUrls: ['./login-form.component.css']
+  templateUrl: './login-form.component.html', // Ruta al archivo HTML
+  styleUrls: ['./login-form.component.css']   // Ruta al archivo CSS
 })
+// Propiedades que almacenan el estado del formulario
 export class LoginFormComponent {
   email = '';
   password = '';
   accepted = false;
 
-
+  // Constructor con inyección de dependencias: Router para navegación, HttpClient para peticiones HTTP
   constructor(private router: Router, private http: HttpClient) { }
 
   login() {
+    // Habria que cambiar el alert por algo mas bonito
     if (!this.accepted) {
       alert('Debes aceptar los términos');
       return;
@@ -46,15 +49,16 @@ export class LoginFormComponent {
       alert('Debes rellenar todos los campos');
       return;
     }
-
+    // Crea el objeto usuario con los datos del formulario
     const newUser: User = {
       email: this.email,
       password: this.password
     };
 
-
+    // Envía una petición POST al backend con el objeto usuario
     this.http.post<boolean>('http://localhost:8081/api/account/login', newUser)
     .subscribe({
+      // Si la respuesta es true, redirige al inicio; si no, a la página de error
       next: (response) => {
         console.log('Respuesta del backend:', response);
         if (response === true) {
@@ -69,7 +73,7 @@ export class LoginFormComponent {
     }
   });
 }
-
+// Método que redirige al usuario a la página de registro
 register() {
   this.router.navigate(['/register']); 
 }

@@ -17,9 +17,17 @@
 }
 
 .login-logo {
-  width: 200px;   /* ajusta el tamaño según tu imagen */
+  width: 200px;
   height: auto;
+  margin-bottom: 70px;
+  margin-top: 70px;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-drag: none;
 }
+
 
 
 .login-container h2 {
@@ -48,3 +56,4 @@
   text-align: center;
 
 }
+

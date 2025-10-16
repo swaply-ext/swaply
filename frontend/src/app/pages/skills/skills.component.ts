@@ -47,15 +47,18 @@ export class SkillsComponent {
       ]
     }
   ];
-
+  
   selectedCategory: string | null = null;
 
+  // Inyectar HttpClient para hacer peticiones HTTP
   constructor(private http: HttpClient) {}
 
+  // Función para seleccionar una categoría
   selectCategory(categoryId: string): void {
     this.selectedCategory = categoryId;
   }
 
+  // Función para enviar las skills seleccionadas al backend
   submitSkills(): void {
     const selectedSkills = this.categories
       .flatMap(category => category.subcategories)

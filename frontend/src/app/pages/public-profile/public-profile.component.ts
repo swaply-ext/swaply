@@ -8,7 +8,7 @@ import { InterestsPanelComponent } from '../../components/interests-panel/intere
 @Component({
   selector: 'app-public-profile',
   standalone: true,
-  imports: [
+  imports: [ //hay que importar los componentes que usemos
     CommonModule,
     AppNavbarComponent,
     ProfileInfoComponent,

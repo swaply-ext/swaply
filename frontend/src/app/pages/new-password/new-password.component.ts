@@ -20,18 +20,21 @@ import { HttpClientModule } from '@angular/common/http';
   styleUrls: ['./new-password.component.css']
 })
 export class NewPasswordComponent {
+  // Propiedades que almacenan el estado del formulario
   newPassword: string = '';
   confirmPassword: string = '';
   previousPassword: string = '';
   message: string = '';
   passwordHistory: string[] = [];
 
+  // Constructor con inyección de dependencias: Location para navegación, Router para redirección, HttpClient para peticiones HTTP
   constructor(
     private location: Location,
     private router: Router,
     private http: HttpClient
   ) { }
 
+  //Restricciones de la contraseña
   validatePassword(password: string): { valid: boolean; message: string } {
     const minLength = 8;
     const uppercase = /[A-Z]/;
@@ -58,10 +61,12 @@ export class NewPasswordComponent {
 
     return { valid: true, message: '' };
   }
-
+  
   submitNewPassword(): void {
     const validation = this.validatePassword(this.newPassword);
 
+    // Cambiar el alert por algo mas bonito
+    //Validación de la contraseña
     if (!validation.valid) {
       if (validation.message === 'Las contraseñas no coinciden.') {
         alert(validation.message);
@@ -71,7 +76,7 @@ export class NewPasswordComponent {
       this.message = validation.message;
       return;
     }
-
+    // Si es válida, guarda la nueva contraseña y actualiza el historial
     if (this.previousPassword) {
       this.passwordHistory.push(this.previousPassword);
     }

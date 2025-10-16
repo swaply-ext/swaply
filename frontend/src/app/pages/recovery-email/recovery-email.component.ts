@@ -18,20 +18,22 @@ interface User {
   styleUrls: ['./recovery-email.component.css']
 })
 export class RecoveryEmailComponent {
+  // Variable para almacenar el correo electrónico del usuario
   email: string = '';
-
+  // Variable para almacenar el código de verificación recibido del backend
   constructor(
     private router: Router,
     private location: Location,
     private http: HttpClient
   ) {}
 
+  // Función para manejar el envío del formulario
   enviarCodigo() {
     if (!this.email) {
       alert('Por favor, introduce tu correo electrónico.');
       return;
     }
-
+    // Envía una petición POST al backend con el correo electrónico
     this.http.post('http://localhost:8081/api/account/verifyCode', this.email)
       .subscribe({
         next: response => {
@@ -40,7 +42,7 @@ export class RecoveryEmailComponent {
         },
         error: err => console.error('Error enviando dato:', err),
       });
-
+      
     console.log('Código de recuperación enviado a', this.email);
   }
 
