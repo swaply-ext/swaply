@@ -2,9 +2,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { RecoveryDataService } from '../../services/recovery-data.service.service';
 import { HttpClientModule } from '@angular/common/http';
-import { RegisterDataService } from 'src/app/services/register-data.service';
 
 @Component({
   selector: 'app-pass-verification',
@@ -14,25 +13,22 @@ import { RegisterDataService } from 'src/app/services/register-data.service';
   styleUrls: ['./pass-verification.component.css']
 })
 export class PassVerificationComponent implements OnInit {
-
   code: string[] = ['', '', '', '', '', ''];
-  validCode: any;
+  expectedCode?: string;
+  recoveryObject = { id: '', email: '' };
 
   constructor(
     private location: Location,
     private router: Router,
-    private http: HttpClient,
-    private registerDataService: RegisterDataService
-  ) {
-    const navigation = this.router.getCurrentNavigation();
-    this.validCode = navigation?.extras?.state?.['code'];
-    this.validCode = String(this.validCode);
-  }
+    private recoveryService: RecoveryDataService
+  ) {}
 
   ngOnInit() {
-    const allData = this.registerDataService.getRegisterData();
-    console.log("Código válido para verificación (pass):", this.validCode);
-    console.log("Dades acumulades al servei:", allData);
+    const data = this.recoveryService.getRecoveryData();
+    this.expectedCode = data.code;
+    this.recoveryObject.id = data.id ?? '';
+    this.recoveryObject.email = data.email ?? '';
+    console.log('Esperat code:', this.expectedCode, 'recoveryObject:', this.recoveryObject);
   }
 
   onInput(event: Event, index: number) {
@@ -40,7 +36,6 @@ export class PassVerificationComponent implements OnInit {
     const value = input.value.replace(/\D/g, '');
     input.value = value;
     this.code[index] = value;
-
     if (value && index < 5) {
       const next = document.getElementById(`code-${index + 1}`) as HTMLInputElement;
       next?.focus();
@@ -57,30 +52,14 @@ export class PassVerificationComponent implements OnInit {
 
   verifyCode(): void {
     const fullCode = this.code.join('');
-
     if (fullCode.length < 6) {
       alert('Introduce los 6 dígitos antes de continuar.');
       return;
     }
 
-    console.log('Introducido', fullCode);
-    if (fullCode === this.validCode) {
-      const allData = this.registerDataService.getRegisterData();
-      const { verifyCode, ...dataToSend } = allData;
-
-      // Exemple: si és el procés de registre envia al endpoint de register
-      // Si és per recuperació de password, canvieu la URL a la corresponent
-      this.http.post('http://localhost:8081/api/account/register', dataToSend)
-        .subscribe({
-          next: response => {
-            this.router.navigate(['/confirmation']);
-          },
-          error: err => {
-            alert('Error enviando datos al backend');
-            console.error('Error enviando datos:', err);
-          }
-        });
-
+    if (fullCode === this.expectedCode) {
+      // Codi correcte → ja tenim id al servei. Anem a new-password
+      this.router.navigate(['/new-password']);
     } else {
       alert('Código incorrecto');
     }
@@ -90,4 +69,3 @@ export class PassVerificationComponent implements OnInit {
     this.location.back();
   }
 }
-// ...existing code...

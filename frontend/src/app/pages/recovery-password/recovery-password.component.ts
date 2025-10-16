@@ -5,11 +5,7 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { HttpClientModule } from '@angular/common/http';
-//import { RecoveryDataService } from '../../services/recovery-data.service';
-
-interface User {
-  email: string;
-}
+import { RecoveryDataService } from '../../services/recovery-data.service.service';
 
 @Component({
   selector: 'app-recovery-password',
@@ -21,7 +17,12 @@ interface User {
 export class RecoveryPasswordComponent {
   email: string = '';
 
-  constructor(private router: Router, private location: Location, private http: HttpClient) { } //falta el del service 
+  constructor(
+    private router: Router,
+    private location: Location,
+    private http: HttpClient,
+    private recoveryService: RecoveryDataService
+  ) {}
 
   enviarCodigo() {
     if (!this.email) {
@@ -29,18 +30,25 @@ export class RecoveryPasswordComponent {
       return;
     }
 
-    this.http.post('http://localhost:8081/api/account/recoveryCode', this.email)
-      .subscribe({
-        next: response => {
-          
-          console.log('Respuesta del backend:', response);
-          //this.RecoveryDataService.setRecoveryData(response); fa falta un nou servei
-          this.router.navigate(['/verify'], {state: {code: response}});
+    // Enviar JSON { email: ... }
+  this.http.post<{ userId?: string; id?: string; codeString?: string; code?: string }>(
+    'http://localhost:8081/api/account/recoveryCode',
+    { email: this.email }
+      ).subscribe({
+      next: response => {
+        const id = response.userId ?? response.id ?? '';
+        const code = response.codeString ?? response.code ?? '';
+        // Guarda sempre amb la mateixa forma interna
+        this.recoveryService.setRecoveryData({ id, code, email: this.email });
+        this.router.navigate(['/pass-verification']);
+  },
+        error: err => {
+          console.error('Error enviando dato:', err);
+          alert('Error enviando el correo. Intenta de nuevo.');
         },
-        error: err => console.error('Error enviando dato:', err),
       });
 
-    console.log('Código de recuperación enviado a', this.email);
+    console.log('Solicitud de código enviada para', this.email);
   }
 
   volverAtras() {
