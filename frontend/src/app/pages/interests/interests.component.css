@@ -27,6 +27,7 @@
   gap: 32px;                              
   border-bottom-left-radius: 12px;          
   border-radius: 35px; 
+  
 }
 
 
@@ -38,7 +39,7 @@
   font-weight: 800;   
   color: #3CB57C;     
   text-align: center;
-  border-radius: 8px;   
+  border-radius: 9px;   
 }
 
 
