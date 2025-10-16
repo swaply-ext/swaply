@@ -49,6 +49,24 @@ export class EmailVerificationComponent {
     }
   }
 
+    onPaste(event: ClipboardEvent){
+    event.preventDefault();
+    const pasteCode = event.clipboardData?.getData('text') || '';
+    const digits = pasteCode.replace(/\D/g, '').slice(0, 6).split('');
+    
+    digits.forEach((digit, i) => {
+    
+    const input = document.getElementById(`code-${i}`) as HTMLInputElement;
+    if (input) {
+      input.value = digit;
+      this.code[i] = digit;
+    }
+    });
+    const nextIndex = digits.length < 6 ? digits.length : 5;
+    const nextInput = document.getElementById(`code-${nextIndex}`) as HTMLInputElement;
+    nextInput?.focus();
+  }
+
   onKeyDown(event: KeyboardEvent, index: number) {
     const input = event.target as HTMLInputElement;
     if (event.key === 'Backspace' && !input.value && index > 0) {
@@ -90,4 +108,5 @@ export class EmailVerificationComponent {
   goBack(): void {
     this.location.back();
   }
+
 }

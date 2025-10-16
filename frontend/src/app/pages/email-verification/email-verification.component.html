@@ -3,7 +3,7 @@
   <p>Introduzca el código enviado a su correo electrónico.</p>
 
   <div class="code-inputs">
-  <input type="text" id="code-0" maxlength="1" (input)="onInput($event,0)" (keydown)="onKeyDown($event,0)">
+  <input type="text" id="code-0" maxlength="1" (paste)="onPaste($event)" (input)="onInput($event,0)" (keydown)="onKeyDown($event,0)">
   <input type="text" id="code-1" maxlength="1" (input)="onInput($event,1)" (keydown)="onKeyDown($event,1)">
   <input type="text" id="code-2" maxlength="1" (input)="onInput($event,2)" (keydown)="onKeyDown($event,2)">
   <input type="text" id="code-3" maxlength="1" (input)="onInput($event,3)" (keydown)="onKeyDown($event,3)">
