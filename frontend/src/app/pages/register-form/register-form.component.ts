@@ -12,7 +12,7 @@ import { RegisterDataService } from '../../services/register-data.service';
 
 interface User {
   email: string;
-  passwordHash: string;
+  password: string;
   acceptedTerms: boolean;
 }
 
@@ -79,7 +79,7 @@ export class RegisterFormComponent {
 
     const newUser = {
       email: this.email,
-      passwordHash: this.password
+      password: this.password
     };
     // estem guardant les dades al servei per acumular-los i enviarlos a commponent personal-info
     this.registerDataService.setRegisterData(newUser);

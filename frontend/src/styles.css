@@ -14,7 +14,9 @@
 
 body {
   font-family: var(--font-primary);
-  background-color: var(--principal-color-1);
+  background: linear-gradient(to bottom, #012534 0%, #00839E 100%);
+  min-height: 100vh;
+  margin: 0;
 }
 
 h1 {

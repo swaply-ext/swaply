@@ -95,8 +95,8 @@ public class UserService /* implements UserRepository */ {
             existingUser.setEmail(dto.getEmail());
         }
 
-        if (!existingUser.getPasswordHash().equals(dto.getPasswordHash())) {
-            existingUser.setPasswordHash(dto.getPasswordHash());
+        if (!existingUser.getPassword().equals(dto.getPassword())) {
+            existingUser.setPassword(dto.getPassword());
         }
 
         if (!existingUser.getLocation().equals(dto.getLocation())) {

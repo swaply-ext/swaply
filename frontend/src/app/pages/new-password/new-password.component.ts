@@ -1,100 +1,74 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule, Location } from '@angular/common';
 import { PasswordInputComponent } from '../../components/password-input/password-input.component';
 import { ConfirmPasswordInputComponent } from '../../components/confirm-password-input/confirm-password-input.component';
-import { Location } from '@angular/common';
-import { CommonModule } from '@angular/common';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { HttpClientModule } from '@angular/common/http';
+import { RecoveryDataService } from '../../services/recovery-data.service.service';
 
 @Component({
   selector: 'app-new-password',
   standalone: true,
-  imports: [
-    CommonModule,
-    PasswordInputComponent,
-    ConfirmPasswordInputComponent,
-    HttpClientModule
-  ],
+  imports: [CommonModule, PasswordInputComponent, ConfirmPasswordInputComponent, HttpClientModule],
   templateUrl: './new-password.component.html',
   styleUrls: ['./new-password.component.css']
 })
-export class NewPasswordComponent {
-  // Propiedades que almacenan el estado del formulario
+export class NewPasswordComponent implements OnInit {
   newPassword: string = '';
   confirmPassword: string = '';
-  previousPassword: string = '';
-  message: string = '';
-  passwordHistory: string[] = [];
 
   // Constructor con inyección de dependencias: Location para navegación, Router para redirección, HttpClient para peticiones HTTP
   constructor(
-    private location: Location,
+    private http: HttpClient,
     private router: Router,
-    private http: HttpClient
+    private recoveryService: RecoveryDataService,
+    private location: Location
   ) { }
 
-  //Restricciones de la contraseña
-  validatePassword(password: string): { valid: boolean; message: string } {
-    const minLength = 8;
-    const uppercase = /[A-Z]/;
-    const lowercase = /[a-z]/;
-    const number = /[0-9]/;
-    const special = /[!@#$%^&*?]/;
-    const simpleSeq = /(1234|abcd|password|qwerty)/i;
+  ngOnInit() { }
 
-    if (password.length < minLength) return { valid: false, message: `Debe tener al menos ${minLength} caracteres.` };
-
-    if (!uppercase.test(password)) return { valid: false, message: 'Debe contener al menos una letra mayúscula.' };
-
-    if (!lowercase.test(password)) return { valid: false, message: 'Debe contener al menos una letra minúscula.' };
-
-    if (!number.test(password)) return { valid: false, message: 'Debe contener al menos un número.' };
-
-    if (!special.test(password)) return { valid: false, message: 'Debe contener al menos un carácter especial (!@#$%^&*?).' };
-
-    if (simpleSeq.test(password)) return { valid: false, message: 'No use secuencias simples o información personal.' };
-
-    if (password === this.previousPassword) return { valid: false, message: 'La nueva contraseña debe ser diferente de la anterior.' };
-    
-    if (password !== this.confirmPassword) return { valid: false, message: 'Las contraseñas no coinciden.' };
-
-    return { valid: true, message: '' };
+  goBack() {
+    this.location.back();
   }
-  
-  submitNewPassword(): void {
-    const validation = this.validatePassword(this.newPassword);
 
-    // Cambiar el alert por algo mas bonito
-    //Validación de la contraseña
-    if (!validation.valid) {
-      if (validation.message === 'Las contraseñas no coinciden.') {
-        alert(validation.message);
-      } else {
-        console.log(validation.message);
-      }
-      this.message = validation.message;
+  submitNewPassword() {
+    if (!this.newPassword || !this.confirmPassword) {
+      alert('Por favor, completa ambos campos.');
       return;
     }
-    // Si es válida, guarda la nueva contraseña y actualiza el historial
-    if (this.previousPassword) {
-      this.passwordHistory.push(this.previousPassword);
+
+    if (this.newPassword !== this.confirmPassword) {
+      alert('Las contraseñas no coinciden.');
+      return;
     }
-    this.previousPassword = this.newPassword;
-    this.message = '¡Contraseña cambiada correctamente!';
-    console.log(this.message);
-    console.log('Historial de contraseñas:', this.passwordHistory);
-    console.log('Contraseña actual:', this.previousPassword);
 
-    this.http.post('http://localhost:8081/api/account/NO-SE', this.newPassword ) //PROVISIONAL
-      .subscribe({
-        next: response => console.log('Respuesta del backend:', response),
-        error: err => console.error('Error enviando datos:', err)
-      });
-    this.router.navigate(['/confirm-password']);
-  }
+    const data = this.recoveryService.getRecoveryData();
+    const payload = { Id: data.id, newPassword: this.newPassword };
 
-  goBack(): void {
-    this.location.back();
+    if (!payload.Id) {
+      alert('No user id available. Vuelve a solicitar el código.');
+      this.router.navigate(['/recovery-password']);
+      return;
+    }
+
+
+    this.http.post<boolean>(
+      'http://localhost:8081/api/account/new-password',
+      { id: data.id, newPassword: this.newPassword }
+    ).subscribe({
+      next: ok => {
+        if (ok) {
+          this.recoveryService.clear();
+          this.router.navigate(['/confirmation']);
+        } else {
+          alert('Error cambiando la contraseña');
+        }
+      },
+      error: err => {
+        console.error('Error al cambiar contraseña:', err);
+        alert('Error de conexión con el servidor');
+      }
+    });
+
   }
 }
