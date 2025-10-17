@@ -4,16 +4,11 @@ import lombok.Data;
 
 @Data
 public class LoginDTO {
-    private String type = "user";
     private String email;
     private String password;
 
     public LoginDTO() {
         // Constructor vacío necesario para Jackson
-    }
-
-    public String getType() {
-        return this.type;
     }
 
     public String getEmail() {
