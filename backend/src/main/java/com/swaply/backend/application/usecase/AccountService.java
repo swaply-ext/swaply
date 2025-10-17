@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 import java.util.Random;
 import java.util.UUID;
 
+import javax.management.RuntimeErrorException;
+
 @Service
 public class AccountService /* implements UserRepository */ {
 
@@ -60,26 +62,22 @@ public class AccountService /* implements UserRepository */ {
         return codeString;
     }
 
-    public ResponseEntity<RecoveryCodeResponseDTO> recoveryCode(String email) {
+    public RecoveryCodeResponseDTO recoveryCode(String email) {
 
-        if (!isEmailRegistered(email)) {
-            System.out.println("Correo no registrado");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
-        UserDTO user = userService.getUserByEmail(email);
-        String userId = user.getId();
-        Random random = new Random();
-        int codeInt = 100000 + random.nextInt(900000); // Asegura que sea de 6 dígitos
-        String codeString = Integer.toString(codeInt);
+            UserDTO user = userService.getUserByEmail(email);
+            String userId = user.getId();
+            Random random = new Random();
+            int codeInt = 100000 + random.nextInt(900000); // Asegura que sea de 6 dígitos
+            String codeString = Integer.toString(codeInt);
 
-        mailService.sendMessage(email, codeString);
+            mailService.sendMessage(email, codeString);
 
-        RecoveryCodeResponseDTO response = new RecoveryCodeResponseDTO(userId, codeString);
-        return ResponseEntity.ok(response);
+            RecoveryCodeResponseDTO response = new RecoveryCodeResponseDTO(userId, codeString);
+            return response;
 
     }
 
-    public ResponseEntity<Boolean> recoveryPassword(RecoveryPasswordRecieveDTO dto) {
+    public Boolean recoveryPassword(RecoveryPasswordRecieveDTO dto) {
         UserDTO userDTO = new UserDTO();
         String newPassword = dto.getNewPassword();
         String Id = dto.getUserId();
@@ -87,14 +85,14 @@ public class AccountService /* implements UserRepository */ {
         userDTO.setPassword(newPassword);
         userService.updateUser(Id, userDTO);
 
-        return ResponseEntity.ok(true);
+        return true;
     }
 
     public RegisterDTO register(RegisterDTO dto) {
 
         // 1) Mapear DTO -> Entity (type="user", id ignorado)
         Register entity = registerMapper.toEntity(dto);
-        
+
         // 2) Asignar ID aquí (no en el mapper)
         entity.setId(UUID.randomUUID().toString());
 

@@ -46,6 +46,11 @@
 			<artifactId>bcprov-jdk18on</artifactId>
 			<version>1.78</version>
 		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.13.0</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -87,6 +92,11 @@
 			<groupId>com.azure</groupId>
 			<artifactId>azure-security-keyvault-secrets</artifactId>
 			<version>${azure.keyvault.secrets.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+			<version>7.0.0-M3</version>
 		</dependency>
 
 		<dependency>

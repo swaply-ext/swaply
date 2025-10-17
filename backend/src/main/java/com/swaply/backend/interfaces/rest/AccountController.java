@@ -29,13 +29,28 @@ public class AccountController {
         }
 
     @PostMapping("/recoveryCode")
-    public ResponseEntity<RecoveryCodeResponseDTO> recoveryCode(@RequestBody String email) {
-        return service.recoveryCode(email);
+    public ResponseEntity<?> recoveryCode(@RequestBody String email) {
+        try{
+            RecoveryCodeResponseDTO recoverycode = service.recoveryCode(email);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(recoverycode);
+            
+        }catch (NullPointerException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No mail");
+
+        }
     }
 
     @PostMapping("/recoveryPassword")
     public ResponseEntity<Boolean> recoveryPassword(@RequestBody RecoveryPasswordRecieveDTO dto) {
-        return service.recoveryPassword(dto);
+        
+        try {
+            service.recoveryPassword(dto);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
+        
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
+        }
+
     }
 
     @PostMapping("/mailVerify")
@@ -43,7 +58,7 @@ public class AccountController {
 
         try {
             String code = service.mailVerify(email);
-            return ResponseEntity.ok(code);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(code);
 
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("El usuario ya existe");
