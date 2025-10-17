@@ -76,13 +76,6 @@ export class EmailVerificationComponent {
     nextInput?.focus();
   }
 
-
-    // Enfoca el siguiente campo disponible
-    const nextIndex = digits.length < 6 ? digits.length : 5;
-    const nextInput = document.getElementById(`code-${nextIndex}`) as HTMLInputElement;
-    nextInput?.focus();
-  }
-
   // Permite retroceder al campo anterior si se presiona Backspace en un campo vacío
   onKeyDown(event: KeyboardEvent, index: number) {
     const input = event.target as HTMLInputElement;
