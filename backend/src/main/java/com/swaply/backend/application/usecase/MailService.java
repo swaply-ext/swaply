@@ -47,4 +47,20 @@ public class MailService {
         }
     }
 
+    
+    public void sendPasswordResetEmail(String email, String fullUrl) {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true,
+                    java.nio.charset.StandardCharsets.UTF_8.name());
+            helper.setTo(email);
+            helper.setSubject("Url de recovery password");
+            helper.setText("<h1>Url de recovery password</h1><br><p>" +
+                    org.springframework.web.util.HtmlUtils.htmlEscape(fullUrl) + "</p>", true);
+            helper.setFrom(sender);
+            javaMailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

@@ -6,8 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.swaply.backend.application.usecase.AccountService;
 import com.swaply.backend.application.dto.LoginDTO;
-import com.swaply.backend.application.dto.RecoveryCodeResponseDTO;
-import com.swaply.backend.application.dto.RecoveryPasswordRecieveDTO;
 import com.swaply.backend.application.dto.RegisterDTO;
 import com.swaply.backend.application.dto.UserDTO;
 
