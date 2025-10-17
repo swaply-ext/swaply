@@ -1,0 +1,12 @@
+<div class="input-container">
+  <input class="postal" type="text" 
+    [(ngModel)]="postalCode" 
+    (ngModelChange)="postalChange.emit($event)" 
+    placeholder="C.P."
+    maxlength="5">
+  <input type="text" 
+    [(ngModel)]="address" 
+    (ngModelChange)="addressChange.emit($event)" 
+    placeholder="Localidad">
+  <span class="material-icons">location_on</span>
+</div>

@@ -1,0 +1,16 @@
+<div class="recovery-container">
+  <h1>Verifica tu Correo</h1>
+  <p>Introduce tu correo electrónico para recibir un código de confirmación.</p>
+<!--Campo de email-->
+  <input
+    type="email"
+    placeholder="Correo electrónico"
+    [(ngModel)]="email"
+    required
+  />
+
+  <div class="button-wrapper">
+    <button class="back-button" (click)="volverAtras()"></button>
+    <button class="send-button" (click)="enviarCodigo()">Enviar</button>
+  </div>
+</div>

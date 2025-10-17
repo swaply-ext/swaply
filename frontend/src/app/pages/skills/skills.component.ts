@@ -1,31 +1,74 @@
-import { NgFor, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormsModule, NgModel } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-skills',
-  imports: [NgFor, NgIf, FormsModule],
+  standalone: true,
+  imports: [CommonModule, FormsModule, HttpClientModule],
   templateUrl: './skills.component.html',
   styleUrls: ['./skills.component.css']
 })
 export class SkillsComponent {
-  categories = ['Deportes', 'Cocina', 'Otros']; // main categories
-  newSkill = ''; // input to add a skill
-  skillsByCategory: { [key: string]: string[] } = {}; // store skills per category
-
-  selectedCategory = ''; // category selected in the dropdown
-
-  addSkill() { // function to add a skill
-    if (this.selectedCategory && this.newSkill.trim() !== '') {
-      if (!this.skillsByCategory[this.selectedCategory]) {
-        this.skillsByCategory[this.selectedCategory] = [];
-      }
-      this.skillsByCategory[this.selectedCategory].push(this.newSkill);
-      this.newSkill = ''; // reset input field
+  categories = [
+    {
+      name: 'DEPORTES',
+      id: 'sports',
+      subcategories: [
+        { name: 'FÚTBOL', id: 'football', selected: false },
+        { name: 'PÁDEL', id: 'padel', selected: false },
+        { name: 'BÁSQUET', id: 'basketball', selected: false },
+        { name: 'BOXEO', id: 'boxing', selected: false },
+        { name: 'VÓLEY', id: 'volleyball', selected: false }
+      ]
+    },
+    {
+      name: 'MÚSICA',
+      id: 'music',
+      subcategories: [
+        { name: 'GUITARRA', id: 'guitar', selected: false },
+        { name: 'PIANO', id: 'piano', selected: false },
+        { name: 'VIOLÍN', id: 'violin', selected: false },
+        { name: 'BATERÍA', id: 'drums', selected: false },
+        { name: 'SAXO', id: 'saxophone', selected: false }
+      ]
+    },
+    {
+      name: 'OCIO',
+      id: 'leisure',
+      subcategories: [
+        { name: 'COCINA', id: 'cooking', selected: false },
+        { name: 'DIBUJO Y PINTURA', id: 'drawing', selected: false },
+        { name: 'BAILE', id: 'dancing', selected: false },
+        { name: 'MANUALIDADES', id: 'crafts', selected: false },
+        { name: 'OCIO DIGITAL', id: 'digital', selected: false }
+      ]
     }
+  ];
+  
+  selectedCategory: string | null = null;
+
+  // Inyectar HttpClient para hacer peticiones HTTP
+  constructor(private http: HttpClient) {}
+
+  // Función para seleccionar una categoría
+  selectCategory(categoryId: string): void {
+    this.selectedCategory = categoryId;
   }
 
-  removeSkill(category: string, index: number) { // function to remove a skill
-    this.skillsByCategory[category].splice(index, 1);
+  // Función para enviar las skills seleccionadas al backend
+  submitSkills(): void {
+    const selectedSkills = this.categories
+      .flatMap(category => category.subcategories)
+      .filter(subcategory => subcategory.selected)
+      .map(subcategory => subcategory.name);
+
+      this.http.post('http://localhost:8081/api/skills/save', { skills: selectedSkills })
+      .subscribe({
+        next: response => console.log('Resputesta del backend:', response),
+        error: err => console.error('Error enviando skills:', err)
+      });
   }
 }

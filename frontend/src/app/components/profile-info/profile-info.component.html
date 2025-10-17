@@ -1,0 +1,28 @@
+<div class="profile-card">
+  <img [src]="avatarUrl" alt="User avatar" class="avatar" />
+
+  <div class="info">
+    <h2 class="name">{{ fullName }}</h2>
+
+    <div class="username-row">
+      <p class="username">{{ username }}</p>
+
+      <!-- Condición: vista pública o privada -->
+      <div class="icon-group" [class.public]="isPublic">
+        <ng-container *ngIf="isPublic; else privateIcons">
+          <span class="material-icons">chat</span>
+          <span class="material-icons">favorite</span>
+          <span class="material-icons">share</span>
+        </ng-container>
+        <ng-template #privateIcons>
+          <span class="material-icons">settings</span>
+          <span class="material-icons">share</span>
+        </ng-template>
+      </div>
+    </div>
+
+    <p class="location">{{ ubicacion }}</p>
+  </div>
+
+  <p class="description">{{ description }}</p>
+</div>

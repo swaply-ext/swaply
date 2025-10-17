@@ -1,0 +1,8 @@
+<div class="input-container">
+  <input type="tel" 
+    [(ngModel)]="phone" 
+    (ngModelChange)="phoneChange.emit($event)" 
+    placeholder="Teléfono"
+    maxlength="9">
+  <span class="material-icons">phone_enabled</span>
+</div>
