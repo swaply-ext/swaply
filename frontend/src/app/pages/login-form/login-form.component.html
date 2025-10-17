@@ -1,5 +1,5 @@
 <div class="login-logo-wrapper">
-  <img src="assets/logo_swp_invert.png" alt="Logo" class="login-logo">
+  <img src="assets/logo_swp_invert.png" alt="Logo" class="login-logo" draggable="false">
 </div>
 
 
@@ -8,14 +8,18 @@
 
 
   <form>
+    <!-- Componente para el campo de email, password, terms-checkbox -->
     <app-email-input (emailChange)="email = $event"></app-email-input>
     <app-password-input (passwordChange)="password = $event"></app-password-input>
     <app-terms-checkbox (checkedChange)="accepted = $event"></app-terms-checkbox>
 
-
+    <!-- Componente personalizado para el campo de email -->
     <div>
       <a routerLink="/recovery-password"><strong>He olvidado la contraseña.</strong></a>
     </div>
+
+    <!-- Componente con botones de login y registro -->
+    <!-- Emite eventos para iniciar sesión o registrarse -->
     <app-login-register-buttons 
     (registerClick)="register()"
     (loginClick)="login()">

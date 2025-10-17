@@ -5,6 +5,7 @@
     <div class="category-selector">
       <h3>Categorías</h3>
       <div class="category-buttons">
+        <!--Botones para seleccionar categorías-->
         <button 
           *ngFor="let category of categories" 
           [class.selected]="selectedCategory === category.id"
@@ -16,11 +17,13 @@
     
     <div class="subcategories" *ngIf="selectedCategory">
       <div class="subcategory-list">
+        <!--Mostrar subcategorías basadas en la categoría seleccionada-->
         <div *ngFor="let category of categories">
           <div *ngIf="selectedCategory === category.id">
             <div class="subcategory-item" *ngFor="let subcategory of 
             category.subcategories">
               <label>
+                <!--Checkbox para seleccionar subcategorías-->
                 <input type="checkbox" [(ngModel)]="subcategory.
                 selected">
                 {{ subcategory.name }}

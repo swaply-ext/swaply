@@ -46,6 +46,7 @@ interface UserData {
 //recibimos la info de email and password guardamos el objeto userInfo {}
 
 export class PersonalInformationComponent {
+  // Propiedades que almacenan el estado del formulario
   previousData: any = {};
   name = '';
   surname = '';
@@ -56,16 +57,18 @@ export class PersonalInformationComponent {
   phone = 0;
   postalCode = 0;
   
-
+  // Constructor con inyección de dependencias
   constructor(
     private router: Router,
     private http: HttpClient,
     private registerDataService: RegisterDataService
   ) { }
+  // Al inicializar el componente, recupera los datos previos del servicio
   ngOnInit() {
     this.previousData = this.registerDataService.getRegisterData();
     console.log('Datos previos recibidos:', this.previousData);
   }
+  // Función para manejar el envío del formulario
   registerData() {
     if (!this.name || this.validateName(this.name)) { alert('Debes introducir un nombre válido'); return; }
 
@@ -83,7 +86,7 @@ export class PersonalInformationComponent {
 
     if (!this.address || this.validateAddress(this.address)) { alert('Debes introducir una dirección válida'); return; }
 
-
+    // Crea el objeto con los nuevos datos del usuario
     const newUserData = {
       name: this.name,
       surname: this.surname,
@@ -94,9 +97,9 @@ export class PersonalInformationComponent {
       adress: this.address,
       postalCode: this.postalCode
     };
-
+    // Combina los datos previos con los nuevos
     this.registerDataService.setRegisterData(newUserData);
-
+    // Recupera todos los datos del usuario desde el servicio
     const allData = this.registerDataService.getRegisterData();
     this.http.post<{ code: string }>('http://localhost:8081/api/account/mailVerify', allData.email)
       .subscribe({
@@ -115,7 +118,7 @@ export class PersonalInformationComponent {
 
 
   }
-
+  //Restricciones de los campos
   private validateName(name: string): boolean {
     const minLength = 3;
     const maxLength = 30;
