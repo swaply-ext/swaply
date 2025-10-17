@@ -1,27 +1,38 @@
-
-
 server:
   port: 8081
 
-keyvault:
-  url: https://swaply-key.vault.azure.net/
+spring:
+  cloud:
+    azure:
+      # --- Key Vault como PropertySource (lee secretos al arrancar) ---
+      keyvault:
+        secret:
+          property-sources:
+            - name: swaply-key
+              endpoint: https://swaply-key.vault.azure.net/
 
-secrets:
-  cosmos-endpoint: cosmos-endpoint
-  cosmos-key: cosmos-readwrite-key
+      # --- Cosmos con clave (NO AAD) ---
+      cosmos:
+        connection-mode: GATEWAY     # HTTPS/443, útil con firewalls
+        endpoint: https://swaply-db.documents.azure.com:443/
+        key: ${cosmos-readwrite-key} # <-- secreto en Key Vault
+        database: swaplydb           # Asegúrate que coincide con el nombre real
+        populate-query-metrics: true
 
-cosmos:
-  database: "swaplydb"
-
-
+  # Mail: valores desde Key Vault (ya los tienes)
+  mail:
+    host: ${smtp-host}
+    port: 587
+    username: ${smtp-username}
+    password: ${smtp-password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 logging:
   level:
-    com.azure.identity: INFO
-    com.azure: WARN
-
-# spring:
-#   security:
-#     user:
-#       name: user
-#       password: password
+    com.azure.identity: DEBUG
+    com.azure.core: DEBUG

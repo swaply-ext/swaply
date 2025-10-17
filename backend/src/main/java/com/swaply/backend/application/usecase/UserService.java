@@ -10,6 +10,7 @@ import java.lang.reflect.Method;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.azure.cosmos.models.PartitionKey;
 import com.azure.spring.data.cosmos.core.CosmosTemplate;
 import com.swaply.backend.application.dto.UserDTO;
 import com.swaply.backend.application.mapper.UserMapper;
@@ -45,6 +46,7 @@ public class UserService /* implements UserRepository */ {
     }
 
     public UserDTO getUserByEmail(String email) {
+
         User user = userRepo.findByEmail(email);
         if (user == null) {
             System.out.println("User not found");
@@ -58,7 +60,8 @@ public class UserService /* implements UserRepository */ {
     }
 
     public UserDTO getUserByID(String id) {
-        return userMapper.toDTO(userRepo.findById(id).orElse(null));
+        PartitionKey partitionKey = new PartitionKey("user");
+        return userMapper.toDTO(userRepo.findById(id, partitionKey).orElse(null));
     }
 
     public UserDTO tryToGetUserById(String id) {
@@ -78,9 +81,10 @@ public class UserService /* implements UserRepository */ {
     }
 
     public void deleteUserById(String id) {
-        User user = userRepo.findById(id).orElse(null);
+        PartitionKey partitionKey = new PartitionKey("user");
+        User user = userRepo.findById(id, partitionKey).orElse(null);
         if (user != null) {
-            userRepo.delete(user);
+            userRepo.deleteById(id, partitionKey);
         } else {
             throw new RuntimeException("User not found");
         }
@@ -88,13 +92,13 @@ public class UserService /* implements UserRepository */ {
 
     @Transactional
     public UserDTO updateUser(String id, UserDTO dto) {
-        User user = userRepo.findById(id)
+        PartitionKey partitionKey = new PartitionKey("user");
+        User user = userRepo.findById(id, partitionKey)
                 .orElseThrow(() -> new RuntimeException("User not found!"));
 
         // Copia solo propiedades NO nulas desde el DTO sobre la entidad existente
         userMapper.updateUserFromDto(dto, user);
 
-        user = userRepo.save(user);
         return userMapper.toDTO(user);
     }
 
