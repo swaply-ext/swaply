@@ -17,6 +17,7 @@ export class NewPasswordComponent implements OnInit {
   newPassword: string = '';
   confirmPassword: string = '';
 
+  // Constructor con inyección de dependencias: Location para navegación, Router para redirección, HttpClient para peticiones HTTP
   constructor(
     private http: HttpClient,
     private router: Router,

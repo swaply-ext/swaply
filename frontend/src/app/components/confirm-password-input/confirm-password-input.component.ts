@@ -14,8 +14,14 @@ export class ConfirmPasswordInputComponent {
   @Input() hasError = false;
   @Output() confirmPasswordChange = new EventEmitter<string>();
 
+  showPassword: boolean = false;
+
   onInput(event: Event) {
     const value = (event.target as HTMLInputElement).value;
     this.confirmPasswordChange.emit(value);
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
   }
 }

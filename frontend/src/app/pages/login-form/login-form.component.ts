@@ -13,9 +13,9 @@ interface User {
 }
 
 @Component({
-  selector: 'login-form',
+  selector: 'login-form', // Nombre del componente en el HTML
   standalone: true,
-  imports: [
+  imports: [              // Componentes y módulos que se usan en la plantilla
     EmailInputComponent,
     PasswordInputComponent,
     TermsCheckboxComponent,
@@ -23,9 +23,10 @@ interface User {
     LoginRegisterButtonsComponent,
     HttpClientModule
   ],
-  templateUrl: './login-form.component.html',
-  styleUrls: ['./login-form.component.css']
+  templateUrl: './login-form.component.html', // Ruta al archivo HTML
+  styleUrls: ['./login-form.component.css']   // Ruta al archivo CSS
 })
+// Propiedades que almacenan el estado del formulario
 export class LoginFormComponent {
   email = '';
   password = '';
@@ -34,6 +35,7 @@ export class LoginFormComponent {
   constructor(private router: Router, private http: HttpClient) { }
 
   login() {
+    // Habria que cambiar el alert por algo mas bonito
     if (!this.accepted) {
       alert('Debes aceptar los términos');
       return;
@@ -42,7 +44,7 @@ export class LoginFormComponent {
       alert('Debes rellenar todos los campos');
       return;
     }
-
+    // Crea el objeto usuario con los datos del formulario
     const newUser: User = {
       email: this.email,
       password: this.password

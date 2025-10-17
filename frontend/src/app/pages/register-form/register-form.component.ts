@@ -33,6 +33,7 @@ interface User {
   styleUrls: ['./register-form.component.css']
 })
 export class RegisterFormComponent {
+  // Propiedades que almacenan el estado del formulario
   email = '';
   confirmEmail = '';
   password = '';
@@ -42,9 +43,10 @@ export class RegisterFormComponent {
   hasErrorAll = false;
 
 
-
+  // Constructor con inyección de dependencias: Router para navegación, HttpClient para peticiones HTTP, RegisterDataService para compartir datos entre componentes
   constructor(private router: Router, private http: HttpClient, private registerDataService: RegisterDataService) {}
 
+  // Función que maneja el registro del usuario
   register() {
     this.showError = false;
 
@@ -84,7 +86,7 @@ export class RegisterFormComponent {
 
     this.router.navigateByUrl('/personal-information');
   }
-
+  
   private validateEmail(email: string): boolean {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);

@@ -1,39 +1,47 @@
-<div class="container">
-  <h1>Selecciona tus intereses</h1>
-  
-  <div class="categories">
-    <div class="category-selector">
-      <h3>Categorías</h3>
-      <div class="category-buttons">
-        <button 
-          *ngFor="let category of categories" 
-          [class.selected]="selectedCategory === category.id"
-          (click)="selectCategory(category.id)">
-          {{ category.name }}
-        </button>
-      </div>
-    </div>
-    
-    <div class="subcategories" *ngIf="selectedCategory">
-      <h3>Subcategorías</h3>
-      <div class="subcategory-list">
-        <div *ngFor="let category of categories">
-          <div *ngIf="selectedCategory === category.id">
-            <div class="subcategory-item" *ngFor="let subcategory of 
-            category.subcategories">
-              <label>
-                <input type="checkbox" [(ngModel)]="subcategory.
-                selected">
-                {{ subcategory.name }}
-              </label>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <div class="actions">
-    <button (click)="submitInterests()" class="submit-button">Guardar intereses</button>
-  </div>
+<div class="interests-screen">
+  <div class="panel">
+    <div class="content-box">
+      <h1 class="main-title">Selecciona tus intereses</h1>
+
+      <!-- BLOQUE DE CATEGORÍAS Y SUBCATEGORÍAS -->
+      <div class="selection-wrapper">
+        <h3 class="category-title">Categorías</h3>
+
+        <!-- Nuevo contenedor animado -->
+        <div class="grid" [class.shifted]="selectedCategory">
+          <!-- CATEGORÍAS -->
+          <div class="category-column">
+            <div class="category-buttons">
+              <button
+                *ngFor="let category of categories"
+                [class.selected]="selectedCategory === category.id"
+                (click)="selectCategory(category.id)">
+                {{ category.name }}
+              </button>
+            </div>
+          </div>
+
+          <!-- SUBCATEGORÍAS -->
+          <div class="subcategory-column" *ngIf="selectedCategory">
+            <div *ngFor="let category of categories">
+              <div *ngIf="selectedCategory === category.id">
+                <div class="subcategory-list">
+                  <label
+                    *ngFor="let subcategory of category.subcategories"
+                    class="subcategory-option">
+                    <input type="checkbox" [(ngModel)]="subcategory.selected" />
+                    <span class="subcategory-label">{{ subcategory.name }}</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="submit-button" (click)="submitInterests()">Guardar</button>
+      </div>
+    </div>
+  </div>
 </div>

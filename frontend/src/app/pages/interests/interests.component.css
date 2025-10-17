@@ -1,187 +1,225 @@
-.container {
-  max-width: 800px;
-  margin: 40px auto;
-  padding: 24px 16px;
-  background: var(--background-secondary, #29404e);
-  border-radius: 16px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
-}
-h1 {
-  text-align: center;
-  color: var(--primary-color-2, #3ed598);
-  font-family: var(--font-primary, 'Montserrat', sans-serif);
-  font-weight: 700;
-  margin-bottom: 28px;
-  letter-spacing: 0.5px;
+/* === OCULTAR EL MARCO ANTIGUO DEL TÍTULO === */
+.title-box {
+  display: none;  /* ya no lo usamos */
 }
 
-.categories {
-  background: var(--background-tertiary, #315465);
-  color: var(--text-on-dark, #fff);
-  border-radius: 12px;
-  padding: 20px 16px 16px 16px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
-
-.category-selector h3,
-.subcategories h3 {
-  text-align: center;
-  font-family: var(--font-primary, 'Montserrat', sans-serif);
-  font-weight: 600;
-  color: var(--primary-color-2, #3ed598);
-  margin: 0 0 10px 0;
-  font-size: 1.15rem;
-  letter-spacing: 0.2px;
-}
-
-.category-buttons {
+/* === CENTRADO Y ZOOM DEL PANEL === */
+.interests-screen {
   display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 0;
+  flex-direction: column;  
+  align-items: center;      
+  justify-content: center; 
+  min-height: 100vh;        
+  zoom: 1;                  
 }
 
-.category-buttons button {
-  background: var(--primary-color-2, #3ed598);
-  color: var(--primary-color-1, #29404e);
-  font-family: var(--font-secondary, 'Inter', sans-serif);
-  border: none;
-  border-radius: 6px;
-  padding: 9px 18px;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 500;
-  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-  outline: none;
+
+/* === PANEL SEMITRANSPARENTE GENERAL (AHORA ENVUELVE EL H1) === */
+/* .content-box es la capa con fondo semitransparente:
+   - Proporciona padding interior
+   - Organiza hijos en columna con separación uniforme
+   - Redondea las esquinas inferiores */
+.content-box {
+  background-color: rgba(255,255,255,0.05); 
+  padding: 40px;                           
+  display: flex;
+  flex-direction: column;                   
+  gap: 32px;                              
+  border-bottom-left-radius: 12px;          
+  border-radius: 35px; 
+  
 }
 
-.category-buttons button:hover,
-.category-buttons button.selected {
-  background: var(--secondary-color-2, #1fa67a);
-  color: var(--secondary-color-3, #fff);
-  box-shadow: 0 0 8px rgba(62,213,152,0.15);
+
+/* === TÍTULO PRINCIPAL DENTRO DEL MARCO === */
+
+.content-box > .main-title {
+  margin: 0 0 24px;    
+  font-size: 3rem;     
+  font-weight: 800;   
+  color: #3CB57C;     
+  text-align: center;
+  border-radius: 8px;   
 }
 
-.subcategories {
-  margin-top: 12px;
-  margin-bottom: 0;
-  padding: 0;
+
+/* === WRAPPER UNIFICADO PARA CATEGORÍAS Y SUBCATEGORÍAS === */
+/* .selection-wrapper agrupa subtítulo, grid de categorías y subcategorías:
+   - Fondo semitransparente distinto
+   - Padding interior y esquinas redondeadas
+   - Flex vertical con gap */
+
+.selection-wrapper {
+  background-color: rgba(255,255,255,0.07); 
+  padding: 24px;                           
+  border-radius: 8px;                      
+  display: flex;
+  flex-direction: column;                
+  gap: 24px;                              
 }
 
-.subcategories h3 {
-  margin-bottom: 6px !important;
-  margin-top: 0;
+
+/* === TÍTULO DE CATEGORÍAS === */
+/* Estilo del subtítulo dentro del wrapper */
+.category-title {
+  margin: 0;              
+  text-align: center;    
+  color: #3CB57C;        
+  font-size: 1.32rem;     
+  font-weight: 800;       
+  transition: background 0.2s, transform 0.1s;
+  cursor: pointer; 
 }
 
-.subcategory-list {
+
+/* === GRID DE DOS COLUMNAS === */
+/* .grid contiene las dos columnas: categorías y subcategorías */
+.grid {
+  display: flex;
+  justify-content: center;     
+  align-items: center;         
+  min-height: 300px;
+  transition: all 0.4s ease;   
+}
+
+.grid.shifted {
+  justify-content: flex-start; 
+  align-items: flex-start;     
+  gap: 40px;                  
+}
+
+.grid.only-categories {
+  justify-content: center;   
+  align-items: center;      
+  min-height: 250px;       
+}
+
+
+/* === COLUMNA DE CATEGORÍAS === */
+/* .category-column organiza botones en columna */
+.category-column {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 0;
-  margin: 0;
-}
-
-.subcategory-item {
-  background: rgba(255,255,255,0.07);
-  border-radius: 6px;
-  padding: 0;
-  transition: background 0.18s;
-  display: flex;
   align-items: center;
+  transition: transform 0.4s ease;
 }
-
-.subcategory-item label {
-  width: 100%;
+.category-buttons {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  color: var(--text-on-dark, #fff);
-  font-family: var(--font-secondary, 'Inter', sans-serif);
-  font-size: 1rem;
-  cursor: pointer;
-  padding: 8px 12px;
-  border-radius: 6px;
-  background: none;
-  transition: background 0.18s;
+  flex-direction: column;
+  gap: 43px;
+  transform: scale(1.05);
+  margin-top: 7px; 
+  width: 180px;
+}
+.category-buttons button {
+  background-color: #3CB57C; 
+  color: #FFFFFF;            
+  border: none;           
+  border-radius: 20px;       
+  padding: 15px;             
+  font-weight: 650;          
+  cursor: pointer;           
+  transition: background 0.2s; 
+  text-transform: uppercase; 
+  
+}
+.category-buttons button.selected,
+.category-buttons button:hover {
+  background-color: #1fa67a; 
 }
 
-.subcategory-item label:hover,
-.subcategory-item:hover {
-  background: rgba(62,213,152,0.10);
+
+
+/* === COLUMNA DE SUBCATEGORÍAS === */
+
+.subcategory-column {
+  flex: 2;                  
+  display: flex;
+  flex-direction: column;    
+  padding-left: 28px;    
+    
 }
 
-.subcategory-item input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
-  accent-color: var(--primary-color-2, #3ed598);
-  margin-right: 8px;
-  border-radius: 4px;
-  border: 2px solid var(--primary-color-2, #3ed598);
-  background: #fff;
-  transition: box-shadow 0.18s;
-  flex-shrink: 0;
+.grid.shifted .subcategory-column {
+  opacity: 1;
+  transform: translateX(0);
 }
+
+/* === LISTA DE SUBCATEGORÍAS COMO GRID PARA ALINEACIÓN PERFECTA === */
+.subcategory-list {
+  background-color: rgba(255,255,255,0.07); 
+  padding: 14px;           
+  display: grid;                      
+  grid-template-columns: max-content; 
+  row-gap: 30px;                      
+  justify-content: center;           
+  width: 100%;              
+  align-self: stretch;
+  border-radius: 8px;          
+
+}
+
+
+
+/* === OPCIONES INDIVIDUALES (checkbox + etiqueta) === */
+.subcategory-option {
+  display: flex;         
+  align-items: center;   
+  gap: 12px;             
+  color: #FFFFFF;           
+  font-size: 0.95rem;        
+  cursor: pointer;          
+
+}
+
+
+
+/* === CHECKBOX SIN CAMBIOS === */
+.subcategory-option input[type="checkbox"] {
+  width: 12px;               
+  height: 18px;              
+  accent-color: #3CB57C;     
+}
+
+
+
+
+/* === BOTÓN GUARDAR === */
 
 .actions {
-  text-align: center;
-  margin-top: 28px;
+  text-align: center;       
 }
-
 .submit-button {
-  background: var(--primary-color-2, #3ed598);
-  color: var(--primary-color-1, #29404e);
-  font-family: var(--font-secondary, 'Inter', sans-serif);
-  font-weight: 600;
-  border: none;
-  border-radius: 8px;
-  padding: 12px 28px;
-  cursor: pointer;
-  font-size: 1.05rem;
-  transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.15s;
-  outline: none;
+  background-color: #3CB57C;
+  color: #FFFFFF;            
+  border: none;              
+  border-radius: 6px;      
+  padding: 12px 28px;       
+  font-size: 1rem;           
+  font-weight: 700;        
+  cursor: pointer;           
+  transition: background 0.2s, transform 0.1s;
+  text-transform: uppercase; 
 }
-
 .submit-button:hover {
-  background: var(--secondary-color-2, #1fa67a);
-  color: var(--secondary-color-3, #fff);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(31,166,122,0.13);
+  background-color: #1fa67a; 
+  transform: translateY(-2px); 
 }
 
-/* Responsive design */
-@media (max-width: 700px) {
-  .container {
-    max-width: 98vw;
-    padding: 14px 2vw;
-  }
-  .categories {
-    padding: 12px 4vw 10px 4vw;
-  }
-}
 
-@media (max-width: 500px) {
-  .category-buttons {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
-  }
-  .container {
-    padding: 8px 0;
-  }
-  .subcategory-item label {
-    font-size: 0.97rem;
-    padding: 8px 8px;
-  }
-  .submit-button {
-    width: 100%;
-    padding: 12px 0;
-    font-size: 1rem;
-  }
-}
+/* === RESPONSIVE === */
 
-/* Utility: hide scrollbars for subcategory-list if needed */
-.subcategory-list {
-  scrollbar-width: thin;
-  scrollbar-color: var(--primary-color-2, #3ed598) #29404e;
+@media (max-width: 600px) {
+  .grid {
+    flex-direction: column; 
+    align-items: stretch;   
+  }
+  .panel {
+    width: 90%;             
+  }
+  .category-buttons,
+  .subcategory-list {
+    margin-top: 0;         
+    margin-bottom: 0;
+  }
 }
