@@ -8,7 +8,6 @@ import com.swaply.backend.application.mapper.RegisterMapper;
 import com.swaply.backend.application.mapper.UserMapper;
 import com.swaply.backend.domain.model.Register;
 import com.swaply.backend.domain.model.User;
-import com.swaply.backend.domain.repository.AccountRepository;
 import com.swaply.backend.application.dto.RecoveryCodeResponseDTO;
 import com.swaply.backend.application.dto.RecoveryPasswordRecieveDTO;
 
@@ -27,17 +26,15 @@ import javax.management.RuntimeErrorException;
 public class AccountService /* implements UserRepository */ {
 
     private final CosmosTemplate cosmosTemplate;
-    private final AccountRepository accountRepo;
     private final UserService userService; //
     private final MailService mailService;
     private final RegisterMapper registerMapper;
     private final PasswordService passwordService;
 
     @Autowired
-    public AccountService(CosmosTemplate cosmosTemplate, AccountRepository accountRepo, UserService userService,
+    public AccountService(CosmosTemplate cosmosTemplate, UserService userService,
             MailService mailService, RegisterMapper registerMapper, PasswordService passwordService) {
         this.cosmosTemplate = cosmosTemplate;
-        this.accountRepo = accountRepo;
         this.userService = userService;
         this.mailService = mailService;
         this.registerMapper = registerMapper;

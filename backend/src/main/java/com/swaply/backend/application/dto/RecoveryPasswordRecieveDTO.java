@@ -6,8 +6,6 @@ public class RecoveryPasswordRecieveDTO {
 
     public RecoveryPasswordRecieveDTO(String userId, String code) {
         this.userId = userId;
-        this.newPassword = newPassword;
-    
     }
     public String getUserId() {
         return userId;
