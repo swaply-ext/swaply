@@ -48,6 +48,29 @@ export class EmailVerificationComponent {
       next?.focus();
     }
   }
+  // Permite pegar el código completo en los campos
+  onPaste(event: ClipboardEvent) {
+    event.preventDefault();
+    // Obtiene el texto del portapapeles y lo convierte en array de dígitos
+    const pasteCode = event.clipboardData?.getData('text') || '';
+    const digits = pasteCode.replace(/\D/g, '').slice(0, 6).split('');
+
+    // Asigna cada dígito a su campo correspondiente
+    digits.forEach((digit, i) => {
+
+      const input = document.getElementById(`code-${i}`) as HTMLInputElement;
+      if (input) {
+        input.value = digit;
+        this.code[i] = digit;
+      }
+    });
+
+    // Enfoca el siguiente campo disponible
+    const nextIndex = digits.length < 6 ? digits.length : 5;
+    const nextInput = document.getElementById(`code-${nextIndex}`) as HTMLInputElement;
+    nextInput?.focus();
+  }
+
 
   onKeyDown(event: KeyboardEvent, index: number) {
     const input = event.target as HTMLInputElement;
