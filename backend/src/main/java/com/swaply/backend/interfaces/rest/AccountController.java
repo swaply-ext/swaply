@@ -22,31 +22,27 @@ public class AccountController {
     public AccountController(@Autowired AccountService service) {
         this.service = service;
     }
-    
-        @PostMapping("/register")
-        public ResponseEntity register(@RequestBody RegisterDTO dto) {
-            return ResponseEntity.ok(service.register(dto));
-        }
 
-    @PostMapping("/recoveryCode")
-    public ResponseEntity<?> recoveryCode(@RequestBody String email) {
-        try{
-            RecoveryCodeResponseDTO recoverycode = service.recoveryCode(email);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(recoverycode);
-            
-        }catch (NullPointerException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No mail");
-
-        }
+    @PostMapping("/register")
+    public ResponseEntity register(@RequestBody RegisterDTO dto) {
+        return ResponseEntity.ok(service.register(dto));
     }
 
-    @PostMapping("/recoveryPassword")
-    public ResponseEntity<Boolean> recoveryPassword(@RequestBody RecoveryPasswordRecieveDTO dto) {
-        
+    @PostMapping("/recoveryCode")
+    public ResponseEntity<?> generateAndSendResetLink(@RequestBody String email) {
+
+        service.generateAndSendResetLink(email);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Código generado y enviado");
+
+    }
+
+    @PostMapping("/passwordReset")
+    public ResponseEntity<Boolean> resetPassword(@RequestBody String token, String newPassword) {
+
         try {
-            service.recoveryPassword(dto);
+            service.resetPassword(token, newPassword);
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
-        
+
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
         }

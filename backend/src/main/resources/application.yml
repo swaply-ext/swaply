@@ -32,7 +32,12 @@ spring:
           starttls:
             enable: true
 
+# URL de la página de reseteo de contraseña en tu frontend
+frontend:
+  reset-password-url: http://localhost:4200/new-password
+
 logging:
   level:
     com.azure.identity: DEBUG
     com.azure.core: DEBUG
+
