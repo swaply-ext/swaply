@@ -21,7 +21,8 @@ public class UserController {
 
     @PostMapping("/new")
     public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO user) {
-        return ResponseEntity.ok(service.createUser(user));
+        UserDTO createdUser = service.createUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
     @GetMapping("/getAll")
@@ -31,36 +32,20 @@ public class UserController {
 
     @GetMapping("/getUserById/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable String id) {
-        try {
-            return ResponseEntity.ok(service.getUserByID(id));
-        } catch (NullPointerException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        return ResponseEntity.ok(service.getUserByID(id));
     }
 
+    // Porque se retorna noContent?
     @DeleteMapping("/deleteUserById/{id}")
     public ResponseEntity<Void> deleteUserById(@PathVariable String id) {
-        try {
-            service.deleteUserById(id);
-            return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        service.deleteUserById(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/update/{id}")
     public ResponseEntity<UserDTO> updatedUser(@PathVariable String id, @RequestBody UserDTO user) {
-        try {
-            UserDTO updatedUser = service.updateUser(id, user);
-            return ResponseEntity.ok(updatedUser);
-        } catch (RuntimeException e) {
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+        UserDTO updatedUser = service.updateUser(id, user);
+        return ResponseEntity.ok(updatedUser);
     }
 
     @GetMapping("/getByEmail/{email}")
@@ -68,20 +53,4 @@ public class UserController {
         return ResponseEntity.ok(service.getUserByEmail(email));
     }
 
-
-    // @GetMapping("/{id}")
-    // public Optional<UserDTO> obtenerPorId(@PathVariable String id) {
-    // return service.obtenerPorId(id);
-    // }
-
-    // @PutMapping("/{id}")
-    // public UserDTO actualizarUsuario(@PathVariable String id, @RequestBody
-    // UserDTO userActualizado) {
-    // return service.actualizarUsuario(id, userActualizado);
-    // }
-
-    // @DeleteMapping("/{id}")
-    // public void eliminarUsuario(@PathVariable String id) {
-    // service.eliminarUsuario(id);
-    // }
 }

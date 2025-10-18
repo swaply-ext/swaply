@@ -22,7 +22,7 @@ public class AccountController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody RegisterDTO dto) {
+    public ResponseEntity<?> register(@RequestBody RegisterDTO dto) {
         return ResponseEntity.ok(service.register(dto));
     }
 

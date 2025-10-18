@@ -10,125 +10,70 @@ import java.lang.reflect.Method;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.azure.cosmos.models.PartitionKey;
-import com.azure.spring.data.cosmos.core.CosmosTemplate;
 import com.swaply.backend.application.dto.UserDTO;
+import com.swaply.backend.application.exception.UserNotFoundException;
 import com.swaply.backend.application.mapper.UserMapper;
 import com.swaply.backend.domain.model.User;
 import com.swaply.backend.domain.repository.UserRepository;
 
 @Service
+public class UserService {
 
-public class UserService /* implements UserRepository */ {
+    private final UserRepository repository;
+    private final UserMapper mapper;
 
-    private final CosmosTemplate cosmosTemplate;
-    private final UserRepository userRepo;
-    private final UserMapper userMapper;
-
-    public UserService(CosmosTemplate cosmosTemplate, UserRepository userRepo, UserMapper userMapper) {
-        this.cosmosTemplate = cosmosTemplate;
-        this.userRepo = userRepo;
-        this.userMapper = userMapper;
+    public UserService(UserRepository repository, UserMapper mapper) {
+        this.repository = repository;
+        this.mapper = mapper;
     }
 
-    public UserDTO createUser(UserDTO dto) {
-        String container = cosmosTemplate.getContainerName(User.class);
-        User saved = cosmosTemplate.upsertAndReturnEntity(container, userMapper.toEntity(dto));
-        return dto;
-    }
-
-    public List<UserDTO> getAllUsers() {
-        return StreamSupport
-                .stream(cosmosTemplate.findAll(User.class).spliterator(), false)
-                .filter(user -> "user".equals(user.getType())) // Filtrar por tipo "user"
-                .map(userMapper::toDTO)
-                .collect(Collectors.toList());
-    }
-
-    public UserDTO getUserByEmail(String email) {
-
-        User user = userRepo.findByEmail(email);
-        if (user == null) {
-            System.out.println("User not found");
-            throw new RuntimeException("User not found");
-        }
-        return userMapper.toDTO(user);
+    public boolean existsById(String id) {
+        return repository.existsUserById(id);
     }
 
     public boolean existsByEmail(String email) {
-        return userRepo.existsByEmail(email);
+        return repository.existsUserByEmail(email);
+    }
+
+    public UserDTO getUserByEmail(String email) {
+        User user = repository.findUserByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
+        return mapper.toDTO(user);
     }
 
     public UserDTO getUserByID(String id) {
-        PartitionKey partitionKey = new PartitionKey("user");
-        return userMapper.toDTO(userRepo.findById(id, partitionKey).orElse(null));
+        User user = repository.findUserById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+        return mapper.toDTO(user);
     }
 
-    public UserDTO tryToGetUserById(String id) {
-        if (!isUserExisting(id)) {
-            return null;
-        }
-        return getUserByID(id);
-    }
-
-    public boolean isUserExisting(String id) {// método para controlar nulls
-        try {
-            getUserByID(id);
-        } catch (NullPointerException e) {
-            return false;
-        }
-        return true;
+    public List<UserDTO> getAllUsers() {
+        return repository.findAllUsers()
+                .stream()
+                .map(mapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     public void deleteUserById(String id) {
-        PartitionKey partitionKey = new PartitionKey("user");
-        User user = userRepo.findById(id, partitionKey).orElse(null);
-        if (user != null) {
-            userRepo.deleteById(id, partitionKey);
-        } else {
-            throw new RuntimeException("User not found");
+        if (!repository.existsUserById(id)) {
+            throw new UserNotFoundException("User not found with id: " + id);
         }
+        repository.deleteUserById(id);
     }
 
     @Transactional
     public UserDTO updateUser(String id, UserDTO dto) {
-        PartitionKey partitionKey = new PartitionKey("user");
-        User user = userRepo.findById(id, partitionKey)
-                .orElseThrow(() -> new RuntimeException("User not found!"));
+        User user = repository.findUserById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+        mapper.updateUserFromDto(dto, user);
+        User saved = repository.save(user);
+        return mapper.toDTO(saved);
+    }
 
-        // Copia solo propiedades NO nulas desde el DTO sobre la entidad existente
-        userMapper.updateUserFromDto(dto, user);
-
-        return userMapper.toDTO(user);
+    public UserDTO createUser(UserDTO dto) {
+        User user = mapper.toEntity(dto);
+        User saved = repository.save(user);
+        return mapper.toDTO(saved);
     }
 
 }
-// return repo.findAll()
-// .stream()
-// .map(u -> new UserDTO(u.getName(), u.getEmail()))
-// .collect(Collectors.toList());
-
-// public List<User> getAll() {
-// // Convertimos el Iterable<User> que devuelve repo.findAll() en un Stream
-// secuencial
-// return StreamSupport.stream(repo.findAll().spliterator(), false)
-
-// // Filtramos los usuarios cuyo campo 'id' sea exactamente igual a "User"
-// .filter(user -> "User".equals(user.getId()))
-
-// // Recolectamos los elementos filtrados en una lista y la devolvemos
-// .collect(Collectors.toList());
-// }
-
-// public Optional<User> obtenerPorId(String id) {
-// return repo.findById(id);
-// }
-
-// public User actualizarUsuario(String id, User userActualizado) {
-// userActualizado.setId(id);
-// return repo.save(userActualizado);
-// }
-
-// public void eliminarUsuario(String id) {
-// repo.deleteById(id);
-// }

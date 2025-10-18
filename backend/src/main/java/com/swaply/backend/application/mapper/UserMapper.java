@@ -21,10 +21,9 @@ public interface UserMapper {
     // UPDATE parcial: copia solo campos NO nulos del DTO sobre la entidad existente
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mappings({
-        // Nunca sobreescribas el id al actualizar una entidad existente
-        @Mapping(target = "id", ignore = true)
-        // Si NO quieres que el password se actualice vía este DTO, descomenta:
-        // @Mapping(target = "password", ignore = true)
+        // Nunca sobreescribas el id ni el type al actualizar una entidad existente
+        @Mapping(target = "id", ignore = true),
+        @Mapping(target = "type", ignore = true)
     })
     void updateUserFromDto(UserDTO dto, @MappingTarget User entity);
 }

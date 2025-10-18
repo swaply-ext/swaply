@@ -9,9 +9,6 @@ import com.swaply.backend.application.mapper.UserMapper;
 import com.swaply.backend.domain.model.Register;
 import com.swaply.backend.domain.model.User;
 import com.swaply.backend.domain.repository.UserRepository;
-import com.swaply.backend.application.dto.RecoveryCodeResponseDTO;
-import com.swaply.backend.application.dto.RecoveryPasswordRecieveDTO;
-
 import org.apache.qpid.proton.codec.BooleanType.BooleanEncoding;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
