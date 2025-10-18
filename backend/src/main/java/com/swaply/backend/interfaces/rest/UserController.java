@@ -1,6 +1,7 @@
 package com.swaply.backend.interfaces.rest;
 
 import com.swaply.backend.application.usecase.UserService;
+import com.swaply.backend.application.dto.RegisterDTO;
 import com.swaply.backend.application.dto.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO user) {
+    public ResponseEntity<UserDTO> createUser(@RequestBody RegisterDTO user) {
         UserDTO createdUser = service.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }

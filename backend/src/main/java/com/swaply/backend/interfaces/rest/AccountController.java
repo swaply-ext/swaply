@@ -22,52 +22,36 @@ public class AccountController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterDTO dto) {
-        return ResponseEntity.ok(service.register(dto));
+    public ResponseEntity<UserDTO> register(@RequestBody RegisterDTO dto) {
+        UserDTO newUser = service.register(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
+    }
+
+    // Esto hay que mirarlo seguramente el Front no deberia tener el código solo un
+    // boolean al enviarlo
+    @PostMapping("/mailVerify")
+    public ResponseEntity<String> mailVerify(@RequestBody String email) {
+        String code = service.mailVerify(email);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(code);
     }
 
     @PostMapping("/recoveryCode")
-    public ResponseEntity<?> generateAndSendResetLink(@RequestBody String email) {
-
+    public ResponseEntity<String> generateAndSendResetLink(@RequestBody String email) {
         service.generateAndSendResetLink(email);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Código generado y enviado");
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Código generado y enviado si el mail existe");
 
     }
 
     @PostMapping("/passwordReset")
     public ResponseEntity<Boolean> resetPassword(@RequestBody String token, String newPassword) {
-
-        try {
-            service.resetPassword(token, newPassword);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
-
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
-        }
-
-    }
-
-    @PostMapping("/mailVerify")
-    public ResponseEntity<String> mailVerify(@RequestBody String email) {
-
-        try {
-            String code = service.mailVerify(email);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(code);
-
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("El usuario ya existe");
-        }
+        service.resetPassword(token, newPassword);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
     }
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginDTO dto) {
-        try {
             String userID = service.login(dto);
             return ResponseEntity.ok(userID);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Mail o password incorrectos.");
-
-        }
     }
 
 }
