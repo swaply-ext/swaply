@@ -50,7 +50,7 @@ public class UserController {
     }
 
     /* La petició se hace a: http://localhost:8081/api/users/email?email= */
-    @GetMapping("/email")
+    @GetMapping(params = "email")
     public ResponseEntity<UserDTO> getByEmail(@RequestParam String email) {
         return ResponseEntity.ok(service.getUserByEmail(email));
     }
