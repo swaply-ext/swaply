@@ -73,7 +73,7 @@ public class AccountService /* implements UserRepository */ {
         int codeInt = 100000 + random.nextInt(900000); // Asegura que sea de 6 dígitos
         String codeString = Integer.toString(codeInt);
 
-        mailService.sendMessage(email, codeString);
+        mailService.sendVerificationCode(email, codeString);
 
         return codeString;
     }
