@@ -5,6 +5,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import com.swaply.backend.application.dto.MailDTO;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -13,7 +14,6 @@ import jakarta.mail.internet.MimeMessage;
 public class MailService {
 
     private final JavaMailSender javaMailSender;
-    private final String sender;
 
     public MailService(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;
@@ -23,29 +23,28 @@ public class MailService {
             if (user == null || user.isBlank()) {
                 throw new IllegalStateException("El username SMTP no está configurado.");
             }
-            this.sender = user;
         } else {
             throw new IllegalStateException("JavaMailSender no es JavaMailSenderImpl.");
         }
     }
 
-    public void sendMessage(String email, String msg) {
+    public void sendMessage(MailDTO mail) {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         try {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true,
                     java.nio.charset.StandardCharsets.UTF_8.name());
-            helper.setTo(email);
-            helper.setSubject("Prueba de correo");
-            helper.setText("<h1>Correo de prueba</h1><br><p>" +
-                    org.springframework.web.util.HtmlUtils.htmlEscape(msg) + "</p>", true);
-            helper.setFrom(sender);
+
+            helper.setTo(mail.getEmail());
+            helper.setSubject(mail.getSubject());
+            helper.setText(mail.getSample(), true);
+
             javaMailSender.send(mimeMessage);
+
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
     }
 
-    
     public void sendPasswordResetEmail(String email, String fullUrl) {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         try {
@@ -55,7 +54,6 @@ public class MailService {
             helper.setSubject("Url de recovery password");
             helper.setText("<h1>Url de recovery password</h1><br><p>" +
                     org.springframework.web.util.HtmlUtils.htmlEscape(fullUrl) + "</p>", true);
-            helper.setFrom(sender);
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
             throw new RuntimeException(e);

@@ -12,7 +12,6 @@ public class PasswordService {
         this.passwordEncoder = new Argon2PasswordEncoder(16, 32, 1, 6000, 10); // 16 -> salt length, 32 -> hash length, 1 -> parallelism, 6000 -> RAMmemory cost(KB), 10 -> iterations
     }
 
-
     public String hash(String password) {
         return passwordEncoder.encode(password);
     }

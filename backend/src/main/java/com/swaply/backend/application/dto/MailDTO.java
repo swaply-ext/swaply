@@ -1,13 +1,15 @@
 package com.swaply.backend.application.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class MailDTO {
     private String email;
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    private String subject;
+    private String sample; // Muy relativo a revisar
+    private String message;
 }

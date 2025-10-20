@@ -1,0 +1,23 @@
+package com.swaply.backend.interfaces.rest;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import com.swaply.backend.application.usecase.MailService;
+
+@RestController
+@RequestMapping("/api/Sendmail")
+public class MailController {
+
+    private final MailService mailService;
+
+    public MailController(MailService mailService) {
+        this.mailService = mailService;
+    }
+
+    @PostMapping("{email}")
+    public ResponseEntity<String> sendTestEmail(@PathVariable String email) {
+            mailService.sendMessage(email, "asdasd" );
+            return ResponseEntity.ok("Correo enviado exitosamente a " + email);
+    }
+}
