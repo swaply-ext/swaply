@@ -1,7 +1,5 @@
 package com.swaply.backend.application.dto;
 
-import org.springframework.data.annotation.AccessType;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -1,13 +1,10 @@
 package com.swaply.backend.application.usecase;
 
 import java.util.Random;
-import java.util.UUID;
 
 import com.swaply.backend.application.dto.LoginDTO;
 import com.swaply.backend.application.dto.RegisterDTO;
 import com.swaply.backend.application.dto.UserDTO;
-import com.swaply.backend.domain.model.User;
-import com.swaply.backend.domain.repository.UserRepository;
 
 import com.swaply.backend.application.exception.InvalidCredentialsException;
 import com.swaply.backend.application.exception.UserAlreadyExistsException;
@@ -20,7 +17,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Service
 public class AccountService /* implements UserRepository */ {
 
-    private final UserRepository userRepository;
 
     private final UserService userService; //
     private final MailService mailService;
@@ -32,12 +28,11 @@ public class AccountService /* implements UserRepository */ {
 
     public AccountService(UserService userService,
             MailService mailService, PasswordService passwordService,
-            JwtService jwtService, UserRepository userRepository) {
+            JwtService jwtService) {
         this.userService = userService;
         this.mailService = mailService;
         this.passwordService = passwordService;
         this.jwtService = jwtService;
-        this.userRepository = userRepository;
     }
 
     // Falta revision de que no exista el nombre de usuario

@@ -1,9 +1,5 @@
 package com.swaply.backend.application.dto;
 
-import org.springframework.data.annotation.Id;
-
-import com.azure.spring.data.cosmos.core.mapping.PartitionKey;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

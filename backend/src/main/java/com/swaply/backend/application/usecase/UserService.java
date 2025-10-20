@@ -2,10 +2,7 @@ package com.swaply.backend.application.usecase;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-import java.lang.reflect.Method;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,10 +12,8 @@ import com.swaply.backend.application.dto.RegisterDTO;
 import com.swaply.backend.application.exception.UserNotFoundException;
 import com.swaply.backend.application.mapper.UserMapper;
 import com.swaply.backend.domain.model.User;
-import com.swaply.backend.application.usecase.PasswordService;
 import com.swaply.backend.domain.repository.UserRepository;
 
-import ch.qos.logback.core.joran.action.NewRuleAction;
 
 @Service
 public class UserService {
