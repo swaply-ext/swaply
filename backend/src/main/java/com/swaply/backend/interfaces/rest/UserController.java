@@ -49,8 +49,9 @@ public class UserController {
         return ResponseEntity.ok(updatedUser);
     }
 
-    @GetMapping("/email/{email}")
-    public ResponseEntity<UserDTO> getByEmail(@PathVariable String email) {
+    /* La petició se hace a: http://localhost:8081/api/users/email?email= */
+    @GetMapping("/email")
+    public ResponseEntity<UserDTO> getByEmail(@RequestParam String email) {
         return ResponseEntity.ok(service.getUserByEmail(email));
     }
 
