@@ -10,11 +10,8 @@ import com.swaply.backend.shared.UserCRUD.UserService;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.shared.UserCRUD.exception.UserNotFoundException;
 import com.swaply.backend.shared.mail.MailService;
-import com.swaply.backend.shared.token.JwtService;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 public class AuthService {
@@ -22,15 +19,12 @@ public class AuthService {
     private final UserService userService; //
     private final MailService mailService;
     private final PasswordService passwordService;
-    private final JwtService jwtService;
 
     public AuthService(UserService userService,
-            MailService mailService, PasswordService passwordService,
-            JwtService jwtService) {
+            MailService mailService, PasswordService passwordService) {
         this.userService = userService;
         this.mailService = mailService;
         this.passwordService = passwordService;
-        this.jwtService = jwtService;
     }
 
     public String login(LoginDTO dto) {

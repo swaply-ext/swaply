@@ -47,13 +47,13 @@ export class LoginFormComponent {
       return;
     }
 
-    const newUser: User = {
+    const user: User = {
       email: this.email,
       password: this.password
     };
 
 
-    this.http.post<boolean>('http://localhost:8081/api/account/login', newUser)
+    this.http.post<boolean>('http://localhost:8081/api/auth/login', user)
     .subscribe({
       next: (response) => {
         console.log('Respuesta del backend:', response);
