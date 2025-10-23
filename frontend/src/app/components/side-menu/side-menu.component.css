@@ -1,0 +1,34 @@
+.side-menu-container {
+  width: 250px;
+  margin: 2rem auto;
+  margin-left: auto;
+  padding: 1rem;
+  border: 1px solid #315465;
+  border-radius: 8px;
+  background-color: #315465;
+  text-decoration: none;
+}
+ul {
+  list-style: none; /* elimina el marcador */
+  padding: 0;
+}
+ul li:not(:last-child) {
+  margin-bottom: 2rem;
+}
+.side-btn{
+    color: var(  --secundary-color-1);
+    text-decoration: none;
+}
+.side-btn:hover {
+    /* al pasar por encima, hacer que se haga un mini cuadrado  */
+    background-color: var(--background-tertiary, #fff);
+    color: var(--text-on-dark, #315465);
+    padding: 0.5rem 0.8rem;
+    border-radius: 4px;
+    transition: background-color 0.9s, color 0.3s;
+    transition-timing-function: ease-in-out;
+
+
+
+    
+}
