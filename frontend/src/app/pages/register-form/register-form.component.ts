@@ -1,20 +1,15 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { RegisterDataService } from '../../services/register-data.service';
 import { EmailInputComponent } from '../../components/email-input/email-input.component';
 import { ConfirmEmailInputComponent } from '../../components/confirm-email-input/confirm-email-input.component';
 import { PasswordInputComponent } from '../../components/password-input/password-input.component';
 import { ConfirmPasswordInputComponent } from '../../components/confirm-password-input/confirm-password-input.component';
 import { TermsCheckboxComponent } from '../../components/terms-checkbox/terms-checkbox.component';
 import { ActionButtonsComponent } from '../../components/action-buttons/action-buttons.component';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { RegisterDataService } from '../../services/register-data.service';
-
-interface User {
-  email: string;
-  password: string;
-  acceptedTerms: boolean;
-}
+import { UsernameInputComponent } from "../../components/username-input/username-input.component";
 
 @Component({
   selector: 'app-register-form',
@@ -27,13 +22,14 @@ interface User {
     ConfirmPasswordInputComponent,
     TermsCheckboxComponent,
     ActionButtonsComponent,
-    HttpClientModule
-    ],
+    HttpClientModule,
+    UsernameInputComponent
+  ],
   templateUrl: './register-form.component.html',
   styleUrls: ['./register-form.component.css']
 })
 export class RegisterFormComponent {
-  // Propiedades que almacenan el estado del formulario
+  username = '';
   email = '';
   confirmEmail = '';
   password = '';
@@ -42,12 +38,18 @@ export class RegisterFormComponent {
   showError = false;
   hasErrorAll = false;
 
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+    private registerDataService: RegisterDataService
+  ) {}
 
-  // Constructor con inyección de dependencias: Router para navegación, HttpClient para peticiones HTTP, RegisterDataService para compartir datos entre componentes
-  constructor(private router: Router, private http: HttpClient, private registerDataService: RegisterDataService) {}
-
-  // Función que maneja el registro del usuario
   register() {
+    const userData = [
+      this.username,
+      this.email,
+      this.password
+    ];
     this.showError = false;
 
     if (!this.accepted) {
@@ -55,7 +57,7 @@ export class RegisterFormComponent {
       return;
     }
 
-    if (!this.email || !this.confirmEmail || !this.password || !this.confirmPassword) {
+    if (!this.username || !this.email || !this.confirmEmail || !this.password || !this.confirmPassword) {
       alert('Debes rellenar todos los campos');
       return;
     }
@@ -77,16 +79,28 @@ export class RegisterFormComponent {
       return;
     }
 
-    const newUser = {
-      email: this.email,
-      password: this.password
-    };
-    // estem guardant les dades al servei per acumular-los i enviarlos a commponent personal-info
-    this.registerDataService.setRegisterData(newUser);
-
-    this.router.navigateByUrl('/personal-information');
+    // comprobar si el username ya existe en el servidor
+    this.http.post<{ success: boolean; message?: string }>('http://localhost:8081/api/auth/register', userData)
+      .subscribe({
+        next: (response) => {
+          if (response.success) {
+            //servei que em passa el email de l'objkectew de l'usuari del register form fins al /verify
+            this.registerDataService.setRegisterData({ email: this.email });
+            this.router.navigate(['/verify']);
+          }
+        },
+        error: (error) => {
+          if (error.status === 401) {
+            // Conflicte - usuari o email ja existeix
+            alert(error.error.message || 'Usuario o email ya existe');
+          } else {
+            alert('Error en el servidor. Inténtalo más tarde.');
+          }
+        }
+      });
   }
-  
+
+  // Métodos de validación como métodos de la clase
   private validateEmail(email: string): boolean {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
