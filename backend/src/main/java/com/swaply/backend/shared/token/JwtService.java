@@ -13,17 +13,17 @@ import java.util.Date;
 @Service
 public class JwtService {
 
-    // Es una BUENA PRÁCTICA usar una clave secreta DIFERENTE para los tokens de reseteo
+    // Es una BUENA PRÁCTICA usar una clave secreta DIFERENTE para los tokens de
+    // reseteo
     // que para los tokens de sesión. Puedes cargarla desde application.properties
     @Value("${jwt-secret-key}")
     private String passwordResetSecretKey;
-
-    
 
     private static final long RESET_TOKEN_EXPIRATION = 900000; // 15 minutos en milisegundos
 
     /**
      * Genera un token específico para el reseteo de contraseña.
+     * 
      * @param userId El ID del usuario.
      * @return El token JWT.
      */
@@ -37,9 +37,20 @@ public class JwtService {
                 .compact();
     }
 
+    public String generateIdToken(String userId) {
+        return Jwts.builder()
+                .subject(userId) // Guardamos el ID del usuario aquí
+                .claim("type", "userToken") // Claim para diferenciarlo
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + RESET_TOKEN_EXPIRATION))
+                .signWith(getResetSigningKey(), Jwts.SIG.HS256)
+                .compact();
+    }
+
     /**
      * Valida un token de reseteo y extrae el ID del usuario.
      * Lanza una excepción si el token es inválido o ha expirado.
+     * 
      * @param token El token a validar.
      * @return El ID del usuario.
      */

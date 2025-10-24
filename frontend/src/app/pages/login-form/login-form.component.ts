@@ -6,10 +6,11 @@ import { TermsCheckboxComponent } from '../../components/terms-checkbox/terms-ch
 import { LoginRegisterButtonsComponent } from '../../components/login-register-buttons/login-register-buttons.component';
 import { RouterLink } from '@angular/router';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 
 interface User {
   email: string;
-  password: string; 
+  password: string;
 }
 
 @Component({
@@ -50,28 +51,37 @@ export class LoginFormComponent {
       password: this.password
     };
 
-    this.http.post('http://localhost:8081/api/auth/login', newUser, { responseType: 'text' })
+    this.http.post('http://localhost:8081/api/auth/login', newUser, { responseType: 'text', observe: 'response' })
       .subscribe({
-        next: (response: string) => {
-          console.log('Respuesta del backend:', response);
+        next: (response: HttpResponse<Object>) => {
 
-          // Si hay un token/UUID -> login correcto
-          if (response && response.length > 0) {
-            this.router.navigate(['/']);
-          } else {
-            // Contraseña incorrecta o usuario no encontrado -> /error-auth
+          if (response.status == 200) {
+            console.log(response.status);
+            console.log("Login correcto");
+            console.log('Respuesta del backend:', response);
+            const token = response.body;
+          }
+          else {
             this.router.navigate(['/error-auth']);
           }
+
         },
         error: err => {
-          console.error('Error enviando login:', err);
-          // Error de conexión -> también /error-auth
-          this.router.navigate(['/error-auth']);
+          if (err.status == 401) {
+            console.log(err.status);
+            console.log("Credenciales Incorrectas");
+
+          } else {
+            console.error('Error enviando login:', err);
+            // Error de conexión -> también /error-auth
+            this.router.navigate(['/error-auth']);
+          }
+
         }
       });
   }
 
   register() {
-    this.router.navigate(['/register']); 
+    this.router.navigate(['/register']);
   }
 }
