@@ -1,9 +1,45 @@
 <body>
-<app-app-navbar></app-app-navbar>
-<app-profile-info></app-profile-info>
+  <app-app-navbar></app-app-navbar>
 
-<div class="profile-panels-container">
-  <!--Componentes de profile-skills y de profile-interests-->
-  <app-skills-panel class="profile-skills"></app-skills-panel>
-  <app-interests-panel class="profile-interests"></app-interests-panel>
-</div>
+  <div class="profile-page-container">
+    <app-profile-info></app-profile-info>
+
+    <div class="profile-info-container">
+      <!-- SOBRE MI -->
+      <div class="profile-section about">
+        <label for="about">Sobre mí</label>
+        <textarea id="about" placeholder="Escribe algo sobre ti..."></textarea>
+      </div>
+
+      <!-- CORREO Y FECHA -->
+      <div class="profile-row">
+        <div class="profile-section half">
+          <label for="email">Correo electrónico</label>
+          <input id="email" type="email" placeholder="ejemplo@gmail.com">
+        </div>
+
+        <div class="profile-section half">
+          <label for="birthdate">Fecha de nacimiento</label>
+          <input id="birthdate" type="date" value="2000-12-25">
+        </div>
+      </div>
+
+      <!-- UBICACIÓN Y GÉNERO -->
+      <div class="profile-row">
+        <div class="profile-section half">
+          <label for="location">Ubicación</label>
+          <input id="location" type="text" placeholder="Tarragona, Cataluña, España">
+        </div>
+
+        <div class="profile-section half">
+          <label for="gender">Género</label>
+          <select id="gender">
+            <option value="hombre" selected>Hombre</option>
+            <option value="mujer">Mujer</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
