@@ -84,7 +84,7 @@ export class RegisterFormComponent {
     // estem guardant les dades al servei per acumular-los i enviarlos a commponent personal-info
     this.registerDataService.setRegisterData(newUser);
 
-    this.router.navigateByUrl('/personal-information');
+    this.router.navigateByUrl('/verify');
   }
   
   private validateEmail(email: string): boolean {
