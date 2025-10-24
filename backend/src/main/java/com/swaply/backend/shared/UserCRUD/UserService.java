@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.swaply.backend.application.auth.dto.RegisterDTO;
+import com.swaply.backend.application.auth.dto.RegisterInitialDTO;
 import com.swaply.backend.application.auth.service.PasswordService;
 import com.swaply.backend.shared.UserCRUD.dto.UpdateUserDTO;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.shared.UserCRUD.exception.UserNotFoundException;
-
 
 @Service
 public class UserService {
@@ -68,6 +68,46 @@ public class UserService {
         mapper.updateUserFromDto(dto, user);
         User saved = repository.save(user);
         return mapper.entityToDTO(saved);
+    }
+
+    @Transactional
+    public UserDTO createUserTtl(RegisterInitialDTO dto, String code) {
+        User newUser = mapper.fromRegisterTtlDTO(dto);
+
+        String passsword = passwordService.hash(dto.getPassword());
+        newUser.setPassword(passsword);
+        newUser.setId(UUID.randomUUID().toString());
+        newUser.setTtl(300);
+        newUser.setCode(code);
+        User savedUser = repository.save(newUser);
+
+        return mapper.entityToDTO(savedUser);
+    }
+
+    @Transactional
+    public UserDTO activateUser(UserDTO dto) {
+        User newUser = mapper.dtoToEntity(dto);
+
+        newUser.setCode(null);
+        newUser.setTtl(-1);
+
+        User savedUser = repository.save(newUser);
+
+        return mapper.entityToDTO(savedUser);
+    }
+
+    @Transactional
+    public UserDTO registerUser(RegisterInitialDTO dto) {
+        User newUser = mapper.fromRegisterTtlDTO(dto);
+
+        newUser.setModerator(false);
+        newUser.setVerified(false);
+        newUser.setPremium(false);
+
+        User savedUser = repository.save(newUser);
+
+        return mapper.entityToDTO(savedUser);
+
     }
 
     @Transactional
