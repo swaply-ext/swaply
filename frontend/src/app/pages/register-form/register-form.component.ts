@@ -29,7 +29,6 @@ import { UsernameInputComponent } from "../../components/username-input/username
   styleUrls: ['./register-form.component.css']
 })
 export class RegisterFormComponent {
-  // Propiedades que almacenan el estado del formulario
   username = '';
   email = '';
   confirmEmail = '';
@@ -39,14 +38,12 @@ export class RegisterFormComponent {
   showError = false;
   hasErrorAll = false;
 
-  // Constructor con inyección de dependencias: Router para navegación, HttpClient para peticiones HTTP, RegisterDataService para compartir datos entre componentes
   constructor(
     private router: Router,
     private http: HttpClient,
     private registerDataService: RegisterDataService
   ) {}
 
-  // Función que maneja el registro del usuario
   register() {
     this.showError = false;
 
@@ -89,19 +86,25 @@ export class RegisterFormComponent {
               email: this.email,
               password: this.password
             };
-            // estem guardant les dades al servei per acumular-los i enviarlos a commponent personal-info
             this.registerDataService.setRegisterData(newUser);
 
-    this.router.navigateByUrl('/verify');
+            // Navegar después de guardar los datos
+            this.router.navigateByUrl('/verify');
+          }
+        },
+        error: (err) => {
+          console.error('Error al verificar el usuario', err);
+          alert('No se pudo verificar el usuario. Intenta más tarde.');
+        }
+      });
   }
 
-  // Validación del formato del correo
+  // Métodos de validación como métodos de la clase
   private validateEmail(email: string): boolean {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
   }
 
-  // Validación de la contraseña con requisitos de seguridad
   private validatePassword(password: string): { valid: boolean; message: string } {
     const minLength = 8;
     const uppercase = /[A-Z]/;
