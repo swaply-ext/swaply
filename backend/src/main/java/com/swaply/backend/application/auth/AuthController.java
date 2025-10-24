@@ -24,9 +24,9 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserDTO> initialRegister(@RequestBody RegisterInitialDTO dto) {
-        UserDTO newUser = service.initialRegister(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
+    public ResponseEntity<Boolean> initialRegister(@RequestBody RegisterInitialDTO dto) {
+        service.initialRegister(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(true);
     }
 
     // Esto hay que mirarlo seguramente el Front no deberia tener el código solo un
