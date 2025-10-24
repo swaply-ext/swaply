@@ -108,7 +108,7 @@ export class EmailVerificationComponent {
           },
           error: err => {
             alert('Error enviando datos al backend');
-            console.error('Error enviando datos:', err);
+            console.error('Error enviando datos:', err);           
           }
         }) // solo activaremos la api si hace falta doble comprobar en front (ya esta), en back si lo enviamos  */
 
