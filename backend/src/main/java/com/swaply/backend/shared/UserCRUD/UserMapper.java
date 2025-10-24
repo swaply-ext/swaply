@@ -2,6 +2,7 @@
 package com.swaply.backend.shared.UserCRUD;
 
 import com.swaply.backend.application.auth.dto.RegisterDTO;
+import com.swaply.backend.application.auth.dto.RegisterInitialDTO;
 import com.swaply.backend.shared.UserCRUD.dto.UpdateUserDTO;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 
@@ -40,4 +41,7 @@ public interface UserMapper {
     @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE)
     //Usa la lógica de mapeo que tiene justo encima
     User fromRegisterDTO(RegisterDTO dto);
+
+    @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE)
+    User fromRegisterTtlDTO(RegisterInitialDTO dto);
 }
