@@ -1,20 +1,15 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { RegisterDataService } from '../../services/register-data.service';
 import { EmailInputComponent } from '../../components/email-input/email-input.component';
 import { ConfirmEmailInputComponent } from '../../components/confirm-email-input/confirm-email-input.component';
 import { PasswordInputComponent } from '../../components/password-input/password-input.component';
 import { ConfirmPasswordInputComponent } from '../../components/confirm-password-input/confirm-password-input.component';
 import { TermsCheckboxComponent } from '../../components/terms-checkbox/terms-checkbox.component';
 import { ActionButtonsComponent } from '../../components/action-buttons/action-buttons.component';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { RegisterDataService } from '../../services/register-data.service';
-
-interface User {
-  email: string;
-  password: string;
-  acceptedTerms: boolean;
-}
+import { UsernameInputComponent } from "../../components/username-input/username-input.component";
 
 @Component({
   selector: 'app-register-form',
@@ -27,13 +22,15 @@ interface User {
     ConfirmPasswordInputComponent,
     TermsCheckboxComponent,
     ActionButtonsComponent,
-    HttpClientModule
-    ],
+    HttpClientModule,
+    UsernameInputComponent
+  ],
   templateUrl: './register-form.component.html',
   styleUrls: ['./register-form.component.css']
 })
 export class RegisterFormComponent {
   // Propiedades que almacenan el estado del formulario
+  username = '';
   email = '';
   confirmEmail = '';
   password = '';
@@ -42,9 +39,12 @@ export class RegisterFormComponent {
   showError = false;
   hasErrorAll = false;
 
-
   // Constructor con inyección de dependencias: Router para navegación, HttpClient para peticiones HTTP, RegisterDataService para compartir datos entre componentes
-  constructor(private router: Router, private http: HttpClient, private registerDataService: RegisterDataService) {}
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+    private registerDataService: RegisterDataService
+  ) {}
 
   // Función que maneja el registro del usuario
   register() {
@@ -55,7 +55,7 @@ export class RegisterFormComponent {
       return;
     }
 
-    if (!this.email || !this.confirmEmail || !this.password || !this.confirmPassword) {
+    if (!this.username || !this.email || !this.confirmEmail || !this.password || !this.confirmPassword) {
       alert('Debes rellenar todos los campos');
       return;
     }
@@ -77,21 +77,31 @@ export class RegisterFormComponent {
       return;
     }
 
-    const newUser = {
-      email: this.email,
-      password: this.password
-    };
-    // estem guardant les dades al servei per acumular-los i enviarlos a commponent personal-info
-    this.registerDataService.setRegisterData(newUser);
+    // comprobar si el username ya existe en el servidor
+    this.http.get<boolean>(`http://localhost:3000/check-username?username=${this.username}`)
+      .subscribe({
+        next: (exists) => {
+          if (exists) {
+            alert('El nombre de usuario ya existe. Elige otro.');
+          } else {
+            const newUser = {
+              username: this.username,
+              email: this.email,
+              password: this.password
+            };
+            // estem guardant les dades al servei per acumular-los i enviarlos a commponent personal-info
+            this.registerDataService.setRegisterData(newUser);
 
     this.router.navigateByUrl('/verify');
   }
-  
+
+  // Validación del formato del correo
   private validateEmail(email: string): boolean {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
   }
 
+  // Validación de la contraseña con requisitos de seguridad
   private validatePassword(password: string): { valid: boolean; message: string } {
     const minLength = 8;
     const uppercase = /[A-Z]/;
