@@ -45,6 +45,11 @@ export class RegisterFormComponent {
   ) {}
 
   register() {
+    const userData = [
+      this.username,
+      this.email,
+      this.password
+    ];
     this.showError = false;
 
     if (!this.accepted) {
@@ -75,26 +80,22 @@ export class RegisterFormComponent {
     }
 
     // comprobar si el username ya existe en el servidor
-    this.http.get<boolean>(`http://localhost:3000/check-username?username=${this.username}`)
+    this.http.post<{ success: boolean; message?: string }>('http://localhost:8081/api/auth/register', userData)
       .subscribe({
-        next: (exists) => {
-          if (exists) {
-            alert('El nombre de usuario ya existe. Elige otro.');
-          } else {
-            const newUser = {
-              username: this.username,
-              email: this.email,
-              password: this.password
-            };
-            this.registerDataService.setRegisterData(newUser);
-
-            // Navegar después de guardar los datos
-            this.router.navigateByUrl('/verify');
+        next: (response) => {
+          if (response.success) {
+            //servei que em passa el email de l'objkectew de l'usuari del register form fins al /verify
+            this.registerDataService.setRegisterData({ email: this.email });
+            this.router.navigate(['/verify']);
           }
         },
-        error: (err) => {
-          console.error('Error al verificar el usuario', err);
-          alert('No se pudo verificar el usuario. Intenta más tarde.');
+        error: (error) => {
+          if (error.status === 401) {
+            // Conflicte - usuari o email ja existeix
+            alert(error.error.message || 'Usuario o email ya existe');
+          } else {
+            alert('Error en el servidor. Inténtalo más tarde.');
+          }
         }
       });
   }

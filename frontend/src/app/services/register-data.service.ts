@@ -1,5 +1,11 @@
 import { Injectable } from '@angular/core';
 
+export interface RegisterData {
+  username?: string;
+  email?: string;
+  password?: string;
+  token?: string;
+}
 @Injectable({
   providedIn: 'root'
 })
