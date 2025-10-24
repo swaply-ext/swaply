@@ -92,14 +92,7 @@ export class RegisterFormComponent {
             // estem guardant les dades al servei per acumular-los i enviarlos a commponent personal-info
             this.registerDataService.setRegisterData(newUser);
 
-            this.router.navigateByUrl('/personal-information');
-          }
-        },
-        error: (err) => {
-          console.error('Error al verificar el usuario', err);
-          alert('No se pudo verificar el usuario. Intenta más tarde.');
-        }
-      });
+    this.router.navigateByUrl('/verify');
   }
 
   // Validación del formato del correo
