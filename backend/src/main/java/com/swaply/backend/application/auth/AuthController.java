@@ -36,9 +36,9 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDTO dto) {
-        String userID = service.login(dto);
-        return ResponseEntity.ok(userID);
+    public ResponseEntity<Object> login(@RequestBody LoginDTO dto) {
+        Object token = service.login(dto);
+        return ResponseEntity.ok(token);
     }
 
 }

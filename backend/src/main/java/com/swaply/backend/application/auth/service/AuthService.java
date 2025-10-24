@@ -33,7 +33,7 @@ public class AuthService {
         this.jwtService = jwtService;
     }
 
-    public String login(LoginDTO dto) {
+    public Object login(LoginDTO dto) {
         String formEmail = dto.getEmail();
         String formPassword = dto.getPassword();
 
@@ -48,7 +48,7 @@ public class AuthService {
         if (passwordService.match(formPassword, user.getPassword())) {
             System.out.println("Login correcto");
             System.out.println(user.getId());
-            return user.getId();
+            return jwtService.generateIdToken(user.getId());
         } else {
             System.out.println("Contraseña incorrecta");
             throw new InvalidCredentialsException("Contraseña incorrecta");
