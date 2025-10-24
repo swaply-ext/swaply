@@ -50,7 +50,7 @@ export class LoginFormComponent {
       password: this.password
     };
 
-    this.http.post('http://localhost:8081/api/account/login', newUser, { responseType: 'text' })
+    this.http.post('http://localhost:8081/api/auth/login', newUser, { responseType: 'text' })
       .subscribe({
         next: (response: string) => {
           console.log('Respuesta del backend:', response);
