@@ -101,7 +101,7 @@ export class PersonalInformationComponent {
     this.registerDataService.setRegisterData(newUserData);
     // Recupera todos los datos del usuario desde el servicio
     const allData = this.registerDataService.getRegisterData();
-    this.http.post<{ code: string }>('http://localhost:8081/api/account/mailVerify', allData.email)
+    this.http.post<{ code: string }>('http://localhost:8081/api/auth/mailVerify', allData.email)
       .subscribe({
         next: response => {
           // Guarda el codi de verificació rebut

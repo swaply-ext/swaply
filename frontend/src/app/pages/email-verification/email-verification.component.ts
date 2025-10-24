@@ -101,7 +101,7 @@ export class EmailVerificationComponent {
       // Elimina el campo 'verifyCode' antes de enviar
       const { verifyCode, ...dataToSend } = allData;
       // despues de vericiar hay que enviar el objeto infoUser ENTERO (sin verify)
-      this.http.post('http://localhost:8081/api/account/register', dataToSend) //envia el codigo de verificacion al endpoint de back y loc comprueban
+      this.http.post('http://localhost:8081/api/auth/register', dataToSend) //envia el codigo de verificacion al endpoint de back y loc comprueban
         .subscribe({
           next: response => {
             this.router.navigate(['/confirmation']);
