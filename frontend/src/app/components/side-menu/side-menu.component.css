@@ -27,8 +27,8 @@ ul li:not(:last-child) {
     border-radius: 4px;
     transition: background-color 0.9s, color 0.3s;
     transition-timing-function: ease-in-out;
-
-
-
-    
+}
+.activo {
+  text-decoration: underline; /* o ponerlo en negrita, color, etc */
+  font-weight: bold;
 }
