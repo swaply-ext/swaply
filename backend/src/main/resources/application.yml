@@ -40,4 +40,4 @@ logging:
   level:
     com.azure.identity: DEBUG
     com.azure.core: DEBUG
-
+    com.azure.spring.data.cosmos: DEBUG

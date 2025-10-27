@@ -32,6 +32,11 @@ public class UserController {
         return ResponseEntity.ok(service.getAllUsers());
     }
 
+    @GetMapping(params = "usernameFragment")
+    public ResponseEntity<List<UserDTO>> findUsersByUsernameContaining(@RequestParam String usernameFragment) {
+        return ResponseEntity.ok(service.findUsersByUsernameContaining(usernameFragment));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable String id) {
         return ResponseEntity.ok(service.getUserByID(id));
@@ -55,5 +60,8 @@ public class UserController {
     public ResponseEntity<UserDTO> getByEmail(@RequestParam String email) {
         return ResponseEntity.ok(service.getUserByEmail(email));
     }
+
+
+
 
 }
