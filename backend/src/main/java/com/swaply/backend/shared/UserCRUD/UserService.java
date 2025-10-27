@@ -54,6 +54,13 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
+    public List<UserDTO> findUsersByUsernameContaining(String usernameFragment) {
+        return repository.findUsersByUsernameContaining(usernameFragment)
+                .stream()
+                .map(mapper::entityToDTO)
+                .collect(Collectors.toList());
+    }
+
     public void deleteUserById(String id) {
         if (!repository.existsUserById(id)) {
             throw new UserNotFoundException("User not found with id: " + id);
