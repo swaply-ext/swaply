@@ -10,7 +10,8 @@ export const appConfig: ApplicationConfig = {
 import { Routes } from '@angular/router';
 import { SkillsComponent } from './pages/skills/skills.component';
 import { InterestsComponent } from './pages/interests/interests.component';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { authInterceptor } from './interceptors/auth.interceptor';
 
 export const appRoutes: Routes = [
   { path: 'skills', component: SkillsComponent },
@@ -19,6 +20,6 @@ export const appRoutes: Routes = [
 ];
 
 export const appConfig = {
-  providers: [provideHttpClient()],
+  providers: [provideHttpClient(withInterceptors([authInterceptor]))],
   imports: []
 };
