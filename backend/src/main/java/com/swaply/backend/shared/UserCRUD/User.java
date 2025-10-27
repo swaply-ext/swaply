@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
@@ -31,6 +32,8 @@ public class User {
     private String password;
     private String location;
     private String gender;
+    private ArrayList<String> skills;
+    private ArrayList<String> interest;
     @JsonFormat(pattern="dd/MM/yyyy")
     private Date birthDate;
     private String description;

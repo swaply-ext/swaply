@@ -35,6 +35,11 @@ public class UserService {
         return repository.existsUserByEmail(email);
     }
 
+    public boolean existsUserByUsername(String username){
+        return repository.existsUserByUsername(username);
+    }
+    
+
     public UserDTO getUserByEmail(String email) {
         User user = repository.findUserByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));

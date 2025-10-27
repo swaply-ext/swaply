@@ -12,9 +12,7 @@ import com.swaply.backend.shared.UserCRUD.exception.UserNotFoundException;
 import com.swaply.backend.shared.mail.MailService;
 import com.swaply.backend.shared.token.JwtService;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 public class AuthService {
@@ -59,6 +57,10 @@ public class AuthService {
         if (userService.existsByEmail(dto.getEmail())) {
             throw new UserAlreadyExistsException("El email: " + dto.getEmail() + " ya esta en uso.");
         }
+        if (userService.existsUserByUsername(dto.getUsername())) {
+            throw new UserAlreadyExistsException("El username: " + dto.getUsername() + " ya esta en uso.");
+        }
+
         return userService.createUser(dto);
     }
 
