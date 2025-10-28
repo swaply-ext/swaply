@@ -63,6 +63,7 @@ export class LoginFormComponent {
             localStorage.setItem('authToken', token);
             console.log("Token recibido:", token);
             console.log("Token guardado:", localStorage.getItem('authToken'));
+            this.http.post('http://localhost:8081/api/users/token', newUser, { responseType: 'text', observe: 'response' })
           }
           else {
             this.router.navigate(['/error-auth']);

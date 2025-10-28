@@ -36,13 +36,14 @@ public class UserController {
         return ResponseEntity.ok(service.getUserByID(id));
     }
 
-    @GetMapping("{/email}}")
+    @GetMapping("/{email}")
     public ResponseEntity<UserDTO> getByEmail(@PathVariable String email) {
         return ResponseEntity.ok(service.getUserByEmail(email));
     }
 
     @GetMapping("/token")
     public ResponseEntity<String> testToken(@RequestHeader("Authorization") String token) {
+        System.out.println("Se ha llamado el endpoint correctamente");
         if (token == null || token.isEmpty()) {
             return ResponseEntity.badRequest().body("Token no proporcionado");
         }
