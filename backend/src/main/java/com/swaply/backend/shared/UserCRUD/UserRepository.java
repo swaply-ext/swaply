@@ -2,6 +2,7 @@ package com.swaply.backend.shared.UserCRUD;
 
 import com.azure.cosmos.models.PartitionKey;
 import com.azure.spring.data.cosmos.repository.CosmosRepository;
+import com.swaply.backend.shared.UserCRUD.Model.User;
 
 import java.util.List;
 import java.util.Optional;

@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.swaply.backend.application.auth.dto.RegisterDTO;
 import com.swaply.backend.application.auth.service.PasswordService;
+import com.swaply.backend.shared.UserCRUD.Model.User;
 import com.swaply.backend.shared.UserCRUD.dto.UpdateUserDTO;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.shared.UserCRUD.exception.UserNotFoundException;
