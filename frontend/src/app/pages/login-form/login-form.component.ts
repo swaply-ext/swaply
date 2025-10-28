@@ -61,7 +61,8 @@ export class LoginFormComponent {
             console.log('Respuesta del backend:', response);
             const token = response.body as string;
             localStorage.setItem('authToken', token);
-            console.log("Token guardado:", token);
+            console.log("Token recibido:", token);
+            console.log("Token guardado:", localStorage.getItem('authToken'));
           }
           else {
             this.router.navigate(['/error-auth']);
