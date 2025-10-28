@@ -28,13 +28,12 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDTO>> getAll() {
+    public ResponseEntity<List<UserDTO>> getAll(@RequestParam(required = false) String contains) {
+        if (contains != null){
+            contains = contains.replace(" " , "");
+            return ResponseEntity.ok(service.findUsersByUsernameContaining(contains));
+        }
         return ResponseEntity.ok(service.getAllUsers());
-    }
-
-    @GetMapping(params = "usernameFragment")
-    public ResponseEntity<List<UserDTO>> findUsersByUsernameContaining(@RequestParam String usernameFragment) {
-        return ResponseEntity.ok(service.findUsersByUsernameContaining(usernameFragment));
     }
 
     @GetMapping("/{id}")
@@ -42,7 +41,6 @@ public class UserController {
         return ResponseEntity.ok(service.getUserByID(id));
     }
 
-    // Porque se retorna noContent?
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUserById(@PathVariable String id) {
         service.deleteUserById(id);
@@ -56,9 +54,9 @@ public class UserController {
     }
 
     // La petició se hace a: http://localhost:8081/api/users?email=test@example.com
-    @GetMapping(params = "email")
-    public ResponseEntity<UserDTO> getByEmail(@RequestParam String email) {
-        return ResponseEntity.ok(service.getUserByEmail(email));
-    }
+    // @GetMapping(params = "email")
+    // public ResponseEntity<UserDTO> getByEmail(@RequestParam String email) {
+    //     return ResponseEntity.ok(service.getUserByEmail(email));
+    // }
 
 }

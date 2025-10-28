@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.swaply.backend.application.account.service.AccountService;
+import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 
 @RestController
 @RequestMapping("/api/account")
@@ -33,5 +34,10 @@ public class AccountController {
         service.resetPassword(token, newPassword);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
     }
+
+    // @PatchMapping("/skills/{id}")
+    // public ResponseEntity<UserDTO> addSkills(@PathVariable String id){
+    //     return ResponseEntity.ok(service.addSkills(id));
+    // }
 
 }

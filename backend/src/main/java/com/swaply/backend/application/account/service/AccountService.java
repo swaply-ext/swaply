@@ -1,6 +1,5 @@
 package com.swaply.backend.application.account.service;
 
-
 import com.swaply.backend.shared.UserCRUD.UserService;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.shared.UserCRUD.exception.UserNotFoundException;
@@ -13,7 +12,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 public class AccountService /* implements UserRepository */ {
-
 
     private final UserService userService; //
     private final MailService mailService;
@@ -29,8 +27,6 @@ public class AccountService /* implements UserRepository */ {
         this.mailService = mailService;
         this.jwtService = jwtService;
     }
-    
-    
 
     public void generateAndSendResetLink(String email) {
         UserDTO user;
