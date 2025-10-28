@@ -42,13 +42,20 @@ public class UserController {
     }
 
     @GetMapping("/token")
-    public ResponseEntity<String> testToken(@RequestHeader("Authorization") String token) {
-        System.out.println("Se ha llamado el endpoint correctamente");
-        if (token == null || token.isEmpty()) {
-            return ResponseEntity.badRequest().body("Token no proporcionado");
-        }
-        return ResponseEntity.ok().body("El token es: " + token);
+    public ResponseEntity<String> testToken(@RequestHeader(value = "Authorization", required = false) String token) {
+    System.out.println("Se ha llamado el endpoint correctamente");
+
+    if (token == null) {
+        return ResponseEntity.badRequest().body("Token null");
     }
+
+    if (token.isEmpty()) {
+        return ResponseEntity.badRequest().body("Token vacío");
+    }
+
+    return ResponseEntity.ok().body("El token es: " + token);
+}
+
 
 
     // ========== PostMappings ==========
