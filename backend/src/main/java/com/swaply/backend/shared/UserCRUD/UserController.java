@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/users") //Raíz de los endpoints de User
 public class UserController {
 
     private final UserService service;
@@ -21,15 +21,14 @@ public class UserController {
         this.service = service;
     }
 
-    @PostMapping
-    public ResponseEntity<UserDTO> createUser(@RequestBody RegisterDTO user) {
-        UserDTO createdUser = service.createUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
-    }
-
+    // ========== GetMappings ==========
     @GetMapping
-    public ResponseEntity<List<UserDTO>> getAll() {
-        return ResponseEntity.ok(service.getAllUsers());
+    public ResponseEntity<List<UserDTO>> getAll(@RequestParam(required = false) String contains) {
+        //if (contains != null){ //Si contiene un parámetro devolverá los usuarios que cumplan ese requisito
+        //    contains = contains.replace(" " , ""); //Eliminar espacios en blanco
+        //    return ResponseEntity.ok(service.findUsersByUsernameContaining(contains));
+        //}
+        return ResponseEntity.ok(service.getAllUsers()); //Si NO contiene ningún parámetro, devovlerá todos los usuarios
     }
 
     @GetMapping("/{id}")
@@ -37,23 +36,38 @@ public class UserController {
         return ResponseEntity.ok(service.getUserByID(id));
     }
 
-    // Porque se retorna noContent?
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUserById(@PathVariable String id) {
-        service.deleteUserById(id);
-        return ResponseEntity.noContent().build();
+    @GetMapping("{/email}}")
+    public ResponseEntity<UserDTO> getByEmail(@PathVariable String email) {
+        return ResponseEntity.ok(service.getUserByEmail(email));
     }
 
+    @GetMapping("/token")
+    public ResponseEntity<String> testToken(@RequestHeader("Authorization") String token) {
+        if (token == null || token.isEmpty()) {
+            return ResponseEntity.badRequest().body("Token no proporcionado");
+        }
+        return ResponseEntity.ok().body("El token es: " + token);
+    }
+
+
+    // ========== PostMappings ==========
+    @PostMapping
+    public ResponseEntity<UserDTO> createUser(@RequestBody RegisterDTO user) {
+        UserDTO createdUser = service.createUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+    }
+
+    // ========== PatchMappings ==========
     @PatchMapping("/{id}")
     public ResponseEntity<UserDTO> updatedUser(@PathVariable String id, @RequestBody UpdateUserDTO user) {
         UserDTO updatedUser = service.updateUser(id, user);
         return ResponseEntity.ok(updatedUser);
     }
 
-    // La petició se hace a: http://localhost:8081/api/users?email=test@example.com
-    @GetMapping(params = "email")
-    public ResponseEntity<UserDTO> getByEmail(@RequestParam String email) {
-        return ResponseEntity.ok(service.getUserByEmail(email));
+    // ========== DeleteMappings ==========
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUserById(@PathVariable String id) {
+        service.deleteUserById(id);
+        return ResponseEntity.noContent().build();
     }
-
 }
