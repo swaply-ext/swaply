@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.swaply.backend.application.auth.dto.RegisterDTO;
 import com.swaply.backend.application.auth.service.PasswordService;
+import com.swaply.backend.shared.UserCRUD.Model.User;
 import com.swaply.backend.shared.UserCRUD.dto.UpdateUserDTO;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.shared.UserCRUD.exception.UserNotFoundException;
@@ -35,6 +36,11 @@ public class UserService {
         return repository.existsUserByEmail(email);
     }
 
+    public boolean existsUserByUsername(String username){
+        return repository.existsUserByUsername(username);
+    }
+    
+
     public UserDTO getUserByEmail(String email) {
         User user = repository.findUserByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
@@ -49,6 +55,13 @@ public class UserService {
 
     public List<UserDTO> getAllUsers() {
         return repository.findAllUsers()
+                .stream()
+                .map(mapper::entityToDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<UserDTO> findUsersByUsernameContaining(String usernameFragment) {
+        return repository.findUsersByUsernameContaining(usernameFragment)
                 .stream()
                 .map(mapper::entityToDTO)
                 .collect(Collectors.toList());

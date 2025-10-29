@@ -46,11 +46,11 @@ export class SkillsComponent {
       ]
     }
   ];
-  
+
   selectedCategory: string | null = null;
 
   // Inyectar HttpClient para hacer peticiones HTTP
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // Función para seleccionar una categoría
   selectCategory(categoryId: string): void {
@@ -62,9 +62,11 @@ export class SkillsComponent {
     const selectedSkills = this.categories
       .flatMap(category => category.subcategories)
       .filter(subcategory => subcategory.selected)
-      .map(subcategory => subcategory.name);
+      .map(subcategory => {
+        return { name: subcategory.name, level: null };
+      });
 
-      this.http.post('http://localhost:8081/api/skills/save', { skills: selectedSkills })
+    this.http.patch('http://localhost:8081/api/users/USR-001', { skills: selectedSkills })
       .subscribe({
         next: response => console.log('Resputesta del backend:', response),
         error: err => console.error('Error enviando skills:', err)

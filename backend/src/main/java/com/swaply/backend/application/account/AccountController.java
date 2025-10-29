@@ -34,4 +34,9 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
     }
 
+    // @PatchMapping("/skills/{id}")
+    // public ResponseEntity<UserDTO> addSkills(@PathVariable String id){
+    //     return ResponseEntity.ok(service.addSkills(id));
+    // }
+
 }

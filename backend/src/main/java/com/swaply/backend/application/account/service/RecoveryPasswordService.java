@@ -1,12 +1,6 @@
 package com.swaply.backend.application.account.service;
 
-import java.util.Random;
 
-import com.swaply.backend.application.auth.dto.LoginDTO;
-import com.swaply.backend.application.auth.dto.RegisterDTO;
-import com.swaply.backend.application.auth.exception.InvalidCredentialsException;
-import com.swaply.backend.application.auth.exception.UserAlreadyExistsException;
-import com.swaply.backend.application.auth.service.PasswordService;
 import com.swaply.backend.shared.UserCRUD.UserService;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.shared.UserCRUD.exception.UserNotFoundException;
@@ -22,18 +16,16 @@ public class RecoveryPasswordService {
 
     private final UserService userService; //
     private final MailService mailService;
-    private final PasswordService passwordService;
     private final JwtService jwtService;
 
     @Value("${frontend.reset-password-url}")
     private String resetPasswordBaseUrl;
 
     public RecoveryPasswordService(UserService userService,
-            MailService mailService, PasswordService passwordService,
+            MailService mailService,
             JwtService jwtService) {
         this.userService = userService;
         this.mailService = mailService;
-        this.passwordService = passwordService;
         this.jwtService = jwtService;
     }
 
