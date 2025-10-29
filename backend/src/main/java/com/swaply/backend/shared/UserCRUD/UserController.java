@@ -41,21 +41,6 @@ public class UserController {
         return ResponseEntity.ok(service.getUserByEmail(email));
     }
 
-    @GetMapping("/token")
-    public ResponseEntity<String> testToken(@RequestHeader(value = "Authorization", required = false) String token) {
-    System.out.println("Endpoint Token verificado correctamente");
-
-    if (token == null) {
-        return ResponseEntity.badRequest().body("Token null");
-    }
-
-    if (token.isEmpty()) {
-        return ResponseEntity.badRequest().body("Token vacío");
-    }
-
-    return ResponseEntity.ok().body("El token es: " + token);
-}
-
 
 
     // ========== PostMappings ==========

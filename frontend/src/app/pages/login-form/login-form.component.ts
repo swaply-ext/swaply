@@ -61,12 +61,6 @@ export class LoginFormComponent {
             const token = response.body as string;
             localStorage.setItem('authToken', token);
             console.log("Token recibido:", token);
-            console.log("Token guardado:", localStorage.getItem('authToken'));
-            this.http.get('http://localhost:8081/api/users/token', { responseType: 'text', observe: 'response' })
-              .subscribe({
-              next: (res) => console.log("Token verificado automáticamente:", res.body),
-              error: (err) => console.error("Error al enviar token automáticamente:", err)
-          });
           }
           else {
             this.router.navigate(['/error-auth']);
