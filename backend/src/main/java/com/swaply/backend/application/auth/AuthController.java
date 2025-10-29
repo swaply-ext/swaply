@@ -26,22 +26,21 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<Boolean> initialRegister(@RequestBody RegisterInitialDTO dto) {
         service.initialRegister(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(true);
+        return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 
     // Esto hay que mirarlo seguramente el Front no deberia tener el código solo un
     // boolean al enviarlo
     @PostMapping("/registerCodeVerify")
-    public ResponseEntity<Boolean> registerCodeVerify(@RequestBody RegisterActivationDTO dto) {
-        service.registerCodeVerify(dto);
-
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
+    public ResponseEntity<String> registerCodeVerify(@RequestBody RegisterActivationDTO dto) {
+        String token = service.registerCodeVerify(dto);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(token);
     }
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginDTO dto) {
-        String userID = service.login(dto);
-        return ResponseEntity.ok(userID);
+        String token = service.login(dto);
+        return ResponseEntity.ok(token);
     }
 
 }

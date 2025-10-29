@@ -21,13 +21,13 @@ export class EmailVerificationComponent implements OnInit {
     private router: Router,
     private http: HttpClient,
     private registerDataService: RegisterDataService
-  ) {}
+  ) { }
 
   ngOnInit() {
     // Recupera email del servei
     const data = this.registerDataService.getRegisterData();
     this.email = data.email || '';
-    
+
     if (!this.email) {
       console.error('No email found in service');
       this.router.navigate(['/register']);
@@ -47,7 +47,7 @@ export class EmailVerificationComponent implements OnInit {
       next?.focus();
     }
   }
-   onPaste(event: ClipboardEvent) {
+  onPaste(event: ClipboardEvent) {
     event.preventDefault();
     // Obtiene el texto del portapapeles y lo convierte en array de dígitos
     const pasteCode = event.clipboardData?.getData('text') || '';
@@ -79,7 +79,7 @@ export class EmailVerificationComponent implements OnInit {
 
   verifyCode() {
     const fullCode = this.code.join('');
-    
+
     if (fullCode.length < 6) {
       alert('Introduce los 6 dígitos antes de continuar.');
       return;
@@ -92,13 +92,15 @@ export class EmailVerificationComponent implements OnInit {
 
     console.log('Enviando verificación:', verifyData);
 
-    this.http.post<{ success: boolean; token?: string }>('http://localhost:8081/api/verify-email', verifyData)
+    this.http.post('http://localhost:8081/api/auth/registerCodeVerify', verifyData, {
+      observe: 'response', responseType: 'text'
+    })
       .subscribe({
         next: (response) => {
-          console.log('Respuesta del backend:', response);
-          if (response.success || response.token) {
+          if (response.status === 202 && response.body) {
             // Guarda el token al servei
             //this.registerDataService.setRegisterData({ token: response.token });
+
             this.router.navigate(['/confirmation']);
           } else {
             alert('Código incorrecto');

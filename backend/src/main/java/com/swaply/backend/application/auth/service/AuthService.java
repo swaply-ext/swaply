@@ -73,19 +73,18 @@ public class AuthService {
         return userService.createUserTtl(dto, codeString);
     }
 
-    public ResponseEntity<Boolean> registerCodeVerify(RegisterActivationDTO dto) {
+    public String registerCodeVerify(RegisterActivationDTO dto) {
         String email = dto.getEmail();
         String code = dto.getCode();
+        
         UserDTO user = userService.getUserByEmail(email);
+        
         if (user.getCode() != null && user.getCode().equals(code)) {
 
-            // ¡Código correcto!
-            // Ahora, persistimos al usuario eliminando su TTL.
-            // Necesitarás un método en tu 'userService' que haga esto.
             userService.activateUser(user);
 
-            return ResponseEntity.ok(true);
-
+            
+            return user.getId();
         } else {
             // VICTOR CREAR EXCEPCION
             throw new InvalidCredentialsException("El código de verificación es incorrecto.");

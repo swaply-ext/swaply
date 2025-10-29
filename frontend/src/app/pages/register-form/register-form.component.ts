@@ -45,11 +45,11 @@ export class RegisterFormComponent {
   ) {}
 
   register() {
-    const userData = [
-      this.username,
-      this.email,
-      this.password
-    ];
+    const userData = {
+      username : this.username,
+      email:this.email,
+      password: this.password
+    };
     this.showError = false;
 
     if (!this.accepted) {
@@ -80,10 +80,10 @@ export class RegisterFormComponent {
     }
 
     // comprobar si el username ya existe en el servidor
-    this.http.post<{ success: boolean; message?: string }>('http://localhost:8081/api/auth/register', userData)
+    this.http.post('http://localhost:8081/api/auth/register', userData, {observe: 'response'})
       .subscribe({
         next: (response) => {
-          if (response.success) {
+          if (response.status === 201) {
             //servei que em passa el email de l'objkectew de l'usuari del register form fins al /verify
             this.registerDataService.setRegisterData({ email: this.email });
             this.router.navigate(['/verify']);
