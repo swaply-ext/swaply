@@ -8,7 +8,6 @@ import { PhoneInputComponent } from "../../components/phone-input/phone-input.co
 import { AddressInputComponent } from "../../components/address-input/address-input.component";
 import { UsernameInputComponent } from "../../components/username-input/username-input.component";
 import { HttpClient } from '@angular/common/http';
-import { HttpClientModule } from '@angular/common/http';
 import { RegisterDataService } from '../../services/register-data.service';
 import { GenderInputComponent } from '../../components/gender-input/gender-input.component';
 
@@ -35,8 +34,7 @@ interface UserData {
     GenderInputComponent,
     PhoneInputComponent,
     AddressInputComponent,
-    UsernameInputComponent,
-    HttpClientModule
+    UsernameInputComponent
   ],
   standalone: true,
   styleUrls: ['./personal-information.component.css'],

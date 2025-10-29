@@ -4,13 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { HttpClientModule } from '@angular/common/http';
 import { RecoveryDataService } from '../../services/recovery-data.service.service';
 
 @Component({
   selector: 'app-recovery-password',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './recovery-password.component.html',
   styleUrls: ['./recovery-password.component.css']
 })

@@ -46,7 +46,9 @@ public class AuthService {
         if (passwordService.match(formPassword, user.getPassword())) {
             System.out.println("Login correcto");
             System.out.println(user.getId());
-            return jwtService.generateIdToken(user.getId());
+            String token = jwtService.generateIdToken(user.getId());
+            System.out.println(token);
+            return token;
         } else {
             System.out.println("Contraseña incorrecta");
             throw new InvalidCredentialsException("Contraseña incorrecta");

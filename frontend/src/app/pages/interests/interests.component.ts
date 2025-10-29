@@ -4,13 +4,12 @@ import { Component } from '@angular/core';
 import { FormsModule, NgModel } from '@angular/forms'; 
 import { CommonModule } from '@angular/common';        
 import { HttpClient } from '@angular/common/http';    
-import { HttpClientModule } from '@angular/common/http';
 
 // Decorador que define el componente
 @Component({
   selector: 'app-interests',                  
   standalone: true,                           
-  imports: [FormsModule, CommonModule, HttpClientModule], 
+  imports: [FormsModule, CommonModule], 
   templateUrl: './interests.component.html',   
   styleUrls: ['./interests.component.css']     
 })

@@ -3,12 +3,11 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { RecoveryDataService } from '../../services/recovery-data.service.service';
-import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-pass-verification',
   standalone: true,
-  imports: [HttpClientModule],
+  imports: [],
   templateUrl: './pass-verification.component.html',
   styleUrls: ['./pass-verification.component.css']
 })

@@ -5,8 +5,8 @@ import { PasswordInputComponent } from '../../components/password-input/password
 import { TermsCheckboxComponent } from '../../components/terms-checkbox/terms-checkbox.component';
 import { LoginRegisterButtonsComponent } from '../../components/login-register-buttons/login-register-buttons.component';
 import { RouterLink } from '@angular/router';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse, HttpErrorResponse } from '@angular/common/http';
+
 
 interface User {
   email: string;
@@ -21,8 +21,7 @@ interface User {
     PasswordInputComponent,
     TermsCheckboxComponent,
     RouterLink,
-    LoginRegisterButtonsComponent,
-    HttpClientModule
+    LoginRegisterButtonsComponent
   ],
   templateUrl: './login-form.component.html', // Ruta al archivo HTML
   styleUrls: ['./login-form.component.css']   // Ruta al archivo CSS
@@ -59,7 +58,9 @@ export class LoginFormComponent {
             console.log(response.status);
             console.log("Login correcto");
             console.log('Respuesta del backend:', response);
-            const token = response.body;
+            const token = response.body as string;
+            localStorage.setItem('authToken', token);
+            console.log("Token recibido:", token);
           }
           else {
             this.router.navigate(['/error-auth']);

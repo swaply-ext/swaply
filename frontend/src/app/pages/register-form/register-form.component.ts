@@ -7,7 +7,7 @@ import { PasswordInputComponent } from '../../components/password-input/password
 import { ConfirmPasswordInputComponent } from '../../components/confirm-password-input/confirm-password-input.component';
 import { TermsCheckboxComponent } from '../../components/terms-checkbox/terms-checkbox.component';
 import { ActionButtonsComponent } from '../../components/action-buttons/action-buttons.component';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { RegisterDataService } from '../../services/register-data.service';
 
 interface User {
@@ -26,8 +26,7 @@ interface User {
     PasswordInputComponent,
     ConfirmPasswordInputComponent,
     TermsCheckboxComponent,
-    ActionButtonsComponent,
-    HttpClientModule
+    ActionButtonsComponent
     ],
   templateUrl: './register-form.component.html',
   styleUrls: ['./register-form.component.css']

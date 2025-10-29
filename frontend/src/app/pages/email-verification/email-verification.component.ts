@@ -2,13 +2,12 @@ import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { HttpClientModule } from '@angular/common/http';
 import { RegisterDataService } from '../../services/register-data.service';
 
 @Component({
   selector: 'app-email-verification',
   standalone: true,
-  imports: [HttpClientModule],
+  imports: [],
   templateUrl: './email-verification.component.html',
   styleUrls: ['./email-verification.component.css']
 })
