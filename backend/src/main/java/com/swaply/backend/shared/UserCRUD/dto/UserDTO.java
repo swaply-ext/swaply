@@ -1,8 +1,6 @@
 package com.swaply.backend.shared.UserCRUD.dto;
 
 import java.sql.Date;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;

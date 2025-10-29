@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.swaply.backend.application.account.service.AccountService;
-import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 
 @RestController
 @RequestMapping("/api/account")
