@@ -1,4 +1,4 @@
-package com.swaply.backend.shared.UserCRUD;
+package com.swaply.backend.shared.UserCRUD.Model;
 
 import com.azure.spring.data.cosmos.core.mapping.Container;
 import com.azure.spring.data.cosmos.core.mapping.PartitionKey;
@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.annotation.Id;
 
@@ -31,6 +32,8 @@ public class User {
     private String password;
     private String location;
     private String gender;
+    private List<Skills> skills;
+    private List<Skills> interest;
     @JsonFormat(pattern="dd/MM/yyyy")
     private Date birthDate;
     private String description;

@@ -1,6 +1,5 @@
 package com.swaply.backend.application.auth.dto;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
