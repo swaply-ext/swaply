@@ -7,7 +7,6 @@ import { PasswordInputComponent } from '../../components/password-input/password
 import { ConfirmPasswordInputComponent } from '../../components/confirm-password-input/confirm-password-input.component';
 import { TermsCheckboxComponent } from '../../components/terms-checkbox/terms-checkbox.component';
 import { ActionButtonsComponent } from '../../components/action-buttons/action-buttons.component';
-import { HttpClient } from '@angular/common/http';
 import { RegisterDataService } from '../../services/register-data.service';
 
 interface User {
@@ -20,19 +19,18 @@ interface User {
   selector: 'app-register-form',
   standalone: true,
   imports: [
-    CommonModule,
+    CommonModule, 
     EmailInputComponent,
     ConfirmEmailInputComponent,
     PasswordInputComponent,
     ConfirmPasswordInputComponent,
     TermsCheckboxComponent,
     ActionButtonsComponent
-    ],
+  ],
   templateUrl: './register-form.component.html',
   styleUrls: ['./register-form.component.css']
 })
 export class RegisterFormComponent {
-  // Propiedades que almacenan el estado del formulario
   email = '';
   confirmEmail = '';
   password = '';
@@ -41,11 +39,11 @@ export class RegisterFormComponent {
   showError = false;
   hasErrorAll = false;
 
+  constructor(
+    private router: Router,
+    private registerDataService: RegisterDataService
+  ) {}
 
-  // Constructor con inyección de dependencias: Router para navegación, HttpClient para peticiones HTTP, RegisterDataService para compartir datos entre componentes
-  constructor(private router: Router, private http: HttpClient, private registerDataService: RegisterDataService) {}
-
-  // Función que maneja el registro del usuario
   register() {
     this.showError = false;
 
@@ -76,16 +74,24 @@ export class RegisterFormComponent {
       return;
     }
 
-    const newUser = {
-      email: this.email,
-      password: this.password
-    };
-    // estem guardant les dades al servei per acumular-los i enviarlos a commponent personal-info
-    this.registerDataService.setRegisterData(newUser);
-
-    this.router.navigateByUrl('/personal-information');
+    // intentar registrar el usuario directamente en el backend
+    const newUser = { email: this.email, password: this.password };
+    this.registerDataService.registerUser(newUser).subscribe({
+      next: () => {
+        // Registro exitoso, guarda datos en el servicio
+        this.registerDataService.setRegisterData(newUser);
+        this.router.navigateByUrl('/personal-information');
+      },
+      error: (err) => {
+        if (err.message === 'Correo ya registrado') {
+          alert('El correo ya está registrado');
+        } else {
+          alert('Error al registrar el usuario');
+        }
+      }
+    });
   }
-  
+
   private validateEmail(email: string): boolean {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
