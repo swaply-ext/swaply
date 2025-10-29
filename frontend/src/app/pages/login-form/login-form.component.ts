@@ -5,8 +5,8 @@ import { PasswordInputComponent } from '../../components/password-input/password
 import { TermsCheckboxComponent } from '../../components/terms-checkbox/terms-checkbox.component';
 import { LoginRegisterButtonsComponent } from '../../components/login-register-buttons/login-register-buttons.component';
 import { RouterLink } from '@angular/router';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse, HttpErrorResponse } from '@angular/common/http';
+
 
 interface User {
   email: string;
@@ -21,8 +21,7 @@ interface User {
     PasswordInputComponent,
     TermsCheckboxComponent,
     RouterLink,
-    LoginRegisterButtonsComponent,
-    HttpClientModule
+    LoginRegisterButtonsComponent
   ],
   templateUrl: './login-form.component.html', // Ruta al archivo HTML
   styleUrls: ['./login-form.component.css']   // Ruta al archivo CSS
@@ -63,7 +62,11 @@ export class LoginFormComponent {
             localStorage.setItem('authToken', token);
             console.log("Token recibido:", token);
             console.log("Token guardado:", localStorage.getItem('authToken'));
-            this.http.post('http://localhost:8081/api/users/token', newUser, { responseType: 'text', observe: 'response' })
+            this.http.get('http://localhost:8081/api/users/token', { responseType: 'text', observe: 'response' })
+              .subscribe({
+              next: (res) => console.log("Token verificado automáticamente:", res.body),
+              error: (err) => console.error("Error al enviar token automáticamente:", err)
+          });
           }
           else {
             this.router.navigate(['/error-auth']);

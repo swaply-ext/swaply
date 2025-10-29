@@ -2,14 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { PasswordInputComponent } from '../../components/password-input/password-input.component';
 import { ConfirmPasswordInputComponent } from '../../components/confirm-password-input/confirm-password-input.component';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { RecoveryDataService } from '../../services/recovery-data.service.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-new-password',
   standalone: true,
-  imports: [CommonModule, PasswordInputComponent, ConfirmPasswordInputComponent, HttpClientModule],
+  imports: [CommonModule, PasswordInputComponent, ConfirmPasswordInputComponent],
   templateUrl: './new-password.component.html',
   styleUrls: ['./new-password.component.css']
 })

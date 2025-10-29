@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { HttpClientModule } from '@angular/common/http';
 
 interface User {
   email: string;
@@ -13,7 +12,7 @@ interface User {
 @Component({
   selector: 'app-recovery-email',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './recovery-email.component.html',
   styleUrls: ['./recovery-email.component.css']
 })

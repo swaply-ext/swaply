@@ -43,7 +43,7 @@ public class UserController {
 
     @GetMapping("/token")
     public ResponseEntity<String> testToken(@RequestHeader(value = "Authorization", required = false) String token) {
-    System.out.println("Se ha llamado el endpoint correctamente");
+    System.out.println("Endpoint Token verificado correctamente");
 
     if (token == null) {
         return ResponseEntity.badRequest().body("Token null");
