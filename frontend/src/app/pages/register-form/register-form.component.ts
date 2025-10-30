@@ -8,6 +8,9 @@ import { ConfirmPasswordInputComponent } from '../../components/confirm-password
 import { TermsCheckboxComponent } from '../../components/terms-checkbox/terms-checkbox.component';
 import { ActionButtonsComponent } from '../../components/action-buttons/action-buttons.component';
 import { RegisterDataService } from '../../services/register-data.service';
+import { UsernameInputComponent } from "../../components/username-input/username-input.component";
+import { FormsModule } from '@angular/forms';
+
 
 interface User {
   email: string;
@@ -25,12 +28,14 @@ interface User {
     PasswordInputComponent,
     ConfirmPasswordInputComponent,
     TermsCheckboxComponent,
-    ActionButtonsComponent
+    ActionButtonsComponent,
+    UsernameInputComponent
   ],
   templateUrl: './register-form.component.html',
   styleUrls: ['./register-form.component.css']
 })
 export class RegisterFormComponent {
+  username = '';
   email = '';
   confirmEmail = '';
   password = '';
@@ -92,6 +97,7 @@ export class RegisterFormComponent {
     });
   }
 
+  // Métodos de validación como métodos de la clase
   private validateEmail(email: string): boolean {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
