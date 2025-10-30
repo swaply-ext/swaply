@@ -9,48 +9,48 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.time.Duration;
 
 @Service
 public class JwtService {
 
-    // Es una BUENA PRÁCTICA usar una clave secreta DIFERENTE para los tokens de
-    // reseteo
-    // que para los tokens de sesión. Puedes cargarla desde application.properties
-    @Value("${jwt-secret-passwordReset}")
+    // @Value("${jwt-secret-passwordReset}")
+    @Value("${jwt-secret-key}") // Temporal hasta generar ambos secretos
     private String passwordResetSecretKey;
 
-    @Value("${jwt-secret-session}")
+    // @Value("${jwt-secret-session}")
+    @Value("${jwt-secret-key}") // Temporal hasta generar ambos secretos
     private String sessionSecretKey;
 
-    private static final long RESET_TOKEN_EXPIRATION = 900000; // 15 minutos en milisegundos
+    private static final Duration RESET_TOKEN_EXPIRATION = Duration.ofMinutes(15);
+    private static final String RESET_TOKEN_TYPE = "password-reset";
 
-    private static final long SESSION_TOKEN_EXPIRATION = 900000; // Hay que hacer esto configurable en otra medida. No
-                                                                 // solo ms
+    private static final Duration SESSION_TOKEN_EXPIRATION = Duration.ofDays(7);
+    private static final String SESSION_TOKEN_TYPE = "session";
 
-    private String buildToken(String userId, String type, long expiration, String secret) {
+    private String buildToken(String userId, String type, Duration expiration, String secret) {
         return Jwts.builder()
-                .subject(userId) // Guardamos el ID del usuario aquí
-                .claim("type", type) // Claim para diferenciarlo
+                .subject(userId)
+                .claim("type", type) // Tipo de token
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + expiration))
+                .expiration(new Date(System.currentTimeMillis() + expiration.toMillis())) // Conversion a milisegundos
                 .signWith(getSigningKey(secret), Jwts.SIG.HS256)
                 .compact();
     }
 
     public String generatePasswordResetToken(String userId) {
-        String token = buildToken(
-                userId, "password-reset",
+        return buildToken(
+                userId, RESET_TOKEN_TYPE,
                 RESET_TOKEN_EXPIRATION,
                 passwordResetSecretKey);
-        return token;
     }
 
     public String generateSessionToken(String userId) {
-        String token = buildToken(
-                userId, "session",
+        return buildToken(
+                userId, SESSION_TOKEN_TYPE,
                 SESSION_TOKEN_EXPIRATION,
                 sessionSecretKey);
-        return token;
+
     }
 
     private SecretKey getSigningKey(String secret) {
@@ -58,20 +58,32 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String extractUserIdFromPasswordResetToken(String token) {
+    private String extractIdFromToken(String token, String secret, String type) {
         Claims claims = Jwts.parser()
-                .verifyWith(getSigningKey(passwordResetSecretKey))
+                .verifyWith(getSigningKey(secret))
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-
-        // Verificación extra del tipo de token
-        String tokenType = claims.get("type", String.class);
-        if (!"password-reset".equals(tokenType)) {
-            throw new IllegalArgumentException("Token inválido: no es para reseteo de contraseña.");
+        String tokentype = claims.get("type", String.class);
+        if (!type.equals(tokentype)) {
+            throw new IllegalArgumentException("Token inválido: no es del tipo esperado.");
         }
+        String userId = claims.getSubject();
+        return userId;
+    }
 
-        return claims.getSubject();
+    public String extractUserIdFromPasswordResetToken(String token) {
+        return extractIdFromToken(
+                token,
+                passwordResetSecretKey,
+                RESET_TOKEN_TYPE);
+    }
+
+    public String extractUserIdFromSessionToken(String token) {
+        return extractIdFromToken(
+                token,
+                sessionSecretKey,
+                SESSION_TOKEN_TYPE);
     }
 
 }
