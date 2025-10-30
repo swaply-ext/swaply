@@ -15,40 +15,53 @@ import { RecoveryDataService } from '../../services/recovery-data.service.servic
 })
 export class RecoveryPasswordComponent {
   email: string = '';
+  showError = false;
 
   constructor(
     private router: Router,
     private location: Location,
     private http: HttpClient,
     private recoveryService: RecoveryDataService
-  ) {}
+  ) { }
 
-  enviarCodigo() {
+  sendCode() {
+    this.showError = false;
+
     if (!this.email) {
-      alert('Por favor, introduce tu correo electrónico.');
+      this.showError = true;
+      return;
+    }
+
+    if (!this.validateEmail(this.email)) {
+      this.showError = true;
       return;
     }
 
     // Enviar JSON { email: ... }
-  this.http.post<{ userId?: string; id?: string; codeString?: string; code?: string }>(
-    'http://localhost:8081/api/account/recoveryCode',
-    this.email 
-      ).subscribe({
-    next: ({ userId, code }) => {
-      this.recoveryService.setRecoveryData({ id: userId, code, email: this.email });
-      this.router.navigate(['/pass-verification']);
-    },
+    this.http.post<{ userId?: string; id?: string; codeString?: string; code?: string }>(
+      'http://localhost:8081/api/account/recoveryCode',
+      this.email
+    ).subscribe({
+      next: ({ userId, code }) => {
+        this.recoveryService.setRecoveryData({ id: userId, code, email: this.email });
+        this.router.navigate(['/pass-verification']);
+      },
 
-        error: err => {
-          console.error('Error enviando dato:', err);
-          alert('Error enviando el correo. Intenta de nuevo.');
-        },
-      });
+      error: err => {
+        console.error('Error enviando dato:', err);
+        alert('Error enviando el correo. Intenta de nuevo.');
+      },
+    });
 
     console.log('Solicitud de código enviada para', this.email);
   }
 
-  volverAtras() {
+  goBack() {
     this.location.back();
+  }
+
+  private validateEmail(email: string): boolean {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
   }
 }

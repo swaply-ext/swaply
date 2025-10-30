@@ -6,7 +6,7 @@ import { TermsCheckboxComponent } from '../../components/terms-checkbox/terms-ch
 import { LoginRegisterButtonsComponent } from '../../components/login-register-buttons/login-register-buttons.component';
 import { RouterLink } from '@angular/router';
 import { HttpClient, HttpResponse, HttpErrorResponse } from '@angular/common/http';
-
+import { CommonModule } from '@angular/common';
 
 interface User {
   email: string;
@@ -21,7 +21,8 @@ interface User {
     PasswordInputComponent,
     TermsCheckboxComponent,
     RouterLink,
-    LoginRegisterButtonsComponent
+    LoginRegisterButtonsComponent,
+    CommonModule
   ],
   templateUrl: './login-form.component.html', // Ruta al archivo HTML
   styleUrls: ['./login-form.component.css']   // Ruta al archivo CSS
@@ -31,17 +32,18 @@ export class LoginFormComponent {
   email = '';
   password = '';
   accepted = false;
+  showError = false;
 
   constructor(private router: Router, private http: HttpClient) { }
 
   login() {
     // Habria que cambiar el alert por algo mas bonito
     if (!this.accepted) {
-      alert('Debes aceptar los términos');
+      this.showError =true;
       return;
     }
     if (!this.email || !this.password) {
-      alert('Debes rellenar todos los campos');
+      this.showError =true;
       return;
     }
     // Crea el objeto usuario con los datos del formulario

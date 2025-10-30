@@ -3,11 +3,12 @@ import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { RegisterDataService } from '../../services/register-data.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-email-verification',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './email-verification.component.html',
   styleUrls: ['./email-verification.component.css']
 })
@@ -18,6 +19,7 @@ export class EmailVerificationComponent {
 
   code: string[] = ['', '', '', '', '', ''];
   validCode: any;
+  showError = false;
 
   // Constructor con inyección de dependencias
   constructor(
@@ -89,7 +91,7 @@ export class EmailVerificationComponent {
 
     // Cambiar el alert por algo mas bonito
     if (fullCode.length < 6) {
-      alert('Introduce los 6 dígitos antes de continuar.');
+      this.showError = true;
       return;
     }
 
@@ -113,7 +115,7 @@ export class EmailVerificationComponent {
 
     } else {
       // Cambiar el alert por algo mas bonito
-      alert('Código incorrecto');
+      this.showError = true;
     }
   }
 
