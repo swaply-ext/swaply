@@ -3,13 +3,19 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
+interface RegisterUserDTO {
+  username: string;
+  email: string;
+  password: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class RegisterDataService {
   private registerData: any = {};
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   setRegisterData(data: any) {
     this.registerData = { ...this.registerData, ...data };
@@ -23,14 +29,13 @@ export class RegisterDataService {
     this.registerData = {};
   }
 
-  // Registra usuario en el backend usando URL completa y recibe respuesta como texto
-  registerUser(data: { email: string; password: string }): Observable<any> {
+  // 🔹 Llama al backend para registrar inicialmente (verifica email y username)
+  initialRegister(data: RegisterUserDTO): Observable<any> {
     return this.http.post('http://localhost:8081/api/auth/register', data, {
       responseType: 'text',
       observe: 'response'
     }).pipe(
       map((response: HttpResponse<string>) => {
-        // si no existe se crea, devolvemos la respuesta
         if (response.status === 201) {
           return response.body;
         } else {
@@ -38,9 +43,14 @@ export class RegisterDataService {
         }
       }),
       catchError(err => {
-        // 409 Conflict = correo o usuario duplicado
-        if (err.status === 409) {
-          return throwError(() => new Error('Correo ya registrado'));
+        if (err.status === 409) { // Conflict
+          if (err.error.includes('email')) {
+            return throwError(() => new Error('Email ya registrado'));
+          } else if (err.error.includes('username')) {
+            return throwError(() => new Error('Username ya registrado'));
+          } else {
+            return throwError(() => new Error('Correo o username ya registrado'));
+          }
         }
         return throwError(() => new Error('Error al registrar el usuario'));
       })

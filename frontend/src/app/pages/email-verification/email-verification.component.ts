@@ -100,17 +100,17 @@ export class EmailVerificationComponent {
       // Elimina el campo 'verifyCode' antes de enviar
       const { verifyCode, ...dataToSend } = allData;
       // despues de vericiar hay que enviar el objeto infoUser ENTERO (sin verify)
-      this.http.post('http://localhost:8081/api/auth/register', dataToSend) //envia el codigo de verificacion al endpoint de back y loc comprueban
+      this.http.post('http://localhost:8081/api/auth/registerCodeVerify', dataToSend) //envia el codigo de verificacion al endpoint de back y loc comprueban
         .subscribe({
           next: response => {
-            this.router.navigate(['/confirmation']);
+            this.router.navigate(['/']);
           },
           error: err => {
             alert('Error enviando datos al backend');
             console.error('Error enviando datos:', err);
           }
         }) // solo activaremos la api si hace falta doble comprobar en front (ya esta), en back si lo enviamos  */
-
+        
     } else {
       // Cambiar el alert por algo mas bonito
       alert('Código incorrecto');
