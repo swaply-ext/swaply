@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.swaply.backend.application.auth.dto.RegisterDTO;
+import com.swaply.backend.application.auth.dto.RegisterInitialDTO;
 import com.swaply.backend.application.auth.service.PasswordService;
 import com.swaply.backend.shared.UserCRUD.Model.User;
 import com.swaply.backend.shared.UserCRUD.dto.UpdateUserDTO;
@@ -84,12 +85,36 @@ public class UserService {
     }
 
     @Transactional
-    public UserDTO createUser(RegisterDTO dto) {
-        User newUser = mapper.fromRegisterDTO(dto);
+    public UserDTO createUserTtl(RegisterInitialDTO dto, String code) {
+        User newUser = mapper.fromRegisterTtlDTO(dto);
 
+        String passsword = passwordService.hash(dto.getPassword());
+        newUser.setPassword(passsword);
         newUser.setId(UUID.randomUUID().toString());
-        String passwordHash = passwordService.hash(dto.getPassword());
-        newUser.setPassword(passwordHash);
+        newUser.setTtl(300);
+        newUser.setCode(code);
+        User savedUser = repository.save(newUser);
+
+        return mapper.entityToDTO(savedUser);
+    }
+
+
+    @Transactional
+    public UserDTO activateUser(UserDTO dto) {
+        User newUser = mapper.dtoToEntity(dto);
+
+        newUser.setCode(null);
+        newUser.setTtl(-1);
+
+        User savedUser = repository.save(newUser);
+
+        return mapper.entityToDTO(savedUser);
+    }
+
+
+    @Transactional
+    public UserDTO registerUser(RegisterInitialDTO dto) {
+        User newUser = mapper.fromRegisterTtlDTO(dto);
 
         newUser.setModerator(false);
         newUser.setVerified(false);
@@ -100,6 +125,27 @@ public class UserService {
         return mapper.entityToDTO(savedUser);
 
     }
+
+    // Hay qye ver si eliminamos esto, que necesidad hay de tenerlo? ADMIN??
+
+
+    // @Transactional
+    // public UserDTO createUser(RegisterDTO dto) {
+    //     User newUser = mapper.fromRegisterDTO(dto);
+
+    //     newUser.setId(UUID.randomUUID().toString());
+    //     String passwordHash = passwordService.hash(dto.getPassword());
+    //     newUser.setPassword(passwordHash);
+
+    //     newUser.setModerator(false);
+    //     newUser.setVerified(false);
+    //     newUser.setPremium(false);
+
+    //     User savedUser = repository.save(newUser);
+
+    //     return mapper.entityToDTO(savedUser);
+
+    // }
 
     @Transactional
     public void updateUserPassword(String id, String newPassword) {

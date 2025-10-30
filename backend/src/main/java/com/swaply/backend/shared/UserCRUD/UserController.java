@@ -21,11 +21,13 @@ public class UserController {
         this.service = service;
     }
 
-    @PostMapping
-    public ResponseEntity<UserDTO> createUser(@RequestBody RegisterDTO user) {
-        UserDTO createdUser = service.createUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
-    }
+    // No se si hay que dejar esto, puede ser util para un Admin o testing tal vez
+
+    // @PostMapping
+    // public ResponseEntity<UserDTO> createUser(@RequestBody RegisterDTO user) {
+    //     UserDTO createdUser = service.createUser(user);
+    //     return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+    // }
 
     @GetMapping
     public ResponseEntity<List<UserDTO>> getAll(@RequestParam(required = false) String contains) {

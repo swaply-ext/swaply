@@ -30,6 +30,8 @@ public class User {
     private String surname;
     private String email;
     private String password;
+    private String code;
+    private int ttl;
     private String location;
     private String gender;
     private List<Skills> skills;
