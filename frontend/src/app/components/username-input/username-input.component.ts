@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -11,5 +11,6 @@ import { FormsModule } from '@angular/forms';
 })
 export class UsernameInputComponent {
   username = '';
+  @Input() hasError: boolean = false;
   @Output() usernameChange = new EventEmitter<string>();
 }

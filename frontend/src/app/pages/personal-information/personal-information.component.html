@@ -3,13 +3,17 @@
 
     <form>
         <!--Componentes de los campos-->
-        <app-name-input (nameChange)="name = $event"></app-name-input>
-        <app-surname-input (surnameChange)="surname = $event"></app-surname-input>
-        <app-username-input (usernameChange)="username = $event"></app-username-input> 
-        <app-birth-date (birthDateChange)="birthDate = $event"></app-birth-date>
-        <app-gender-input (genderChange)="gender = $event" ></app-gender-input>
-        <app-phone-input (phoneChange)="phone = $event"></app-phone-input>
-        <app-address-input (addressChange)="address = $event" (postalChange)="postalCode = $event"></app-address-input>
+        <app-name-input (nameChange)="name = $event" [hasError]="hasErrorAll"></app-name-input>
+        <app-surname-input (surnameChange)="surname = $event" [hasError]="hasErrorAll"></app-surname-input>
+        <app-username-input (usernameChange)="username = $event" [hasError]="hasErrorAll"></app-username-input>
+        <app-birth-date (birthDateChange)="birthDate = $event" [hasError]="hasErrorAll"></app-birth-date>
+        <app-gender-input (genderChange)="gender = $event" [hasError]="hasErrorAll"></app-gender-input>
+        <app-phone-input (phoneChange)="phone = $event" [hasError]="hasErrorAll"></app-phone-input>
+        <app-address-input (addressChange)="address = $event" (postalChange)="postalCode = $event"
+            [hasError]="hasErrorAll"></app-address-input>
+        <small *ngIf="showError" class="error-message">
+            {{message}}
+        </small>
         <app-next-button (submit)=" registerData()"></app-next-button>
     </form>
 </div>

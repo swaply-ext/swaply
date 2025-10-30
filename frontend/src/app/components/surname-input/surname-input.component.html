@@ -1,4 +1,4 @@
-<div class="input-container">
+<div class="input-container" [ngClass]="{ 'error': hasError }">
   <input type="text" 
     [(ngModel)]="surname" 
     (ngModelChange)="surnameChange.emit($event)" 
