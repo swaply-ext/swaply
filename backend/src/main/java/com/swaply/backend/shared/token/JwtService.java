@@ -20,7 +20,7 @@ public class JwtService {
     private String passwordResetSecretKey;
 
     @Value("${jwt-secret-session}")
-    private String idTokenSecretKey;
+    private String sessionSecretKey;
 
     private static final long RESET_TOKEN_EXPIRATION = 900000; // 15 minutos en milisegundos
 
@@ -49,7 +49,7 @@ public class JwtService {
         String token = buildToken(
                 userId, "session",
                 SESSION_TOKEN_EXPIRATION,
-                idTokenSecretKey);
+                sessionSecretKey);
         return token;
     }
 
