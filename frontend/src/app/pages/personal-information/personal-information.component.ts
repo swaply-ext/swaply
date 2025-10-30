@@ -10,7 +10,7 @@ import { UsernameInputComponent } from "../../components/username-input/username
 import { HttpClient } from '@angular/common/http';
 import { RegisterDataService } from '../../services/register-data.service';
 import { GenderInputComponent } from '../../components/gender-input/gender-input.component';
-
+import { CommonModule } from '@angular/common';
 
 interface UserData {
   name: string;
@@ -34,7 +34,8 @@ interface UserData {
     GenderInputComponent,
     PhoneInputComponent,
     AddressInputComponent,
-    UsernameInputComponent
+    UsernameInputComponent,
+    CommonModule
   ],
   standalone: true,
   styleUrls: ['./personal-information.component.css'],
@@ -54,7 +55,10 @@ export class PersonalInformationComponent {
   address = '';
   phone = 0;
   postalCode = 0;
-  
+  showError = false;
+  hasErrorAll = false;
+  message = '';
+
   // Constructor con inyección de dependencias
   constructor(
     private router: Router,
@@ -68,21 +72,63 @@ export class PersonalInformationComponent {
   }
   // Función para manejar el envío del formulario
   registerData() {
-    if (!this.name || this.validateName(this.name)) { alert('Debes introducir un nombre válido'); return; }
+    this.showError = false;
 
-    if (!this.surname || this.validateName(this.surname)) { alert('Debes introducir un apellido válido'); return; }
+    if (!this.name || this.validateName(this.name)) {
+      this.showError = true;
+      this.hasErrorAll = true;
+      this.message = 'Debes introducir un nombre válido';
+      return;
+    }
 
-    if (!this.username || this.validateUsername(this.username)) { alert('Debes introducir un nombre de usuario válido'); return; }
+    if (!this.surname || this.validateName(this.surname)) {
+      this.showError = true;
+      this.hasErrorAll = true;
+      this.message = 'Debes introducir un apellido válido';
+      return;
+    }
 
-    if (!this.birthDate || (new Date(this.birthDate) > new Date()) || this.isToday(new Date(this.birthDate))) { alert('Debes introducir una fecha de nacimiento válida'); return; }
+    if (!this.username || this.validateUsername(this.username)) {
+      this.showError = true;
+      this.hasErrorAll = true;
+      this.message = 'Debes introducir un nombre de usuario válido';
+      return;
+    }
 
-    if (!this.gender) { alert('Debes seleccionar un género'); return; }
-    
-    if (!this.phone || this.validatePhone(this.phone)) { alert('Debes introducir un número de teléfono válido'); return; }
+    if (!this.birthDate || (new Date(this.birthDate) > new Date()) || this.isToday(new Date(this.birthDate))) {
+      this.showError = true;
+      this.hasErrorAll = true;
+      this.message = 'Debes introducir una fecha de nacimiento válida';
+      return;
+    }
 
-    if (!this.postalCode || this.validatePostal(this.postalCode)) { alert('Debes introducir un código postal válido'); return; }
+    if (!this.gender) {
+      this.showError = true;
+      this.hasErrorAll = true;
+      this.message = 'Debes seleccionar un género';
+      return;
+    }
 
-    if (!this.address || this.validateAddress(this.address)) { alert('Debes introducir una dirección válida'); return; }
+    if (!this.phone || this.validatePhone(this.phone)) {
+      this.showError = true;
+      this.hasErrorAll = true;
+      this.message = 'Debes introducir un número de teléfono válido';
+      return;
+    }
+
+    if (!this.postalCode || this.validatePostal(this.postalCode)) {
+      this.showError = true;
+      this.hasErrorAll = true;
+      this.message = 'Debes introducir un código postal válido';
+      return;
+    }
+
+    if (!this.address || this.validateAddress(this.address)) {
+      this.showError = true;
+      this.hasErrorAll = true;
+      this.message = 'Debes introducir una dirección válida';
+      return;
+    }
 
     // Crea el objeto con los nuevos datos del usuario
     const newUserData = {
@@ -111,7 +157,7 @@ export class PersonalInformationComponent {
           // Ara tens al servei: email, password, dades personals i verifyCode
           // Pots navegar a la pàgina de verificació
         },
-        error: err => console.error('Error enviant dades:', err)
+        error: err => console.error('Error enviando datos:', err)
       });
 
 

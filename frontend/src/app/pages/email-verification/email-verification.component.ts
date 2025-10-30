@@ -6,7 +6,7 @@ import { RegisterDataService } from '../../services/register-data.service';
 @Component({
   selector: 'app-email-verification',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './email-verification.component.html',
   styleUrls: ['./email-verification.component.css']
 })
@@ -82,7 +82,7 @@ export class EmailVerificationComponent implements OnInit {
     const fullCode = this.code.join('');
 
     if (fullCode.length < 6) {
-      alert('Introduce los 6 dígitos antes de continuar.');
+      this.showError = true;
       return;
     }
 

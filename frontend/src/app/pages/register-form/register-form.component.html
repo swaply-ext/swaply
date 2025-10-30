@@ -28,7 +28,7 @@
     </app-confirm-password-input>
 
     <small *ngIf="showError" class="error-message">
-      El correo o la contraseña no coinciden.
+      {{message}}
     </small>
 
     <app-terms-checkbox (checkedChange)="accepted = $event"></app-terms-checkbox>

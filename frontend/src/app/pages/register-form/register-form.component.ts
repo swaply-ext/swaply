@@ -44,6 +44,7 @@ export class RegisterFormComponent {
   accepted = false;
   showError = false;
   hasErrorAll = false;
+  message = '';
 
   constructor(
     private router: Router,
@@ -54,7 +55,9 @@ export class RegisterFormComponent {
     this.showError = false;
 
     if (!this.accepted) {
-      alert('Debes aceptar los términos');
+      this.showError = true;
+      this.hasErrorAll = true;
+      this.message = 'Debes aceptar los términos';
       return;
     }
 
@@ -64,19 +67,24 @@ export class RegisterFormComponent {
     }
 
     if (!this.validateEmail(this.email)) {
-      alert('Correo inválido. Debe contener "@" y formato correcto.');
+      this.showError = true;
+      this.hasErrorAll = true;
+      this.message = 'Correo inválido. Debe contener "@" y formato correcto';
       return;
     }
 
     const passwordValidation = this.validatePassword(this.password);
     if (!passwordValidation.valid) {
-      alert('Contraseña inválida:\n' + passwordValidation.message);
+      this.showError = true;
+      this.hasErrorAll = true;
+      this.message = 'Contraseña inválida:\n' + passwordValidation.message;
       return;
     }
 
     if (this.email !== this.confirmEmail || this.password !== this.confirmPassword) {
       this.showError = true;
       this.hasErrorAll = true;
+      this.message = 'El correo o la contraseña no coinciden';
       return;
     }
 
@@ -94,7 +102,8 @@ export class RegisterFormComponent {
         } else if (err.message.includes('username')) {
           alert('El username ya está registrado');
         } else {
-          alert('Error al registrar el usuario');
+          this.showError = true;
+          this.message = 'Error al registrar el usuario';
         }
       }
     });

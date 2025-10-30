@@ -16,6 +16,7 @@ import { HttpClient } from '@angular/common/http';
 export class NewPasswordComponent implements OnInit {
   newPassword: string = '';
   confirmPassword: string = '';
+  showError = false;
 
   // Constructor con inyección de dependencias: Location para navegación, Router para redirección, HttpClient para peticiones HTTP
   constructor(
@@ -32,13 +33,21 @@ export class NewPasswordComponent implements OnInit {
   }
 
   submitNewPassword() {
+    this.showError = false;
+
+    const passwordValidation = this.validatePassword(this.newPassword);
+    if (!passwordValidation.valid) {
+      this.showError = true;
+      return;
+    }
+
     if (!this.newPassword || !this.confirmPassword) {
-      alert('Por favor, completa ambos campos.');
+      this.showError = true;
       return;
     }
 
     if (this.newPassword !== this.confirmPassword) {
-      alert('Las contraseñas no coinciden.');
+      this.showError = true;
       return;
     }
 
@@ -71,4 +80,22 @@ export class NewPasswordComponent implements OnInit {
     });
 
   }
+  private validatePassword(password: string): { valid: boolean; message: string } {
+    const minLength = 8;
+    const uppercase = /[A-Z]/;
+    const lowercase = /[a-z]/;
+    const number = /[0-9]/;
+    const special = /[!@#$%^&*?]/;
+    const simpleSeq = /(1234|abcd|password|qwerty)/i;
+
+    if (password.length < minLength) return { valid: false, message: `Debe tener al menos ${minLength} caracteres.` };
+    if (!uppercase.test(password)) return { valid: false, message: 'Debe contener al menos una letra mayúscula.' };
+    if (!lowercase.test(password)) return { valid: false, message: 'Debe contener al menos una letra minúscula.' };
+    if (!number.test(password)) return { valid: false, message: 'Debe contener al menos un número.' };
+    if (!special.test(password)) return { valid: false, message: 'Debe contener al menos un carácter especial (!@#$%^&*?).' };
+    if (simpleSeq.test(password)) return { valid: false, message: 'No use secuencias simples o información personal.' };
+
+    return { valid: true, message: '' };
+  }
 }
+

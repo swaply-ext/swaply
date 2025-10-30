@@ -57,3 +57,20 @@
 
 }
 
+.login-container.error input {
+ border: 2px solid red;
+  background-color: #ffe6e6;
+  color: red; 
+}
+
+.login-container.error input::placeholder {
+  color: #ff6666; 
+}
+
+.error-message {
+  color: #ff4d4f;
+  font-size: 0.85rem;
+  margin-top: 5px;
+  padding-left: 5px;
+  text-align: left;
+}
