@@ -5,12 +5,12 @@
   min-height: 100vh;
   font-family: 'Quicksand', sans-serif;
   margin: 0;
-  background: linear-gradient(to bottom, #012534 0%, #00839E 100%); /* degradado de fondo */
+  background: linear-gradient(to bottom, #012534 0%, #00839E 100%);
 }
 
-.confirm-password-container {
-  background: #356B8A; /* color del container */
-  padding: 3rem;               
+.error-404-container {
+  background: #356B8A;
+  padding: 3rem;               /* espacio interno */
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
   text-align: center;
@@ -19,18 +19,33 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start; 
+  justify-content: flex-start; /* el contenido empieza desde arriba */
+}
+
+h2 {
+  color: #fff;
+  font-size: 35px;
+  margin: 1rem 0 0 0;
+  font-family: var(--font-primary);
+  font-weight: 500;
+}
+
+.error-404-container p {
+  color: #fff;
+  font-size: 1rem;
+  margin-top: 1rem;   /* añade un poco de espacio desde el h2 */
+  margin-bottom: 0;
 }
 
 .icon-circle {
   width: 140px;
   height: 140px;
-  background-color: var(--principal-color-2); /* verde */
+  background-color: #A11D1D;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: -120px;          /* sobresale hacia arriba */
+  margin-top: -120px;          /* baja la mitad del círculo hacia arriba */
   margin-bottom: 1.5rem;
 }
 
@@ -39,12 +54,10 @@
   font-size: 7rem;
 }
 
-.confirm-password-container p {
+.error-404-container p {
   color: #fff;
   font-size: 1rem;
-  margin-top: 1rem;   /* espacio desde la X */
   margin-bottom: 0;
-  text-align: center;
 }
 
 .button-wrapper {
@@ -54,7 +67,7 @@
 
 .continue-button {
   padding: 0.8rem 2rem;
-  background-color: var(--principal-color-2); /* verde */
+  background-color: #A11D1D;
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -65,17 +78,17 @@
 }
 
 .continue-button:hover {
-  background-color: #21867a; /* verde más oscuro al hover */
+  background-color: #b9243b;
 }
 
 @media (max-width: 480px) {
-  .confirm-password-container {
+  .error-404-container {
     padding: 1.5rem;
     width: 90%;
   }
 
   .button-wrapper {
-    flex-direction: column; 
+    flex-direction: column;
   }
 
   .continue-button {
