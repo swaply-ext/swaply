@@ -9,9 +9,13 @@
 
   <form>
     <!-- Componente para el campo de email, password, terms-checkbox -->
-    <app-email-input (emailChange)="email = $event"></app-email-input>
-    <app-password-input (passwordChange)="password = $event"></app-password-input>
+    <app-email-input (emailChange)="email = $event" [hasError]="showError"></app-email-input>
+    <app-password-input (passwordChange)="password = $event" [hasError]="showError"></app-password-input>
     <app-terms-checkbox (checkedChange)="accepted = $event"></app-terms-checkbox>
+
+    <p><small *ngIf="showError" class="error-message">
+        Debes aceptar los términos y rellenar todos los campos.
+      </small></p>
 
     <!-- Componente personalizado para el campo de email -->
     <div>
@@ -20,9 +24,7 @@
 
     <!-- Componente con botones de login y registro -->
     <!-- Emite eventos para iniciar sesión o registrarse -->
-    <app-login-register-buttons 
-    (registerClick)="register()"
-    (loginClick)="login()">
+    <app-login-register-buttons (registerClick)="register()" (loginClick)="login()">
     </app-login-register-buttons>
 
   </form>
