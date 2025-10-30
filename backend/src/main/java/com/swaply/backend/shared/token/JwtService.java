@@ -9,69 +9,81 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.time.Duration;
 
 @Service
 public class JwtService {
 
-    // Es una BUENA PRÁCTICA usar una clave secreta DIFERENTE para los tokens de
-    // reseteo
-    // que para los tokens de sesión. Puedes cargarla desde application.properties
-    @Value("${jwt-secret-key}")
+    // @Value("${jwt-secret-passwordReset}")
+    @Value("${jwt-secret-key}") // Temporal hasta generar ambos secretos
     private String passwordResetSecretKey;
 
-    private static final long RESET_TOKEN_EXPIRATION = 900000; // 15 minutos en milisegundos
+    // @Value("${jwt-secret-session}")
+    @Value("${jwt-secret-key}") // Temporal hasta generar ambos secretos
+    private String sessionSecretKey;
 
-    /**
-     * Genera un token específico para el reseteo de contraseña.
-     * 
-     * @param userId El ID del usuario.
-     * @return El token JWT.
-     */
+    private static final Duration RESET_TOKEN_EXPIRATION = Duration.ofMinutes(15);
+    private static final String RESET_TOKEN_TYPE = "password-reset";
+
+    private static final Duration SESSION_TOKEN_EXPIRATION = Duration.ofDays(7);
+    private static final String SESSION_TOKEN_TYPE = "session";
+
+    private String buildToken(String userId, String type, Duration expiration, String secret) {
+        return Jwts.builder()
+                .subject(userId)
+                .claim("type", type) // Tipo de token
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + expiration.toMillis())) // Conversion a milisegundos
+                .signWith(getSigningKey(secret), Jwts.SIG.HS256)
+                .compact();
+    }
+
     public String generatePasswordResetToken(String userId) {
-        return Jwts.builder()
-                .subject(userId) // Guardamos el ID del usuario aquí
-                .claim("type", "password-reset") // Claim para diferenciarlo
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + RESET_TOKEN_EXPIRATION))
-                .signWith(getResetSigningKey(), Jwts.SIG.HS256)
-                .compact();
+        return buildToken(
+                userId, RESET_TOKEN_TYPE,
+                RESET_TOKEN_EXPIRATION,
+                passwordResetSecretKey);
     }
 
-    public String generateIdToken(String userId) {
-        return Jwts.builder()
-                .subject(userId) // Guardamos el ID del usuario aquí
-                .claim("type", "userToken") // Claim para diferenciarlo
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + RESET_TOKEN_EXPIRATION))
-                .signWith(getResetSigningKey(), Jwts.SIG.HS256)
-                .compact();
+    public String generateSessionToken(String userId) {
+        return buildToken(
+                userId, SESSION_TOKEN_TYPE,
+                SESSION_TOKEN_EXPIRATION,
+                sessionSecretKey);
+
     }
 
-    /**
-     * Valida un token de reseteo y extrae el ID del usuario.
-     * Lanza una excepción si el token es inválido o ha expirado.
-     * 
-     * @param token El token a validar.
-     * @return El ID del usuario.
-     */
-    public String extractUserIdFromPasswordResetToken(String token) {
+    private SecretKey getSigningKey(String secret) {
+        byte[] keyBytes = Decoders.BASE64.decode(secret);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    private String extractIdFromToken(String token, String secret, String type) {
         Claims claims = Jwts.parser()
-                .verifyWith(getResetSigningKey())
+                .verifyWith(getSigningKey(secret))
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-
-        // Verificación extra del tipo de token
-        String tokenType = claims.get("type", String.class);
-        if (!"password-reset".equals(tokenType)) {
-            throw new IllegalArgumentException("Token inválido: no es para reseteo de contraseña.");
+        String tokentype = claims.get("type", String.class);
+        if (!type.equals(tokentype)) {
+            throw new IllegalArgumentException("Token inválido: no es del tipo esperado.");
         }
-
-        return claims.getSubject();
+        String userId = claims.getSubject();
+        return userId;
     }
 
-    private SecretKey getResetSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(passwordResetSecretKey);
-        return Keys.hmacShaKeyFor(keyBytes);
+    public String extractUserIdFromPasswordResetToken(String token) {
+        return extractIdFromToken(
+                token,
+                passwordResetSecretKey,
+                RESET_TOKEN_TYPE);
     }
+
+    public String extractUserIdFromSessionToken(String token) {
+        return extractIdFromToken(
+                token,
+                sessionSecretKey,
+                SESSION_TOKEN_TYPE);
+    }
+
 }
