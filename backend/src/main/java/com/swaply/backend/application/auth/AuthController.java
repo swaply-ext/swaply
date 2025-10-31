@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.application.auth.service.AuthService;
 import com.swaply.backend.application.auth.dto.LoginDTO;
+import com.swaply.backend.application.auth.dto.RegisterActivationDTO;
 import com.swaply.backend.application.auth.dto.RegisterDTO;
+import com.swaply.backend.application.auth.dto.RegisterInitialDTO;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -22,22 +24,21 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserDTO> register(@RequestBody RegisterDTO dto) {
-        UserDTO newUser = service.register(dto);
+    public ResponseEntity<UserDTO> register(@RequestBody RegisterInitialDTO dto) {
+        UserDTO newUser = service.initialRegister(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
 
-    // Esto hay que mirarlo seguramente el Front no deberia tener el código solo un
-    // boolean al enviarlo
-    @PostMapping("/mailVerify")
-    public ResponseEntity<String> mailVerify(@RequestBody String email) {
-        String code = service.mailVerify(email);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(code);
+
+    @PostMapping("/registerCodeVerify")
+    public ResponseEntity<String> registerCodeVerify(@RequestBody RegisterActivationDTO dto) {
+        String token = service.registerCodeVerify(dto);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(token);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestBody LoginDTO dto) {
-        Object token = service.login(dto);
+    public ResponseEntity<String> login(@RequestBody LoginDTO dto) {
+        String token = service.login(dto);
         return ResponseEntity.ok(token);
     }
 

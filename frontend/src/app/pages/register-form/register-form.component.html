@@ -3,6 +3,10 @@
 
   <!--Formulario de registro con componentes personalizados-->
   <form>
+    <app-username-input
+      [(username)]="username"
+      [hasError]="hasErrorAll">
+    </app-username-input>
     <app-email-input
       [(email)]="email"
       [hasError]="hasErrorAll">

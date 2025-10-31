@@ -7,10 +7,16 @@ import { FormsModule } from '@angular/forms';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './username-input.component.html',
-  styleUrl: './username-input.component.css'
+  styleUrls: ['./username-input.component.css']
 })
 export class UsernameInputComponent {
-  username = '';
+  @Input() username: string = '';
   @Input() hasError: boolean = false;
   @Output() usernameChange = new EventEmitter<string>();
+
+  onInput(event: Event) {
+    const value = (event.target as HTMLInputElement).value;
+    this.username = value;
+    this.usernameChange.emit(value);
+  }
 }
