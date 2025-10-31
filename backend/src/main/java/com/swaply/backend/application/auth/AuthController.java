@@ -29,12 +29,12 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
 
-
     @PostMapping("/registerCodeVerify")
     public ResponseEntity<String> registerCodeVerify(@RequestBody RegisterActivationDTO dto) {
         String token = service.registerCodeVerify(dto);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(token);
     }
+    
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginDTO dto) {

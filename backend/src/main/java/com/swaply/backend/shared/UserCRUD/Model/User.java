@@ -34,6 +34,7 @@ public class User {
     private int ttl;
     private String location;
     private String gender;
+    private String phone;
     private List<Skills> skills;
     private List<Skills> interest;
     @JsonFormat(pattern="dd/MM/yyyy")

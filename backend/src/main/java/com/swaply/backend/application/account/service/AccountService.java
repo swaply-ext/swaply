@@ -1,6 +1,7 @@
 package com.swaply.backend.application.account.service;
 
 import com.swaply.backend.shared.UserCRUD.UserService;
+import com.swaply.backend.shared.UserCRUD.dto.UpdateUserDTO;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.shared.UserCRUD.exception.UserNotFoundException;
 import com.swaply.backend.shared.mail.MailService;
@@ -66,4 +67,15 @@ public class AccountService /* implements UserRepository */ {
         }
     }
 
+    public void UpdatePersonalInfo(String token, UpdateUserDTO dto) {
+        try {
+            String userId = jwtService.extractUserIdFromSessionToken(token);
+
+            userService.updateUser(userId, dto);
+
+        } catch (Exception e) {
+            // Hay que ver si creamos una exception aqui también
+            throw new RuntimeException("No se ha podido actualizar la informacion  del usuario", e);
+        }
+    }
 }
