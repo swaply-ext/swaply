@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.swaply.backend.application.account.service.AccountService;
+import com.swaply.backend.shared.UserCRUD.dto.UpdateUserDTO;
 
 @RestController
 @RequestMapping("/api/account")
@@ -26,6 +27,12 @@ public class AccountController {
         service.generateAndSendResetLink(email);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body("Código generado y enviado si el mail existe");
 
+    }
+
+        @PostMapping("/personalInfo")
+    public ResponseEntity<Boolean> personalInfo(@RequestBody String token, UpdateUserDTO dto) {
+        service.UpdatePersonalInfo(token, dto);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
     }
 
     @PostMapping("/passwordReset")
