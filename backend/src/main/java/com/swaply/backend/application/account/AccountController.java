@@ -45,5 +45,10 @@ public class AccountController {
     // public ResponseEntity<UserDTO> addSkills(@PathVariable String id){
     //     return ResponseEntity.ok(service.addSkills(id));
     // }
+    @PostMapping("/profileData")
+    public ResponseEntity<Boolean> getProfileData(@RequestBody String token) {
+        service.getProfileData(token);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
+    }
 
 }
