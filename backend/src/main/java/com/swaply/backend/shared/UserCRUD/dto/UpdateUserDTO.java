@@ -20,6 +20,7 @@ public class UpdateUserDTO {
     private String location;
     private String gender;
     private String description;
+    private String phone;
     private List<Skills> skills;
     private List<Skills> interests;
     private boolean isVerified;
