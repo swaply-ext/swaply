@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.swaply.backend.application.account.dto.ProfileDataDTO;
 import com.swaply.backend.application.account.service.AccountService;
 import com.swaply.backend.shared.UserCRUD.dto.UpdateUserDTO;
 
@@ -45,10 +46,26 @@ public class AccountController {
     // public ResponseEntity<UserDTO> addSkills(@PathVariable String id){
     //     return ResponseEntity.ok(service.addSkills(id));
     // }
-    @PostMapping("/profileData")
-    public ResponseEntity<Boolean> getProfileData(@RequestBody String token) {
-        service.getProfileData(token);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
-    }
+
+
+
+    // NO TOCAR --- EN DESARROLLO ALEIX I ARNAU, NOOOOO TOCAR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // Hace falta el maper y el service para entrar en lógica
+    // metodo para enviar datos de profile a frontend, en desarrollo arnau y aleix.
+
+    /*@GetMapping("/profileData") // 1. És un GET, no un POST
+    public ResponseEntity<ProfileDataDTO> getProfileData(
+            // 2. El token ve en una capçalera, NO al body
+            @RequestHeader("Authorization") String authorizationHeader) { 
+        
+        // 3. Cridem al servei i ens retorna el DTO amb les dades
+        ProfileDataDTO profileData = service.getProfileData(authorizationHeader);
+        
+        // 4. Retornem el DTO amb un 200 OK. Angular rebrà el JSON.
+        return ResponseEntity.ok(profileData);
+    }*/
+
+// TOCAR A PARTIR DE AQUI ABAJO:
+
 
 }
