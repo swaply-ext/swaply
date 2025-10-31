@@ -49,7 +49,7 @@ export class RegisterFormComponent {
   constructor(
     private router: Router,
     private registerDataService: RegisterDataService
-  ) {}
+  ) { }
 
   register() {
     this.showError = false;
@@ -62,7 +62,9 @@ export class RegisterFormComponent {
     }
 
     if (!this.username || !this.email || !this.confirmEmail || !this.password || !this.confirmPassword) {
-      alert('Debes rellenar todos los campos');
+      this.showError = true;
+      this.hasErrorAll = true;
+      this.message = 'Debes rellenar todos los campos';
       return;
     }
 
@@ -98,9 +100,13 @@ export class RegisterFormComponent {
       },
       error: (err) => {
         if (err.message.includes('email')) {
-          alert('El correo ya está registrado');
+          this.showError = true;
+          this.hasErrorAll = true;
+          this.message = 'El correo ya está registrado';
         } else if (err.message.includes('username')) {
-          alert('El username ya está registrado');
+          this.showError = true;
+          this.hasErrorAll = true;
+          this.message = 'El username ya está registrado';
         } else {
           this.showError = true;
           this.message = 'Error al registrar el usuario';

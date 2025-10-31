@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { RegisterDataService } from '../../services/register-data.service';
@@ -14,7 +14,7 @@ import { RegisterDataService } from '../../services/register-data.service';
 
 export class EmailVerificationComponent implements OnInit {
   code: string[] = ['', '', '', '', '', ''];
-
+  showError = false;
   email: string = '';
 
   constructor(
@@ -103,14 +103,15 @@ export class EmailVerificationComponent implements OnInit {
             // this.registerDataService.setRegisterData({ token: response });
             this.router.navigate(['/confirmation']);
           } else {
-            alert('Código incorrecto');
+            this.showError = true;
           }
         },
         error: (error) => {
           console.error('Error en la verificación:', error);
           if (error.status === 401) {
-            alert('Código incorrecto o expirado');
+            this.showError = true;
           } else {
+            this.showError = true;
             alert('Error de servidor. Inténtalo más tarde.');
             this.router.navigate(['/error']);
           }
