@@ -81,11 +81,11 @@ public class AccountService /* implements UserRepository */ {
         }
     }
 
-    public void ShowProfileData(String token) {
+    public ProfileDataDTO ShowProfileData(String token) {
         try {
             String userId = jwtService.extractUserIdFromSessionToken(token);
 
-            userService.getUserProfileDataByID(userId);
+            return userService.getUserProfileDataByID(userId);
 
         } catch (Exception e) {
             // Hay que ver si creamos una exception aqui también

@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.swaply.backend.application.account.dto.ProfileDataDTO;
 import com.swaply.backend.application.auth.dto.RegisterDTO;
 import com.swaply.backend.application.auth.dto.RegisterInitialDTO;
 import com.swaply.backend.application.auth.service.PasswordService;
@@ -157,4 +158,10 @@ public class UserService {
         repository.save(user);
     }
 
+
+    public ProfileDataDTO getUserProfileDataByID(String id) {
+        User user = repository.findUserById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+        return mapper.userToProfileDataDTO(user);
+    }
 }
