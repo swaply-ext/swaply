@@ -1,6 +1,8 @@
 package com.swaply.backend.application.account.service;
 
+import com.swaply.backend.application.account.dto.ProfileDataDTO;
 import com.swaply.backend.shared.UserCRUD.UserService;
+import com.swaply.backend.shared.UserCRUD.Model.User;
 import com.swaply.backend.shared.UserCRUD.dto.UpdateUserDTO;
 import com.swaply.backend.shared.mail.MailService;
 import com.swaply.backend.shared.token.JwtService;
@@ -33,6 +35,18 @@ public class AccountService /* implements UserRepository */ {
         } catch (Exception e) {
             // Hay que ver si creamos una exception aqui también
             throw new RuntimeException("No se ha podido actualizar la informacion  del usuario", e);
+        }
+    }
+
+    public ProfileDataDTO ShowProfileData(String token) {
+        try {
+            String userId = jwtService.extractUserIdFromSessionToken(token);
+
+            return userService.getUserProfileDataByID(userId);
+
+        } catch (Exception e) {
+            // Hay que ver si creamos una exception aqui también
+            throw new RuntimeException("No se ha podido obtener la informacion  del usuario", e);
         }
     }
 }
