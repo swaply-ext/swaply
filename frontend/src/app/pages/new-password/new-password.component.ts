@@ -17,6 +17,7 @@ export class NewPasswordComponent implements OnInit {
   newPassword: string = '';
   confirmPassword: string = '';
   showError = false;
+  message = '';
 
   // Constructor con inyección de dependencias: Location para navegación, Router para redirección, HttpClient para peticiones HTTP
   constructor(
@@ -38,16 +39,19 @@ export class NewPasswordComponent implements OnInit {
     const passwordValidation = this.validatePassword(this.newPassword);
     if (!passwordValidation.valid) {
       this.showError = true;
+      this.message = 'Contraseña inválida:\n' + passwordValidation.message;
       return;
     }
 
     if (!this.newPassword || !this.confirmPassword) {
       this.showError = true;
+      this.message = 'Debes rellenar todos los campos';
       return;
     }
 
     if (this.newPassword !== this.confirmPassword) {
       this.showError = true;
+      this.message = 'Las contraseñas deben coincidir';
       return;
     }
 
@@ -55,7 +59,8 @@ export class NewPasswordComponent implements OnInit {
     const payload = { Id: data.id, newPassword: this.newPassword };
 
     if (!payload.Id) {
-      alert('No user id available. Vuelve a solicitar el código.');
+      this.showError = true;
+      this.message = 'Error. Vuelve a solicitar el código.';
       this.router.navigate(['/recovery-password']);
       return;
     }
@@ -70,12 +75,14 @@ export class NewPasswordComponent implements OnInit {
           this.recoveryService.clear();
           this.router.navigate(['/confirmation']);
         } else {
-          alert('Error cambiando la contraseña');
+          this.showError = true;
+          this.message = 'Error cambiando la contraseña';
         }
       },
       error: err => {
         console.error('Error al cambiar contraseña:', err);
-        alert('Error de conexión con el servidor');
+        this.showError = true;
+        this.message = 'Error de servidor. Intentalo de nuevo más tarde';
       }
     });
 
@@ -96,6 +103,17 @@ export class NewPasswordComponent implements OnInit {
     if (simpleSeq.test(password)) return { valid: false, message: 'No use secuencias simples o información personal.' };
 
     return { valid: true, message: '' };
+  }
+  onPasswordChange(newPassword: string) {
+    this.newPassword = newPassword;
+    const passwordValidation = this.validatePassword(newPassword);
+    if (!passwordValidation.valid) {
+      this.showError = true;
+      this.message = 'Contraseña inválida:\n' + passwordValidation.message;
+    } else {
+      this.showError = false;
+      this.message = '';
+    }
   }
 }
 

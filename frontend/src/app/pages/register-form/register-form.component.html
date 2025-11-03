@@ -19,6 +19,7 @@
 
     <app-password-input
       [(password)]="password"
+      (passwordChange)="onPasswordChange($event)"
       [hasError]="hasErrorAll">
     </app-password-input>
 
