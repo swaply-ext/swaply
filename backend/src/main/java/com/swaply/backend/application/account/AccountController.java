@@ -16,21 +16,11 @@ public class AccountController {
 
     private final AccountService service;
 
-    public AccountController( AccountService service) {
+    public AccountController(AccountService service) {
         this.service = service;
     }
 
-    // Esto hay que mirarlo seguramente el Front no deberia tener el código solo un
-    // boolean al enviarlo
-
-    @PostMapping("/recoveryCode")
-    public ResponseEntity<String> generateAndSendResetLink(@RequestBody String email) {
-        service.generateAndSendResetLink(email);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Código generado y enviado si el mail existe");
-
-    }
-
-        @PostMapping("/personalInfo")
+    @PostMapping("/personalInfo")
     public ResponseEntity<Boolean> personalInfo(@RequestBody String token, UpdateUserDTO dto) {
         service.UpdatePersonalInfo(token, dto);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
@@ -51,28 +41,29 @@ public class AccountController {
 
     // @PatchMapping("/skills/{id}")
     // public ResponseEntity<UserDTO> addSkills(@PathVariable String id){
-    //     return ResponseEntity.ok(service.addSkills(id));
+    // return ResponseEntity.ok(service.addSkills(id));
     // }
 
-
-
-    // NO TOCAR --- EN DESARROLLO ALEIX I ARNAU, NOOOOO TOCAR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // NO TOCAR --- EN DESARROLLO ALEIX I ARNAU, NOOOOO TOCAR
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // Hace falta el maper y el service para entrar en lógica
     // metodo para enviar datos de profile a frontend, en desarrollo arnau y aleix.
 
-    /*@GetMapping("/profileData") // 1. És un GET, no un POST
-    public ResponseEntity<ProfileDataDTO> getProfileData(
-            // 2. El token ve en una capçalera, NO al body
-            @RequestHeader("Authorization") String authorizationHeader) { 
-        
-        // 3. Cridem al servei i ens retorna el DTO amb les dades
-        ProfileDataDTO profileData = service.getProfileData(authorizationHeader);
-        
-        // 4. Retornem el DTO amb un 200 OK. Angular rebrà el JSON.
-        return ResponseEntity.ok(profileData);
-    }*/
+    /*
+     * @GetMapping("/profileData") // 1. És un GET, no un POST
+     * public ResponseEntity<ProfileDataDTO> getProfileData(
+     * // 2. El token ve en una capçalera, NO al body
+     * 
+     * @RequestHeader("Authorization") String authorizationHeader) {
+     * 
+     * // 3. Cridem al servei i ens retorna el DTO amb les dades
+     * ProfileDataDTO profileData = service.getProfileData(authorizationHeader);
+     * 
+     * // 4. Retornem el DTO amb un 200 OK. Angular rebrà el JSON.
+     * return ResponseEntity.ok(profileData);
+     * }
+     */
 
-// TOCAR A PARTIR DE AQUI ABAJO:
-
+    // TOCAR A PARTIR DE AQUI ABAJO:
 
 }

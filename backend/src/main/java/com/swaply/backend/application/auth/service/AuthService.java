@@ -55,7 +55,10 @@ public class AuthService {
     public UserDTO initialRegister(RegisterInitialDTO dto) {
         if (userService.existsByEmail(dto.getEmail())) {
             throw new UserAlreadyExistsException("El email: " + dto.getEmail() + " ya esta en uso.");
-        } // Falta exists by username
+        }
+        if (userService.existsByUsername(dto.getUsername())) {
+            throw new UserAlreadyExistsException("El usuario: " + dto.getUsername() + " ya esta en uso.");
+        }
         Random random = new Random();
         int codeInt = 100000 + random.nextInt(900000); // Asegura que sea de 6 dígitos
         String codeString = Integer.toString(codeInt);
@@ -76,7 +79,6 @@ public class AuthService {
 
             return user.getId();
         } else {
-            // VICTOR CREAR EXCEPCION
             throw new InvalidCredentialsException("El código de verificación es incorrecto.");
         }
 
