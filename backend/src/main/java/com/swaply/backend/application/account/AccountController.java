@@ -31,6 +31,7 @@ public class AccountController {
 
     @PatchMapping("/skills")
     public ResponseEntity<String> updateSkills(@RequestHeader("Authorization") String token, @RequestBody SkillsDTO dto) {
+        token = token.replace("Bearer ", "");//Temporal es una CERDADA, Marc esta trabajando en esto
         service.updateSkills(token, dto);
         return ResponseEntity.ok(null);
     }

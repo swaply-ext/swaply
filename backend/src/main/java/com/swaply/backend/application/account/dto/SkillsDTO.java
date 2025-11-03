@@ -13,6 +13,5 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SkillsDTO {
-    private String userId;
     private List<Skills> skills;
 }
