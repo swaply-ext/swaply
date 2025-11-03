@@ -16,6 +16,7 @@ export class EmailVerificationComponent implements OnInit {
   code: string[] = ['', '', '', '', '', ''];
   showError = false;
   email: string = '';
+  message = '';
 
   constructor(
     private location: Location,
@@ -83,6 +84,7 @@ export class EmailVerificationComponent implements OnInit {
 
     if (fullCode.length < 6) {
       this.showError = true;
+      this.message = 'Debes introducir un código válido';
       return;
     }
 
@@ -104,15 +106,17 @@ export class EmailVerificationComponent implements OnInit {
             this.router.navigate(['/confirmation']);
           } else {
             this.showError = true;
+            this.message = 'Error de servidor. Inténtalo más tarde.';
           }
         },
         error: (error) => {
           console.error('Error en la verificación:', error);
           if (error.status === 401) {
             this.showError = true;
+            this.message = 'Código de verificación incorrecto'
           } else {
             this.showError = true;
-            alert('Error de servidor. Inténtalo más tarde.');
+            this.message = 'Error de servidor. Inténtalo más tarde.';
             this.router.navigate(['/error']);
           }
         }
