@@ -104,5 +104,16 @@ export class NewPasswordComponent implements OnInit {
 
     return { valid: true, message: '' };
   }
+  onPasswordChange(newPassword: string) {
+    this.newPassword = newPassword;
+    const passwordValidation = this.validatePassword(newPassword);
+    if (!passwordValidation.valid) {
+      this.showError = true;
+      this.message = 'Contraseña inválida:\n' + passwordValidation.message;
+    } else {
+      this.showError = false;
+      this.message = '';
+    }
+  }
 }
 
