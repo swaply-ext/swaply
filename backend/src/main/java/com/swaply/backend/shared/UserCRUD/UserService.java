@@ -7,14 +7,12 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.swaply.backend.application.auth.dto.RegisterDTO;
 import com.swaply.backend.application.auth.dto.RegisterInitialDTO;
 import com.swaply.backend.application.auth.service.PasswordService;
 import com.swaply.backend.shared.UserCRUD.Model.User;
 import com.swaply.backend.shared.UserCRUD.dto.UpdateUserDTO;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.shared.UserCRUD.exception.UserNotFoundException;
-
 
 @Service
 public class UserService {
@@ -37,10 +35,9 @@ public class UserService {
         return repository.existsUserByEmail(email);
     }
 
-    public boolean existsUserByUsername(String username){
+    public boolean existsByUsername(String username) {
         return repository.existsUserByUsername(username);
     }
-    
 
     public UserDTO getUserByEmail(String email) {
         User user = repository.findUserByEmail(email)
@@ -98,7 +95,6 @@ public class UserService {
         return mapper.entityToDTO(savedUser);
     }
 
-
     @Transactional
     public UserDTO activateUser(UserDTO dto) {
         User newUser = mapper.dtoToEntity(dto);
@@ -110,7 +106,6 @@ public class UserService {
 
         return mapper.entityToDTO(savedUser);
     }
-
 
     @Transactional
     public UserDTO registerUser(RegisterInitialDTO dto) {
@@ -128,22 +123,21 @@ public class UserService {
 
     // Hay qye ver si eliminamos esto, que necesidad hay de tenerlo? ADMIN??
 
-
     // @Transactional
     // public UserDTO createUser(RegisterDTO dto) {
-    //     User newUser = mapper.fromRegisterDTO(dto);
+    // User newUser = mapper.fromRegisterDTO(dto);
 
-    //     newUser.setId(UUID.randomUUID().toString());
-    //     String passwordHash = passwordService.hash(dto.getPassword());
-    //     newUser.setPassword(passwordHash);
+    // newUser.setId(UUID.randomUUID().toString());
+    // String passwordHash = passwordService.hash(dto.getPassword());
+    // newUser.setPassword(passwordHash);
 
-    //     newUser.setModerator(false);
-    //     newUser.setVerified(false);
-    //     newUser.setPremium(false);
+    // newUser.setModerator(false);
+    // newUser.setVerified(false);
+    // newUser.setPremium(false);
 
-    //     User savedUser = repository.save(newUser);
+    // User savedUser = repository.save(newUser);
 
-    //     return mapper.entityToDTO(savedUser);
+    // return mapper.entityToDTO(savedUser);
 
     // }
 
