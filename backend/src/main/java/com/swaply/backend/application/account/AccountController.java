@@ -26,12 +26,6 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
     }
 
-    @PostMapping("/passwordReset")
-    public ResponseEntity<Boolean> resetPassword(@RequestBody String token, String newPassword) {
-        service.resetPassword(token, newPassword);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
-    }
-
     @GetMapping("/profileData")
     public ResponseEntity<ProfileDataDTO> ShowProfileData(@RequestBody String token) {
         ProfileDataDTO profileData = service.ShowProfileData(token);
