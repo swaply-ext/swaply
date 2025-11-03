@@ -1,6 +1,6 @@
-package com.swaply.backend.application.account.service;
+package com.swaply.backend.application.auth.service;
 
-
+import com.swaply.backend.application.auth.dto.ResetPasswordDTO;
 import com.swaply.backend.shared.UserCRUD.UserService;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.shared.UserCRUD.exception.UserNotFoundException;
@@ -30,39 +30,25 @@ public class RecoveryPasswordService {
     }
 
     public void generateAndSendResetLink(String email) {
-        UserDTO user;
-        try {
-            user = userService.getUserByEmail(email);
-        } catch (UserNotFoundException e) {
-            return;
-        }
-
-        // 2. Genera el token para el usuario
+        UserDTO user = userService.getUserByEmail(email);
         String token = jwtService.generatePasswordResetToken(user.getId());
 
-        // 3. Construye la URL completa con el token como parámetro
         String fullUrl = UriComponentsBuilder.fromHttpUrl(resetPasswordBaseUrl)
                 .queryParam("token", token)
                 .toUriString();
 
-        // El resultado será algo como:
-        // "https://mi.sitio.web/cambiar-contrasena?token=eyJhbGciOiJI..."
-
         System.out.println("URL de reseteo generada: " + fullUrl);
-
-        // 4. Envía la URL por correo electrónico
         mailService.sendPasswordResetEmail(user.getEmail(), fullUrl);
     }
 
-    public void resetPassword(String token, String newPassword) {
+    public void resetPassword(ResetPasswordDTO dto) {
         try {
-
-            String userId = jwtService.extractUserIdFromPasswordResetToken(token);
-
-            userService.updateUserPassword(userId, newPassword);
+            String userId = jwtService.extractUserIdFromPasswordResetToken(dto.getToken());
+            userService.updateUserPassword(userId, dto.getNewPassword());
 
         } catch (Exception e) {
             // Hay que ver si creamos una exception aqui también
+            System.out.println("Error al resetear la contraseña: " + e.getMessage());
             throw new RuntimeException("El enlace no es válido o ha expirado.", e);
         }
     }

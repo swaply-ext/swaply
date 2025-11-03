@@ -41,16 +41,14 @@ export class RecoveryPasswordComponent {
     }
 
     // Enviar JSON { email: ... }
-    this.http.post<{ userId?: string; id?: string; codeString?: string; code?: string }>(
-      'http://localhost:8081/api/account/recoveryCode',
-      this.email
+    this.http.post('http://localhost:8081/api/auth/recoveryMail', this.email, { observe: 'response' }
     ).subscribe({
-      next: ({ userId, code }) => {
-        this.recoveryService.setRecoveryData({ id: userId, code, email: this.email });
-        this.router.navigate(['/pass-verification']);
+      next: response => {
+        if (response.status == 200) {
+          console.log('Código de recuperación enviado con éxito si existe');
+        }
       },
-
-      error: err => {
+        error: err => {
         console.error('Error enviando dato:', err);
         this.showError = true;
         this.message = 'Error enviando el correo. Intenta de nuevo.';

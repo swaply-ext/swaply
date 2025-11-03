@@ -6,10 +6,11 @@ import org.springframework.web.bind.annotation.*;
 
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.application.auth.service.AuthService;
+import com.swaply.backend.application.auth.service.RecoveryPasswordService;
 import com.swaply.backend.application.auth.dto.LoginDTO;
 import com.swaply.backend.application.auth.dto.RegisterActivationDTO;
-import com.swaply.backend.application.auth.dto.RegisterDTO;
 import com.swaply.backend.application.auth.dto.RegisterInitialDTO;
+import com.swaply.backend.application.auth.dto.ResetPasswordDTO;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -18,9 +19,11 @@ public class AuthController {
     // Classe per rebre el JSON del frontend
 
     private final AuthService service;
+    private final RecoveryPasswordService recoveryPasswordService;
 
-    public AuthController(AuthService service) {
+    public AuthController(AuthService service, RecoveryPasswordService recoveryPasswordService) {
         this.service = service;
+        this.recoveryPasswordService = recoveryPasswordService;
     }
 
     @PostMapping("/register")
@@ -34,12 +37,23 @@ public class AuthController {
         String token = service.registerCodeVerify(dto);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(token);
     }
-    
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginDTO dto) {
         String token = service.login(dto);
         return ResponseEntity.ok(token);
+    }
+
+    @PostMapping("/recoveryMail")
+    public ResponseEntity<String> generateAndSendResetLink(@RequestBody String email) {
+        recoveryPasswordService.generateAndSendResetLink(email);
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
+
+    @PostMapping("/passwordReset")
+    public ResponseEntity<Boolean> resetPassword(@RequestBody ResetPasswordDTO dto) {
+        recoveryPasswordService.resetPassword(dto);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
     }
 
 }
