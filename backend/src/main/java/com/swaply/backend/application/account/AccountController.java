@@ -1,11 +1,14 @@
 package com.swaply.backend.application.account;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.swaply.backend.application.account.dto.ProfileDataDTO;
+import com.swaply.backend.application.account.dto.SkillsDTO;
 import com.swaply.backend.application.account.service.AccountService;
+import com.swaply.backend.shared.UserCRUD.Model.Skills;
 import com.swaply.backend.shared.UserCRUD.dto.UpdateUserDTO;
 
 @RestController
@@ -26,10 +29,11 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
     }
 
-    // @PatchMapping("/skills/{id}")
-    // public ResponseEntity<UserDTO> addSkills(@PathVariable String id){
-    // return ResponseEntity.ok(service.addSkills(id));
-    // }
+    @PatchMapping("/skills")
+    public ResponseEntity<String> updateSkills(@RequestHeader("Authorization") String token, @RequestBody SkillsDTO dto) {
+        service.updateSkills(token, dto);
+        return ResponseEntity.ok(null);
+    }
 
     // NO TOCAR --- EN DESARROLLO ALEIX I ARNAU, NOOOOO TOCAR
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

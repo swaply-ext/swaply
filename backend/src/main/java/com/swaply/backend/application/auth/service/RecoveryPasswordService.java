@@ -3,7 +3,6 @@ package com.swaply.backend.application.auth.service;
 import com.swaply.backend.application.auth.dto.ResetPasswordDTO;
 import com.swaply.backend.shared.UserCRUD.UserService;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
-import com.swaply.backend.shared.UserCRUD.exception.UserNotFoundException;
 import com.swaply.backend.shared.mail.MailService;
 import com.swaply.backend.shared.token.JwtService;
 

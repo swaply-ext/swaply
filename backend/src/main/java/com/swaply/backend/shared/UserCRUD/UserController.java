@@ -1,12 +1,10 @@
 package com.swaply.backend.shared.UserCRUD;
 
-import com.swaply.backend.application.auth.dto.RegisterDTO;
 import com.swaply.backend.shared.UserCRUD.dto.UpdateUserDTO;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
