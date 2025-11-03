@@ -16,6 +16,7 @@ import { RecoveryDataService } from '../../services/recovery-data.service.servic
 export class RecoveryPasswordComponent {
   email: string = '';
   showError = false;
+  message = '';
 
   constructor(
     private router: Router,
@@ -29,11 +30,13 @@ export class RecoveryPasswordComponent {
 
     if (!this.email) {
       this.showError = true;
+      this.message = 'Debes introducir un correo'
       return;
     }
 
     if (!this.validateEmail(this.email)) {
       this.showError = true;
+      this.message = 'El correo introducido no es válido.'
       return;
     }
 
@@ -47,7 +50,8 @@ export class RecoveryPasswordComponent {
       },
         error: err => {
         console.error('Error enviando dato:', err);
-        alert('Error enviando el correo. Intenta de nuevo.');
+        this.showError = true;
+        this.message = 'Error enviando el correo. Intenta de nuevo.';
       },
     });
 

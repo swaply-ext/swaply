@@ -137,4 +137,15 @@ export class RegisterFormComponent {
 
     return { valid: true, message: '' };
   }
+  onPasswordChange(password: string) {
+    this.password = password;
+    const passwordValidation = this.validatePassword(password);
+    if (!passwordValidation.valid) {
+      this.showError = true;
+      this.message = 'Contraseña inválida:\n' + passwordValidation.message;
+    } else {
+      this.showError = false;
+      this.message = '';
+    }
+  }
 }
