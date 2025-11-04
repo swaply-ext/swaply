@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-skills',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,FormsModule],
   templateUrl: './skills.component.html',
   styleUrls: ['./skills.component.css']
 })
@@ -50,6 +51,7 @@ subcategories: [
     }
   ];
 
+// Inyectar HttpClient para hacer peticiones HTTP
   constructor(private http: HttpClient) {}
 
   toggleCategory(categoryId: string) {
@@ -62,18 +64,22 @@ subcategories: [
     const sub = category?.subcategories.find(s => s.id === subId);
     if (sub) sub.selected = !sub.selected;
   }
-
+  
+// Función para enviar las skills seleccionadas al backend
   submitSkills() {
     const selectedSkills = this.categories
-      .flatMap(cat => cat.subcategories)
-      .filter(s => s.selected)
-      .map(s => ({ name: s.name, level: null }));
+      .flatMap(category => category.subcategories)
+      .filter(subcategory => subcategory.selected)
+      .map(subcategory => {
+        return { name: subcategory.name, level: null };
+      });
 
-    this.http.patch('http://localhost:8081/api/users/USR-001', {
-      skills: selectedSkills
-    }).subscribe({
-      next: res => console.log('Respuesta backend:', res),
-      error: err => console.error('Error enviando skills:', err)
-    });
+    this.http.patch('http://localhost:8081/api/users/USR-001', { skills: selectedSkills })
+      .subscribe({
+        next: response => console.log('Resputesta del backend:', response),
+        error: err => console.error('Error enviando skills:', err)
+      });
   }
 }
+
+
