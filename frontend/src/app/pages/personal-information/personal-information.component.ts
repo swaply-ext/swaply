@@ -49,7 +49,6 @@ export class PersonalInformationComponent {
   previousData: any = {};
   name = '';
   surname = '';
-  username = '';
   birthDate: Date | undefined;
   gender = '';
   address = '';
@@ -85,13 +84,6 @@ export class PersonalInformationComponent {
       this.showError = true;
       this.hasErrorAll = true;
       this.message = 'Debes introducir un apellido válido';
-      return;
-    }
-
-    if (!this.username || this.validateUsername(this.username)) {
-      this.showError = true;
-      this.hasErrorAll = true;
-      this.message = 'Debes introducir un nombre de usuario válido';
       return;
     }
 
@@ -134,7 +126,6 @@ export class PersonalInformationComponent {
     const newUserData = {
       name: this.name,
       surname: this.surname,
-      username: this.username,
       birthDate: this.birthDate,
       gender: this.gender,
       phone: this.phone,
@@ -145,6 +136,7 @@ export class PersonalInformationComponent {
     this.registerDataService.setRegisterData(newUserData);
     // Recupera todos los datos del usuario desde el servicio
     const allData = this.registerDataService.getRegisterData();
+    //RUTA DE API INCORRECTA, CAMBIAR CUANDO EL ENDPOINT ESTÉ TERMINADO
     this.http.post<{ code: string }>('http://localhost:8081/api/auth/mailVerify', allData.email)
       .subscribe({
         next: response => {
@@ -225,14 +217,4 @@ export class PersonalInformationComponent {
     else return false;
   }
 
-  private validateUsername(username: string): boolean {
-    const minLength = 3;
-    const maxLength = 30;
-    const special = /[!@#$%^&*?/]/;
-
-    if (username.length < minLength) return true;
-    if (username.length > maxLength) return true;
-    if (special.test(username)) return true;
-    else return false;
-  }
 }
