@@ -132,6 +132,7 @@ export class RegisterFormComponent {
 
   private validatePassword(password: string): { valid: boolean; message: string } {
     const minLength = 8;
+    const maxLength = 64;
     const uppercase = /[A-Z]/;
     const lowercase = /[a-z]/;
     const number = /[0-9]/;
@@ -139,11 +140,14 @@ export class RegisterFormComponent {
     const simpleSeq = /(1234|abcd|password|qwerty)/i;
 
     if (password.length < minLength) return { valid: false, message: `Debe tener al menos ${minLength} caracteres.` };
+    if (password.length > maxLength) return { valid: false, message: `Debe tener más de ${maxLength} caracteres.` };
     if (!uppercase.test(password)) return { valid: false, message: 'Debe contener al menos una letra mayúscula.' };
     if (!lowercase.test(password)) return { valid: false, message: 'Debe contener al menos una letra minúscula.' };
     if (!number.test(password)) return { valid: false, message: 'Debe contener al menos un número.' };
     if (!special.test(password)) return { valid: false, message: 'Debe contener al menos un carácter especial (!@#$%^&*?).' };
     if (simpleSeq.test(password)) return { valid: false, message: 'No use secuencias simples o información personal.' };
+    if (password.toLowerCase() == this.email.toLowerCase()) return { valid: false, message: `No use su correo electrónico` };
+    if (password.toLowerCase() == this.username.toLowerCase()) return { valid: false, message: `No use su nombre de usuario` };
 
     return { valid: true, message: '' };
   }
