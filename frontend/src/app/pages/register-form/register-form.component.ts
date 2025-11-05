@@ -162,11 +162,11 @@ export class RegisterFormComponent {
   private validateUsername(username: string): boolean {
     const minLength = 3;
     const maxLength = 30;
-    const special = /[!@#$%^&*?/]/;
+    const requeriments = /^[a-z0-9_-]+$/;
 
     if (username.length < minLength) return true;
     if (username.length > maxLength) return true;
-    if (special.test(username)) return true;
+    if (!requeriments.test(username)) return true;  //Si el patrón coincide no ejecutará el if
     else return false;
   }
 }
