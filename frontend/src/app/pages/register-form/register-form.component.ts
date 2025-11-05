@@ -68,6 +68,13 @@ export class RegisterFormComponent {
       return;
     }
 
+    if (!this.username || this.validateUsername(this.username)) {
+      this.showError = true;
+      this.hasErrorAll = true;
+      this.message = 'Debes introducir un nombre de usuario válido';
+      return;
+    }
+
     if (!this.validateEmail(this.email)) {
       this.showError = true;
       this.hasErrorAll = true;
@@ -147,5 +154,16 @@ export class RegisterFormComponent {
       this.showError = false;
       this.message = '';
     }
+  }
+
+  private validateUsername(username: string): boolean {
+    const minLength = 3;
+    const maxLength = 30;
+    const special = /[!@#$%^&*?/]/;
+
+    if (username.length < minLength) return true;
+    if (username.length > maxLength) return true;
+    if (special.test(username)) return true;
+    else return false;
   }
 }
