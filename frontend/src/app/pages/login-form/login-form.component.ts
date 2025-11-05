@@ -62,6 +62,7 @@ export class LoginFormComponent {
             console.log('Respuesta del backend:', response);
             const token = response.body as string;
             localStorage.setItem('authToken', token);
+            this.router.navigate(['/']);
             console.log("Token recibido:", token);
           }
           else {

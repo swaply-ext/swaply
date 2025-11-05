@@ -8,8 +8,8 @@
         <app-birth-date (birthDateChange)="birthDate = $event" [hasError]="hasErrorAll"></app-birth-date>
         <app-gender-input (genderChange)="gender = $event" [hasError]="hasErrorAll"></app-gender-input>
         <app-phone-input (phoneChange)="phone = $event" [hasError]="hasErrorAll"></app-phone-input>
-        <app-address-input (addressChange)="address = $event" (postalChange)="postalCode = $event"
-            [hasError]="hasErrorAll"></app-address-input>
+        <app-location-input (locationChange)="location = $event" (postalChange)="postalCode = $event"
+            [hasError]="hasErrorAll"></app-location-input>
         <small *ngIf="showError" class="error-message">
             {{message}}
         </small>

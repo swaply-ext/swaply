@@ -1,5 +1,6 @@
 package com.swaply.backend.application.account.service;
 
+import com.swaply.backend.application.account.dto.PersonalInfoDTO;
 import com.swaply.backend.application.account.dto.SkillsDTO;
 import com.swaply.backend.shared.UserCRUD.UserService;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
@@ -29,17 +30,16 @@ public class AccountService /* implements UserRepository */ {
         this.mapper = mapper;
     }
 
-    // public void UpdatePersonalInfo(String token, UpdateUserDTO dto) {
-    //     try {
-    //         String userId = jwtService.extractUserIdFromSessionToken(token);
+    public void UpdatePersonalInfo(String token, PersonalInfoDTO dto) {
+        try {
+            String userId = jwtService.extractUserIdFromSessionToken(token);
+            UserDTO userDto = mapper.fromPersonalInfoDTO(dto);
+            userService.updateUser(userId, userDto);
+        } catch (Exception e) {
+            throw new RuntimeException("No se ha podido actualizar la información del usuario", e);
+        }
+    }
 
-    //         // userService.updateUser(userId, dto); 
-
-    //     } catch (Exception e) {
-    //         // Hay que ver si creamos una exception aqui también
-    //         throw new RuntimeException("No se ha podido actualizar la informacion  del usuario", e);
-    //     }
-    // }
 
     public void updateSkills(String token, SkillsDTO dto) {
         System.out.println(token);
@@ -49,7 +49,7 @@ public class AccountService /* implements UserRepository */ {
         userService.updateUser(userid, updateUser);    
     }
 
-    public ProfileDataDTO ShowProfileData(String token) {
+    /*public ProfileDataDTO ShowProfileData(String token) {
         try {
             String userId = jwtService.extractUserIdFromSessionToken(token);
 
@@ -59,5 +59,5 @@ public class AccountService /* implements UserRepository */ {
             // Hay que ver si creamos una exception aqui también
             throw new RuntimeException("No se ha podido obtener la informacion  del usuario", e);
         }
-    }
+    }*/
 }

@@ -99,15 +99,19 @@ export class EmailVerificationComponent implements OnInit {
       .subscribe({
         next: (response) => {
           console.log('Respuesta del backend:', response);
-          // Aquí response será un string, no un objeto
-          if (response) {
-            // Si es un token
-            // this.registerDataService.setRegisterData({ token: response });
-            this.router.navigate(['/confirmation']);
-          } else {
-            this.showError = true;
-            this.message = 'Error de servidor. Inténtalo más tarde.';
-          }
+  if (response) {
+    // Guardar token en el servicio
+    this.registerDataService.setRegisterData({ token: response });
+
+    // Guardar token en localStorage con la misma clave que usa el interceptor
+    localStorage.setItem('authToken', response);
+
+    // Redirigir al usuario
+    this.router.navigate(['/confirmation']);
+  } else {
+    this.showError = true;
+    this.message = 'Error de servidor. Inténtalo más tarde.';
+  }
         },
         error: (error) => {
           console.error('Error en la verificación:', error);

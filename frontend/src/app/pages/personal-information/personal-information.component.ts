@@ -6,23 +6,10 @@ import { SurnameInputComponent } from "../../components/surname-input/surname-in
 import { BirthDateComponent } from "../../components/birth-date/birth-date.component";
 import { PhoneInputComponent } from "../../components/phone-input/phone-input.component";
 import { AddressInputComponent } from "../../components/address-input/address-input.component";
-import { UsernameInputComponent } from "../../components/username-input/username-input.component";
 import { HttpClient } from '@angular/common/http';
 import { RegisterDataService } from '../../services/register-data.service';
 import { GenderInputComponent } from '../../components/gender-input/gender-input.component';
 import { CommonModule } from '@angular/common';
-
-interface UserData {
-  name: string;
-  surname: string;
-  username: string;
-  birthDate: Date;
-  gender: string;
-  phone: number;
-  adress: string;
-  postalCode: number;
-}
-
 
 @Component({
   selector: 'app-personal-information',
@@ -34,187 +21,146 @@ interface UserData {
     GenderInputComponent,
     PhoneInputComponent,
     AddressInputComponent,
-    UsernameInputComponent,
     CommonModule
   ],
   standalone: true,
   styleUrls: ['./personal-information.component.css'],
   templateUrl: './personal-information.component.html',
 })
-
-//recibimos la info de email and password guardamos el objeto userInfo {}
-
 export class PersonalInformationComponent {
-  // Propiedades que almacenan el estado del formulario
-  previousData: any = {};
   name = '';
   surname = '';
   birthDate: Date | undefined;
   gender = '';
-  address = '';
+  location = '';
   phone = 0;
   postalCode = 0;
+
   showError = false;
   hasErrorAll = false;
   message = '';
 
-  // Constructor con inyección de dependencias
   constructor(
     private router: Router,
     private http: HttpClient,
     private registerDataService: RegisterDataService
   ) { }
-  // Al inicializar el componente, recupera los datos previos del servicio
+
   ngOnInit() {
-    this.previousData = this.registerDataService.getRegisterData();
-    console.log('Datos previos recibidos:', this.previousData);
+    const data = this.registerDataService.getRegisterData();
+
+    this.name = data.name || '';
+    this.surname = data.surname || '';
+    this.birthDate = data.birthDate ? new Date(data.birthDate) : undefined;
+    this.gender = data.gender || '';
+    this.location = data.location || '';
+    this.phone = data.phone || 0;
+    this.postalCode = data.postalCode || 0;
   }
-  // Función para manejar el envío del formulario
+
   registerData() {
     this.showError = false;
 
-    if (!this.name || this.validateName(this.name)) {
-      this.showError = true;
-      this.hasErrorAll = true;
-      this.message = 'Debes introducir un nombre válido';
-      return;
-    }
+    if (!this.name || this.validateName(this.name)) return this.setError('Debes introducir un nombre válido');
+    if (!this.surname || this.validateName(this.surname)) return this.setError('Debes introducir un apellido válido');
+    if (!this.birthDate || this.isFutureDate(this.birthDate) || this.isToday(this.birthDate)) return this.setError('Debes introducir una fecha de nacimiento válida');
+    if (!this.gender) return this.setError('Debes seleccionar un género');
+    if (!this.phone || this.validatePhone(this.phone)) return this.setError('Debes introducir un número de teléfono válido');
+    if (!this.postalCode || this.validatePostal(this.postalCode)) return this.setError('Debes introducir un código postal válido');
+    if (!this.location || this.validateLocation(this.location)) return this.setError('Debes introducir una ubicación válida');
 
-    if (!this.surname || this.validateName(this.surname)) {
-      this.showError = true;
-      this.hasErrorAll = true;
-      this.message = 'Debes introducir un apellido válido';
-      return;
-    }
-
-    if (!this.birthDate || (new Date(this.birthDate) > new Date()) || this.isToday(new Date(this.birthDate))) {
-      this.showError = true;
-      this.hasErrorAll = true;
-      this.message = 'Debes introducir una fecha de nacimiento válida';
-      return;
-    }
-
-    if (!this.gender) {
-      this.showError = true;
-      this.hasErrorAll = true;
-      this.message = 'Debes seleccionar un género';
-      return;
-    }
-
-    if (!this.phone || this.validatePhone(this.phone)) {
-      this.showError = true;
-      this.hasErrorAll = true;
-      this.message = 'Debes introducir un número de teléfono válido';
-      return;
-    }
-
-    if (!this.postalCode || this.validatePostal(this.postalCode)) {
-      this.showError = true;
-      this.hasErrorAll = true;
-      this.message = 'Debes introducir un código postal válido';
-      return;
-    }
-
-    if (!this.address || this.validateAddress(this.address)) {
-      this.showError = true;
-      this.hasErrorAll = true;
-      this.message = 'Debes introducir una dirección válida';
-      return;
-    }
-
-    // Crea el objeto con los nuevos datos del usuario
-    const newUserData = {
+    const personalData = {
       name: this.name,
       surname: this.surname,
       birthDate: this.birthDate,
       gender: this.gender,
       phone: this.phone,
-      adress: this.address,
+      location: this.location,
       postalCode: this.postalCode
     };
-    // Combina los datos previos con los nuevos
-    this.registerDataService.setRegisterData(newUserData);
-    // Recupera todos los datos del usuario desde el servicio
-    const allData = this.registerDataService.getRegisterData();
-    //RUTA DE API INCORRECTA, CAMBIAR CUANDO EL ENDPOINT ESTÉ TERMINADO
-    this.http.post<{ code: string }>('http://localhost:8081/api/auth/mailVerify', allData.email)
-      .subscribe({
-        next: response => {
-          // Guarda el codi de verificació rebut
-          console.log("response: " + response);
 
-          this.router.navigate(['/verify'], { state: { code: response } });
+    // Guardar datos en el servicio
+    this.registerDataService.setRegisterData(personalData);
 
+    // Recuperar token del servicio o localStorage
+    let { token, email, username, password } = this.registerDataService.getRegisterData();
+    if (!token) {
+      token = localStorage.getItem('token') || '';
+    }
 
-          // Ara tens al servei: email, password, dades personals i verifyCode
-          // Pots navegar a la pàgina de verificació
-        },
-        error: err => console.error('Error enviando datos:', err)
-      });
+    if (!token) {
+      this.setError('No se ha verificado el email. Regresa al registro.');
+      return;
+    }
 
+    const allUserData = { email, username, password, ...personalData };
 
+    this.http.post('http://localhost:8081/api/account/personalInfo', allUserData, {
+      headers: { Authorization: `Bearer ${token}` }
+    }).subscribe({
+      next: () => {
+        console.log('Registro completo:', allUserData);
+        this.router.navigate(['/']);
+      },
+      error: (err) => {
+        console.error('Error al actualizar información:', err);
+        this.setError('Error al actualizar información. Inténtalo más tarde.');
+      }
+    });
   }
-  //Restricciones de los campos
+
+  private setError(msg: string) {
+    this.showError = true;
+    this.hasErrorAll = true;
+    this.message = msg;
+  }
+
   private validateName(name: string): boolean {
-    const minLength = 3;
-    const maxLength = 30;
     const number = /[0-9]/;
     const special = /[!@#$%^&*?/]/;
-
-    if (name.length < minLength) return true;
-    if (name.length > maxLength) return true;
-    if (number.test(name)) return true;
-    if (special.test(name)) return true;
-    else return false;
+    return name.length < 3 || name.length > 30 || number.test(name) || special.test(name);
   }
 
-  private validateAddress(address: string): boolean {
-    const minLength = 3;
-    const maxLength = 50;
+  private validateLocation(location: string): boolean {
     const number = /[0-9]/;
     const special = /[!@#$%^&*?]/;
-
-    if (address.length < minLength) return true;
-    if (address.length > maxLength) return true;
-    if (number.test(address)) return true;
-    if (special.test(address)) return true;
-    else return false;
+    return location.length < 3 || location.length > 50 || number.test(location) || special.test(location);
   }
 
-  private isToday(date: Date): boolean {
+  private isToday(date: Date | string): boolean {
+    const d = date instanceof Date ? date : this.parseDateString(date);
     const today = new Date();
-    return (date.getDate() === today.getDate() &&
-      date.getMonth() === today.getMonth() &&
-      date.getFullYear() === today.getFullYear()
-    );
+    return d.getDate() === today.getDate() &&
+           d.getMonth() === today.getMonth() &&
+           d.getFullYear() === today.getFullYear();
+  }
+
+  private isFutureDate(date: Date | string): boolean {
+    const d = date instanceof Date ? date : this.parseDateString(date);
+    const today = new Date();
+    return d.getFullYear() > today.getFullYear() ||
+           (d.getFullYear() === today.getFullYear() && d.getMonth() > today.getMonth()) ||
+           (d.getFullYear() === today.getFullYear() && d.getMonth() === today.getMonth() && d.getDate() > today.getDate());
+  }
+
+  private parseDateString(dateStr: string): Date {
+    const [day, month, year] = dateStr.split('/').map(Number);
+    return new Date(year, month - 1, day);
   }
 
   private validatePhone(phone: number): boolean {
-    const length = 9;
+    const numString = phone.toString();
     const uppercase = /[A-Z]/;
     const lowercase = /[a-z]/;
     const special = /[!@#$%^&*?/]/;
-    const numString = phone.toString();
-
-    if (numString.length != length) return true;
-    if (uppercase.test(numString)) return true;
-    if (lowercase.test(numString)) return true;
-    if (special.test(numString)) return true;
-    else return false;
+    return numString.length !== 9 || uppercase.test(numString) || lowercase.test(numString) || special.test(numString);
   }
 
   private validatePostal(postalCode: number): boolean {
-    const length = 5;
+    const numString = postalCode.toString();
     const uppercase = /[A-Z]/;
     const lowercase = /[a-z]/;
     const special = /[!@#$%^&*?/]/;
-    const numString = postalCode.toString();
-
-    if (numString.length != length) return true;
-    if (uppercase.test(numString)) return true;
-    if (lowercase.test(numString)) return true;
-    if (special.test(numString)) return true;
-    else return false;
+    return numString.length !== 5 || uppercase.test(numString) || lowercase.test(numString) || special.test(numString);
   }
-
 }
