@@ -21,14 +21,20 @@ public class UserController {
         this.service = service;
     }
 
-    @PostMapping
-    public ResponseEntity<UserDTO> createUser(@RequestBody RegisterDTO user) {
-        UserDTO createdUser = service.createUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
-    }
+    // No se si hay que dejar esto, puede ser util para un Admin o testing tal vez
+
+    // @PostMapping
+    // public ResponseEntity<UserDTO> createUser(@RequestBody RegisterDTO user) {
+    //     UserDTO createdUser = service.createUser(user);
+    //     return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+    // }
 
     @GetMapping
-    public ResponseEntity<List<UserDTO>> getAll() {
+    public ResponseEntity<List<UserDTO>> getAll(@RequestParam(required = false) String contains) {
+        if (contains != null){
+            contains = contains.replace(" " , "");
+            return ResponseEntity.ok(service.findUsersByUsernameContaining(contains));
+        }
         return ResponseEntity.ok(service.getAllUsers());
     }
 
@@ -37,7 +43,6 @@ public class UserController {
         return ResponseEntity.ok(service.getUserByID(id));
     }
 
-    // Porque se retorna noContent?
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUserById(@PathVariable String id) {
         service.deleteUserById(id);
@@ -50,11 +55,11 @@ public class UserController {
         return ResponseEntity.ok(updatedUser);
     }
 
-    /* La petició se hace a: http://localhost:8081/api/users/email?email= */
-    @GetMapping(params = "email")
-    public ResponseEntity<UserDTO> getByEmail(@RequestParam String email) {
-        return ResponseEntity.ok(service.getUserByEmail(email));
-    }
+    // La petició se hace a: http://localhost:8081/api/users?email=test@example.com
+    // @GetMapping(params = "email")
+    // public ResponseEntity<UserDTO> getByEmail(@RequestParam String email) {
+    //     return ResponseEntity.ok(service.getUserByEmail(email));
+    // }
 
 }
 //GetMapping de datos profile

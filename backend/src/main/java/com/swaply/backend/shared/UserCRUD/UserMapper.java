@@ -1,7 +1,10 @@
 
 package com.swaply.backend.shared.UserCRUD;
 
+import com.swaply.backend.application.account.dto.ProfileDataDTO;
 import com.swaply.backend.application.auth.dto.RegisterDTO;
+import com.swaply.backend.application.auth.dto.RegisterInitialDTO;
+import com.swaply.backend.shared.UserCRUD.Model.User;
 import com.swaply.backend.shared.UserCRUD.dto.UpdateUserDTO;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 
@@ -38,6 +41,9 @@ public interface UserMapper {
     //Completamente opcional solo quita un warning pero me estaba rallando
     //El warning es porque el register dto no tiene los mismos campos que el modelo user pero esa es la idea de un DTO
     @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE)
-    //Usa la lógica de mapeo que tiene justo encima
-    User fromRegisterDTO(RegisterDTO dto);
+    User fromRegisterTtlDTO(RegisterInitialDTO dto);
+
+
+    @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE)
+    ProfileDataDTO userToProfileDataDTO(User user);
 }

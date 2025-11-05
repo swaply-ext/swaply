@@ -8,10 +8,9 @@ import { PhoneInputComponent } from "../../components/phone-input/phone-input.co
 import { AddressInputComponent } from "../../components/address-input/address-input.component";
 import { UsernameInputComponent } from "../../components/username-input/username-input.component";
 import { HttpClient } from '@angular/common/http';
-import { HttpClientModule } from '@angular/common/http';
 import { RegisterDataService } from '../../services/register-data.service';
 import { GenderInputComponent } from '../../components/gender-input/gender-input.component';
-
+import { CommonModule } from '@angular/common';
 
 interface UserData {
   name: string;
@@ -36,7 +35,7 @@ interface UserData {
     PhoneInputComponent,
     AddressInputComponent,
     UsernameInputComponent,
-    HttpClientModule
+    CommonModule
   ],
   standalone: true,
   styleUrls: ['./personal-information.component.css'],
@@ -50,13 +49,15 @@ export class PersonalInformationComponent {
   previousData: any = {};
   name = '';
   surname = '';
-  username = '';
   birthDate: Date | undefined;
   gender = '';
   address = '';
   phone = 0;
   postalCode = 0;
-  
+  showError = false;
+  hasErrorAll = false;
+  message = '';
+
   // Constructor con inyección de dependencias
   constructor(
     private router: Router,
@@ -70,27 +71,61 @@ export class PersonalInformationComponent {
   }
   // Función para manejar el envío del formulario
   registerData() {
-    if (!this.name || this.validateName(this.name)) { alert('Debes introducir un nombre válido'); return; }
+    this.showError = false;
 
-    if (!this.surname || this.validateName(this.surname)) { alert('Debes introducir un apellido válido'); return; }
+    if (!this.name || this.validateName(this.name)) {
+      this.showError = true;
+      this.hasErrorAll = true;
+      this.message = 'Debes introducir un nombre válido';
+      return;
+    }
 
-    if (!this.username || this.validateUsername(this.username)) { alert('Debes introducir un nombre de usuario válido'); return; }
+    if (!this.surname || this.validateName(this.surname)) {
+      this.showError = true;
+      this.hasErrorAll = true;
+      this.message = 'Debes introducir un apellido válido';
+      return;
+    }
 
-    if (!this.birthDate || (new Date(this.birthDate) > new Date()) || this.isToday(new Date(this.birthDate))) { alert('Debes introducir una fecha de nacimiento válida'); return; }
+    if (!this.birthDate || (new Date(this.birthDate) > new Date()) || this.isToday(new Date(this.birthDate))) {
+      this.showError = true;
+      this.hasErrorAll = true;
+      this.message = 'Debes introducir una fecha de nacimiento válida';
+      return;
+    }
 
-    if (!this.gender) { alert('Debes seleccionar un género'); return; }
-    
-    if (!this.phone || this.validatePhone(this.phone)) { alert('Debes introducir un número de teléfono válido'); return; }
+    if (!this.gender) {
+      this.showError = true;
+      this.hasErrorAll = true;
+      this.message = 'Debes seleccionar un género';
+      return;
+    }
 
-    if (!this.postalCode || this.validatePostal(this.postalCode)) { alert('Debes introducir un código postal válido'); return; }
+    if (!this.phone || this.validatePhone(this.phone)) {
+      this.showError = true;
+      this.hasErrorAll = true;
+      this.message = 'Debes introducir un número de teléfono válido';
+      return;
+    }
 
-    if (!this.address || this.validateAddress(this.address)) { alert('Debes introducir una dirección válida'); return; }
+    if (!this.postalCode || this.validatePostal(this.postalCode)) {
+      this.showError = true;
+      this.hasErrorAll = true;
+      this.message = 'Debes introducir un código postal válido';
+      return;
+    }
+
+    if (!this.address || this.validateAddress(this.address)) {
+      this.showError = true;
+      this.hasErrorAll = true;
+      this.message = 'Debes introducir una dirección válida';
+      return;
+    }
 
     // Crea el objeto con los nuevos datos del usuario
     const newUserData = {
       name: this.name,
       surname: this.surname,
-      username: this.username,
       birthDate: this.birthDate,
       gender: this.gender,
       phone: this.phone,
@@ -101,7 +136,8 @@ export class PersonalInformationComponent {
     this.registerDataService.setRegisterData(newUserData);
     // Recupera todos los datos del usuario desde el servicio
     const allData = this.registerDataService.getRegisterData();
-    this.http.post<{ code: string }>('http://localhost:8081/api/account/mailVerify', allData.email)
+    //RUTA DE API INCORRECTA, CAMBIAR CUANDO EL ENDPOINT ESTÉ TERMINADO
+    this.http.post<{ code: string }>('http://localhost:8081/api/auth/mailVerify', allData.email)
       .subscribe({
         next: response => {
           // Guarda el codi de verificació rebut
@@ -113,7 +149,7 @@ export class PersonalInformationComponent {
           // Ara tens al servei: email, password, dades personals i verifyCode
           // Pots navegar a la pàgina de verificació
         },
-        error: err => console.error('Error enviant dades:', err)
+        error: err => console.error('Error enviando datos:', err)
       });
 
 
@@ -181,14 +217,4 @@ export class PersonalInformationComponent {
     else return false;
   }
 
-  private validateUsername(username: string): boolean {
-    const minLength = 3;
-    const maxLength = 30;
-    const special = /[!@#$%^&*?/]/;
-
-    if (username.length < minLength) return true;
-    if (username.length > maxLength) return true;
-    if (special.test(username)) return true;
-    else return false;
-  }
 }

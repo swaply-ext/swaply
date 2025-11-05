@@ -1,6 +1,10 @@
 package com.swaply.backend.shared.UserCRUD.dto;
 
-import java.util.ArrayList;
+import java.sql.Date;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.swaply.backend.shared.UserCRUD.Model.Skills;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,11 +21,15 @@ public class UserDTO {
     private String surname;
     private String email;
     private String password;
+    private String code;
+    private int ttl;
     private String location;
     private String gender;
-    private ArrayList<String> skills;
-    private ArrayList<String> interest;
-    private int age;
+    private String phone;
+    private List<Skills> skills;
+    private List<Skills> interest;
+    @JsonFormat(pattern="dd/MM/yyyy")
+    private Date birthDate;
     private String description;
     private boolean isVerified;
     private String profilePhotoUrl;
