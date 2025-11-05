@@ -6,23 +6,10 @@ import { SurnameInputComponent } from "../../components/surname-input/surname-in
 import { BirthDateComponent } from "../../components/birth-date/birth-date.component";
 import { PhoneInputComponent } from "../../components/phone-input/phone-input.component";
 import { AddressInputComponent } from "../../components/address-input/address-input.component";
-import { UsernameInputComponent } from "../../components/username-input/username-input.component";
 import { HttpClient } from '@angular/common/http';
 import { RegisterDataService } from '../../services/register-data.service';
 import { GenderInputComponent } from '../../components/gender-input/gender-input.component';
 import { CommonModule } from '@angular/common';
-
-interface UserData {
-  name: string;
-  surname: string;
-  username: string;
-  birthDate: Date;
-  gender: string;
-  phone: number;
-  adress: string;
-  postalCode: number;
-}
-
 
 @Component({
   selector: 'app-personal-information',
@@ -34,7 +21,6 @@ interface UserData {
     GenderInputComponent,
     PhoneInputComponent,
     AddressInputComponent,
-    UsernameInputComponent,
     CommonModule
   ],
   standalone: true,
