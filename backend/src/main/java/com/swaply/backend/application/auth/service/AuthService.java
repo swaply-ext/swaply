@@ -64,11 +64,11 @@ public class AuthService {
         }
 
         Random random = new Random();
-        int codeInt = 100000 + random.nextInt(900000); // Asegura que sea de 6 dígitos
-        // String codeString = Integer.toString(codeInt);
+        int code = 100000 + random.nextInt(900000); // Asegura que sea de 6 dígitos
+        // String codeString = Integer.toString(code);
 
-        mailService.sendVerificationCode(dto.getEmail(), codeInt);
-        dto.setCode(codeInt);
+        mailService.sendVerificationCode(dto.getEmail(), code);
+        dto.setCode(code);
 
         UserDTO newUser = mapper.fromRegisterDTO(dto);
         return userService.createUser(newUser);
