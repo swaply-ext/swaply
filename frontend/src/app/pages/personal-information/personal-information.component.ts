@@ -144,22 +144,22 @@ export class PersonalInformationComponent {
   private validateName(name: string): boolean {
     const minLength = 3;
     const maxLength = 30;
-    const requeriments = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s'-]+$/;
+    const requirements = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s'-]+$/;
 
     if (name.length < minLength) return true;
     if (name.length > maxLength) return true;
-    if (!requeriments.test(name)) return true;
+    if (!requirements.test(name)) return true;
     else return false;
   }
 
   private validateLocation(location: string): boolean {
     const minLength = 3;
     const maxLength = 50;
-    const requeriments = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9\s,'ºª-]+$/;
+    const requirements = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9\s,'ºª-]+$/;
 
     if (location.length < minLength) return true;
     if (location.length > maxLength) return true;
-    if (!requeriments.test(location)) return true;
+    if (!requirements.test(location)) return true;
     else return false;
   }
 
@@ -173,28 +173,26 @@ export class PersonalInformationComponent {
 
   private validatePhone(phone: number): boolean {
     const length = 9;
-    const uppercase = /[A-Z]/;
-    const lowercase = /[a-z]/;
-    const special = /[!@#$%^&*?/]/;
+    const requirements = /^[0-9]+$/;;
     const numString = phone.toString();
+    const startsCorrectly = /^[6789]/;
 
     if (numString.length != length) return true;
-    if (uppercase.test(numString)) return true;
-    if (lowercase.test(numString)) return true;
-    if (special.test(numString)) return true;
+    if (!requirements.test(numString)) return true;
+    if (!startsCorrectly.test(numString)) return true;
     else return false;
   }
 
   private validatePostal(postalCode: number): boolean {
     const length = 5;
-    const requeriments = /^[0-9]+$/;
+    const requirements = /^[0-9]+$/;
     const numString = postalCode.toString();
     const min = 1001;
     const max = 52999;
 
 
     if (numString.length != length) return true;
-    if (requeriments.test(numString)) return true;
+    if (!requirements.test(numString)) return true;
     if (postalCode > max) return true;
     if (postalCode < min) return true;
     else return false;
