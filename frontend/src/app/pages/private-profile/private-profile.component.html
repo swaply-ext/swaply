@@ -1,0 +1,12 @@
+<p>private-profile works!</p>
+<body>
+<app-app-navbar></app-app-navbar>
+<app-profile-info [isPublic]="false"></app-profile-info>
+
+
+<div class="profile-panels-container">
+  <!--Importación de los componentes-->
+  <app-skills-panel [isPublic]="true" class="profile-skills"></app-skills-panel>
+  <app-interests-panel [isPublic]="true" class="profile-interests"></app-interests-panel>
+</div>
+</body>

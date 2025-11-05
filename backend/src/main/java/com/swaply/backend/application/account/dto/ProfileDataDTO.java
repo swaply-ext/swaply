@@ -1,5 +1,9 @@
 package com.swaply.backend.application.account.dto;
 
+import java.util.List;
+
+import com.swaply.backend.shared.UserCRUD.Model.Skills;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +16,9 @@ public class ProfileDataDTO {
     private String username;
     private String location;
     private String description;
+    private List<Skills> interest;
+    private List<Skills>skills;
+
 }
 
 // NO TOCAR --- EN DESARROLLO ALEIX I ARNAU, NOOOOO TOCAR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
