@@ -49,15 +49,15 @@ public class AccountService /* implements UserRepository */ {
         userService.updateUser(userid, updateUser);    
     }
 
-    public ProfileDataDTO ShowProfileData(String token) {
-        try {
-            String userId = jwtService.extractUserIdFromSessionToken(token);
+    // public ProfileDataDTO ShowProfileData(String token) {
+    //     try {
+    //         String userId = jwtService.extractUserIdFromSessionToken(token);
 
-            return userService.getUserProfileDataByID(userId);
+    //         return userService.getUserProfileDataByID(userId);
 
-        } catch (Exception e) {
-            // Hay que ver si creamos una exception aqui también
-            throw new RuntimeException("No se ha podido obtener la informacion  del usuario", e);
-        }
-    }
+    //     } catch (Exception e) {
+    //         // Hay que ver si creamos una exception aqui también
+    //         throw new RuntimeException("No se ha podido obtener la informacion  del usuario", e);
+    //     }
+    // }
 }
