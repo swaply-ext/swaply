@@ -101,7 +101,7 @@ export class PersonalInformationComponent {
       return;
     }
 
-    if (!this.address || this.validateAddress(this.address)) {
+    if (!this.address || this.validateLocation(this.address)) {
       this.showError = true;
       this.hasErrorAll = true;
       this.message = 'Debes introducir una dirección válida';
@@ -152,16 +152,14 @@ export class PersonalInformationComponent {
     else return false;
   }
 
-  private validateAddress(address: string): boolean {
+  private validateLocation(location: string): boolean {
     const minLength = 3;
     const maxLength = 50;
-    const number = /[0-9]/;
-    const special = /[!@#$%^&*?]/;
+    const requeriments = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9\s,'ºª-]+$/;
 
-    if (address.length < minLength) return true;
-    if (address.length > maxLength) return true;
-    if (number.test(address)) return true;
-    if (special.test(address)) return true;
+    if (location.length < minLength) return true;
+    if (location.length > maxLength) return true;
+    if (!requeriments.test(location)) return true;
     else return false;
   }
 
