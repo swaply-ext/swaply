@@ -1,6 +1,7 @@
 package com.swaply.backend.application.account.service;
 
 import com.swaply.backend.application.account.dto.PersonalInfoDTO;
+import com.swaply.backend.application.account.dto.ProfileDataDTO;
 import com.swaply.backend.application.account.dto.SkillsDTO;
 import com.swaply.backend.shared.UserCRUD.UserService;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
@@ -52,12 +53,26 @@ public class AccountService /* implements UserRepository */ {
     /*public ProfileDataDTO ShowProfileData(String token) {
         try {
             String userId = jwtService.extractUserIdFromSessionToken(token);
+    // public ProfileDataDTO ShowProfileData(String token) {
+    //     try {
+    //         String userId = jwtService.extractUserIdFromSessionToken(token);
 
-            return userService.getUserProfileDataByID(userId);
+    //         return userService.getUserProfileDataByID(userId);
+
+    //     } catch (Exception e) {
+    //         // Hay que ver si creamos una exception aqui también
+    //         throw new RuntimeException("No se ha podido obtener la informacion  del usuario", e);
+    //     }
+    //}
 
         } catch (Exception e) {
             // Hay que ver si creamos una exception aqui también
             throw new RuntimeException("No se ha podido obtener la informacion  del usuario", e);
         }
     }*/
+    public ProfileDataDTO getProfileData(String token) {
+        String userId = jwtService.extractUserIdFromSessionToken(token);
+        UserDTO userDTO = userService.getUserByID(userId);
+        return mapper.fromUserDTO(userDTO);
+    }
 }

@@ -6,8 +6,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.swaply.backend.application.account.dto.PersonalInfoDTO;
+import com.azure.core.annotation.Get;
+import com.swaply.backend.application.account.dto.ProfileDataDTO;
 import com.swaply.backend.application.account.dto.SkillsDTO;
 import com.swaply.backend.application.account.service.AccountService;
+
+import io.micrometer.core.ipc.http.HttpSender.Response;
 
 @RestController
 @RequestMapping("/api/account")
@@ -58,5 +62,10 @@ public class AccountController {
      */
 
     // TOCAR A PARTIR DE AQUI ABAJO:
-
+    @GetMapping("/profileData")
+    public ResponseEntity<ProfileDataDTO> getProfileData(@RequestHeader("Authorization") String token) {
+        token = token.replace("Bearer ", "");
+        ProfileDataDTO profileData = service.getProfileData(token);
+        return ResponseEntity.ok(profileData) ;
+    }
 }
