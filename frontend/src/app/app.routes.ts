@@ -21,6 +21,8 @@ import { PublicProfileComponent } from './pages/public-profile/public-profile.co
 import { RecoveryEmailComponent } from './pages/recovery-email/recovery-email.component';
 import { PassVerificationComponent } from './pages/pass-verification/pass-verification.component';
 import { SideMenuComponent } from './components/side-menu/side-menu.component';
+import { ExitComponent } from './pages/exit/exit.component';
+import { Error404Component } from './pages/error-404/error-404.component';
 
 // Creamos una ruta para la verificación de correo
 // Ahora usamos el componente real EmailVerificationComponent
@@ -46,5 +48,8 @@ export const appRoutes: Routes = [
   { path: 'public-profile', component: PublicProfileComponent }, // ruta para el perfil público
   { path: 'recovery-email', component: RecoveryEmailComponent }, // ruta para la recuperación de correo
   { path: 'pass-verification', component: PassVerificationComponent},
-  { path: 'side-menu', component: SideMenuComponent} // ruta para el componente del menú lateral
-]
+  { path: 'side-menu', component: SideMenuComponent}, // ruta para el componente del menú lateral
+  { path: 'exit', component: ExitComponent},
+  { path: '404', component: Error404Component },
+  { path: '**', redirectTo: '/404', pathMatch: 'full' }
+];

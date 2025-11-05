@@ -1,7 +1,6 @@
 package com.swaply.backend.shared.mail;
 
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
@@ -46,11 +45,11 @@ public class MailService {
         sendHtmlEmail(email, "Tu Código de Verificación de Swaply", htmlBody);
     }
 
-    public void sendPasswordResetEmail(String to, String resetUrl) {
+    public void sendPasswordResetEmail(String email, String resetUrl) {
         Context context = new Context();
         context.setVariable("resetUrl", resetUrl);
         String htmlBody = templateEngine.process("email/PasswordReset.html", context);
-        sendHtmlEmail(to, "Restablece tu contraseña de Swaply", htmlBody);
+        sendHtmlEmail(email, "Restablece tu contraseña de Swaply", htmlBody);
     }
 
     

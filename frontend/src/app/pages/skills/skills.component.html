@@ -1,41 +1,39 @@
-<div class="container">
-  <h1>Selecciona tus habilidades</h1>
-  
-  <div class="categories">
-    <div class="category-selector">
-      <h3>Categorías</h3>
-      <div class="category-buttons">
-        <!--Botones para seleccionar categorías-->
-        <button 
-          *ngFor="let category of categories" 
-          [class.selected]="selectedCategory === category.id"
-          (click)="selectCategory(category.id)">
-          {{ category.name }}
-        </button>
-      </div>
-    </div>
-    
-    <div class="subcategories" *ngIf="selectedCategory">
-      <div class="subcategory-list">
-        <!--Mostrar subcategorías basadas en la categoría seleccionada-->
-        <div *ngFor="let category of categories">
-          <div *ngIf="selectedCategory === category.id">
-            <div class="subcategory-item" *ngFor="let subcategory of 
-            category.subcategories">
-              <label>
-                <!--Checkbox para seleccionar subcategorías-->
-                <input type="checkbox" [(ngModel)]="subcategory.
-                selected">
-                {{ subcategory.name }}
-              </label>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <div class="actions">
-    <button (click)="submitSkills()" class="submit-button">Guardar habilidades</button>
-  </div>
+<div class="skills-container">
+  <h1>Selecciona tus habilidades</h1>
+
+  <div class="category-block" *ngFor="let category of categories">
+
+    <div class="category-header" (click)="toggleCategory(category.id)">
+      <span class="category-title">{{ category.name }}</span>
+
+      <span class="arrow" [class.open]="category.open">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#3CB57C"><path d="M400-80 0-480l400-400 71 71-329 329 329 329-71 71Z"/></svg>
+
+
+      </span>
+    </div>
+
+    <div
+      class="chips-container"
+       [class.open]="category.open"
+    >
+      <div
+        class="chip"
+        *ngFor="let sub of category.subcategories"
+        [class.selected]="sub.selected"
+        (click)="toggleSkill(category.id, sub.id); $event.stopPropagation()"
+      >
+        {{ sub.name }}
+      </div>
+    </div>
+
+  </div>
+
+  <div class="actions">
+    <button (click)="submitSkills()" class="save-btn">
+      Guardar
+    </button>
+  </div>
 </div>
+
+

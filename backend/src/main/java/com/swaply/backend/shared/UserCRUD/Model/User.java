@@ -1,11 +1,15 @@
-package com.swaply.backend.shared.UserCRUD;
+package com.swaply.backend.shared.UserCRUD.Model;
 
 import com.azure.spring.data.cosmos.core.mapping.Container;
 import com.azure.spring.data.cosmos.core.mapping.PartitionKey;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.annotation.Id;
 
@@ -26,9 +30,15 @@ public class User {
     private String surname;
     private String email;
     private String password;
+    private String code;
+    private int ttl;
     private String location;
     private String gender;
-    private int age;
+    private String phone;
+    private List<Skills> skills;
+    private List<Skills> interest;
+    @JsonFormat(pattern="dd/MM/yyyy")
+    private Date birthDate;
     private String description;
     private boolean isVerified;
     private String profilePhotoUrl;

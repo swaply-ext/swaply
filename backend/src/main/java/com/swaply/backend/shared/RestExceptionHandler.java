@@ -33,6 +33,6 @@ public class RestExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleGenericError(Exception e) {
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error inesperado.");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error inesperado: " + e.getMessage());
     }
 }

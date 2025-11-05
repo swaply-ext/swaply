@@ -1,41 +1,48 @@
 :host {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: center;  /* centra horizontalmente */
+  align-items: center;      /* centra verticalmente */
   min-height: 100vh;
   font-family: 'Quicksand', sans-serif;
-  background-color: var(--principal-color-1);
+  margin: 0;
+  background: linear-gradient(to bottom, #012534 0%, #00839E 100%); /* degradado de fondo */
 }
 
 .error-auth-container {
-  background: #315465;
-  padding: 3rem;
+  background: #356B8A;
+  padding: 3rem;               
   border-radius: 12px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.1);
   text-align: center;
   max-width: 450px;
   width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; 
 }
 
 .icon-circle {
   width: 140px;
   height: 140px;
-  color: #e63946; /* rojo para error */
+  background-color: #A11D1D; /* rojo igual que Error404 */
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0 auto 1.5rem auto;
-  border: #e63946 4px solid;
+  margin-top: -120px;          
+  margin-bottom: 1.5rem;
 }
 
 .icon-circle .material-icons {
+  color: #fff;
   font-size: 7rem;
 }
 
 .error-auth-container p {
   color: #fff;
   font-size: 1rem;
+  margin-top: 1rem;   
   margin-bottom: 0;
 }
 
@@ -46,7 +53,7 @@
 
 .continue-button {
   padding: 0.8rem 2rem;
-  background-color: var(--principal-color-2); 
+  background-color: #A11D1D;  /* botón rojo */
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -57,12 +64,13 @@
 }
 
 .continue-button:hover {
-  background-color: var(--principal-color-2);
+  background-color: #b9243b; /* rojo más oscuro al pasar el ratón */
 }
 
 @media (max-width: 480px) {
   .error-auth-container {
     padding: 1.5rem;
+    width: 90%;
   }
 
   .button-wrapper {

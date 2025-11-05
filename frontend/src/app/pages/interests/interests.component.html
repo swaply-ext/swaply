@@ -1,47 +1,35 @@
-<div class="interests-screen">
-  <div class="panel">
-    <div class="content-box">
-      <h1 class="main-title">Selecciona tus intereses</h1>
+<div class="interests-container">
+  <h1>Selecciona tus intereses</h1>
 
-      <!-- BLOQUE DE CATEGORÍAS Y SUBCATEGORÍAS -->
-      <div class="selection-wrapper">
-        <h3 class="category-title">Categorías</h3>
+  <div class="category-block" *ngFor="let category of categories">
 
-        <!-- Nuevo contenedor animado -->
-        <div class="grid" [class.shifted]="selectedCategory">
-          <!-- CATEGORÍAS -->
-          <div class="category-column">
-            <div class="category-buttons">
-              <button
-                *ngFor="let category of categories"
-                [class.selected]="selectedCategory === category.id"
-                (click)="selectCategory(category.id)">
-                {{ category.name }}
-              </button>
-            </div>
-          </div>
+    <div class="category-header" (click)="toggleCategory(category.id)">
+      <span class="category-title">{{ category.name }}</span>
 
-          <!-- SUBCATEGORÍAS -->
-          <div class="subcategory-column" *ngIf="selectedCategory">
-            <div *ngFor="let category of categories">
-              <div *ngIf="selectedCategory === category.id">
-                <div class="subcategory-list">
-                  <label
-                    *ngFor="let subcategory of category.subcategories"
-                    class="subcategory-option">
-                    <input type="checkbox" [(ngModel)]="subcategory.selected" />
-                    <span class="subcategory-label">{{ subcategory.name }}</span>
-                  </label>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="actions">
-        <button class="submit-button" (click)="submitInterests()">Guardar</button>
-      </div>
+      <span class="arrow" [class.open]="category.open">
+        <svg xmlns="http://www.w3.org/2000/svg" height="24px"
+             viewBox="0 -960 960 960" width="24px" fill="#3CB57C">
+          <path d="M400-80 0-480l400-400 71 71-329 329 329 329-71 71Z"/>
+        </svg>
+      </span>
     </div>
+
+    <div class="chips-container" [class.open]="category.open">
+
+      <div
+        class="chip"
+        *ngFor="let sub of category.subcategories"
+        [class.selected]="sub.selected"
+        (click)="toggleInterest(category.id, sub.id); $event.stopPropagation()"
+      >
+        {{ sub.name }}
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="actions">
+    <button class="save-btn" (click)="submitInterests()">Guardar</button>
   </div>
 </div>

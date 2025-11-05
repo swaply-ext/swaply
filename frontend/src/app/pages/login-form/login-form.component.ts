@@ -5,11 +5,12 @@ import { PasswordInputComponent } from '../../components/password-input/password
 import { TermsCheckboxComponent } from '../../components/terms-checkbox/terms-checkbox.component';
 import { LoginRegisterButtonsComponent } from '../../components/login-register-buttons/login-register-buttons.component';
 import { RouterLink } from '@angular/router';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 
 interface User {
   email: string;
-  password: string; 
+  password: string;
 }
 
 @Component({
@@ -21,7 +22,7 @@ interface User {
     TermsCheckboxComponent,
     RouterLink,
     LoginRegisterButtonsComponent,
-    HttpClientModule
+    CommonModule
   ],
   templateUrl: './login-form.component.html', // Ruta al archivo HTML
   styleUrls: ['./login-form.component.css']   // Ruta al archivo CSS
@@ -31,17 +32,18 @@ export class LoginFormComponent {
   email = '';
   password = '';
   accepted = false;
+  showError = false;
 
   constructor(private router: Router, private http: HttpClient) { }
 
   login() {
     // Habria que cambiar el alert por algo mas bonito
     if (!this.accepted) {
-      alert('Debes aceptar los términos');
+      this.showError =true;
       return;
     }
     if (!this.email || !this.password) {
-      alert('Debes rellenar todos los campos');
+      this.showError =true;
       return;
     }
     // Crea el objeto usuario con los datos del formulario
@@ -50,28 +52,39 @@ export class LoginFormComponent {
       password: this.password
     };
 
-    this.http.post('http://localhost:8081/api/account/login', newUser, { responseType: 'text' })
+    this.http.post('http://localhost:8081/api/auth/login', newUser, { responseType: 'text', observe: 'response' })
       .subscribe({
-        next: (response: string) => {
-          console.log('Respuesta del backend:', response);
+        next: (response: HttpResponse<Object>) => {
 
-          // Si hay un token/UUID -> login correcto
-          if (response && response.length > 0) {
-            this.router.navigate(['/']);
-          } else {
-            // Contraseña incorrecta o usuario no encontrado -> /error-auth
+          if (response.status == 200) {
+            console.log(response.status);
+            console.log("Login correcto");
+            console.log('Respuesta del backend:', response);
+            const token = response.body as string;
+            localStorage.setItem('authToken', token);
+            console.log("Token recibido:", token);
+          }
+          else {
             this.router.navigate(['/error-auth']);
           }
+
         },
         error: err => {
-          console.error('Error enviando login:', err);
-          // Error de conexión -> también /error-auth
-          this.router.navigate(['/error-auth']);
+          if (err.status == 401) {
+            console.log(err.status);
+            console.log("Credenciales Incorrectas");
+
+          } else {
+            console.error('Error enviando login:', err);
+            // Error de conexión -> también /error-auth
+            this.router.navigate(['/error-auth']);
+          }
+
         }
       });
   }
 
   register() {
-    this.router.navigate(['/register']); 
+    this.router.navigate(['/register']);
   }
 }
