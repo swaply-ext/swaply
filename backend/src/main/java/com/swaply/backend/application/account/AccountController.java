@@ -4,6 +4,7 @@ package com.swaply.backend.application.account;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.azure.core.annotation.Get;
 import com.swaply.backend.application.account.dto.ProfileDataDTO;
 import com.swaply.backend.application.account.dto.SkillsDTO;
 import com.swaply.backend.application.account.service.AccountService;
@@ -56,7 +57,7 @@ public class AccountController {
      */
 
     // TOCAR A PARTIR DE AQUI ABAJO:
-
+    @GetMapping("/profileData")
     public ResponseEntity<ProfileDataDTO> getProfileData(@RequestHeader("Authorization") String token) {
         token = token.replace("Bearer ", "");
         ProfileDataDTO profileData = service.getProfileData(token);
