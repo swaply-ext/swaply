@@ -3,6 +3,30 @@ body {
   margin: 0;
   background: linear-gradient(to bottom, #012534 0%, #00839E 100%);
 }
+/* CONTENEDOR GLOBAL */
+.profile-page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px; /* separación entre los dos bloques */
+  width: 80%;
+  /* max-width: 900px; */
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* El componente superior */
+app-profile-info {
+  width: 100%;
+}
+
+/* Contenedor inferior con los 5 campos */
+.profile-info-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
 
 .profile-panels-container {
   display: flex;
@@ -33,6 +57,7 @@ body {
   justify-content: flex-start;
 }
 
+
 .profile-interests {
   justify-content: flex-end;
 }
@@ -47,4 +72,120 @@ body {
     padding: 12px;
     min-height: auto;
   }
+}
+
+.profile-info-container {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 16px;
+  padding: 30px;
+  color: #fff;
+  max-width: 900px;
+  margin: 40px auto;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  
+}
+
+/* FILAS (correo-fecha, ubicacion-genero) */
+.profile-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+/* SECCIONES GENERALES */
+.profile-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.profile-section label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #d2faff;
+}
+
+/* CAMPOS */
+.profile-section input,
+.profile-section select,
+.profile-section textarea {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid #00bcd4;
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #fff;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.profile-section input:focus,
+.profile-section select:focus,
+.profile-section textarea:focus {
+  border-color: #00eaff;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* SOBRE MI ocupa todo el ancho */
+.profile-section.about textarea {
+  width: 100%;
+  resize: none;
+  height: 100px;
+}
+
+/* Los inputs mitad de ancho en las filas */
+.profile-section.half {
+  flex: 1;
+}
+
+/* Responsivo */
+@media (max-width: 700px) {
+  .profile-row {
+    flex-direction: column;
+  }
+  .profile-section.half {
+    width: 100%;
+  }
+}
+
+/* === PLACEHOLDERS === */
+.profile-section input::placeholder,
+.profile-section textarea::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* En Safari */
+.profile-section input::-webkit-input-placeholder,
+.profile-section textarea::-webkit-input-placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* En Firefox */
+.profile-section input::-moz-placeholder,
+.profile-section textarea::-moz-placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* En Edge/IE */
+.profile-section input:-ms-input-placeholder,
+.profile-section textarea:-ms-input-placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+.profile-bottom-row {
+  display: flex;
+  width: 100%;
+  gap: 20px;
+  align-items: stretch;
+}
+
+.profile-side-layout {
+  flex-shrink: 0;
+  width: 250px;
+}
+
+.profile-info-container {
+  flex: 1;
 }
