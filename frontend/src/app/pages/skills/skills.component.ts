@@ -71,10 +71,10 @@ subcategories: [
       .flatMap(category => category.subcategories)
       .filter(subcategory => subcategory.selected)
       .map(subcategory => {
-        return { name: subcategory.name, level: null };
+        return { name: subcategory.name, level: 1 };
       });
 
-    this.http.patch('http://localhost:8081/api/users/USR-001', { skills: selectedSkills })
+    this.http.patch('http://localhost:8081/api/account/skills', { skills: selectedSkills })
       .subscribe({
         next: response => console.log('Resputesta del backend:', response),
         error: err => console.error('Error enviando skills:', err)

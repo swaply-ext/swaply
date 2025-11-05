@@ -13,4 +13,6 @@ public class RegisterInitialDTO {
     private String email;
     private String password;
     private String username;
+    private Integer ttl = 300;
+    private Integer code;
 }

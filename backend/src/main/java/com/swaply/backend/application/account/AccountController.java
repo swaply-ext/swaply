@@ -1,12 +1,11 @@
 package com.swaply.backend.application.account;
 
-import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.swaply.backend.application.account.dto.ProfileDataDTO;
+import com.swaply.backend.application.account.dto.SkillsDTO;
 import com.swaply.backend.application.account.service.AccountService;
-import com.swaply.backend.shared.UserCRUD.dto.UpdateUserDTO;
 
 @RestController
 @RequestMapping("/api/account")
@@ -20,23 +19,18 @@ public class AccountController {
         this.service = service;
     }
 
-    @PostMapping("/personalInfo")
-    public ResponseEntity<Boolean> personalInfo(@RequestBody String token, UpdateUserDTO dto) {
-        service.UpdatePersonalInfo(token, dto);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
-    }
-
-    @GetMapping("/profileData")
-    public ResponseEntity<ProfileDataDTO> ShowProfileData(@RequestBody String token) {
-        ProfileDataDTO profileData = service.ShowProfileData(token);
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(profileData);
-    }
-
-
-    // @PatchMapping("/skills/{id}")
-    // public ResponseEntity<UserDTO> addSkills(@PathVariable String id){
-    // return ResponseEntity.ok(service.addSkills(id));
+    // @PostMapping("/personalInfo")
+    // public ResponseEntity<Boolean> personalInfo(@RequestBody String token, UpdateUserDTO dto) {
+    //     service.UpdatePersonalInfo(token, dto);
+    //     return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
     // }
+
+    @PatchMapping("/skills")
+    public ResponseEntity<String> updateSkills(@RequestHeader("Authorization") String token, @RequestBody SkillsDTO dto) {
+        token = token.replace("Bearer ", "");//Temporal es una CERDADA, Marc esta trabajando en esto
+        service.updateSkills(token, dto);
+        return ResponseEntity.ok(null);
+    }
 
     // NO TOCAR --- EN DESARROLLO ALEIX I ARNAU, NOOOOO TOCAR
     // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

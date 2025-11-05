@@ -2,6 +2,7 @@ package com.swaply.backend.application.auth.service;
 
 import java.util.Random;
 
+import com.swaply.backend.application.auth.AuthMapper;
 import com.swaply.backend.application.auth.dto.LoginDTO;
 import com.swaply.backend.application.auth.dto.RegisterActivationDTO;
 import com.swaply.backend.application.auth.dto.RegisterInitialDTO;
@@ -22,14 +23,16 @@ public class AuthService {
     private final MailService mailService;
     private final PasswordService passwordService;
     private final JwtService jwtService;
+    private final AuthMapper mapper;
 
     public AuthService(UserService userService,
             MailService mailService, PasswordService passwordService,
-            JwtService jwtService) {
+            JwtService jwtService, AuthMapper mapper) {
         this.userService = userService;
         this.mailService = mailService;
         this.passwordService = passwordService;
         this.jwtService = jwtService;
+        this.mapper = mapper;
     }
 
     public String login(LoginDTO dto) {
@@ -59,25 +62,30 @@ public class AuthService {
         if (userService.existsByUsername(dto.getUsername())) {
             throw new UserAlreadyExistsException("El usuario: " + dto.getUsername() + " ya esta en uso.");
         }
-        Random random = new Random();
-        int codeInt = 100000 + random.nextInt(900000); // Asegura que sea de 6 dígitos
-        String codeString = Integer.toString(codeInt);
 
-        mailService.sendVerificationCode(dto.getEmail(), codeString);
-        return userService.createUserTtl(dto, codeString);
+        Random random = new Random();
+        int code = 100000 + random.nextInt(900000); // Asegura que sea de 6 dígitos
+        // String codeString = Integer.toString(code);
+
+        mailService.sendVerificationCode(dto.getEmail(), code);
+        dto.setCode(code);
+
+        UserDTO newUser = mapper.fromRegisterDTO(dto);
+        return userService.createUser(newUser);
     }
 
-    public String registerCodeVerify(RegisterActivationDTO dto) {
-        String email = dto.getEmail();
-        String code = dto.getCode();
+    public String completeRegistration(RegisterActivationDTO dto) {
 
-        UserDTO user = userService.getUserByEmail(email);
+        UserDTO user = userService.getUserByEmail(dto.getEmail());
 
-        if (user.getCode() != null && user.getCode().equals(code)) {
+        if (user.getCode() != null && user.getCode().equals(dto.getCode())) {
 
-            userService.activateUser(user);
+            user.setCode(-1);
+            user.setTtl(-1);
 
-            return user.getId();
+            userService.updateUser(user.getId(), user);
+
+            return jwtService.generateSessionToken(user.getId());
         } else {
             throw new InvalidCredentialsException("El código de verificación es incorrecto.");
         }

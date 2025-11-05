@@ -38,7 +38,7 @@ public class MailService {
         }
     }
 
-    public void sendVerificationCode(String email, String code) {
+    public void sendVerificationCode(String email, Integer code) {
         Context context = new Context();
         context.setVariable("code", code);
         String htmlBody = templateEngine.process("email/RegisterVerificationCode", context);
