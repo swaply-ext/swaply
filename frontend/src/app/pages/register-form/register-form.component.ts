@@ -140,7 +140,7 @@ export class RegisterFormComponent {
     const simpleSeq = /(1234|abcd|password|qwerty)/i;
 
     if (password.length < minLength) return { valid: false, message: `Debe tener al menos ${minLength} caracteres.` };
-    if (password.length > maxLength) return { valid: false, message: `Debe tener más de ${maxLength} caracteres.` };
+    if (password.length > maxLength) return { valid: false, message: `Debe tener menos de ${maxLength} caracteres.` };
     if (!uppercase.test(password)) return { valid: false, message: 'Debe contener al menos una letra mayúscula.' };
     if (!lowercase.test(password)) return { valid: false, message: 'Debe contener al menos una letra minúscula.' };
     if (!number.test(password)) return { valid: false, message: 'Debe contener al menos un número.' };
