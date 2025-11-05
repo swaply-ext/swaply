@@ -191,15 +191,16 @@ export class PersonalInformationComponent {
 
   private validatePostal(postalCode: number): boolean {
     const length = 5;
-    const uppercase = /[A-Z]/;
-    const lowercase = /[a-z]/;
-    const special = /[!@#$%^&*?/]/;
+    const requeriments = /^[0-9]+$/;
     const numString = postalCode.toString();
+    const min = 1001;
+    const max = 52999;
+
 
     if (numString.length != length) return true;
-    if (uppercase.test(numString)) return true;
-    if (lowercase.test(numString)) return true;
-    if (special.test(numString)) return true;
+    if (requeriments.test(numString)) return true;
+    if (postalCode > max) return true;
+    if (postalCode < min) return true;
     else return false;
   }
 
