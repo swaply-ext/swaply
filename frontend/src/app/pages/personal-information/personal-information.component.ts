@@ -144,13 +144,11 @@ export class PersonalInformationComponent {
   private validateName(name: string): boolean {
     const minLength = 3;
     const maxLength = 30;
-    const number = /[0-9]/;
-    const special = /[!@#$%^&*?/]/;
+    const requeriments = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s'-]+$/;
 
     if (name.length < minLength) return true;
     if (name.length > maxLength) return true;
-    if (number.test(name)) return true;
-    if (special.test(name)) return true;
+    if (!requeriments.test(name)) return true;
     else return false;
   }
 
