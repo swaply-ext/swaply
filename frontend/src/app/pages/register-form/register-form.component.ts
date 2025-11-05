@@ -53,6 +53,9 @@ export class RegisterFormComponent {
 
   register() {
     this.showError = false;
+    this.username = this.username.toLowerCase();
+    this.email = this.email.toLowerCase();
+    this.confirmEmail = this.confirmEmail.toLowerCase();
 
     if (!this.accepted) {
       this.showError = true;
