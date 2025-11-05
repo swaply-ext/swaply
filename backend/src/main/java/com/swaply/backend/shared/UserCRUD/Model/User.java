@@ -30,7 +30,7 @@ public class User {
     private String surname;
     private String email;
     private String password;
-    private String code;
+    private Integer code;
     private Integer ttl;
     private String location;
     private String gender;

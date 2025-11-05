@@ -1,6 +1,5 @@
 package com.swaply.backend.shared.UserCRUD;
 
-import com.swaply.backend.shared.UserCRUD.dto.UpdateUserDTO;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +47,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<UserDTO> updatedUser(@PathVariable String id, @RequestBody UpdateUserDTO user) {
+    public ResponseEntity<UserDTO> updatedUser(@PathVariable String id, @RequestBody UserDTO user) {
         UserDTO updatedUser = service.updateUser(id, user);
         return ResponseEntity.ok(updatedUser);
     }

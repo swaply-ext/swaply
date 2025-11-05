@@ -33,8 +33,8 @@ public class AuthController {
     }
 
     @PostMapping("/registerCodeVerify")
-    public ResponseEntity<String> registerCodeVerify(@RequestBody RegisterActivationDTO dto) {
-        String token = service.registerCodeVerify(dto);
+    public ResponseEntity<String> completeRegistration(@RequestBody RegisterActivationDTO dto) {
+        String token = service.completeRegistration(dto);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(token);
     }
 

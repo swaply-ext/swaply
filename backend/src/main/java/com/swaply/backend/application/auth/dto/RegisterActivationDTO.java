@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 public class RegisterActivationDTO {
     // private String id;
     private String email;
-    private String code;
+    private Integer code;
 }

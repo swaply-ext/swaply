@@ -17,7 +17,7 @@ import { Token } from '@angular/compiler';
   styleUrls: ['./new-password.component.css']
 })
 export class NewPasswordComponent implements OnInit {
-  newPassword: string = '';
+  password: string = '';
   confirmPassword: string = '';
   showError = false;
   token: string = '';
@@ -51,27 +51,27 @@ export class NewPasswordComponent implements OnInit {
   submitNewPassword() {
     this.showError = false;
 
-    const passwordValidation = this.validatePassword(this.newPassword);
+    const passwordValidation = this.validatePassword(this.password);
     if (!passwordValidation.valid) {
       this.showError = true;
       this.message = 'Contraseña inválida:\n' + passwordValidation.message;
       return;
     }
 
-    if (!this.newPassword || !this.confirmPassword) {
+    if (!this.password || !this.confirmPassword) {
       this.showError = true;
       this.message = 'Debes rellenar todos los campos';
       return;
     }
 
-    if (this.newPassword !== this.confirmPassword) {
+    if (this.password !== this.confirmPassword) {
       this.showError = true;
       this.message = 'Las contraseñas deben coincidir';
       return;
     }
 
     const data = this.recoveryService.getRecoveryData();
-    const payload = { token: this.token, newPassword: this.newPassword };
+    const payload = { token: this.token, password: this.password };
 
     console.log('Payload para cambio de contraseña:', payload);
 
@@ -112,7 +112,7 @@ export class NewPasswordComponent implements OnInit {
     return { valid: true, message: '' };
   }
   onPasswordChange(newPassword: string) {
-    this.newPassword = newPassword;
+    this.password = newPassword;
     const passwordValidation = this.validatePassword(newPassword);
     if (!passwordValidation.valid) {
       this.showError = true;

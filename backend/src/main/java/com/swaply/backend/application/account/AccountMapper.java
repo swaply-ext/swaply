@@ -1,7 +1,7 @@
 package com.swaply.backend.application.account;
 
 import com.swaply.backend.application.account.dto.SkillsDTO;
-import com.swaply.backend.shared.UserCRUD.dto.UpdateUserDTO;
+import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 
 import org.mapstruct.*;
 
@@ -12,5 +12,5 @@ import org.mapstruct.*;
 public interface AccountMapper {
 
     @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE)
-    UpdateUserDTO fromSkillsDTO(SkillsDTO dto);
+    UserDTO fromSkillsDTO(SkillsDTO dto);
 }

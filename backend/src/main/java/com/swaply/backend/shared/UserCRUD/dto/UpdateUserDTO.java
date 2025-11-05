@@ -16,7 +16,6 @@ public class UpdateUserDTO {
     private String name;
     private String surname;
     private String email;
-    private String password;
     private String location;
     private String gender;
     private String description;
