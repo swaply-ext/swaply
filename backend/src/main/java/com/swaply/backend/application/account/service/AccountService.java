@@ -50,9 +50,6 @@ public class AccountService /* implements UserRepository */ {
         userService.updateUser(userid, updateUser);    
     }
 
-    /*public ProfileDataDTO ShowProfileData(String token) {
-        try {
-            String userId = jwtService.extractUserIdFromSessionToken(token);
     // public ProfileDataDTO ShowProfileData(String token) {
     //     try {
     //         String userId = jwtService.extractUserIdFromSessionToken(token);
