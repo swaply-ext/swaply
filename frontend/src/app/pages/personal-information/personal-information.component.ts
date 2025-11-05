@@ -67,7 +67,7 @@ export class PersonalInformationComponent {
     if (!this.gender) return this.setError('Debes seleccionar un género');
     if (!this.phone || this.validatePhone(this.phone)) return this.setError('Debes introducir un número de teléfono válido');
     if (!this.postalCode || this.validatePostal(this.postalCode)) return this.setError('Debes introducir un código postal válido');
-    if (!this.location || this.validateLocation(this.location)) return this.setError('Debes introducir una ubicación válida');
+    if (!this.location || this.validateLocation(this.location)) return this.setError('Debes introducir una dirección válida');
 
     const personalData = {
       name: this.name,
@@ -79,14 +79,10 @@ export class PersonalInformationComponent {
       postalCode: this.postalCode
     };
 
-    // Guardar datos en el servicio
     this.registerDataService.setRegisterData(personalData);
 
-    // Recuperar token del servicio o localStorage
     let { token, email, username, password } = this.registerDataService.getRegisterData();
-    if (!token) {
-      token = localStorage.getItem('token') || '';
-    }
+    if (!token) token = localStorage.getItem('token') || '';
 
     if (!token) {
       this.setError('No se ha verificado el email. Regresa al registro.');
@@ -115,16 +111,20 @@ export class PersonalInformationComponent {
     this.message = msg;
   }
 
+  // --- VALIDACIONES MEJORADAS ---
+
   private validateName(name: string): boolean {
-    const number = /[0-9]/;
-    const special = /[!@#$%^&*?/]/;
-    return name.length < 3 || name.length > 30 || number.test(name) || special.test(name);
+    const minLength = 3;
+    const maxLength = 30;
+    const requirements = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s'-]+$/;
+    return name.length < minLength || name.length > maxLength || !requirements.test(name);
   }
 
   private validateLocation(location: string): boolean {
-    const number = /[0-9]/;
-    const special = /[!@#$%^&*?]/;
-    return location.length < 3 || location.length > 50 || number.test(location) || special.test(location);
+    const minLength = 3;
+    const maxLength = 50;
+    const requirements = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9\s,'ºª-]+$/;
+    return location.length < minLength || location.length > maxLength || !requirements.test(location);
   }
 
   private isToday(date: Date | string): boolean {
@@ -138,9 +138,7 @@ export class PersonalInformationComponent {
   private isFutureDate(date: Date | string): boolean {
     const d = date instanceof Date ? date : this.parseDateString(date);
     const today = new Date();
-    return d.getFullYear() > today.getFullYear() ||
-           (d.getFullYear() === today.getFullYear() && d.getMonth() > today.getMonth()) ||
-           (d.getFullYear() === today.getFullYear() && d.getMonth() === today.getMonth() && d.getDate() > today.getDate());
+    return d > today;
   }
 
   private parseDateString(dateStr: string): Date {
@@ -150,17 +148,16 @@ export class PersonalInformationComponent {
 
   private validatePhone(phone: number): boolean {
     const numString = phone.toString();
-    const uppercase = /[A-Z]/;
-    const lowercase = /[a-z]/;
-    const special = /[!@#$%^&*?/]/;
-    return numString.length !== 9 || uppercase.test(numString) || lowercase.test(numString) || special.test(numString);
+    const requirements = /^[0-9]+$/;
+    const startsCorrectly = /^[6789]/;
+    return numString.length !== 9 || !requirements.test(numString) || !startsCorrectly.test(numString);
   }
 
   private validatePostal(postalCode: number): boolean {
     const numString = postalCode.toString();
-    const uppercase = /[A-Z]/;
-    const lowercase = /[a-z]/;
-    const special = /[!@#$%^&*?/]/;
-    return numString.length !== 5 || uppercase.test(numString) || lowercase.test(numString) || special.test(numString);
+    const requirements = /^[0-9]+$/;
+    const min = 1001;
+    const max = 52999;
+    return numString.length !== 5 || !requirements.test(numString) || postalCode < min || postalCode > max;
   }
 }

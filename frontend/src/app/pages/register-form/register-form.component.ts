@@ -53,6 +53,9 @@ export class RegisterFormComponent {
 
   register() {
     this.showError = false;
+    this.username = this.username.toLowerCase();
+    this.email = this.email.toLowerCase();
+    this.confirmEmail = this.confirmEmail.toLowerCase();
 
     if (!this.accepted) {
       this.showError = true;
@@ -129,6 +132,7 @@ export class RegisterFormComponent {
 
   private validatePassword(password: string): { valid: boolean; message: string } {
     const minLength = 8;
+    const maxLength = 64;
     const uppercase = /[A-Z]/;
     const lowercase = /[a-z]/;
     const number = /[0-9]/;
@@ -136,11 +140,14 @@ export class RegisterFormComponent {
     const simpleSeq = /(1234|abcd|password|qwerty)/i;
 
     if (password.length < minLength) return { valid: false, message: `Debe tener al menos ${minLength} caracteres.` };
+    if (password.length > maxLength) return { valid: false, message: `Debe tener como máximo ${maxLength} caracteres.` };
     if (!uppercase.test(password)) return { valid: false, message: 'Debe contener al menos una letra mayúscula.' };
     if (!lowercase.test(password)) return { valid: false, message: 'Debe contener al menos una letra minúscula.' };
     if (!number.test(password)) return { valid: false, message: 'Debe contener al menos un número.' };
     if (!special.test(password)) return { valid: false, message: 'Debe contener al menos un carácter especial (!@#$%^&*?).' };
     if (simpleSeq.test(password)) return { valid: false, message: 'No use secuencias simples o información personal.' };
+    if (password.toLowerCase() == this.email.toLowerCase()) return { valid: false, message: `No use su correo electrónico` };
+    if (password.toLowerCase() == this.username.toLowerCase()) return { valid: false, message: `No use su nombre de usuario` };
 
     return { valid: true, message: '' };
   }
@@ -159,11 +166,11 @@ export class RegisterFormComponent {
   private validateUsername(username: string): boolean {
     const minLength = 3;
     const maxLength = 30;
-    const special = /[!@#$%^&*?/]/;
+    const requeriments = /^[a-z0-9_-]+$/
 
     if (username.length < minLength) return true;
     if (username.length > maxLength) return true;
-    if (special.test(username)) return true;
+    if (!requeriments.test(username)) return true;
     else return false;
   }
 }

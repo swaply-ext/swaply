@@ -27,6 +27,7 @@ export class RecoveryPasswordComponent {
 
   sendCode() {
     this.showError = false;
+    this.email = this.email.toLowerCase();
 
     if (!this.email) {
       this.showError = true;
