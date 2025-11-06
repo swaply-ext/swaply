@@ -6,21 +6,23 @@ import com.swaply.backend.application.account.dto.SkillsDTO;
 import com.swaply.backend.shared.mail.MailService;
 import com.swaply.backend.shared.UserCRUD.UserService;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
+import com.swaply.backend.shared.mail.MailService;
 import com.swaply.backend.application.account.AccountMapper;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AccountService /* implements UserRepository */ {
 
-    private final UserService userService; //
+    private final UserService userService;
     private final AccountMapper mapper;
 
     @Value("${frontend.reset-password-url}")
     private String resetPasswordBaseUrl;
 
-    public AccountService(UserService userService, AccountMapper mapper, MailService mailService) {
+    public AccountService(UserService userService,
+            MailService mailService, 
+            AccountMapper mapper) {
         this.userService = userService;
         this.mapper = mapper;
     }

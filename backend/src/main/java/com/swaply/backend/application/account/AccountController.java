@@ -3,6 +3,7 @@ package com.swaply.backend.application.account;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import com.swaply.backend.application.account.dto.PersonalInfoDTO;
@@ -10,6 +11,7 @@ import com.azure.core.annotation.Get;
 import com.swaply.backend.application.account.dto.ProfileDataDTO;
 import com.swaply.backend.application.account.dto.SkillsDTO;
 import com.swaply.backend.application.account.service.AccountService;
+import com.swaply.backend.config.security.SecurityUser;
 
 import io.micrometer.core.ipc.http.HttpSender.Response;
 
@@ -34,10 +36,8 @@ public class AccountController {
     }
 
     @PatchMapping("/skills")
-    public ResponseEntity<String> updateSkills(
-            @RequestParam("id") String userId, 
-            @RequestBody SkillsDTO dto) {
-        service.updateSkills(userId, dto);
+    public ResponseEntity<String> updateSkills(@AuthenticationPrincipal SecurityUser SecurityUser, @RequestBody SkillsDTO dto) {
+        service.updateSkills(SecurityUser.getUsername(), dto);
         return ResponseEntity.ok(null);
     }
 
