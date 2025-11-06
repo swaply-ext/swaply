@@ -29,9 +29,9 @@ public class AccountController {
 
     @PostMapping("/personalInfo")
     public ResponseEntity<Boolean> updatePersonalInfo(
-            @RequestParam("id") String userId,
+            @AuthenticationPrincipal SecurityUser SecurityUser,
             @RequestBody PersonalInfoDTO dto) {
-        service.UpdatePersonalInfo(userId, dto);
+        service.UpdatePersonalInfo(SecurityUser.getUsername(), dto);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
     }
 
@@ -41,27 +41,6 @@ public class AccountController {
         return ResponseEntity.ok(null);
     }
 
-    // NO TOCAR --- EN DESARROLLO ALEIX I ARNAU, NOOOOO TOCAR
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // Hace falta el maper y el service para entrar en lógica
-    // metodo para enviar datos de profile a frontend, en desarrollo arnau y aleix.
-
-    /*
-     * @GetMapping("/profileData") // 1. És un GET, no un POST
-     * public ResponseEntity<ProfileDataDTO> getProfileData(
-     * // 2. El token ve en una capçalera, NO al body
-     * 
-     * @RequestHeader("Authorization") String authorizationHeader) {
-     * 
-     * // 3. Cridem al servei i ens retorna el DTO amb les dades
-     * ProfileDataDTO profileData = service.getProfileData(authorizationHeader);
-     * 
-     * // 4. Retornem el DTO amb un 200 OK. Angular rebrà el JSON.
-     * return ResponseEntity.ok(profileData);
-     * }
-     */
-
-    // TOCAR A PARTIR DE AQUI ABAJO:
     @GetMapping("/profileData")
     public ResponseEntity<ProfileDataDTO> getProfileData(
             @RequestParam("id") String userId) {
