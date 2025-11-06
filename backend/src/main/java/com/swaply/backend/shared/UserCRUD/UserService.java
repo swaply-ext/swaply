@@ -103,9 +103,10 @@ public class UserService {
         repository.save(user);
     }
 
-    /*public ProfileDataDTO getUserProfileDataByID(String id) {
-        User user = repository.findUserById(id)
-                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
-        return mapper.userToProfileDataDTO(user);
-    }*/
+
+    // public ProfileDataDTO getUserProfileDataByID(String id) {
+    //     User user = repository.findUserById(id)
+    //             .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+    //     return mapper.userToProfileDataDTO(user);
+    // }
 }

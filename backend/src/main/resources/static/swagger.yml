@@ -1,0 +1,298 @@
+#https://editor.swagger.io/ para ver el swagger de manera visual
+
+openapi: 3.0.0
+info:
+  title: Swaply
+  description: APIs para administrar la aplicación #APIs for the app administration
+  version: 1.0.0
+servers:
+  - url: http://localhost:8081
+tags:
+  - name: UserController
+    description: Endpoints sobre usuarios #Endpoints about users
+
+#Endpoints
+##Endpoints
+paths:
+  /api/users:
+    get:
+      # Resumen breve del propósito del endpoint.
+      ## Brief summary of the endpoint purpose.
+      summary: Buscar usuarios # Search users
+    
+      # Descripción más detallada del comportamiento del endpoint.
+      ## Detailed description of the endpoint behavior.
+      description: Devuelve todos los usuarios o filtra por email o fragmento de username # Returns all users or filters by email or username fragment
+    
+      # Etiqueta que agrupa este endpoint bajo el controlador de usuarios.
+      ## Tag that groups this endpoint under the user controller.
+      tags:
+        - UserController
+    
+      # Lista de parámetros que se pueden incluir en la URL como query params.
+      ## List of parameters that can be included in the URL as query params.
+      parameters:
+
+        # Parámetro opcional 'email' para buscar un usuario específico por su email.
+        ## Optional 'email' parameter to search for a specific user by email.
+        - name: email
+          in: query  # Indica que el parámetro se encuentra en la URL como query param. ## Indicates the parameter is in the URL as a query param.
+          required: false  # No es obligatorio incluirlo. ## It is not required.
+          schema:
+            type: string  # El tipo de dato esperado es texto. ## Expected data type is string.
+    
+        # Parámetro opcional 'usernameFragment' para buscar usuarios cuyo nombre de usuario contenga ese fragmento.
+        ## Optional 'usernameFragment' parameter to search users whose username contains the fragment.
+        - name: usernameFragment
+          in: query
+          required: false
+          schema:
+            type: string
+    
+      # Define las posibles respuestas que puede devolver el endpoint.
+      ## Defines the possible responses the endpoint can return.
+      responses:
+        '200':
+          # Descripción de la respuesta exitosa.
+          ## Description of the successful response.
+          description: Lista de usuarios o usuario único # List of users or single user
+    
+          # Define el tipo de contenido que se devuelve en la respuesta.
+          ## Defines the type of content returned in the response.
+          content:
+            application/json:
+              schema:
+                # La respuesta puede ser una lista de usuarios o un solo usuario.
+                ## The response can be a list of users or a single user.
+                oneOf:
+                  # Opción 1: una lista de usuarios.
+                  ## Option 1: a list of users.
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/UserDTO'  # Cada elemento sigue el esquema UserDTO. ## Each item follows the UserDTO schema.
+    
+                  # Opción 2: un solo usuario.
+                  ## Option 2: a single user.
+                  - $ref: '#/components/schemas/UserDTO'  # La respuesta es directamente un objeto UserDTO. ## The response is a single UserDTO object.
+                  
+    # Tipo de endpoint
+    ## Endpoint type
+    post:
+      # Describe brevemente la acción que realiza este endpoint.
+      ## Briefly describes the action performed by this endpoint.
+      summary: Crear un nuevo usuario # Create a new user
+
+      # Etiqueta para agrupar los endpoints relacionados con el controlador de usuarios.
+      ## Tag to group endpoints related to the UserController.
+      tags:
+        - UserController
+        
+      # Indica que el cuerpo de la solicitud es obligatorio.
+      ## Indicates that the request body is required.
+      requestBody:
+        required: true
+        
+        # Define el contenido que se espera en el cuerpo de la solicitud.
+        ## Defines the expected content in the request body.
+        content:
+          application/json:
+          
+            # Esquema que define la estructura del cuerpo de la solicitud.
+            ## Schema that defines the structure of the request body.
+            schema:
+              $ref: '#/components/schemas/RegisterDTO'
+              
+      # Define las posibles respuestas que puede devolver el endpoint.
+      ## Defines the possible responses that the endpoint can return.
+      responses:
+        '201':
+          # Describe la respuesta cuando el usuario es creado exitosamente.
+          ## Describes the response when the user is created successfully.
+          description: Usuario creado exitosamente # User created successfully
+          
+          # Define el tipo de contenido que se devuelve en la respuesta.
+          ## Defines the type of content returned in the response.
+          content:
+            application/json:
+            
+              # Esquema que define la estructura de la respuesta.
+              ## Schema that defines the structure of the response.
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+    
+    
+  /api/users/{id}:
+    # Tipo de endpoint
+    ## Endpoint type
+    get:
+      summary: Obtener usuario por ID # Get user by ID
+      
+      # Etiqueta para agrupar los endpoints relacionados con el controlador de usuarios
+      ## Tag to group endpoints related to the UserController
+      tags:
+        - UserController
+        
+      # Define los parámetros que se esperan en la solicitud
+      ## Defines the parameters expected in the request
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            
+      # Define las posibles respuestas que puede devolver el endpoint
+      ## Defines the possible responses that the endpoint can return
+      responses:
+        '200':
+          description: Usuario encontrado # User found
+          
+          # Define el tipo de contenido que se devuelve en la respuesta.
+          ## Defines the type of content returned in the response.
+          content:
+            application/json:
+            
+              # Esquema que define la estructura de la respuesta.
+              ## Schema that defines the structure of the response.
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+                
+    # Tipo de endpoint
+    ## Endpoint type
+    delete:
+      summary: Eliminar usuario por ID # Delete user by ID
+      
+      # Etiqueta para agrupar los endpoints relacionados con el controlador de usuarios
+      ## Tag to group endpoints related to the UserController
+      tags:
+        - UserController
+        
+      # Define los parámetros que se esperan en la solicitud
+      ## Defines the parameters expected in the request
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            
+      # Define las posibles respuestas que puede devolver el endpoint.
+      ## Defines the possible responses that the endpoint can return.
+      responses:
+        '204':
+          description: Usuario eliminado exitosamente # User deleted successfully
+          
+    # Tipo de endpoint
+    ## Endpoint type
+    patch:
+      summary: Actualizar usuario por ID # Update user by ID
+      
+      # Etiqueta para agrupar los endpoints relacionados con el controlador de usuarios.
+      ## Tag to group endpoints related to the UserController.
+      tags:
+        - UserController
+        
+      # Define los parámetros que se esperan en la solicitud.
+      ## Defines the parameters expected in the request.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            
+      # Indica que el cuerpo de la solicitud es obligatorio.
+      ## Indicates that the request body is required.
+      requestBody:
+        required: true
+        
+        # Define el contenido que se espera en el cuerpo de la solicitud
+        ## Defines the expected content in the request body
+        content:
+          application/json:
+          
+            # Esquema que define la estructura del cuerpo de la solicitud
+            ## Schema that defines the structure of the request body
+            schema:
+              $ref: '#/components/schemas/UserDTO'
+              
+      # Define las posibles respuestas que puede devolver el endpoint
+      ## Defines the possible responses that the endpoint can return
+      responses:
+        '200':
+          description: Usuario actualizado exitosamente # User updated successfully
+          
+          # Define el tipo de contenido que se devuelve en la respuesta
+          ## Defines the type of content returned in the response
+          content:
+            application/json:
+            
+              # Esquema que define la estructura de la respuesta
+              ## Schema that defines the structure of the response
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+                
+                
+components:
+  schemas:
+    RegisterDTO:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        name:
+          type: string
+        surname:
+          type: string
+        username:
+          type: string
+        birthDate:
+          type: string
+          format: date
+        phone:
+          type: integer
+        postalCode:
+          type: integer
+        location:
+          type: string
+          
+    UserDTO:
+      type: object
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+        username:
+          type: string
+        name:
+          type: string
+        surname:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        location:
+          type: string
+        gender:
+          type: string
+        age:
+          type: integer
+        description:
+          type: string
+        isVerified:
+          type: boolean
+        profilePhotoUrl:
+          type: string
+        isPremium:
+          type: boolean
+        isModerator:
+          type: boolean
+
+
+
+
+
