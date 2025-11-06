@@ -42,9 +42,8 @@ public class AccountController {
     }
 
     @GetMapping("/profileData")
-    public ResponseEntity<ProfileDataDTO> getProfileData(
-            @RequestParam("id") String userId) {
-        ProfileDataDTO profileData = service.getProfileData(userId);
+    public ResponseEntity<ProfileDataDTO> getProfileData(@AuthenticationPrincipal SecurityUser SecurityUser) {
+        ProfileDataDTO profileData = service.getProfileData(SecurityUser.getUsername());
         return ResponseEntity.ok(profileData);
     }
 }
