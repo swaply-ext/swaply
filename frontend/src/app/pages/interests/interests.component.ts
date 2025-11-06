@@ -32,6 +32,7 @@ export class InterestsComponent {
     {
       name: 'Música',
       id: 'music',
+      open: true,
       subcategories: [
         { name: 'GUITARRA 🎸', id: 'guitar', selected: false },
         { name: 'PIANO 🎹', id: 'piano', selected: false },
@@ -43,6 +44,7 @@ export class InterestsComponent {
     {
       name: 'Ocio',
       id: 'leisure',
+      open: true,
       subcategories: [
        { name: 'DIBUJO 🎨', id: 'drawing', selected: false },
         { name: 'COCINA 👨‍🍳', id: 'cooking', selected: false },
@@ -89,10 +91,12 @@ export class InterestsComponent {
     const selectedInterests = this.categories
       .flatMap(category => category.subcategories)  
       .filter(subcategory => subcategory.selected)  
-      .map(subcategory => subcategory.name);        
+      .map(subcategory => {
+        return { name: subcategory.name, level: 1 };
+      });
 
     // Envía los intereses seleccionados al servidor
-    this.http.post('http://localhost:8081/api/interests/save', { interests: selectedInterests })
+    this.http.post('http://localhost:8081/api/account/interests', { interests: selectedInterests })
       .subscribe({
         next: response => console.log('Respuesta del backend:', response), 
         error: err => console.error('Error enviando intereses:', err)      

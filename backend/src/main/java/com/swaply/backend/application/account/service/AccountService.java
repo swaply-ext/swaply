@@ -3,6 +3,7 @@ package com.swaply.backend.application.account.service;
 import com.swaply.backend.application.account.dto.PersonalInfoDTO;
 import com.swaply.backend.application.account.dto.ProfileDataDTO;
 import com.swaply.backend.application.account.dto.SkillsDTO;
+import com.swaply.backend.application.account.dto.InterestsDTO;
 import com.swaply.backend.shared.mail.MailService;
 import com.swaply.backend.shared.UserCRUD.UserService;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
@@ -35,6 +36,11 @@ public class AccountService /* implements UserRepository */ {
 
     public void updateSkills(String userId, SkillsDTO dto) {
         UserDTO updateUser = mapper.fromSkillsDTO(dto);
+        userService.updateUser(userId, updateUser);
+    }
+
+    public void updateInterests(String userId, InterestsDTO dto) {
+        UserDTO updateUser = mapper.fromInterestsDTO(dto);
         userService.updateUser(userId, updateUser);
     }
 

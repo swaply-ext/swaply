@@ -11,16 +11,6 @@ export class AccountService {
   constructor(private http: HttpClient) {}
 
   getProfileData(): Observable<any> {
-    const token = localStorage.getItem('authToken');
-    if (!token) {
-      console.error('No se ha encontrado el token de autenticación.');
-      throw new Error('Token not found');
-    }
-
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-
-    return this.http.get<any>(this.apiUrl, { headers });
+    return this.http.get<any>(this.apiUrl);
   }
 }

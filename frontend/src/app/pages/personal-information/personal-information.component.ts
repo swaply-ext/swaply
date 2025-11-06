@@ -30,7 +30,7 @@ import { CommonModule } from '@angular/common';
 export class PersonalInformationComponent {
   name = '';
   surname = '';
-  birthDate: Date | undefined;
+  birthDate!: Date;
   gender = '';
   location = '';
   phone = 0;
@@ -51,7 +51,7 @@ export class PersonalInformationComponent {
 
     this.name = data.name || '';
     this.surname = data.surname || '';
-    this.birthDate = data.birthDate ? new Date(data.birthDate) : undefined;
+    this.birthDate = data.birthDate ? new Date(data.birthDate) : new Date();
     this.gender = data.gender || '';
     this.location = data.location || '';
     this.phone = data.phone || 0;
@@ -60,6 +60,10 @@ export class PersonalInformationComponent {
 
   registerData() {
     this.showError = false;
+
+    if (typeof this.birthDate === 'string') {
+      this.birthDate = new Date(this.birthDate);
+    }
 
     if (!this.name || this.validateName(this.name)) return this.setError('Debes introducir un nombre válido');
     if (!this.surname || this.validateName(this.surname)) return this.setError('Debes introducir un apellido válido');
@@ -91,10 +95,9 @@ export class PersonalInformationComponent {
 
     const allUserData = { email, username, password, ...personalData };
 
-    this.http.post('http://localhost:8081/api/account/personalInfo', allUserData, {
-      headers: { Authorization: `Bearer ${token}` }
-    }).subscribe({
-      next: () => {
+    this.http.post('http://localhost:8081/api/account/personalInfo', allUserData)
+      .subscribe({
+        next: () => {
         console.log('Registro completo:', allUserData);
         this.router.navigate(['/']);
       },
@@ -117,47 +120,62 @@ export class PersonalInformationComponent {
     const minLength = 3;
     const maxLength = 30;
     const requirements = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s'-]+$/;
-    return name.length < minLength || name.length > maxLength || !requirements.test(name);
+
+    if (name.length < minLength) return true;
+    if (name.length > maxLength) return true;
+    if (!requirements.test(name)) return true;
+    else return false;
   }
 
   private validateLocation(location: string): boolean {
     const minLength = 3;
     const maxLength = 50;
     const requirements = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9\s,'ºª-]+$/;
-    return location.length < minLength || location.length > maxLength || !requirements.test(location);
+    
+    if (location.length < minLength) return true;
+    if (location.length > maxLength) return true;
+    if (!requirements.test(location)) return true;
+    else return false;
   }
 
-  private isToday(date: Date | string): boolean {
-    const d = date instanceof Date ? date : this.parseDateString(date);
+  private isToday(date: Date): boolean {
     const today = new Date();
-    return d.getDate() === today.getDate() &&
-           d.getMonth() === today.getMonth() &&
-           d.getFullYear() === today.getFullYear();
+    return (
+      date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
+    );
   }
 
-  private isFutureDate(date: Date | string): boolean {
-    const d = date instanceof Date ? date : this.parseDateString(date);
+  private isFutureDate(date: Date): boolean {
     const today = new Date();
-    return d > today;
-  }
-
-  private parseDateString(dateStr: string): Date {
-    const [day, month, year] = dateStr.split('/').map(Number);
-    return new Date(year, month - 1, day);
+    return date > today;
   }
 
   private validatePhone(phone: number): boolean {
+    const length = 9;
+    const requirements = /^[0-9]+$/;;
     const numString = phone.toString();
-    const requirements = /^[0-9]+$/;
     const startsCorrectly = /^[6789]/;
-    return numString.length !== 9 || !requirements.test(numString) || !startsCorrectly.test(numString);
+
+    if (numString.length != length) return true;
+    if (!requirements.test(numString)) return true;
+    if (!startsCorrectly.test(numString)) return true;
+    else return false;
   }
 
   private validatePostal(postalCode: number): boolean {
-    const numString = postalCode.toString();
+    const length = 5;
     const requirements = /^[0-9]+$/;
+    const numString = postalCode.toString();
     const min = 1001;
     const max = 52999;
-    return numString.length !== 5 || !requirements.test(numString) || postalCode < min || postalCode > max;
+
+
+    if (numString.length != length) return true;
+    if (!requirements.test(numString)) return true;
+    if (postalCode > max) return true;
+    if (postalCode < min) return true;
+    else return false;
   }
 }

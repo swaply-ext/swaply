@@ -6,6 +6,7 @@ import { SkillsPanelComponent } from '../../components/skills-panel/skills-panel
 import { InterestsPanelComponent } from '../../components/interests-panel/interests-panel.component';
 import { RouterLink } from '@angular/router';
 import { AccountService } from '../../services/account.service';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-private-profile',
@@ -16,7 +17,8 @@ import { AccountService } from '../../services/account.service';
     ProfileInfoComponent,
     SkillsPanelComponent,
     InterestsPanelComponent,
-    RouterLink
+    RouterLink,
+    RouterOutlet
   ],
   templateUrl: './private-profile.component.html',
   styleUrls: ['./private-profile.component.css']

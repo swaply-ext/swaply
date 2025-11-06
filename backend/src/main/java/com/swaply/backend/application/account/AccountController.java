@@ -10,6 +10,7 @@ import com.swaply.backend.application.account.dto.PersonalInfoDTO;
 import com.azure.core.annotation.Get;
 import com.swaply.backend.application.account.dto.ProfileDataDTO;
 import com.swaply.backend.application.account.dto.SkillsDTO;
+import com.swaply.backend.application.account.dto.InterestsDTO;
 import com.swaply.backend.application.account.service.AccountService;
 import com.swaply.backend.config.security.SecurityUser;
 
@@ -39,6 +40,12 @@ public class AccountController {
     public ResponseEntity<String> updateSkills(@AuthenticationPrincipal SecurityUser SecurityUser, @RequestBody SkillsDTO dto) {
         service.updateSkills(SecurityUser.getUsername(), dto);
         return ResponseEntity.ok(null);
+    }
+
+    @PostMapping("/interests")
+    public ResponseEntity<String> updateInterests(@AuthenticationPrincipal SecurityUser SecurityUser, @RequestBody InterestsDTO dto) {
+        service.updateInterests(SecurityUser.getUsername(), dto);
+        return ResponseEntity.ok(null);    
     }
 
     @GetMapping("/profileData")
