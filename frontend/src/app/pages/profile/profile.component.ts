@@ -43,9 +43,6 @@ export class ProfileComponent {
   gender = "";
   email = "";
   avatarUrl = 'https://cdn.miiwiki.org/a/a0/WS_Matt.png';
-  // showError = false;
-  // hasErrorAll = false;
-  // message = '';
 
   save() {
     const updatedUser: User = {
@@ -57,18 +54,7 @@ export class ProfileComponent {
       gender: this.gender,
       email: this.email
     };
-    //verificcaciones
-    /*
-    for (const [key, value] of Object.entries(updatedUser)) {
-      if (!value) {
-        this.showError = true;
-        this.hasErrorAll = true;
-        this.message = 'El campo no puede estar vacío.';
-        return;
-      }
-    }
-    */
-
+    
     // Simulación de guardado
     console.log('Guardando cambios del usuario:'
       + '\nfullName: ' + this.fullName
