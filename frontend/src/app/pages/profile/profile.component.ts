@@ -2,9 +2,6 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.component";
-import { ProfileInfoComponent } from "../../components/profile-info/profile-info.component";
-import { SkillsPanelComponent } from '../../components/skills-panel/skills-panel.component';
-import { InterestsPanelComponent } from '../../components/interests-panel/interests-panel.component';
 import { SideMenuComponent } from '../../components/side-menu/side-menu.component';
 import { SaveButtonComponent } from '../../components/save-button/save-button.component';
 
@@ -25,9 +22,6 @@ interface User {
     CommonModule,
     FormsModule,
     AppNavbarComponent,
-    ProfileInfoComponent,
-    SkillsPanelComponent,
-    InterestsPanelComponent,
     SideMenuComponent,
     SaveButtonComponent
   ],
