@@ -2,10 +2,12 @@ package com.swaply.backend.application.account;
 
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import com.swaply.backend.application.account.dto.SkillsDTO;
 import com.swaply.backend.application.account.service.AccountService;
+import com.swaply.backend.config.security.SecurityUser;
 
 @RestController
 @RequestMapping("/api/account")
@@ -26,9 +28,8 @@ public class AccountController {
     // }
 
     @PatchMapping("/skills")
-    public ResponseEntity<String> updateSkills(@RequestHeader("Authorization") String token, @RequestBody SkillsDTO dto) {
-        token = token.replace("Bearer ", "");//Temporal es una CERDADA, Marc esta trabajando en esto
-        service.updateSkills(token, dto);
+    public ResponseEntity<String> updateSkills(@AuthenticationPrincipal SecurityUser SecurityUser, @RequestBody SkillsDTO dto) {
+        service.updateSkills(SecurityUser.getUsername(), dto);
         return ResponseEntity.ok(null);
     }
 
