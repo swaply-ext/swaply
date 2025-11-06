@@ -26,18 +26,18 @@ public class AccountController {
     }
 
     @PostMapping("/personalInfo")
-    public ResponseEntity<Boolean> personalInfo(
-            @RequestHeader("Authorization") String token,
+    public ResponseEntity<Boolean> updatePersonalInfo(
+            @RequestParam("id") String userId,
             @RequestBody PersonalInfoDTO dto) {
-        token = token.replace("Bearer ", "");
-        service.UpdatePersonalInfo(token, dto);
+        service.UpdatePersonalInfo(userId, dto);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
     }
 
     @PatchMapping("/skills")
-    public ResponseEntity<String> updateSkills(@RequestHeader("Authorization") String token, @RequestBody SkillsDTO dto) {
-        token = token.replace("Bearer ", "");//Temporal es una CERDADA, Marc esta trabajando en esto
-        service.updateSkills(token, dto);
+    public ResponseEntity<String> updateSkills(
+            @RequestParam("id") String userId, 
+            @RequestBody SkillsDTO dto) {
+        service.updateSkills(userId, dto);
         return ResponseEntity.ok(null);
     }
 
@@ -63,9 +63,9 @@ public class AccountController {
 
     // TOCAR A PARTIR DE AQUI ABAJO:
     @GetMapping("/profileData")
-    public ResponseEntity<ProfileDataDTO> getProfileData(@RequestHeader("Authorization") String token) {
-        token = token.replace("Bearer ", "");
-        ProfileDataDTO profileData = service.getProfileData(token);
-        return ResponseEntity.ok(profileData) ;
+    public ResponseEntity<ProfileDataDTO> getProfileData(
+            @RequestParam("id") String userId) {
+        ProfileDataDTO profileData = service.getProfileData(userId);
+        return ResponseEntity.ok(profileData);
     }
 }
