@@ -48,7 +48,7 @@ public class AccountService /* implements UserRepository */ {
     //     }
     //}
 
-        } catch (Exception e) {
+      /*} catch (Exception e) {
             // Hay que ver si creamos una exception aqui también
             throw new RuntimeException("No se ha podido obtener la informacion  del usuario", e);
         }
