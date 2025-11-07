@@ -78,6 +78,7 @@ export class LoginFormComponent {
           if (err.status == 401) {
             console.log(err.status);
             console.log("Credenciales Incorrectas");
+            this.router.navigate(['/error-auth']);
 
           } else {
             console.error('Error enviando login:', err);
