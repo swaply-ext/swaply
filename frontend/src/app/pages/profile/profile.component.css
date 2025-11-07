@@ -108,6 +108,70 @@ app-profile-info {
   color: #d2faff;
 }
 
+/* IMAGEN DE PERFIL */
+.profile-avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #00bcd4;
+  margin: 0 auto;
+  display: block;
+}
+
+/* SECCIÓN DE IMAGEN */
+.profile-section.image {
+  flex: 0 0 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* SECCIÓN DE NOMBRES */
+.profile-section.names {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.name-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.name-field label {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #d2faff;
+}
+
+.name-field input {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid #00bcd4;
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #fff;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.name-field input:focus {
+  border-color: #00eaff;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.name-field input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* CAMPOS FULL ANCHO */
+.profile-section.full {
+  width: 100%;
+}
+
 /* CAMPOS */
 .profile-section input,
 .profile-section select,
