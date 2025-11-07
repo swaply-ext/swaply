@@ -7,14 +7,12 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import com.swaply.backend.application.account.dto.PersonalInfoDTO;
-import com.azure.core.annotation.Get;
 import com.swaply.backend.application.account.dto.ProfileDataDTO;
 import com.swaply.backend.application.account.dto.SkillsDTO;
 import com.swaply.backend.application.account.dto.InterestsDTO;
 import com.swaply.backend.application.account.service.AccountService;
 import com.swaply.backend.config.security.SecurityUser;
 
-import io.micrometer.core.ipc.http.HttpSender.Response;
 
 @RestController
 @RequestMapping("/api/account")
@@ -38,12 +36,14 @@ public class AccountController {
 
     @PatchMapping("/skills")
     public ResponseEntity<String> updateSkills(@AuthenticationPrincipal SecurityUser SecurityUser, @RequestBody SkillsDTO dto) {
+        System.out.println(SecurityUser.getUsername());
         service.updateSkills(SecurityUser.getUsername(), dto);
         return ResponseEntity.ok(null);
     }
 
-    @PostMapping("/interests")
+    @PatchMapping("/interests")
     public ResponseEntity<String> updateInterests(@AuthenticationPrincipal SecurityUser SecurityUser, @RequestBody InterestsDTO dto) {
+        System.out.println(SecurityUser.getUsername());
         service.updateInterests(SecurityUser.getUsername(), dto);
         return ResponseEntity.ok(null);    
     }

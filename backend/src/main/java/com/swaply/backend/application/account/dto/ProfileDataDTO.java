@@ -16,7 +16,7 @@ public class ProfileDataDTO {
     private String username;
     private String location;
     private String description;
-    private List<Skills> interest;
+    private List<Skills> interests;
     private List<Skills>skills;
 
 }

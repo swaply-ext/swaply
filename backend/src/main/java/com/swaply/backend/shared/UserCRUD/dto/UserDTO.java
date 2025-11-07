@@ -27,7 +27,7 @@ public class UserDTO {
     private String gender;
     private String phone;
     private List<Skills> skills;
-    private List<Skills> interest;
+    private List<Skills> interests;
     @JsonFormat(pattern="dd/MM/yyyy")
     private Date birthDate;
     private String description;
