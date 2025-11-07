@@ -30,6 +30,7 @@ export class RecoveryEmailComponent {
   // Función para manejar el envío del formulario
    sendCode() {
     this.showError = false;
+    this.email = this.email.toLowerCase();
 
     if (!this.email) {
       this.showError = true;

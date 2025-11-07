@@ -80,7 +80,7 @@ export class NewPasswordComponent implements OnInit {
         next: ok => {
           if (ok) {
             this.recoveryService.clear();
-            this.router.navigate(['/confirmation']); // Ruta incorrecta, esto no es un registro
+            this.router.navigate(['/confirm-password']); 
           } else {
             this.showError = true;
             this.message = 'Error cambiando la contraseña';

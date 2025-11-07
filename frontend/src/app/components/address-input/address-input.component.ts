@@ -3,16 +3,16 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-address-input',
+  selector: 'app-location-input', 
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './address-input.component.html',
-  styleUrl: './address-input.component.css'
+  styleUrls: ['./address-input.component.css'] 
 })
 export class AddressInputComponent {
-  address = '';
-  postalCode = null;
+  location = '';          
+  postalCode: number = 0; 
   @Input() hasError: boolean = false;
-  @Output() addressChange = new EventEmitter<string>();
+  @Output() locationChange = new EventEmitter<string>(); 
   @Output() postalChange = new EventEmitter<number>();
 }

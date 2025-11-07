@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-skills',
   standalone: true,
-  imports: [CommonModule,FormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './skills.component.html',
   styleUrls: ['./skills.component.css']
 })
@@ -17,7 +17,7 @@ export class SkillsComponent {
       name: 'Deportes',
       id: 'sports',
       open: true,
-subcategories: [
+      subcategories: [
         { name: 'FÚTBOL ⚽', id: 'football', selected: false },
         { name: 'PÁDEL 🎾', id: 'padel', selected: false },
         { name: 'BÁSQUET 🏀', id: 'basketball', selected: false },
@@ -51,8 +51,8 @@ subcategories: [
     }
   ];
 
-// Inyectar HttpClient para hacer peticiones HTTP
-  constructor(private http: HttpClient) {}
+  // Inyectar HttpClient para hacer peticiones HTTP
+  constructor(private http: HttpClient) { }
 
   toggleCategory(categoryId: string) {
     const category = this.categories.find(c => c.id === categoryId);
@@ -64,14 +64,14 @@ subcategories: [
     const sub = category?.subcategories.find(s => s.id === subId);
     if (sub) sub.selected = !sub.selected;
   }
-  
-// Función para enviar las skills seleccionadas al backend
+
+  // Función para enviar las skills seleccionadas al backend
   submitSkills() {
     const selectedSkills = this.categories
       .flatMap(category => category.subcategories)
       .filter(subcategory => subcategory.selected)
       .map(subcategory => {
-        return { name: subcategory.name, level: 1 };
+        return { name: subcategory.id, level: 1 };
       });
 
     this.http.patch('http://localhost:8081/api/account/skills', { skills: selectedSkills })

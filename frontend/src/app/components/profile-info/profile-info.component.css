@@ -1,3 +1,6 @@
+body {
+  text-decoration: none;
+}
 .profile-card {
   width: 90vw;
   max-width: 2000px;

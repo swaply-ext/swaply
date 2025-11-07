@@ -37,6 +37,10 @@ export class LoginFormComponent {
   constructor(private router: Router, private http: HttpClient) { }
 
   login() {
+
+    this.showError = false;
+    this.email = this.email.toLowerCase();
+
     // Habria que cambiar el alert por algo mas bonito
     if (!this.accepted) {
       this.showError =true;
@@ -62,6 +66,7 @@ export class LoginFormComponent {
             console.log('Respuesta del backend:', response);
             const token = response.body as string;
             localStorage.setItem('authToken', token);
+            this.router.navigate(['/']);
             console.log("Token recibido:", token);
           }
           else {

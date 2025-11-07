@@ -1,13 +1,18 @@
 package com.swaply.backend.application.account;
 
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import com.swaply.backend.application.account.dto.PersonalInfoDTO;
+import com.swaply.backend.application.account.dto.ProfileDataDTO;
 import com.swaply.backend.application.account.dto.SkillsDTO;
+import com.swaply.backend.application.account.dto.InterestsDTO;
 import com.swaply.backend.application.account.service.AccountService;
 import com.swaply.backend.config.security.SecurityUser;
+
 
 @RestController
 @RequestMapping("/api/account")
@@ -21,38 +26,31 @@ public class AccountController {
         this.service = service;
     }
 
-    // @PostMapping("/personalInfo")
-    // public ResponseEntity<Boolean> personalInfo(@RequestBody String token, UpdateUserDTO dto) {
-    //     service.UpdatePersonalInfo(token, dto);
-    //     return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
-    // }
+    @PostMapping("/personalInfo")
+    public ResponseEntity<Boolean> updatePersonalInfo(
+            @AuthenticationPrincipal SecurityUser SecurityUser,
+            @RequestBody PersonalInfoDTO dto) {
+        service.UpdatePersonalInfo(SecurityUser.getUsername(), dto);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
+    }
 
     @PatchMapping("/skills")
     public ResponseEntity<String> updateSkills(@AuthenticationPrincipal SecurityUser SecurityUser, @RequestBody SkillsDTO dto) {
+        System.out.println(SecurityUser.getUsername());
         service.updateSkills(SecurityUser.getUsername(), dto);
         return ResponseEntity.ok(null);
     }
 
-    // NO TOCAR --- EN DESARROLLO ALEIX I ARNAU, NOOOOO TOCAR
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // Hace falta el maper y el service para entrar en lógica
-    // metodo para enviar datos de profile a frontend, en desarrollo arnau y aleix.
+    @PatchMapping("/interests")
+    public ResponseEntity<String> updateInterests(@AuthenticationPrincipal SecurityUser SecurityUser, @RequestBody InterestsDTO dto) {
+        System.out.println(SecurityUser.getUsername());
+        service.updateInterests(SecurityUser.getUsername(), dto);
+        return ResponseEntity.ok(null);    
+    }
 
-    /*
-     * @GetMapping("/profileData") // 1. És un GET, no un POST
-     * public ResponseEntity<ProfileDataDTO> getProfileData(
-     * // 2. El token ve en una capçalera, NO al body
-     * 
-     * @RequestHeader("Authorization") String authorizationHeader) {
-     * 
-     * // 3. Cridem al servei i ens retorna el DTO amb les dades
-     * ProfileDataDTO profileData = service.getProfileData(authorizationHeader);
-     * 
-     * // 4. Retornem el DTO amb un 200 OK. Angular rebrà el JSON.
-     * return ResponseEntity.ok(profileData);
-     * }
-     */
-
-    // TOCAR A PARTIR DE AQUI ABAJO:
-
+    @GetMapping("/profileData")
+    public ResponseEntity<ProfileDataDTO> getProfileData(@AuthenticationPrincipal SecurityUser SecurityUser) {
+        ProfileDataDTO profileData = service.getProfileData(SecurityUser.getUsername());
+        return ResponseEntity.ok(profileData);
+    }
 }
