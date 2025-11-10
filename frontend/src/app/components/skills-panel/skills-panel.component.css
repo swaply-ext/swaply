@@ -64,6 +64,10 @@
   border: none;
 }
 
+.skill-card span{
+  display: block;
+}
+
 .header {
   position: relative;
 }

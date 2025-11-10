@@ -8,6 +8,9 @@
   </div>
 
   <div *ngIf="open" class="interest-grid">
-    <button *ngFor="let interest of interests" class="interest-card">{{ interest }}</button>
+    <button *ngFor="let interest of interests" class="interest-card">
+      <span>{{ interest.name}}</span>
+      <span>{{ interest.level }}</span>
+    </button>
   </div>
 </div>

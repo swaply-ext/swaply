@@ -8,6 +8,9 @@
   </div>
 
   <div *ngIf="open" class="skills-grid">
-    <button *ngFor="let skill of skills" class="skill-card">{{ skill }}</button>
+    <button *ngFor="let skill of skills" class="skill-card">
+      <span>{{ skill.name}}</span>
+      <span>{{ skill.level }}</span>
+    </button>
   </div>
 </div>

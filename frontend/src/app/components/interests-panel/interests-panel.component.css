@@ -65,6 +65,10 @@
   border: none;
 }
 
+.interest-card span{
+  display: block;
+}
+
 .header {
   position: relative;
 }
