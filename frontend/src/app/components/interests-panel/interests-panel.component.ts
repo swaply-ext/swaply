@@ -1,4 +1,4 @@
-import { Component, OnChanges, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -21,8 +21,6 @@ export class InterestsPanelComponent {
 
   constructor(private router: Router) { }
 
-  ngOnChanges(): void {
-  }
 
   togglePanel() {
     this.open = !this.open;

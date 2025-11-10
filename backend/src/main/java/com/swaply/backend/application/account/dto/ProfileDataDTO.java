@@ -12,12 +12,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProfileDataDTO {
-    private String fullName;
+    private String name;
+    private String surname;
     private String username;
     private String location;
     private String description;
     private List<Skills> interests;
     private List<Skills>skills;
+    private String profilePhotoUrl;
 
 }
 

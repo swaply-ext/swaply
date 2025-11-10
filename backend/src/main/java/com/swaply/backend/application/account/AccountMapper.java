@@ -21,8 +21,8 @@ public interface AccountMapper {
     UserDTO fromInterestsDTO(InterestsDTO dto);
 
     @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE)
-    ProfileDataDTO fromUserDTO(UserDTO dto);
-  
+    ProfileDataDTO profileDatafromUserDTO(UserDTO dto);
+
     @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE)
     UserDTO fromPersonalInfoDTO(PersonalInfoDTO dto);
 }

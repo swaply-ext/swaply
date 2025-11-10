@@ -43,6 +43,6 @@ public class AccountService /* implements UserRepository */ {
 
     public ProfileDataDTO getProfileData(String userId) {
         UserDTO userDTO = userService.getUserByID(userId);
-        return mapper.fromUserDTO(userDTO);
+        return mapper.profileDatafromUserDTO(userDTO);
     }
 }

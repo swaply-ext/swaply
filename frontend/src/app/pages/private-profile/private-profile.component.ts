@@ -10,6 +10,14 @@ interface Skill {
   name: string;
   level: string;
 }
+
+interface ProfileData {
+  fullName: string;
+  username: string;
+  location: string;
+  description: string;
+  profilePhotoUrl: string;
+}
 @Component({
   selector: 'app-private-profile',
   standalone: true,
@@ -25,10 +33,11 @@ interface Skill {
 })
 export class PrivateProfileComponent implements OnInit {
 
-  public isPublic: boolean = true;
-  public interests: Array<object> = [];
+  public isPublic: boolean = false;
+  public interests: Array<Skill> = [];
   public skills: Array<Skill> = [];
   private levels: string[] = ['low', 'mid', 'high'];
+  public profileData: ProfileData = {} as ProfileData;
 
   constructor(private accountService: AccountService) { }
 
@@ -38,23 +47,35 @@ export class PrivateProfileComponent implements OnInit {
 
   getProfileDataFromBackend(): void {
     this.accountService.getProfileData().subscribe({
-      next: (data) => {
+      next: (user) => {
         // console.log('Datos recibidos del backend:', data);
-        this.splitAndSendData(data);
+        this.splitAndSendUser(user);
       },
       error: (err) => {
         console.error('Error al obtener datos del perfil:', err);
       }
     });
   }
-  
-  splitAndSendData(data: any): void {
-    console.log(data);
-    this.interests = this.levelToString(data.interests);
-    this.skills = this.levelToString(data.skills);
+
+  splitAndSendUser(user: any): void {
+    this.interests = this.levelToString(user.interests);
+    this.skills = this.levelToString(user.skills);
+    this.mapProfileData(user);
+    console.log('Intereses mapeados:', this.profileData);
   }
-  
-  levelToString(skills: Array<Skill>): Array<Skill>{
+
+  mapProfileData(user: any): void {
+
+    this.profileData = {
+      fullName: `${user.name} ${user.surname}`,
+      username: user.username,
+      location: user.location,
+      description: user.description,
+      profilePhotoUrl: user.profilePhotoUrl
+    };
+  }
+
+  levelToString(skills: Array<Skill>): Array<Skill> {
     skills.forEach(skill => {
       skill.level = this.levels[parseInt(skill.level) - 1];
     });

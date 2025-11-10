@@ -1,7 +1,14 @@
-import { Component, Input } from '@angular/core';
+import { Component,OnChanges, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router'; // <--- Afegeix Router
 
+interface ProfileData {
+  fullName: string;
+  username: string;
+  location: string;
+  description: string;
+  profilePhotoUrl: string;
+}
 @Component({
   selector: 'app-profile-info',
   standalone: true,
@@ -11,12 +18,9 @@ import { Router, RouterModule } from '@angular/router'; // <--- Afegeix Router
 })
 export class ProfileInfoComponent {
   @Input() isPublic: boolean = false;
+  @Input() profileData: ProfileData = {} as ProfileData;
 
-  fullName = 'Juan Pérez';
-  username = 'juanperez123';
-  ubicacion = 'Madrid, España';
-  description = 'ipsum dolor sit amet...';
-  avatarUrl = 'https://upload.wikimedia.org/wikipedia/commons/7/77/Alberto_Chicote-RakutenBolsa_%28derivative%29.jpg';
-
-  constructor(private router: Router) {} // <--- Injecció de Router
+  ngOnChanges(): void {
+    console.log('ProfileData changed:', this.profileData);
+  }
 }

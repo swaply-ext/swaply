@@ -1,11 +1,11 @@
 <div class="skills-panel-container">
-  <div class="header">
+  <header>
     <button class="toggle-btn" (click)="togglePanel()">
       {{ open ? '▲' : '▼' }}
     </button>
     <h1>Habilidades</h1>
     <button *ngIf="!isPublic" class="add-btn-circle" (click)="goToSkills()">+</button>
-  </div>
+  </header>
 
   <div *ngIf="open" class="skills-grid">
     <button *ngFor="let skill of skills" class="skill-card">
