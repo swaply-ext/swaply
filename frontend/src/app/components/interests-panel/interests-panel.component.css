@@ -8,17 +8,22 @@
   color: #fff;
 }
 
-.header {
+header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 1rem;
   gap: 1rem;
+  position: relative;
 }
 
-.header h1 {
+
+header h1 {
   margin: 0;
   font-size: 1.5rem;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .toggle-btn {
@@ -27,6 +32,11 @@
   font-size: 1.5rem;
   cursor: pointer;
   color: var(--principal-color-2);
+}
+
+.toggle-btn:hover {
+  color: #21867a;
+  transform: scale(1.1);
 }
 
 .add-btn-circle {
@@ -51,26 +61,26 @@
 
 .interest-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-  gap: 0.5rem;
-}
+  align-items: center;
+  grid-template-columns: repeat(2, 1fr);
+  grid-column-gap: 2vw;
+  grid-row-gap: 2vw;
+  margin-left: 2vw;
+  margin-right: 2vw;
 
+}
 .interest-card {
-  padding: 0.6rem;
-  background-color: #bfbfbf;
-  border-radius: 6px;
+  background-color: #22607bc5;
+  border-radius: 15px;
   text-align: center;
+  width: 30vh;
+  height: 30vh;
+  height: 100px;
   font-weight: 500;
-  color: #000;
+  color: #ffffff;
   border: none;
 }
 
-.header {
-  position: relative;
-}
-
-.header h1 {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+.interest-card span {
+  display: block;
 }

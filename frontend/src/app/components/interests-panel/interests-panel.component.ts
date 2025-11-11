@@ -2,6 +2,10 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
+interface Skill {
+  name: string;
+  level: string;
+}
 @Component({
   selector: 'app-interests-panel',
   templateUrl: './interests-panel.component.html',
@@ -10,12 +14,13 @@ import { Router } from '@angular/router';
   imports: [CommonModule]
 })
 export class InterestsPanelComponent {
-  @Input() isPublic: boolean = false; // true si es vista pública
+  @Input() isPublic?: boolean;
+  @Input() interests: Array<Skill> = [];
 
   open = false;
-  interests = ['Cantar', 'Bailar', 'Programar', 'Dibujar', 'Cocinar'];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
+
 
   togglePanel() {
     this.open = !this.open;

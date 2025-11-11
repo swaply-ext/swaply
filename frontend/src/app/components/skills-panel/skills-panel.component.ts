@@ -1,6 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component, OnChanges, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+
+interface Skill {
+  name: string;
+  level: string;
+}
 
 @Component({
   selector: 'app-skills-panel',
@@ -10,12 +15,15 @@ import { Router } from '@angular/router';
   imports: [CommonModule]
 })
 export class SkillsPanelComponent {
-  @Input() isPublic: boolean = false; // true si es vista pública
+  @Input() isPublic?: boolean;
+  @Input() skills: Array<Skill> = [];
 
   open = false;
-  skills = ['Cantar', 'Bailar', 'Programar', 'Dibujar', 'Cocinar'];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) { }
+
+  ngOnChanges(): void {
+  }
 
   togglePanel() {
     this.open = !this.open;

@@ -1,11 +1,11 @@
 <div class="profile-card">
-  <img [src]="avatarUrl" alt="User avatar" class="avatar" />
+  <img [src]="profileData.profilePhotoUrl" alt="User avatar" class="avatar" />
 
   <div class="info">
-    <h2 class="name">{{ fullName }}</h2>
+    <h2 class="name">{{ profileData.fullName }}</h2>
 
     <div class="username-row">
-      <p class="username">{{ username }}</p>
+      <p class="username">{{ profileData.username }}</p>
 
       <!-- Condición: vista pública o privada -->
       <div class="icon-group" [class.public]="isPublic">
@@ -21,8 +21,8 @@
       </div>
     </div>
 
-    <p class="location">{{ ubicacion }}</p>
+    <p class="location">{{ profileData.location }}</p>
   </div>
 
-  <p class="description">{{ description }}</p>
+  <p class="description">{{ profileData.description }}</p>
 </div>

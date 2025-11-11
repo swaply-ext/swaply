@@ -8,16 +8,20 @@
   color: #fff;
 }
 
-.header {
+header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 1rem;
+  position: relative;
 }
 
-.header h1 {
+header h1 {
   margin: 0;
   font-size: 1.5rem;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .toggle-btn {
@@ -26,6 +30,11 @@
   font-size: 1.5rem;
   cursor: pointer;
   color: var(--principal-color-2);
+}
+
+.toggle-btn :hover {
+  background-color: #21867a;
+  transform: scale(1.1);
 }
 
 .add-btn-circle {
@@ -50,27 +59,26 @@
 
 .skills-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-  gap: 0.5rem;
+  align-items: center;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  padding: 2rem;
 }
 
 .skill-card {
-  padding: 0.6rem;
-  background-color: #bfbfbf;
-  border-radius: 6px;
+  background-color: #22607bc5;
+  border-radius: 15px;
   text-align: center;
+  /* height: 100px; */
+  aspect-ratio: 1/1;
   font-weight: 500;
-  color: #000;
+  color: #ffffff;
   border: none;
+  /* display: flex; */
+  align-items: center;
+  justify-content: center;
 }
 
-.header {
-  position: relative;
+.skill-card span {
+  display: block;
 }
-
-.header h1 {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
