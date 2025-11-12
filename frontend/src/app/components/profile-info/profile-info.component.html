@@ -8,8 +8,8 @@
       <p class="username">{{ username }}</p>
 
       <!-- Condición: vista pública o privada -->
-      <div class="icon-group" [class.public]="isPublic">
-        <ng-container *ngIf="isPublic; else privateIcons">
+      <div class="icon-group" [class.public]="isLoggedIn">
+        <ng-container *ngIf="!isLoggedIn; else privateIcons">
           <span class="material-icons">chat</span>
           <span class="material-icons">favorite</span>
           <span class="material-icons">share</span>

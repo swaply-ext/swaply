@@ -43,7 +43,6 @@ export class LoginFormComponent {
     this.showError = false;
     this.email = this.email.toLowerCase();
 
-    // Habria que cambiar el alert por algo mas bonito
     if (!this.accepted) {
       this.showError = true;
       return;
@@ -52,7 +51,7 @@ export class LoginFormComponent {
       this.showError = true;
       return;
     }
-    // Crea el objeto usuario con los datos del formulario
+
     const newUser: User = {
       email: this.email,
       password: this.password
@@ -72,40 +71,8 @@ export class LoginFormComponent {
     });
   }
 
-  // this.http.post('http://localhost:8081/api/auth/login', newUser, { responseType: 'text', observe: 'response' })
-  //   .subscribe({
-  //     next: (response: HttpResponse<Object>) => {
-
-  //       if (response.status == 200) {
-  //         console.log(response.status);
-  //         console.log("Login correcto");
-  //         console.log('Respuesta del backend:', response);
-  //         const token = response.body as string;
-  //         localStorage.setItem('authToken', token);
-  //         this.router.navigate(['/']);
-  //         console.log("Token recibido:", token);
-  //       }
-  //       else {
-  //         this.router.navigate(['/error-auth']);
-  //       }
-
-  //     },
-  //     error: err => {
-  //       if (err.status == 401) {
-  //         console.log(err.status);
-  //         console.log("Credenciales Incorrectas");
-
-  //       } else {
-  //         console.error('Error enviando login:', err);
-  //         // Error de conexión -> también /error-auth
-  //         this.router.navigate(['/error-auth']);
-  //       }
-
-  //     }
-  //   });
-
-
   register() {
     this.router.navigate(['/register']);
   }
 }
+

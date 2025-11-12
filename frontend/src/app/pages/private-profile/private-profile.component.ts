@@ -4,9 +4,7 @@ import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.compo
 import { ProfileInfoComponent } from "../../components/profile-info/profile-info.component";
 import { SkillsPanelComponent } from '../../components/skills-panel/skills-panel.component';
 import { InterestsPanelComponent } from '../../components/interests-panel/interests-panel.component';
-import { RouterLink } from '@angular/router';
 import { AccountService } from '../../services/account.service';
-import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-private-profile',
@@ -17,8 +15,6 @@ import { RouterOutlet } from '@angular/router';
     ProfileInfoComponent,
     SkillsPanelComponent,
     InterestsPanelComponent,
-    RouterLink,
-    RouterOutlet
   ],
   templateUrl: './private-profile.component.html',
   styleUrls: ['./private-profile.component.css']

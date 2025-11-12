@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router'; // <--- Afegeix Router
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-profile-info',
@@ -10,7 +11,6 @@ import { Router, RouterModule } from '@angular/router'; // <--- Afegeix Router
   styleUrls: ['./profile-info.component.css']
 })
 export class ProfileInfoComponent {
-  @Input() isPublic: boolean = false;
 
   fullName = 'Juan Pérez';
   username = 'juanperez123';
@@ -18,5 +18,8 @@ export class ProfileInfoComponent {
   description = 'ipsum dolor sit amet...';
   avatarUrl = 'https://upload.wikimedia.org/wikipedia/commons/7/77/Alberto_Chicote-RakutenBolsa_%28derivative%29.jpg';
 
-  constructor(private router: Router) {} // <--- Injecció de Router
+  constructor(private router: Router, private authService: AuthService) {} // <--- Injecció de Router
+  get isLoggedIn(): boolean{
+    return this.authService.isLoggedIn();
+  }
 }

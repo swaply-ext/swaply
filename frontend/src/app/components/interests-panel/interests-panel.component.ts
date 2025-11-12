@@ -10,7 +10,6 @@ import { Router } from '@angular/router';
   imports: [CommonModule]
 })
 export class InterestsPanelComponent {
-  @Input() isPublic: boolean = false; // true si es vista pública
 
   open = false;
   interests = ['Cantar', 'Bailar', 'Programar', 'Dibujar', 'Cocinar'];

@@ -12,6 +12,7 @@ export class AuthService {
   isLoggedIn = signal<boolean>(!!localStorage.getItem('authToken'));
 
   login(credentials: any) {
+    console.log(this.isLoggedIn())
     return this.http.post('http://localhost:8081/api/auth/login', credentials, {
       responseType: 'text',
       observe: 'response'
@@ -31,4 +32,5 @@ logout() {
       localStorage.removeItem('authToken');
       this.isLoggedIn.set(false);
   }
+
 }

@@ -4,7 +4,7 @@
       {{ open ? '▲' : '▼' }}
     </button>
     <h1>Habilidades</h1>
-    <button *ngIf="!isPublic" class="add-btn-circle" (click)="goToSkills()">+</button>
+    <button class="add-btn-circle" (click)="goToSkills()">+</button>
   </div>
 
   <div *ngIf="open" class="skills-grid">
