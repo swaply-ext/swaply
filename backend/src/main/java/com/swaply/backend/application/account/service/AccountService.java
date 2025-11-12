@@ -45,4 +45,9 @@ public class AccountService /* implements UserRepository */ {
         UserDTO userDTO = userService.getUserByID(userId);
         return mapper.profileDatafromUserDTO(userDTO);
     }
+
+    public void UpdateProfileData(String userId, ProfileDataDTO dto) {
+            UserDTO userDto = mapper.fromProfileDataDTO(dto);
+            userService.updateUser(userId, userDto);
+    }
 }
