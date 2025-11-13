@@ -4,9 +4,16 @@ import com.swaply.backend.application.account.dto.PersonalInfoDTO;
 import com.swaply.backend.application.account.dto.ProfileDataDTO;
 import com.swaply.backend.application.account.dto.SkillsDTO;
 import com.swaply.backend.application.account.dto.InterestsDTO;
+import com.swaply.backend.shared.UserCRUD.SkillsRepository;
 import com.swaply.backend.shared.UserCRUD.UserService;
+import com.swaply.backend.shared.UserCRUD.Model.Skills;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.application.account.AccountMapper;
+
+import java.text.Normalizer;
+import java.util.List;
+import java.util.regex.Pattern;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -15,14 +22,16 @@ public class AccountService /* implements UserRepository */ {
 
     private final UserService userService;
     private final AccountMapper mapper;
+    private final SkillsRepository skillsRepository;
 
     @Value("${frontend.reset-password-url}")
     private String resetPasswordBaseUrl;
 
     public AccountService(UserService userService,
-            AccountMapper mapper) {
+            AccountMapper mapper, SkillsRepository skillsRepository) {
         this.userService = userService;
         this.mapper = mapper;
+        this.skillsRepository = skillsRepository;
     }
 
     public void UpdatePersonalInfo(String userId, PersonalInfoDTO dto) {
@@ -49,5 +58,21 @@ public class AccountService /* implements UserRepository */ {
     public void updateProfileData(String userId, ProfileDataDTO dto) {
             UserDTO userDto = mapper.fromProfileDataDTO(dto);
             userService.updateUser(userId, userDto);
+    }
+
+    private String normalizeString(String input) {
+        if (input == null) return "";
+        String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
+        // Elimina las marcas de acentos
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        return pattern.matcher(normalized).replaceAll("").toLowerCase();
+    }
+
+    public List<Skills> searchSkills(String query) {
+        if (query == null || query.trim().isEmpty()) {
+            return List.of();
+        }
+        String cleanQuery = normalizeString(query);
+        return skillsRepository.searchSkillsCustom(cleanQuery);
     }
 }

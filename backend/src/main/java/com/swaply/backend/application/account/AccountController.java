@@ -1,6 +1,8 @@
 package com.swaply.backend.application.account;
 
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -12,6 +14,7 @@ import com.swaply.backend.application.account.dto.SkillsDTO;
 import com.swaply.backend.application.account.dto.InterestsDTO;
 import com.swaply.backend.application.account.service.AccountService;
 import com.swaply.backend.config.security.SecurityUser;
+import com.swaply.backend.shared.UserCRUD.Model.Skills;
 
 
 @RestController
@@ -58,5 +61,11 @@ public class AccountController {
     public ResponseEntity<Boolean> updateProfileData(@AuthenticationPrincipal SecurityUser SecurityUser, @RequestBody ProfileDataDTO dto) {
         service.updateProfileData(SecurityUser.getUsername(), dto);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
+    }
+
+    @GetMapping("/searchSkills")
+    public ResponseEntity<List<Skills>> searchSkills(@RequestParam String query) {
+        List<Skills> results = service.searchSkills(query);
+        return ResponseEntity.ok(results);
     }
 }
