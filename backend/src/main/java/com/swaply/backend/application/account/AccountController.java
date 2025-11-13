@@ -53,4 +53,10 @@ public class AccountController {
         ProfileDataDTO profileData = service.getProfileData(SecurityUser.getUsername());
         return ResponseEntity.ok(profileData);
     }
+
+    @PatchMapping("/changeData")
+    public ResponseEntity<Boolean> updateProfileData(@AuthenticationPrincipal SecurityUser SecurityUser, @RequestBody ProfileDataDTO dto) {
+        service.updateProfileData(SecurityUser.getUsername(), dto);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
+    }
 }
