@@ -18,7 +18,7 @@ public interface AccountRepository extends CosmosRepository<Skills, String> {
 
 
 
-    default List<SkillSearchDTO> findSkillsbyConataining(String query) {
+    default List<SkillSearchDTO> findSkillsbyContaining(String query) {
         return this.findByTypeAndIdContaining(skillType, query);
     }
 }

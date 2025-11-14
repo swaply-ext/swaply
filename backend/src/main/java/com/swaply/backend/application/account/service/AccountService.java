@@ -74,6 +74,6 @@ public class AccountService /* implements UserRepository */ {
             return List.of();
         }
         String cleanQuery = normalizeString(query);
-        return repository.findSkillsbyConataining( cleanQuery);
+        return repository.findSkillsbyContaining(cleanQuery);
     }
 }
