@@ -1,6 +1,8 @@
 package com.swaply.backend.application.account;
 
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -8,10 +10,12 @@ import org.springframework.web.bind.annotation.*;
 
 import com.swaply.backend.application.account.dto.PersonalInfoDTO;
 import com.swaply.backend.application.account.dto.ProfileDataDTO;
+import com.swaply.backend.application.account.dto.SkillSearchDTO;
 import com.swaply.backend.application.account.dto.SkillsDTO;
 import com.swaply.backend.application.account.dto.InterestsDTO;
 import com.swaply.backend.application.account.service.AccountService;
 import com.swaply.backend.config.security.SecurityUser;
+
 
 
 @RestController
@@ -58,5 +62,11 @@ public class AccountController {
     public ResponseEntity<Boolean> updateProfileData(@AuthenticationPrincipal SecurityUser SecurityUser, @RequestBody ProfileDataDTO dto) {
         service.updateProfileData(SecurityUser.getUsername(), dto);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
+    }
+
+    @GetMapping("/skills")
+    public ResponseEntity<List<SkillSearchDTO>> searchSkills(@RequestParam(required = false) String query) {
+        List<SkillSearchDTO> results = service.searchSkills(query);
+        return ResponseEntity.ok(results);
     }
 }
