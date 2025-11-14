@@ -90,7 +90,7 @@ export class SkillSearchComponent {
       // Desactiva el spinner (incluso si ha fallado)
       tap(() => this.isLoading.set(false))
     ).subscribe(results => {
-      // 7. Actualiza los resulyados
+      // Actualiza los resulyados
       this.results.set(results);
     });
   }
