@@ -10,11 +10,12 @@ import org.springframework.web.bind.annotation.*;
 
 import com.swaply.backend.application.account.dto.PersonalInfoDTO;
 import com.swaply.backend.application.account.dto.ProfileDataDTO;
+import com.swaply.backend.application.account.dto.SkillSearchDTO;
 import com.swaply.backend.application.account.dto.SkillsDTO;
 import com.swaply.backend.application.account.dto.InterestsDTO;
 import com.swaply.backend.application.account.service.AccountService;
 import com.swaply.backend.config.security.SecurityUser;
-import com.swaply.backend.shared.UserCRUD.Model.Skills;
+
 
 
 @RestController
@@ -63,9 +64,9 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
     }
 
-    @GetMapping("/searchSkills")
-    public ResponseEntity<List<Skills>> searchSkills(@RequestParam String query) {
-        List<Skills> results = service.searchSkills(query);
+    @GetMapping("/skills")
+    public ResponseEntity<List<SkillSearchDTO>> searchSkills(@RequestParam(required = false) String query) {
+        List<SkillSearchDTO> results = service.searchSkills(query);
         return ResponseEntity.ok(results);
     }
 }

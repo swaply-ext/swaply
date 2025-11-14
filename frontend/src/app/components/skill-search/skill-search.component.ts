@@ -21,9 +21,7 @@ import {
 
 export interface Skill {
   id: string;
-  type: string;
   name: string;
-  normalizedName: string;
   level: number;
   category: string;
   icon: string;
@@ -35,7 +33,7 @@ export interface Skill {
 class SkillSearchService { 
   private http = inject(HttpClient);
   
-  private apiUrl = 'http://localhost:8081/api/account/searchSkills';
+  private apiUrl = 'http://localhost:8081/api/account/skills';
 
   searchSkills(query: string): Observable<Skill[]> {
     if (!query.trim()) {

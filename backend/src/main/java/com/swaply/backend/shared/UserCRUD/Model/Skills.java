@@ -18,11 +18,12 @@ public class Skills {
 
     @Id
     String id;
+    
+    @PartitionKey
     String type = "skills";
 
-    @PartitionKey
     String name;
-    String normalizedName; // este nombre es para que las busquedas no detecten mayusculas ni acentos
+    
     Integer level;
     String category;
     String icon;

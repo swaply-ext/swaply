@@ -2,13 +2,14 @@ package com.swaply.backend.application.account.service;
 
 import com.swaply.backend.application.account.dto.PersonalInfoDTO;
 import com.swaply.backend.application.account.dto.ProfileDataDTO;
+import com.swaply.backend.application.account.dto.SkillSearchDTO;
 import com.swaply.backend.application.account.dto.SkillsDTO;
 import com.swaply.backend.application.account.dto.InterestsDTO;
-import com.swaply.backend.shared.UserCRUD.SkillsRepository;
 import com.swaply.backend.shared.UserCRUD.UserService;
-import com.swaply.backend.shared.UserCRUD.Model.Skills;
+
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.application.account.AccountMapper;
+import com.swaply.backend.application.account.AccountRepository;
 
 import java.text.Normalizer;
 import java.util.List;
@@ -22,16 +23,16 @@ public class AccountService /* implements UserRepository */ {
 
     private final UserService userService;
     private final AccountMapper mapper;
-    private final SkillsRepository skillsRepository;
+    private final AccountRepository repository;
 
     @Value("${frontend.reset-password-url}")
     private String resetPasswordBaseUrl;
 
     public AccountService(UserService userService,
-            AccountMapper mapper, SkillsRepository skillsRepository) {
+            AccountMapper mapper, AccountRepository repository) {
         this.userService = userService;
         this.mapper = mapper;
-        this.skillsRepository = skillsRepository;
+        this.repository = repository;
     }
 
     public void UpdatePersonalInfo(String userId, PersonalInfoDTO dto) {
@@ -68,11 +69,11 @@ public class AccountService /* implements UserRepository */ {
         return pattern.matcher(normalized).replaceAll("").toLowerCase();
     }
 
-    public List<Skills> searchSkills(String query) {
+    public List<SkillSearchDTO> searchSkills(String query) {
         if (query == null || query.trim().isEmpty()) {
             return List.of();
         }
         String cleanQuery = normalizeString(query);
-        return skillsRepository.searchSkillsCustom(cleanQuery);
+        return repository.findSkillsbyConataining( cleanQuery);
     }
 }
