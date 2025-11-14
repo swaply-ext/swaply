@@ -1,6 +1,6 @@
 import { Injectable, signal, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable, tap } from 'rxjs';
 
 
 @Injectable({
@@ -28,9 +28,16 @@ export class AuthService {
     );
   }
 
-logout() {
-      localStorage.removeItem('authToken');
-      this.isLoggedIn.set(false);
+  public autenticateUser(token: string): void {
+    localStorage.setItem('authToken', token);
+    this.isLoggedIn.set(true);
+  }
+
+
+
+  logout() {
+    localStorage.removeItem('authToken');
+    this.isLoggedIn.set(false);
   }
 
 }

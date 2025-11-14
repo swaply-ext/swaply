@@ -1,8 +1,11 @@
+import { AuthService } from './../../services/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { RegisterDataService } from '../../services/register-data.service';
+import { AuthGuard } from '../../services/auth-guard.service';
+import { Token } from '@angular/compiler';
 @Component({
   selector: 'app-email-verification',
   standalone: true,
@@ -22,7 +25,8 @@ export class EmailVerificationComponent implements OnInit {
     private location: Location,
     private router: Router,
     private http: HttpClient,
-    private registerDataService: RegisterDataService
+    private registerDataService: RegisterDataService,
+    private authService: AuthService
   ) { }
 
   ngOnInit() {
@@ -104,7 +108,7 @@ export class EmailVerificationComponent implements OnInit {
     this.registerDataService.setRegisterData({ token: response });
 
     // Guardar token en localStorage con la misma clave que usa el interceptor
-    localStorage.setItem('authToken', response);
+    this.authService.autenticateUser(response);
 
     // Redirigir al usuario
     this.router.navigate(['/confirmation']);

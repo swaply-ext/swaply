@@ -29,29 +29,29 @@ import { AuthGuard } from './services/auth-guard.service';
 // Creamos una ruta para la verificación de correo
 // Ahora usamos el componente real EmailVerificationComponent
 export const appRoutes: Routes = [
-  { path: 'skills', component: SkillsComponent , canActivate: [AuthGuard]}, // ruta para ver SkillsComponent
-  { path: 'interests', component: InterestsComponent, canActivate: [AuthGuard]}, // ruta para ver InterestsComponent
+  { path: 'skills', component: SkillsComponent, canActivate: [AuthGuard] }, // ruta para ver SkillsComponent
+  { path: 'interests', component: InterestsComponent, canActivate: [AuthGuard] }, // ruta para ver InterestsComponent
   { path: '', component: HomeComponent }, // ruta principal muestra el componente Home
   { path: 'register', component: RegisterFormComponent }, // ruta para el formulario de registro
   { path: 'verify', component: EmailVerificationComponent }, // ruta para la verificación de correo
   { path: 'login', component: LoginFormComponent }, // ruta para el login
   { path: 'recovery-password', component: RecoveryPasswordComponent }, // ruta para la recuperación de contraseña
-  { path: 'new-password', component: NewPasswordComponent }, // nueva ruta para cambiar contraseña
+  { path: 'new-password', component: NewPasswordComponent, canActivate: [AuthGuard] }, // nueva ruta para cambiar contraseña
   { path: 'personal-information', component: PersonalInformationComponent }, // ruta para información personal
   { path: 'confirmation', component: ConfirmationComponent }, // ruta para pantalla de confirmación antes de Home
-  { path: 'confirm-password', component: ConfirmPasswordComponent }, // ruta para pantalla de confirmación de cambio de contraseña
+  { path: 'confirm-password', component: ConfirmPasswordComponent, canActivate: [AuthGuard] }, // ruta para pantalla de confirmación de cambio de contraseña
   { path: 'error-auth', component: ErrorAuthComponent }, // ruta para pantalla de error de autenticación
   { path: 'navbar', component: AppNavbarComponent }, // ruta para el menú de navegación (temporal)
   { path: 'skills-panel', component: SkillsPanelComponent }, // ruta para el panel de habilidades
   { path: 'loading', component: LoadingScreenComponent }, // ruta para la pantalla de carga
   { path: 'interests-panel', component: InterestsPanelComponent }, // ruta para el panel de intereses
   { path: 'profile-info', component: ProfileInfoComponent }, // ruta para la información personal (temporal)
-  { path: 'profile-edit', component: ProfileComponent }, // ruta para el perfil de usuario
+  { path: 'profile-edit', component: ProfileComponent, canActivate: [AuthGuard] }, // ruta para el perfil de usuario
   { path: 'public-profile', component: PublicProfileComponent }, // ruta para el perfil público
   { path: 'recovery-email', component: RecoveryEmailComponent }, // ruta para la recuperación de correo
-  { path: 'pass-verification', component: PassVerificationComponent},
-  { path: 'side-menu', component: SideMenuComponent}, // ruta para el componente del menú lateral
-  { path: 'exit', component: ExitComponent},
+  { path: 'pass-verification', component: PassVerificationComponent },
+  { path: 'side-menu', component: SideMenuComponent }, // ruta para el componente del menú lateral
+  { path: 'exit', component: ExitComponent , canActivate: [AuthGuard]},
   { path: 'private-profile', component: PrivateProfileComponent },
   { path: '404', component: Error404Component },
   { path: '**', redirectTo: '/404', pathMatch: 'full' }

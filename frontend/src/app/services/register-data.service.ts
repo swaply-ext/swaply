@@ -29,7 +29,7 @@ export class RegisterDataService {
     this.registerData = {};
   }
 
-  // 🔹 Llama al backend para registrar inicialmente (verifica email y username)
+  // Llama al backend para registrar inicialmente (verifica email y username)
   initialRegister(data: RegisterUserDTO): Observable<any> {
     return this.http.post('http://localhost:8081/api/auth/register', data, {
       responseType: 'text',

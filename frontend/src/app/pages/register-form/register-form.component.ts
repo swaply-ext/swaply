@@ -100,7 +100,8 @@ export class RegisterFormComponent {
       return;
     }
 
-    // 🔹 Registro inicial (verifica email y username en backend)
+
+    // Registro inicial (verifica email y username en backend)
     const newUser = { username: this.username, email: this.email, password: this.password };
     this.registerDataService.initialRegister(newUser).subscribe({
       next: () => {
