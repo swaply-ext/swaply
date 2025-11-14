@@ -33,7 +33,6 @@ interface ProfileData {
 })
 export class PrivateProfileComponent implements OnInit {
 
-  public isPublic: boolean = false;
   public interests: Array<Skill> = [];
   public skills: Array<Skill> = [];
   private levels: string[] = ['low', 'mid', 'high'];

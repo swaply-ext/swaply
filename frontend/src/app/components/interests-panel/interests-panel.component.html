@@ -4,7 +4,7 @@
       {{ open ? '▲' : '▼' }}
     </button>
     <h1>Intereses</h1>
-    <button *ngIf="!isPublic" class="add-btn-circle" (click)="goToInterests()">+</button>
+    <button class="add-btn-circle" (click)="goToInterests()">+</button>
   </header>
 
   <div *ngIf="open" class="interest-grid">

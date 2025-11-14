@@ -6,11 +6,11 @@ import { RegisterFormComponent } from './pages/register-form/register-form.compo
 import { LoginFormComponent } from './pages/login-form/login-form.component';
 import { RecoveryPasswordComponent } from './pages/recovery-password/recovery-password.component';
 import { EmailVerificationComponent } from './pages/email-verification/email-verification.component';
-import { NewPasswordComponent } from './pages/new-password/new-password.component'; 
+import { NewPasswordComponent } from './pages/new-password/new-password.component';
 import { PersonalInformationComponent } from './pages/personal-information/personal-information.component'
-import { ConfirmationComponent } from './pages/confirmation/confirmation.component'; 
+import { ConfirmationComponent } from './pages/confirmation/confirmation.component';
 import { ConfirmPasswordComponent } from './pages/confirm-password/confirm-password.component';
-import { ErrorAuthComponent } from './pages/error-auth/error-auth.component'; 
+import { ErrorAuthComponent } from './pages/error-auth/error-auth.component';
 import { AppNavbarComponent } from './components/app-navbar/app-navbar.component'; //menu nav no es una pagina, esta provisional
 import { SkillsPanelComponent } from './components/skills-panel/skills-panel.component';
 import { LoadingScreenComponent } from './pages/loading-screen/loading-screen.component';
@@ -24,12 +24,13 @@ import { SideMenuComponent } from './components/side-menu/side-menu.component';
 import { ExitComponent } from './pages/exit/exit.component';
 import { Error404Component } from './pages/error-404/error-404.component';
 import { PrivateProfileComponent } from './pages/private-profile/private-profile.component';
+import { AuthGuard } from './services/auth-guard.service';
 
 // Creamos una ruta para la verificación de correo
 // Ahora usamos el componente real EmailVerificationComponent
 export const appRoutes: Routes = [
-  { path: 'skills', component: SkillsComponent }, // ruta para ver SkillsComponent
-  { path: 'interests', component: InterestsComponent }, // ruta para ver InterestsComponent
+  { path: 'skills', component: SkillsComponent, canActivate: [AuthGuard] }, // ruta para ver SkillsComponent
+  { path: 'interests', component: InterestsComponent, canActivate: [AuthGuard]  }, // ruta para ver InterestsComponent
   { path: '', component: HomeComponent }, // ruta principal muestra el componente Home
   { path: 'register', component: RegisterFormComponent }, // ruta para el formulario de registro
   { path: 'verify', component: EmailVerificationComponent }, // ruta para la verificación de correo
@@ -45,12 +46,12 @@ export const appRoutes: Routes = [
   { path: 'loading', component: LoadingScreenComponent }, // ruta para la pantalla de carga
   { path: 'interests-panel', component: InterestsPanelComponent }, // ruta para el panel de intereses
   { path: 'profile-info', component: ProfileInfoComponent }, // ruta para la información personal (temporal)
-  { path: 'profile-edit', component: ProfileComponent }, // ruta para el perfil de usuario
+  { path: 'profile-edit', component: ProfileComponent , canActivate: [AuthGuard] }, // ruta para el perfil de usuario
   { path: 'public-profile', component: PublicProfileComponent }, // ruta para el perfil público
   { path: 'recovery-email', component: RecoveryEmailComponent }, // ruta para la recuperación de correo
-  { path: 'pass-verification', component: PassVerificationComponent},
-  { path: 'side-menu', component: SideMenuComponent}, // ruta para el componente del menú lateral
-  { path: 'exit', component: ExitComponent},
+  { path: 'pass-verification', component: PassVerificationComponent },
+  { path: 'side-menu', component: SideMenuComponent }, // ruta para el componente del menú lateral
+  { path: 'exit', component: ExitComponent },
   { path: 'private-profile', component: PrivateProfileComponent },
   { path: '404', component: Error404Component },
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
