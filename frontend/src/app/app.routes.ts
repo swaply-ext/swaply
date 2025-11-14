@@ -36,10 +36,10 @@ export const appRoutes: Routes = [
   { path: 'verify', component: EmailVerificationComponent }, // ruta para la verificación de correo
   { path: 'login', component: LoginFormComponent }, // ruta para el login
   { path: 'recovery-password', component: RecoveryPasswordComponent }, // ruta para la recuperación de contraseña
-  { path: 'new-password', component: NewPasswordComponent, canActivate: [AuthGuard] }, // nueva ruta para cambiar contraseña
+  { path: 'new-password', component: NewPasswordComponent }, // nueva ruta para cambiar contraseña
   { path: 'personal-information', component: PersonalInformationComponent }, // ruta para información personal
   { path: 'confirmation', component: ConfirmationComponent }, // ruta para pantalla de confirmación antes de Home
-  { path: 'confirm-password', component: ConfirmPasswordComponent , canActivate: [AuthGuard]  }, // ruta para pantalla de confirmación de cambio de contraseña
+  { path: 'confirm-password', component: ConfirmPasswordComponent }, // ruta para pantalla de confirmación de cambio de contraseña
   { path: 'error-auth', component: ErrorAuthComponent }, // ruta para pantalla de error de autenticación
   { path: 'navbar', component: AppNavbarComponent }, // ruta para el menú de navegación (temporal)
   { path: 'skills-panel', component: SkillsPanelComponent }, // ruta para el panel de habilidades
