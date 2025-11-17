@@ -1,43 +1,47 @@
 import { Injectable, signal, inject } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpResponse } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
+import { SKIP_LOADING } from '../interceptors/loading.interceptor';
 
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class AuthService {
-    private http = inject(HttpClient);
+  private http = inject(HttpClient);
 
-    isLoggedIn = signal<boolean>(!!localStorage.getItem('authToken'));
+  isLoggedIn = signal<boolean>(!!localStorage.getItem('authToken'));
 
-    login(credentials: any) {
-        console.log(this.isLoggedIn())
-        return this.http.post('http://localhost:8081/api/auth/login', credentials, {
-            responseType: 'text',
-            observe: 'response'
-        }).pipe(
+  login(credentials: any) {
+    console.log(this.isLoggedIn())
+    return this.http.post('http://localhost:8081/api/auth/login', credentials, {
 
-            tap((response) => {
-                if (response.status === 200) {
-                    const token = response.body as string;
-                    localStorage.setItem('authToken', token);
-                    this.isLoggedIn.set(true);
-                }
-            })
-        );
-    }
+      // SALTAR PANTALLA DE CARGA
+      // context: new HttpContext().set(SKIP_LOADING, true),
+      responseType: 'text',
+      observe: 'response'
+    }).pipe(
 
-    public autenticateUser(token: string): void {
-        localStorage.setItem('authToken', token);
-        this.isLoggedIn.set(true);
-    }
+      tap((response) => {
+        if (response.status === 200) {
+          const token = response.body as string;
+          localStorage.setItem('authToken', token);
+          this.isLoggedIn.set(true);
+        }
+      })
+    );
+  }
+
+  public autenticateUser(token: string): void {
+    localStorage.setItem('authToken', token);
+    this.isLoggedIn.set(true);
+  }
 
 
 
-    logout() {
-        localStorage.removeItem('authToken');
-        this.isLoggedIn.set(false);
-    }
+  logout() {
+    localStorage.removeItem('authToken');
+    this.isLoggedIn.set(false);
+  }
 
 }
