@@ -16,7 +16,7 @@ import { SkillsPanelComponent } from './components/skills-panel/skills-panel.com
 import { LoadingScreenComponent } from './pages/loading-screen/loading-screen.component';
 import { InterestsPanelComponent } from './components/interests-panel/interests-panel.component';
 import { ProfileInfoComponent } from './components/profile-info/profile-info.component';
-import { ProfileComponent } from './pages/profile/profile.component';
+import { EditProfileComponent } from './pages/edit-profile/edit-profile.component';
 import { PublicProfileComponent } from './pages/public-profile/public-profile.component';
 import { RecoveryEmailComponent } from './pages/recovery-email/recovery-email.component';
 import { PassVerificationComponent } from './pages/pass-verification/pass-verification.component';
@@ -45,7 +45,7 @@ export const appRoutes: Routes = [
   { path: 'loading', component: LoadingScreenComponent }, // ruta para la pantalla de carga
   { path: 'interests-panel', component: InterestsPanelComponent }, // ruta para el panel de intereses
   { path: 'profile-info', component: ProfileInfoComponent }, // ruta para la información personal (temporal)
-  { path: 'profile-edit', component: ProfileComponent }, // ruta para el perfil de usuario
+  { path: 'profile-edit', component: EditProfileComponent }, // ruta para el perfil de usuario
   { path: 'public-profile', component: PublicProfileComponent }, // ruta para el perfil público
   { path: 'recovery-email', component: RecoveryEmailComponent }, // ruta para la recuperación de correo
   { path: 'pass-verification', component: PassVerificationComponent},

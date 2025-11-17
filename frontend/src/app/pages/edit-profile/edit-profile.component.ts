@@ -25,10 +25,10 @@ interface User {
     SideMenuComponent,
     SaveButtonComponent
   ],
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css'] 
+  templateUrl: './edit-profile.component.html',
+  styleUrls: ['./edit-profile.component.css'] 
 })
-export class ProfileComponent {
+export class EditProfileComponent {
   fullName = "";
   username = "";
   about = "";
