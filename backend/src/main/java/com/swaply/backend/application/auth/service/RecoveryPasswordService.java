@@ -52,7 +52,7 @@ public class RecoveryPasswordService {
             String newRawPassword = dto.getPassword(); //nueva pass en texto plano para comparar
             UserDTO currentUser = userService.getUserByID(userId); //obtenir la contraseña antigua para comparar
             String currentHashedPassword = currentUser.getPassword();
-            if (passwordService.match(newRawPassword, currentHashedPassword)) {
+            if (passwordService.match(newRawPassword, currentHashedPassword)) { //if que hace condiciona si son iguales o no
                 throw new NewPasswordMatchesOldException("La nueva contraseña no puede ser igual a la anterior.");
             }
             userService.updateUserPassword(userId, newRawPassword);
@@ -62,7 +62,7 @@ public class RecoveryPasswordService {
             UserDTO user = mapper.fromResetPasswordDTO(dto);
             userService.updateUser(userId, user);
             
-
+            //excepcion cuando coincide passwd
         } catch (NewPasswordMatchesOldException e) {
             System.out.println("Error al resetear la contraseña: " + e.getMessage());
             throw e;
