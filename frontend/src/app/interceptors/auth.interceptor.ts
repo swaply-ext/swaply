@@ -10,7 +10,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         Authorization: `Bearer ${token}`
       }
     });
-    console.log("Token enviado:", token);
     return next(newReq);
   }
 
