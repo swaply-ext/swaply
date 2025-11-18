@@ -66,4 +66,11 @@ public class AccountController {
         EditProfileDTO profileData = service.getEditProfileData(SecurityUser.getUsername());
         return ResponseEntity.ok(profileData);
     }
+
+    @PatchMapping("/editProfileData")
+    public ResponseEntity<Boolean> updateEditProfileData(@AuthenticationPrincipal SecurityUser SecurityUser, @RequestBody EditProfileDTO dto) {
+        service.updateEditProfileData(SecurityUser.getUsername(), dto);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
+    }
+
 }

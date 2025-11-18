@@ -6,7 +6,6 @@ import { SideMenuComponent } from '../../components/side-menu/side-menu.componen
 import { SaveButtonComponent } from '../../components/save-button/save-button.component';
 import { AccountService } from '../../services/account.service';
 
-
 interface ProfileData {
   fullName: string;
   username: string;
@@ -35,6 +34,7 @@ export class EditProfileComponent implements OnInit {
   public profileData: ProfileData = {} as ProfileData;
   constructor(private accountService: AccountService) { }
 
+  // Variables individuales para enlazar con el formulario
   fullName = "";
   username = "";
   description = "";
@@ -44,15 +44,13 @@ export class EditProfileComponent implements OnInit {
   email = "";
   profilePhotoUrl = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
 
-
   ngOnInit(): void {
     this.getProfileDataFromBackend();
   }
-
+  // Obtener datos del perfil desde el backend
   getProfileDataFromBackend(): void {
     this.accountService.getEditProfileData().subscribe({
       next: (user) => {
-        // console.log('Datos recibidos del backend:', data);
         this.splitAndSendUser(user);
         console.log('Datos del perfil actuales:', this.profileData);
       },
@@ -61,41 +59,38 @@ export class EditProfileComponent implements OnInit {
       }
     });
   }
+  // Dividir y asignar datos del usuario a las variables del componente
   splitAndSendUser(user: any): void {
-    // this.interests = this.levelToString(user.interests);
-    // this.skills = this.levelToString(user.skills);
     this.mapProfileData(user);
   }
-  
-
+  // Mapear datos del usuario a la estructura ProfileData
   mapProfileData(user: any): void {
-  this.profileData = {
-    fullName: `${user.name} ${user.surname}`,
-    username: user.username,
-    description: user.description,
-    location: user.location,
-    birthDate: user.birthDate ? new Date(user.birthDate) : null,
-    gender: user.gender,
-    email: user.email,
-    profilePhotoUrl: user.profilePhotoUrl
-  };
+    this.profileData = {
+      fullName: `${user.name} ${user.surname}`,
+      username: user.username,
+      description: user.description,
+      location: user.location,
+      birthDate: user.birthDate ? new Date(user.birthDate) : null,
+      gender: user.gender,
+      email: user.email,
+      profilePhotoUrl: user.profilePhotoUrl
+    };
 
-  // Asignar también a las variables individuales que usa el template
-  this.fullName = this.profileData.fullName;
-  this.username = this.profileData.username;
-  this.description = this.profileData.description;
-  this.location = this.profileData.location;
-  this.birthDate = this.profileData.birthDate;
-  this.gender = this.profileData.gender;
-  this.email = this.profileData.email;
-  this.profilePhotoUrl = this.profileData.profilePhotoUrl;
+    // Asignar también a las variables individuales que usa el template
+    this.fullName = this.profileData.fullName;
+    this.username = this.profileData.username;
+    this.description = this.profileData.description;
+    this.location = this.profileData.location;
+    this.birthDate = this.profileData.birthDate;
+    this.gender = this.profileData.gender;
+    this.email = this.profileData.email;
+    this.profilePhotoUrl = this.profileData.profilePhotoUrl;
   }
+  
   onBirthDateChange(event: string): void {
   this.birthDate = new Date(event);
   this.profileData.birthDate = this.birthDate;
   }
-
-
 
   save() {
 
@@ -103,6 +98,7 @@ export class EditProfileComponent implements OnInit {
       console.error('No se pudo actualizar el perfil: campos obligatorios incompletos.');
       return;
     }
+    //recoger los datos del formulario
     const updatedUser: ProfileData = {
       fullName: this.fullName,
       username: this.username,
@@ -113,18 +109,19 @@ export class EditProfileComponent implements OnInit {
       email: this.email,
       profilePhotoUrl: this.profilePhotoUrl
     };
-    
-    // Simulación de guardado
-    console.log('Guardando cambios del usuario:'
-      + '\nfullName: ' + this.fullName
-      + '\nusername: ' + this.username
-      + '\ndescription: ' + this.description
-      + '\nemail: ' + this.email
-      + '\nbirthDate: ' + this.birthDate
-      + '\nlocation: ' + this.location
-      + '\ngender: ' + this.gender
-    );
-    // Aquí iría la lógica para enviar los datos al backend
+    //llamar al servicio para actualizar los datos y sobrecribir los datos actuales
+    this.accountService.updateEditProfileData(updatedUser).subscribe({
+      next: (success) => {
+        if (success) {
+          console.log('Perfil actualizado con éxito.');
+        } else {
+          console.error('Error al actualizar el perfil: respuesta negativa del servidor.');
+        }
+      },
+      error: (err) => {
+        console.error('Error al actualizar el perfil:', err);
+      }
+    });
   }
 
 }
