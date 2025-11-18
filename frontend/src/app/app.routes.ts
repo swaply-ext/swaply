@@ -13,7 +13,7 @@ import { ConfirmPasswordComponent } from './pages/confirm-password/confirm-passw
 import { ErrorAuthComponent } from './pages/error-auth/error-auth.component';
 import { AppNavbarComponent } from './components/app-navbar/app-navbar.component'; //menu nav no es una pagina, esta provisional
 import { SkillsPanelComponent } from './components/skills-panel/skills-panel.component';
-import { LoadingScreenComponent } from './pages/loading-screen/loading-screen.component';
+import { LoadingScreenComponent } from './components/loading-screen/loading-screen.component';
 import { InterestsPanelComponent } from './components/interests-panel/interests-panel.component';
 import { ProfileInfoComponent } from './components/profile-info/profile-info.component';
 import { ProfileComponent } from './pages/profile/profile.component';
@@ -54,7 +54,7 @@ export const appRoutes: Routes = [
   { path: 'side-menu', component: SideMenuComponent }, // ruta para el componente del menú lateral
   { path: 'exit', component: ExitComponent },
   { path: 'private-profile', component: PrivateProfileComponent },
-  { path: 'search-skills', component: SkillSearchComponent }, //baara de busqueda componente
+  { path: 'search-skills', component: SkillSearchComponent }, //barra de busqueda componente
   { path: '404', component: Error404Component },
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
 ];
