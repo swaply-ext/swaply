@@ -33,7 +33,7 @@ export interface Skill {
 class SkillSearchService {
   private http = inject(HttpClient);
 
-  private apiUrl = 'http://localhost:8081/api/account/skills';
+  private apiUrl = 'http://localhost:8081/api/skills';
 
   searchSkills(query: string): Observable<Skill[]> {
     if (!query.trim()) {

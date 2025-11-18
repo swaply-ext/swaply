@@ -1,8 +1,5 @@
 package com.swaply.backend.application.account;
 
-
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -10,13 +7,9 @@ import org.springframework.web.bind.annotation.*;
 
 import com.swaply.backend.application.account.dto.PersonalInfoDTO;
 import com.swaply.backend.application.account.dto.ProfileDataDTO;
-import com.swaply.backend.application.account.dto.SkillSearchDTO;
 import com.swaply.backend.application.account.dto.SkillsDTO;
-import com.swaply.backend.application.account.dto.InterestsDTO;
 import com.swaply.backend.application.account.service.AccountService;
 import com.swaply.backend.config.security.SecurityUser;
-
-
 
 @RestController
 @RequestMapping("/api/account")
@@ -39,17 +32,19 @@ public class AccountController {
     }
 
     @PatchMapping("/skills")
-    public ResponseEntity<String> updateSkills(@AuthenticationPrincipal SecurityUser SecurityUser, @RequestBody SkillsDTO dto) {
+    public ResponseEntity<String> updateSkills(@AuthenticationPrincipal SecurityUser SecurityUser,
+            @RequestBody SkillsDTO dto) {
         System.out.println(SecurityUser.getUsername());
         service.updateSkills(SecurityUser.getUsername(), dto);
         return ResponseEntity.ok(null);
     }
 
     @PatchMapping("/interests")
-    public ResponseEntity<String> updateInterests(@AuthenticationPrincipal SecurityUser SecurityUser, @RequestBody InterestsDTO dto) {
+    public ResponseEntity<String> updateInterests(@AuthenticationPrincipal SecurityUser SecurityUser,
+            @RequestBody SkillsDTO dto) {
         System.out.println(SecurityUser.getUsername());
         service.updateInterests(SecurityUser.getUsername(), dto);
-        return ResponseEntity.ok(null);    
+        return ResponseEntity.ok(null);
     }
 
     @GetMapping("/profileData")
@@ -59,14 +54,10 @@ public class AccountController {
     }
 
     @PatchMapping("/changeData")
-    public ResponseEntity<Boolean> updateProfileData(@AuthenticationPrincipal SecurityUser SecurityUser, @RequestBody ProfileDataDTO dto) {
+    public ResponseEntity<Boolean> updateProfileData(@AuthenticationPrincipal SecurityUser SecurityUser,
+            @RequestBody ProfileDataDTO dto) {
         service.updateProfileData(SecurityUser.getUsername(), dto);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
     }
 
-    @GetMapping("/skills")
-    public ResponseEntity<List<SkillSearchDTO>> searchSkills(@RequestParam(required = false) String query) {
-        List<SkillSearchDTO> results = service.searchSkills(query);
-        return ResponseEntity.ok(results);
-    }
 }
