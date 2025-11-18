@@ -63,14 +63,4 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
     }
 
-    @GetMapping("/skillSearch")
-    public ResponseEntity<List<Skills>> searchSkills(@RequestParam(required = false) String query) {
-        List<Skills> results = service.searchSkills(query);
-        return ResponseEntity.ok(results);
-    }
-
-    @GetMapping("/skill/{id}")
-    public ResponseEntity<Skills> getSkill(@PathVariable String id) {
-        return ResponseEntity.ok(service.getSkill(id));
-    }
 }
