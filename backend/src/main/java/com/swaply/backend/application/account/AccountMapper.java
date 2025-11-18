@@ -2,11 +2,9 @@ package com.swaply.backend.application.account;
 
 import com.swaply.backend.application.account.dto.ProfileDataDTO;
 import com.swaply.backend.application.account.dto.SkillsDTO;
-import com.swaply.backend.application.account.dto.InterestsDTO;
 import com.swaply.backend.application.account.dto.PersonalInfoDTO;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.shared.UserCRUD.Model.Skills;
-import com.swaply.backend.shared.UserCRUD.Model.UserSkills;
 
 import org.mapstruct.*;
 
@@ -15,7 +13,7 @@ import org.mapstruct.*;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 
 public interface AccountMapper {
-    
+
     @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE)
     Skills entityToDTO(SkillsDTO skill);
 
@@ -23,7 +21,7 @@ public interface AccountMapper {
     UserDTO fromSkillsDTO(SkillsDTO dto);
 
     @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE)
-    UserDTO fromInterestsDTO(InterestsDTO dto);
+    UserDTO fromInterestsDTO(SkillsDTO dto);
 
     @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE)
     ProfileDataDTO profileDatafromUserDTO(UserDTO dto);

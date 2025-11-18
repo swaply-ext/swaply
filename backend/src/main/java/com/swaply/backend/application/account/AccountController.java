@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import com.swaply.backend.application.account.dto.PersonalInfoDTO;
 import com.swaply.backend.application.account.dto.ProfileDataDTO;
 import com.swaply.backend.application.account.dto.SkillsDTO;
-import com.swaply.backend.application.account.dto.InterestsDTO;
 import com.swaply.backend.application.account.service.AccountService;
 import com.swaply.backend.config.security.SecurityUser;
 import com.swaply.backend.shared.UserCRUD.Model.Skills;
@@ -46,7 +45,7 @@ public class AccountController {
     }
 
     @PatchMapping("/interests")
-    public ResponseEntity<String> updateInterests(@AuthenticationPrincipal SecurityUser SecurityUser, @RequestBody InterestsDTO dto) {
+    public ResponseEntity<String> updateInterests(@AuthenticationPrincipal SecurityUser SecurityUser, @RequestBody SkillsDTO dto) {
         System.out.println(SecurityUser.getUsername());
         service.updateInterests(SecurityUser.getUsername(), dto);
         return ResponseEntity.ok(null);    
