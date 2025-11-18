@@ -15,16 +15,22 @@ public interface SkillsRepository extends CosmosRepository<Skills, String> {
     String type = "skills";
     PartitionKey SKILL_PARTITION_KEY = new PartitionKey(type);
 
+    // Metodos propios de CosmosRepository sin (Derived Queries)
+
+    default Optional<Skills> getSkillsbyId(String id) {
+        return findById(id, SKILL_PARTITION_KEY);
+    }
+
+    // Derived Queries
+
     List<Skills> findByTypeAndIdContaining(String skillType, String query);
 
     List<Skills> findByType(String type);
 
+    // Metodos con Derived Queries para no tener que definir type cada vez
+
     default List<Skills> findSkillsbyContaining(String query) {
         return this.findByTypeAndIdContaining(type, query);
-    }
-
-    default Optional<Skills> getSkillsbyId(String id) {
-        return findById(id, SKILL_PARTITION_KEY);
     }
 
     default List<Skills> findAllSkills() {

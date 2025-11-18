@@ -4,8 +4,6 @@ import com.swaply.backend.application.account.dto.ProfileDataDTO;
 import com.swaply.backend.application.account.dto.SkillsDTO;
 import com.swaply.backend.application.account.dto.PersonalInfoDTO;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
-import com.swaply.backend.shared.UserCRUD.Model.Skills;
-
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring",
@@ -13,9 +11,6 @@ import org.mapstruct.*;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 
 public interface AccountMapper {
-
-    @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE)
-    Skills entityToDTO(SkillsDTO skill);
 
     @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE)
     UserDTO fromSkillsDTO(SkillsDTO dto);
