@@ -53,7 +53,7 @@ export const appRoutes: Routes = [
   { path: 'pass-verification', component: PassVerificationComponent },
   { path: 'side-menu', component: SideMenuComponent }, // ruta para el componente del menú lateral
   { path: 'exit', component: ExitComponent },
-  { path: 'private-profile', component: PrivateProfileComponent, canActivate: [AuthGuard] },
+  { path: 'myprofile', component: PrivateProfileComponent, canActivate: [AuthGuard] },
   { path: 'search-skills', component: SkillSearchComponent }, //barra de busqueda componente
   { path: '404', component: Error404Component },
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
