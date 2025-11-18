@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-import com.swaply.backend.shared.UserCRUD.Model.Skills;
+import com.swaply.backend.shared.UserCRUD.Model.UserSkills;
 
 import lombok.AllArgsConstructor;
 
@@ -13,5 +13,5 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class InterestsDTO {
-    private List<Skills> interests;
+    private List<UserSkills> interests;
 }

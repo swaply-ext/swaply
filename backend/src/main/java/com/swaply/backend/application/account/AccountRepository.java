@@ -1,12 +1,13 @@
 package com.swaply.backend.application.account;
 
+import com.azure.cosmos.models.PartitionKey;
 import com.azure.spring.data.cosmos.repository.CosmosRepository;
-import com.swaply.backend.application.account.dto.SkillSearchDTO;
 import com.swaply.backend.shared.UserCRUD.Model.Skills;
 
 
-import java.util.List;
 
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
@@ -14,11 +15,16 @@ import org.springframework.stereotype.Repository;
 public interface AccountRepository extends CosmosRepository<Skills, String> {
 
     String skillType = "skills";
-    List<SkillSearchDTO> findByTypeAndIdContaining(String type, String query);
+    PartitionKey SKILL_PARTITION_KEY = new PartitionKey(skillType);
+    List<Skills> findByTypeAndIdContaining(String skillType, String query);
 
 
 
-    default List<SkillSearchDTO> findSkillsbyContaining(String query) {
+    default List<Skills> findSkillsbyContaining(String query) {
         return this.findByTypeAndIdContaining(skillType, query);
+    }
+
+    default Optional<Skills> getSkillsbyId(String id) {
+        return findById(id, SKILL_PARTITION_KEY);
     }
 }

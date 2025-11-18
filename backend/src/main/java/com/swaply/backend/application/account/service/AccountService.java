@@ -2,12 +2,13 @@ package com.swaply.backend.application.account.service;
 
 import com.swaply.backend.application.account.dto.PersonalInfoDTO;
 import com.swaply.backend.application.account.dto.ProfileDataDTO;
-import com.swaply.backend.application.account.dto.SkillSearchDTO;
 import com.swaply.backend.application.account.dto.SkillsDTO;
 import com.swaply.backend.application.account.dto.InterestsDTO;
 import com.swaply.backend.shared.UserCRUD.UserService;
-
+import com.swaply.backend.shared.UserCRUD.Model.Skills;
+import com.swaply.backend.shared.UserCRUD.Model.UserSkills;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
+import com.swaply.backend.shared.UserCRUD.exception.UserNotFoundException;
 import com.swaply.backend.application.account.AccountMapper;
 import com.swaply.backend.application.account.AccountRepository;
 
@@ -69,11 +70,17 @@ public class AccountService /* implements UserRepository */ {
         return pattern.matcher(normalized).replaceAll("").toLowerCase();
     }
 
-    public List<SkillSearchDTO> searchSkills(String query) {
+    public List<Skills> searchSkills(String query) {
         if (query == null || query.trim().isEmpty()) {
             return List.of();
         }
         String cleanQuery = normalizeString(query);
         return repository.findSkillsbyContaining(cleanQuery);
+    }
+
+    public Skills getSkill(String id) {
+        Skills skill = repository.getSkillsbyId(id)
+                .orElseThrow(() -> new UserNotFoundException("Skill not found with id: " + id)); //Crear exception??
+        return skill;
     }
 }
