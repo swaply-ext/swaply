@@ -10,7 +10,7 @@
         <!-- IMAGEN DE PERFIL Y NOMBRES -->
         <div class="profile-row">
           <div class="profile-section image">
-            <img [src]="avatarUrl" alt="Imagen de perfil" class="profile-avatar">
+            <img [src]="profilePhotoUrl" alt="Imagen de perfil" class="profile-avatar">
           </div>
           <div class="profile-section names">
             <div class="name-field">
@@ -27,7 +27,7 @@
         <!-- SOBRE MI -->
         <div class="profile-section about">
           <label for="about">Sobre mí</label>
-          <textarea id="about" placeholder="Escribe algo sobre ti..." [(ngModel)]="about"></textarea>
+          <textarea id="about" placeholder="Escribe algo sobre ti..." [(ngModel)]="description"></textarea>
         </div>
 
         <!-- CORREO Y FECHA -->
@@ -39,7 +39,7 @@
 
           <div class="profile-section half">
             <label for="birthdate">Fecha de nacimiento</label>
-            <input id="birthdate" type="date" [(ngModel)]="birthdate">
+            <input id="birthdate" type="date" [ngModel]="birthDate | date:'yyyy-MM-dd'" (ngModelChange)="onBirthDateChange($event)" [value]="birthDate ? (birthDate | date:'yyyy-MM-dd') : ''">
           </div>
         </div>
 

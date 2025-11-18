@@ -17,4 +17,7 @@ export class AccountService {
   updateProfileData(data: any): Observable<boolean> {
     return this.http.patch<boolean>(`${this.apiUrl}/changeData`, data);
   }
+  getEditProfileData(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/editProfileData`);
+  }
 }

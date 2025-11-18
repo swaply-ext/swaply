@@ -1,6 +1,7 @@
 package com.swaply.backend.application.account;
 
 
+import com.swaply.backend.shared.UserCRUD.dto.EditProfileDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -58,5 +59,11 @@ public class AccountController {
     public ResponseEntity<Boolean> updateProfileData(@AuthenticationPrincipal SecurityUser SecurityUser, @RequestBody ProfileDataDTO dto) {
         service.updateProfileData(SecurityUser.getUsername(), dto);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
+    }
+
+    @GetMapping("/editProfileData")
+    public ResponseEntity<EditProfileDTO> getEditProfileData(@AuthenticationPrincipal SecurityUser SecurityUser) {
+        EditProfileDTO profileData = service.getEditProfileData(SecurityUser.getUsername());
+        return ResponseEntity.ok(profileData);
     }
 }

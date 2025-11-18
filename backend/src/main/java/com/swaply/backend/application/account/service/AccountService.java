@@ -5,6 +5,7 @@ import com.swaply.backend.application.account.dto.ProfileDataDTO;
 import com.swaply.backend.application.account.dto.SkillsDTO;
 import com.swaply.backend.application.account.dto.InterestsDTO;
 import com.swaply.backend.shared.UserCRUD.UserService;
+import com.swaply.backend.shared.UserCRUD.dto.EditProfileDTO;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.application.account.AccountMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,5 +50,10 @@ public class AccountService /* implements UserRepository */ {
     public void updateProfileData(String userId, ProfileDataDTO dto) {
             UserDTO userDto = mapper.fromProfileDataDTO(dto);
             userService.updateUser(userId, userDto);
+    }
+    
+    public EditProfileDTO getEditProfileData(String userId) {
+        UserDTO userDTO = userService.getUserByID(userId);
+        return mapper.editDatafromUserDTO(userDTO);
     }
 }
