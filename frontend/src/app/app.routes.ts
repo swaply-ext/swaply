@@ -31,7 +31,7 @@ import { AuthGuard } from './services/auth-guard.service';
 // Ahora usamos el componente real EmailVerificationComponent
 export const appRoutes: Routes = [
   { path: 'skills', component: SkillsComponent, canActivate: [AuthGuard] }, // ruta para ver SkillsComponent
-  { path: 'interests', component: InterestsComponent, canActivate: [AuthGuard]  }, // ruta para ver InterestsComponent
+  { path: 'interests', component: InterestsComponent, canActivate: [AuthGuard] }, // ruta para ver InterestsComponent
   { path: '', component: HomeComponent }, // ruta principal muestra el componente Home
   { path: 'register', component: RegisterFormComponent }, // ruta para el formulario de registro
   { path: 'verify', component: EmailVerificationComponent }, // ruta para la verificación de correo
@@ -47,13 +47,13 @@ export const appRoutes: Routes = [
   { path: 'loading', component: LoadingScreenComponent }, // ruta para la pantalla de carga
   { path: 'interests-panel', component: InterestsPanelComponent }, // ruta para el panel de intereses
   { path: 'profile-info', component: ProfileInfoComponent }, // ruta para la información personal (temporal)
-  { path: 'profile-edit', component: ProfileComponent , canActivate: [AuthGuard] }, // ruta para el perfil de usuario
+  { path: 'profile-edit', component: ProfileComponent, canActivate: [AuthGuard] }, // ruta para el perfil de usuario
   { path: 'public-profile', component: PublicProfileComponent }, // ruta para el perfil público
   { path: 'recovery-email', component: RecoveryEmailComponent }, // ruta para la recuperación de correo
   { path: 'pass-verification', component: PassVerificationComponent },
   { path: 'side-menu', component: SideMenuComponent }, // ruta para el componente del menú lateral
   { path: 'exit', component: ExitComponent },
-  { path: 'private-profile', component: PrivateProfileComponent },
+  { path: 'private-profile', component: PrivateProfileComponent, canActivate: [AuthGuard] },
   { path: 'search-skills', component: SkillSearchComponent }, //barra de busqueda componente
   { path: '404', component: Error404Component },
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
