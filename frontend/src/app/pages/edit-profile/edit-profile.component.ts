@@ -28,7 +28,7 @@ interface ProfileData {
     SaveButtonComponent
   ],
   templateUrl: './edit-profile.component.html',
-  styleUrls: ['./edit-profile.component.css'] 
+  styleUrls: ['./edit-profile.component.css']
 })
 export class EditProfileComponent implements OnInit {
   public profileData: ProfileData = {} as ProfileData;
@@ -43,6 +43,9 @@ export class EditProfileComponent implements OnInit {
   gender = "";
   email = "";
   profilePhotoUrl = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
+
+  // Variable única para mensajes de error personalizados por campo
+  errorMessages: { [key: string]: string } = {};
 
   ngOnInit(): void {
     this.getProfileDataFromBackend();
@@ -86,27 +89,111 @@ export class EditProfileComponent implements OnInit {
     this.email = this.profileData.email;
     this.profilePhotoUrl = this.profileData.profilePhotoUrl;
   }
-  
+
   onBirthDateChange(event: string): void {
-  this.birthDate = new Date(event);
-  this.profileData.birthDate = this.birthDate;
+    this.birthDate = new Date(event);
+    this.profileData.birthDate = this.birthDate;
   }
+  validate(): boolean {
+    // Validar campos obligatorios
+    if (!this.gender) this.errorMessages['gender'] = 'El género es obligatorio.';
 
+    // Validar fullName
+    if (!this.fullName.trim()) {
+      this.errorMessages['fullName'] = 'El nombre completo es obligatorio.';
+    } else {
+      delete this.errorMessages['fullName'];
+    }
+    // Validar username
+    if (!this.username.trim()) {
+      this.errorMessages['username'] = 'El nombre de usuario es obligatorio.';
+    } else if (this.validateUsernameFormat(this.username)) {
+      this.errorMessages['username'] = 'El nombre de usuario debe tener entre 3 y 30 caracteres, solo letras minúsculas, números, guiones y guiones bajos.';
+    } else {
+      delete this.errorMessages['username'];
+    }
+    // Validar email
+    if (!this.email.trim()) {
+      this.errorMessages['email'] = 'El correo electrónico es obligatorio.';
+    } else if (!this.validateEmail(this.email)) {
+      this.errorMessages['email'] = 'El formato debe ser: "ejempplo@ejemplo.com"';
+    } else {
+      delete this.errorMessages['email'];
+    }
+    // Validar location
+    if (!this.location) {
+      this.errorMessages['location'] = 'La ubicación es obligatoria.';
+    } else if (this.validateLocationFormat(this.location)) {
+      this.errorMessages['location'] = 'La ubicación debe tener entre 3 y 30 caracteres, solo letras y espacios.';
+    } else {
+      delete this.errorMessages['location'];
+    }
+    // Validar birthDate
+    if (!this.birthDate) {
+      this.errorMessages['birthDate'] = 'La fecha de nacimiento es obligatoria.';
+    } else if (!this.validateDateFormat(this.birthDate)) {
+      this.errorMessages['birthDate'] = 'La fecha de nacimiento no es válida.';
+    } else {
+      delete this.errorMessages['birthDate'];
+    }
+
+    //devolver si hay errores o no
+    if (Object.keys(this.errorMessages).length > 0) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+  private refreshPage() {
+    window.location.reload();
+  }
+  private validateEmail(email: string): boolean {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  }
+  private validateUsernameFormat(username: string): boolean {
+    const minLength = 3;
+    const maxLength = 30;
+    const requeriments = /^[a-z0-9_-]+$/
+
+    if (username.length < minLength) return true;
+    if (username.length > maxLength) return true;
+    if (!requeriments.test(username)) return true;
+    else return false;
+  }
+  private validateLocationFormat(location: string): boolean {
+    const minLength = 3;
+    const maxLength = 30;
+    const requeriments = /^[A-Za-z ]+$/
+
+    if (location.length < minLength) return true;
+    if (location.length > maxLength) return true;
+    if (!requeriments.test(location)) return true;
+    else return false;
+  }
+  private validateDateFormat(date: Date): boolean {
+    return !isNaN(date.getTime());
+  }
   save() {
+    // Resetear errores al inicio
+    this.errorMessages = {};
+    // Validar los campos del formulario
+    this.validate();
 
-    if (!this.fullName || !this.username || !this.birthDate || !this.location || !this.gender || !this.email) {
-      console.error('No se pudo actualizar el perfil: campos obligatorios incompletos.');
+    // Si hay errores, no continuar
+    if (Object.keys(this.errorMessages).length > 0) {
+      console.error('No se pudo actualizar el perfil: campos obligatorios incompletos o formatos inválidos.');
       return;
     }
     //recoger los datos del formulario
     const updatedUser: ProfileData = {
       fullName: this.fullName,
-      username: this.username,
+      username: this.username.toLowerCase(),
       description: this.description,
       birthDate: this.birthDate,
       location: this.location,
       gender: this.gender,
-      email: this.email,
+      email: this.email.toLowerCase(),
       profilePhotoUrl: this.profilePhotoUrl
     };
     //llamar al servicio para actualizar los datos y sobrecribir los datos actuales
@@ -122,6 +209,6 @@ export class EditProfileComponent implements OnInit {
         console.error('Error al actualizar el perfil:', err);
       }
     });
+    this.refreshPage();
   }
-
 }
