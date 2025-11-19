@@ -26,6 +26,7 @@ import { Error404Component } from './pages/error-404/error-404.component';
 import { PrivateProfileComponent } from './pages/private-profile/private-profile.component';
 import { SkillSearchComponent } from './components/skill-search/skill-search.component';
 import { AuthGuard } from './services/auth-guard.service';
+import { FilterSkillsComponent } from './components/filter-skills/filter-skills.component';
 import { EmailSentComponent } from './pages/email-sent/email-sent.component';
 
 // Creamos una ruta para la verificación de correo
@@ -55,8 +56,10 @@ export const appRoutes: Routes = [
   { path: 'side-menu', component: SideMenuComponent }, // ruta para el componente del menú lateral
   { path: 'exit', component: ExitComponent },
   { path: 'private-profile', component: PrivateProfileComponent },
-  { path: 'search-skills', component: SkillSearchComponent }, //barra de busqueda componente
+  { path: 'search-skills', component: SkillSearchComponent }, //baara de busqueda componente
+  { path: 'filter-skills', component: FilterSkillsComponent },
   { path: 'email-sent', component: EmailSentComponent },
   { path: '404', component: Error404Component },
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
+  
 ];
