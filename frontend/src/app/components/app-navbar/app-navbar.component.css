@@ -52,6 +52,7 @@
   color: #ffffff;
 }
 
+/* --- Estilos Premium --- */
 .nav-premium {
   color: #B89230;
   font-weight: 600;
@@ -62,11 +63,13 @@
   text-decoration: none;
 }
 
-.nav-premium svg {
-  width: 20px;
-  height: 20px;
+
+.premium-icon {
+  font-size: 27px;
+  color: #B89230;
 }
 
+/* --- Estilos Buscador --- */
 .nav-search {
   position: relative;
   flex-grow: 1;
@@ -76,7 +79,7 @@
 
 .nav-search input {
   width: 100%;
-  padding: 0.6rem 1rem 0.6rem 2.5rem;
+  padding: 0.6rem 1rem 0.6rem 2.8rem; 
   border-radius: 9999px;
   background-color: #0F2D37;
   color: #e5e7eb;
@@ -90,30 +93,39 @@
   border-color: #3CB57C;
 }
 
+
 .nav-search .search-icon {
   position: absolute;
   left: 0.8rem;
   top: 50%;
   transform: translateY(-50%);
   color: #6b7280;
-  width: 20px;
-  height: 20px;
+  font-size: 22px;
+  pointer-events: none;
+  user-select: none;
 }
 
-.nav-right svg {
-  width: 24px;
-  height: 24px;
+/* --- Estilos Iconos Derecha --- */
+
+.nav-icon {
+  font-size: 29px;
   color: #d1d5db;
   cursor: pointer;
   transition: color 0.2s, transform 0.2s;
+  user-select: none; 
 }
 
-.nav-right svg:hover {
+.nav-icon:hover {
   color: #ffffff;
   transform: scale(1.1);
 }
 
-/* Responsividad básica del nav original */
+
+.profile-icon {
+  font-size: 30px;
+}
+
+/* --- Responsividad --- */
 @media (max-width: 1024px) {
   .navbar {
     padding: 1rem;
