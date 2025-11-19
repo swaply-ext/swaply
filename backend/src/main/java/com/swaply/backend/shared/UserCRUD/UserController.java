@@ -58,5 +58,11 @@ public class UserController {
     //     return ResponseEntity.ok(service.getUserByEmail(email));
     // }
 
+    // obtener usuarios por ubicación
+    @GetMapping("/location/{location}")
+    public List<UserDTO> getUsersByLocation(@PathVariable String location) {
+        return service.getUsersByLocation(location);
+    }
+
 }
 //GetMapping de datos profile
