@@ -13,10 +13,10 @@ import { ConfirmPasswordComponent } from './pages/confirm-password/confirm-passw
 import { ErrorAuthComponent } from './pages/error-auth/error-auth.component';
 import { AppNavbarComponent } from './components/app-navbar/app-navbar.component'; //menu nav no es una pagina, esta provisional
 import { SkillsPanelComponent } from './components/skills-panel/skills-panel.component';
-import { LoadingScreenComponent } from './pages/loading-screen/loading-screen.component';
+import { LoadingScreenComponent } from './components/loading-screen/loading-screen.component';
 import { InterestsPanelComponent } from './components/interests-panel/interests-panel.component';
 import { ProfileInfoComponent } from './components/profile-info/profile-info.component';
-import { ProfileComponent } from './pages/profile/profile.component';
+import { EditProfileComponent } from './pages/edit-profile/edit-profile.component';
 import { PublicProfileComponent } from './pages/public-profile/public-profile.component';
 import { RecoveryEmailComponent } from './pages/recovery-email/recovery-email.component';
 import { PassVerificationComponent } from './pages/pass-verification/pass-verification.component';
@@ -27,6 +27,7 @@ import { PrivateProfileComponent } from './pages/private-profile/private-profile
 import { SkillSearchComponent } from './components/skill-search/skill-search.component';
 import { AuthGuard } from './services/auth-guard.service';
 import { FilterSkillsComponent } from './components/filter-skills/filter-skills.component';
+import { EmailSentComponent } from './pages/email-sent/email-sent.component';
 
 // Creamos una ruta para la verificación de correo
 // Ahora usamos el componente real EmailVerificationComponent
@@ -48,7 +49,7 @@ export const appRoutes: Routes = [
   { path: 'loading', component: LoadingScreenComponent }, // ruta para la pantalla de carga
   { path: 'interests-panel', component: InterestsPanelComponent }, // ruta para el panel de intereses
   { path: 'profile-info', component: ProfileInfoComponent }, // ruta para la información personal (temporal)
-  { path: 'profile-edit', component: ProfileComponent , canActivate: [AuthGuard] }, // ruta para el perfil de usuario
+  { path: 'profile-edit', component: EditProfileComponent , canActivate: [AuthGuard] }, // ruta para el perfil de usuario
   { path: 'public-profile', component: PublicProfileComponent }, // ruta para el perfil público
   { path: 'recovery-email', component: RecoveryEmailComponent }, // ruta para la recuperación de correo
   { path: 'pass-verification', component: PassVerificationComponent },
@@ -57,7 +58,8 @@ export const appRoutes: Routes = [
   { path: 'private-profile', component: PrivateProfileComponent },
   { path: 'search-skills', component: SkillSearchComponent }, //baara de busqueda componente
   { path: 'filter-skills', component: FilterSkillsComponent },
-  { path: '404', component: Error404Component }, 
+  { path: 'email-sent', component: EmailSentComponent },
+  { path: '404', component: Error404Component },
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
   
 ];

@@ -8,17 +8,20 @@ export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(Routes)]
 };*/
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { authInterceptor } from './interceptors/auth.interceptor';
 import { provideRouter } from '@angular/router';
 import { appRoutes } from './app.routes';
 import { importProvidersFrom } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
+import { authInterceptor } from './interceptors/auth.interceptor';
+import { loadingInterceptor } from './interceptors/loading.interceptor';
+
 export const appConfig = {
   providers: [
     importProvidersFrom(FormsModule),
     provideRouter(appRoutes),
-    provideHttpClient(withInterceptors([authInterceptor]))
+    provideHttpClient(withInterceptors([authInterceptor])),
+    provideHttpClient(withInterceptors([loadingInterceptor])),
   ]
 };
 

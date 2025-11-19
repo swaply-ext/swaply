@@ -12,3 +12,4 @@
 
 <app-cookies></app-cookies>
 <router-outlet></router-outlet>
+<app-loading-screen *ngIf="loadingService.isLoading$ | async"></app-loading-screen>
