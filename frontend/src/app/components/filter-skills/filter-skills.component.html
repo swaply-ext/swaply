@@ -1,4 +1,4 @@
-<!-- Botón pequeño -->
+<!-- Botón Filtrar -->
 <div class="filter-box" (click)="toggleFilter()">
   <div class="lines">
     <div class="line"></div>
@@ -8,26 +8,35 @@
   <span class="filter-text">Filtrar</span>
 </div>
 
-<!-- Contenedor desplegable -->
-<div class="filter-dropdown" *ngIf="isOpen">
+<!-- Dropdown -->
+<div class="filter-dropdown" *ngIf="isOpen()">
+  
   <div class="category" *ngFor="let cat of categories">
+
     <div class="category-header" (click)="toggleCategory(cat)">
       {{ cat.name }}
     </div>
+
     <div class="subcategory" *ngIf="cat.open">
       <label *ngFor="let sub of cat.subcategories">
-        <input type="checkbox" [(ngModel)]="sub.selected">
+        <input 
+          type="checkbox" 
+          [(ngModel)]="sub.selected" 
+          (change)="toggleSub(sub)"
+        >
         {{ sub.name }}
       </label>
     </div>
+
     <hr />
+
   </div>
+
 </div>
 
 <!-- Resultados -->
-<div class="filter-results" *ngIf="results.length > 0">
+<div class="filter-results" *ngIf="results().length > 0">
   <div *ngFor="let skill of results()">
-  {{ skill.name }}
-</div>
-
+    {{ skill.name }}
+  </div>
 </div>

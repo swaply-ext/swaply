@@ -122,9 +122,12 @@ export class FilterSkillsComponent {
   }
 
   toggleSub(sub: any) {
-    sub.selected = !sub.selected;
-    this.searchSubject.next(this.getSelectedIds());
-  }
+  sub.selected = !sub.selected;
+
+  const selected = this.getSelectedIds();
+  console.log('Skills seleccionadas:', selected); // <-- DEBUG
+  this.searchSubject.next(selected);
+}
 
   // Obtiene IDs seleccionados como cadena separada por comas
   private getSelectedIds(): string {

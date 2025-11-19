@@ -1,15 +1,19 @@
-/* Botón pequeño tipo hamburguesa + texto */
 .filter-box {
   display: flex;
   align-items: center;
-  background-color: #FFFFFF1C; /* fondo solicitado */
+  background-color: #FFFFFF1C;
   border-radius: 5px;
   padding: 4px 8px;
   width: fit-content;
   cursor: pointer;
+  transition: 0.2s;
 }
 
-/* Contenedor de las líneas */
+.filter-box:hover {
+  background-color: #ffffff2b;
+}
+
+/* Icono hamburguesa */
 .filter-box .lines {
   display: flex;
   flex-direction: column;
@@ -19,32 +23,31 @@
 }
 
 .filter-box .line {
-  width: 18px;
+  width: 15px;
   height: 2px;
-  background-color: white; /* líneas blancas */
+  background-color: #A19E9E;
   border-radius: 1px;
 }
 
-/* Texto "Filtrar" */
+/* Texto */
 .filter-box .filter-text {
-  color: #A19E9E; /* color solicitado */
+  color: #A19E9E;
   font-weight: bold;
   font-size: 13px;
 }
 
-/* Contenedor desplegable */
 .filter-dropdown {
-  width: 220px; /* ajustable */
+  width: 220px;
   border: 1px solid #FFFFFF1C;
   border-radius: 5px;
-  background-color: #FFFFFF1C; /* color solicitado */
+  background-color: #FFFFFF1C;
   margin-top: 4px;
   padding: 6px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-  color: #A19E9E; /* color de todo el texto */
+  color: #A19E9E;
+  backdrop-filter: blur(4px);
 }
 
-/* Categorías */
 .category {
   margin-bottom: 4px;
 }
@@ -53,7 +56,13 @@
   font-weight: bold;
   cursor: pointer;
   font-size: 13px;
-  color: #A19E9E; /* color solicitado */
+  color: #A19E9E;
+  padding: 3px 0;
+  transition: 0.2s;
+}
+
+.category-header:hover {
+  color: #ffffff;
 }
 
 .subcategory {
@@ -62,23 +71,55 @@
 }
 
 .subcategory label {
-  display: block;
-  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
   font-size: 13px;
   cursor: pointer;
-  color: #A19E9E; /* color solicitado */
+  color: #fff;
 }
 
-/* Rayitas separadoras */
+/* Oculta checkbox original */
+.subcategory input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  margin-right: 7px;
+  cursor: pointer;
+  background-color: transparent;
+  transition: 0.25s;
+  position: relative;
+}
+
+/* Círculo seleccionado */
+.subcategory input[type="checkbox"]:checked {
+  background-color: var(--principal-color-2);
+  border-color: #fff;
+}
+
+/* Puntito interno */
+.subcategory input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 6px;
+  height: 6px;
+  background: var(--principal-color-2);
+  border-radius: 50%;
+}
+
 hr {
   border: none;
-  border-top: 1px solid #ccc;
-  margin: 4px 0;
+  border-top: 1px solid #cccccc3a;
+  margin: 6px 0;
 }
 
-/* Resultados */
 .filter-results {
-  margin-top: 6px;
+  margin-top: 8px;
   font-size: 13px;
-  color: #A19E9E; /* color de los resultados */
+  color: #A19E9E;
 }
