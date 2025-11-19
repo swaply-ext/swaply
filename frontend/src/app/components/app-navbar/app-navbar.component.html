@@ -1,20 +1,47 @@
-<header class="categories navbar-header">
-  <nav>
-    <ul class="navbar-list">
-    <li><a class="navbar-btn" routerLink="/">Inicio</a></li>
-    <li><a class="navbar-btn" routerLink="/home">Comunidad</a></li>
-      <li><a class="navbar-btn" routerLink="/home">Contacto</a></li>
-      <li class="search-group">
-        <input class="search-input" type="text" placeholder="Buscar..." />
-        <button class="navbar-btn icon-btn" title="Buscar">
-          <span class="material-icons">search</span>
-        </button>
-      </li>
-      <li>
-        <a class="navbar-btn icon-btn" routerLink="/profile" title="Perfil">
-          <span class="material-icons">account_circle</span>
-        </a>
-      </li>
-    </ul>
-  </nav>
-</header>
+<nav class="navbar">
+  <div class="nav-left">
+    <a href="/">
+      <img src="assets/logo_swp_invert.png" alt="Swaply Logo" class="nav-logo-img">
+    </a>
+    <div class="nav-links">
+      <a href="#">Para Ti</a>
+      <a href="#">Comunidad</a>
+      <a href="#">Eventos</a>
+      <a href="#" class="nav-premium">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14" />
+        </svg>
+        Premium
+      </a>
+    </div>
+  </div>
+
+  <div class="nav-search">
+    <input type="text" placeholder="Busca un usuario, habilidad..." />
+    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"></circle>
+      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+    </svg>
+  </div>
+
+  <div class="nav-right">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+    </svg>
+    
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+      <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+    </svg>
+
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+      <circle cx="12" cy="7" r="4"></circle>
+    </svg>
+  </div>
+</nav>

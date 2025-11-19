@@ -1,15 +1,13 @@
 import { Component } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-app-navbar',
-  imports: [RouterModule],
+  selector: 'app-nav-bar',
   standalone: true,
+  imports: [CommonModule],
   templateUrl: './app-navbar.component.html',
-  styleUrl: './app-navbar.component.css'
+  styleUrls: ['./app-navbar.component.scss']
 })
-export class AppNavbarComponent {
-  isMenuOpen = false;
-   constructor(private router: Router) {}
-
+export class NavBarComponent {
+  // El componente está listo para recibir lógica futura si hace falta
 }
