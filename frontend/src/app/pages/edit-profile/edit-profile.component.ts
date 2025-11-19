@@ -131,7 +131,7 @@ export class EditProfileComponent implements OnInit {
     // Validar birthDate
     if (!this.birthDate) {
       this.errorMessages['birthDate'] = 'La fecha de nacimiento es obligatoria.';
-    } else if (!this.validateDateFormat(this.birthDate)) {
+    } else if (this.isFutureDate(this.birthDate) || this.isToday(this.birthDate)) {
       this.errorMessages['birthDate'] = 'La fecha de nacimiento no es válida.';
     } else {
       delete this.errorMessages['birthDate'];
@@ -171,9 +171,20 @@ export class EditProfileComponent implements OnInit {
     if (!requeriments.test(location)) return true;
     else return false;
   }
-  private validateDateFormat(date: Date): boolean {
-    return !isNaN(date.getTime());
+  private isToday(date: Date): boolean {
+    const today = new Date();
+    return (
+      date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
+    );
   }
+
+  private isFutureDate(date: Date): boolean {
+    const today = new Date();
+    return date > today;
+  }
+
   save() {
     // Resetear errores al inicio
     this.errorMessages = {};
