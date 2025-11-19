@@ -51,7 +51,6 @@ export class FilterSkillsComponent {
 
   isOpen = signal(false);
 
-  // Señales para resultados
   results = signal<Skill[]>([]);
   isLoading = signal(false);
 
