@@ -1,0 +1,20 @@
+<div class="search-container">
+  <div class="input-wrapper">
+    <input
+      type="text"
+      placeholder="Buscar habilidad..."
+      [(ngModel)]="searchTerm"
+      (ngModelChange)="onSearchTermChanged($event)"
+      aria-label="Buscar habilidades"
+    />
+    <div *ngIf="isLoading()" class="spinner"></div>
+  </div>
+  <ul class="results-list" *ngIf="results().length > 0">
+    <li *ngFor="let skill of results()">
+      {{ skill.name }}
+    </li>
+  </ul>
+  <div *ngIf="!isLoading() && results().length === 0 && searchTerm.length > 1" class="no-results">
+    No se encontraron resultados para "{{ searchTerm }}".
+  </div>
+</div>

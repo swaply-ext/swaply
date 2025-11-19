@@ -14,7 +14,6 @@ interface Skill {
   imports: [CommonModule]
 })
 export class InterestsPanelComponent {
-  @Input() isPublic?: boolean;
   @Input() interests: Array<Skill> = [];
 
   open = false;

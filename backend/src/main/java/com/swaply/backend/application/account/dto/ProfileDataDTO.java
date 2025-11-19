@@ -2,7 +2,7 @@ package com.swaply.backend.application.account.dto;
 
 import java.util.List;
 
-import com.swaply.backend.shared.UserCRUD.Model.Skills;
+import com.swaply.backend.shared.UserCRUD.Model.UserSkills;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,8 +17,8 @@ public class ProfileDataDTO {
     private String username;
     private String location;
     private String description;
-    private List<Skills> interests;
-    private List<Skills>skills;
+    private List<UserSkills> interests;
+    private List<UserSkills>skills;
     private String profilePhotoUrl;
 
 }
