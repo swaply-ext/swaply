@@ -13,7 +13,6 @@
   background-color: #ffffff2b;
 }
 
-/* Icono hamburguesa */
 .filter-box .lines {
   display: flex;
   flex-direction: column;
@@ -29,7 +28,6 @@
   border-radius: 1px;
 }
 
-/* Texto */
 .filter-box .filter-text {
   color: #A19E9E;
   font-weight: bold;
@@ -79,7 +77,6 @@
   color: #fff;
 }
 
-/* Oculta checkbox original */
 .subcategory input[type="checkbox"] {
   appearance: none;
   -webkit-appearance: none;
@@ -94,13 +91,11 @@
   position: relative;
 }
 
-/* Círculo seleccionado */
 .subcategory input[type="checkbox"]:checked {
   background-color: var(--principal-color-2);
   border-color: #fff;
 }
 
-/* Puntito interno */
 .subcategory input[type="checkbox"]:checked::after {
   content: "";
   position: absolute;
