@@ -1,0 +1,248 @@
+<div class="page-container">
+
+  <!-- Barra de Navegación Principal -->
+  <nav class="navbar">
+    <div class="nav-left">
+      <!-- LOGO ACTUALIZADO: Envuelto en un link <a> -->
+      <a href="/">
+        <img src="assets/logo_swp_invert.png" alt="Swaply Logo" class="nav-logo-img">
+      </a>
+      <div class="nav-links">
+        <a href="#">Para Ti</a>
+        <a href="#">Comunidad</a>
+        <a href="#">Eventos</a>
+        <a href="#" class="nav-premium">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14" />
+          </svg>
+          Premium
+        </a>
+      </div>
+    </div>
+
+    <!-- Búsqueda Central -->
+    <div class="nav-search">
+      <input type="text" placeholder="Busca un usuario, habilidad..." />
+      <!-- Icono Lupa -->
+      <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+    </div>
+
+    <!-- Iconos Derecha -->
+    <div class="nav-right">
+      <!-- Icono Chat -->
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+      </svg>
+      <!-- Icono Campana  -->
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+      </svg>
+      <!-- Icono Perfil -->
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>
+    </div>
+  </nav>
+
+  <!-- Contenido Principal -->
+  <main class="main-content">
+
+    <!-- Sección Próximo Intercambio -->
+    <section class="interchange-section">
+      <h2 class="section-title">Próximo Intercambio</h2>
+
+      <!-- Lógica de *ngIf  -->
+      <ng-container *ngIf="hasIntercambio(); else noIntercambio">
+        <!-- Estado con Intercambio Programado  -->
+        <div class="interchange-box interchange-populated-wrapper">
+          <div class="interchange-populated">
+
+            <!-- Habilidad para Aprender -->
+            <div class="interchange-half">
+              <h3>Tu próxima habilidad para aprender</h3>
+              <div class="interchange-skill-card">
+                <img [src]="skillToLearn().img" alt="{{ skillToLearn().titulo }}">
+                <div>
+                  <h4>{{ skillToLearn().titulo }}</h4>
+                  <p>{{ skillToLearn().hora }}</p>
+                  <p class="skill-location">{{ skillToLearn().via }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Icono Flecha Intercambio -->
+            <svg class="arrow-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 8H4"></path>
+              <path d="M8 4L4 8l4 4"></path>
+              <path d="M4 16h16"></path>
+              <path d="M16 12l4 4-4 4"></path>
+            </svg>
+
+            <!-- Habilidad para Enseñar  -->
+            <div class="interchange-half">
+              <h3>Tu próxima habilidad para enseñar</h3>
+              <div class="interchange-skill-card">
+                <img [src]="skillToTeach().img" alt="{{ skillToTeach().titulo }}">
+                <div>
+                  <h4>{{ skillToTeach().titulo }}</h4>
+                  <p>{{ skillToTeach().hora }}</p>
+                  <p class="skill-location">{{ skillToTeach().via }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- LÓGICA DE CONFIRMACIÓN ACTUALIZADA CON ICONOS -->
+          <div class="confirmation-area">
+            <ng-container *ngIf="isConfirmed(); else showButton">
+              <!-- Estado "Confirmada" (caja oscura) -->
+              <span class="status-text">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+                Asistencia confirmada
+              </span>
+            </ng-container>
+            <ng-template #showButton>
+              <!-- Botón "Confirmar" (botón verde) -->
+              <button class="btn-confirm" (click)="toggleConfirmation()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+                Confirmar asistencia
+              </button>
+            </ng-template>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Template para el *ngIf (el "else") -->
+      <ng-template #noIntercambio>
+        <!-- Estado Sin Intercambio Programado (como en la imagen original) -->
+        <div class="interchange-box interchange-empty">
+          <p>No tienes ningún intercambio programado.</p>
+          <!-- Botón deshabilitado -->
+          <div class="confirmation-area disabled">
+            <span class="status-text">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+              Asistencia confirmada
+            </span>
+          </div>
+        </div>
+      </ng-template>
+
+
+      <!-- Botones de Acción (Debajo de la caja, como en el diseño original) -->
+      <div class="action-buttons">
+        <button class="btn btn-primary">Buscar Intercambio</button>
+        <button class="btn btn-secondary">Crear Intercambio</button>
+      </div>
+
+      <!-- Botón de palanca para demostración -->
+      <button (click)="toggleIntercambio()" class="demo-toggle">
+        (Demo: Cambiar estado)
+      </button>
+    </section>
+
+    <!-- Sección Intercambios Cerca de Ti -->
+    <section class="nearby-section">
+      <!-- Cabecera de la sección -->
+      <div class="nearby-header">
+        <h2 class="section-title">Intercambios Cerca de Ti</h2>
+        <div class="nearby-actions">
+          <!-- Búsqueda de Intercambios -->
+          <div class="nearby-search">
+            <input type="text" placeholder="Buscar habilidad..." />
+            <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </div>
+          <!-- Botón Filtros -->
+          <button class="btn-filter">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="4" y1="21" x2="4" y2="14"></line>
+              <line x1="4" y1="10" x2="4" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12" y2="3"></line>
+              <line x1="20" y1="21" x2="20" y2="16"></line>
+              <line x1="20" y1="12" x2="20" y2="3"></line>
+              <line x1="1" y1="14" x2="7" y2="14"></line>
+              <line x1="9" y1="8" x2="15" y2="8"></line>
+              <line x1="17" y1="16" x2="23" y2="16"></line>
+            </svg>
+            Filtrar
+          </button>
+        </div>
+      </div>
+
+      <!-- Cuadrícula de Intercambios -->
+      <div class="card-grid">
+
+        <!-- Usamos *ngFor para iterar sobre los ejemplos -->
+        <div class="skill-card" *ngFor="let intercambio of intercambiosCerca()">
+          <img [src]="intercambio.img" [alt]="intercambio.titulo" class="card-image">
+          <div class="card-content">
+            <!-- Info de Usuario -->
+            <div class="card-user-info">
+              <!-- AQUÍ SE USA LA RUTA ACTUALIZADA -->
+              <img [src]="intercambio.userImg" [alt]="intercambio.user" class="user-avatar">
+              <span>{{ intercambio.user }}</span>
+            </div>
+            <!-- Detalles del Intercambio -->
+            <h3>{{ intercambio.titulo }}</h3>
+            <div class="card-footer">
+              <span class="location">
+                <!-- Icono Ubicación -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                {{ intercambio.distancia }}
+              </span>
+              <span class="rating">
+                <!-- Icono Estrella -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"
+                  stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon
+                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                  </polygon>
+                </svg>
+                {{ intercambio.rating }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Botón Ver Más -->
+      <div class="see-more-button">
+        <button class="btn btn-primary">Ver Más</button>
+      </div>
+
+    </section>
+  </main>
+</div>

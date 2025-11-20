@@ -1,0 +1,635 @@
+/* --- Importación de Fuente y Estilos Globales --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+
+/* :host es un selector especial de Angular.
+  Aquí le decimos que el fondo degradado aplique al componente.
+*/
+:host {
+    display: block;
+    background: linear-gradient(to bottom, #012534 0%, #00839E 100%);
+    min-height: 100vh;
+}
+
+.page-container {
+    font-family: 'Inter', sans-serif;
+    color: #e5e7eb;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button {
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s, opacity 0.3s;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.main-content {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.section-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 1.5rem;
+}
+
+/* --- 1. Barra de Navegación (Navbar) --- */
+.navbar {
+    background-color: #143F4C;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    flex-wrap: wrap;
+}
+
+.nav-left,
+.nav-right,
+.nav-links {
+    display: flex;
+    align-items: center;
+}
+
+.nav-left {
+    gap: 5rem;
+}
+
+.nav-links {
+    gap: 4rem;
+}
+
+.nav-right {
+    gap: 1.5rem;
+}
+
+.nav-logo-img {
+    height: 44px;
+    width: auto;
+}
+
+.nav-links a:not(.nav-premium) {
+    color: #d1d5db;
+    transition: color 0.2s;
+    font-size: 1.20rem;
+    font-weight: 500;
+}
+
+.nav-links a:hover {
+    color: #ffffff;
+}
+
+.nav-premium {
+    color: #B89230;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 1.20rem;
+}
+
+.nav-premium svg {
+    width: 20px;
+    height: 20px;
+}
+
+.nav-search {
+    position: relative;
+    flex-grow: 1;
+    max-width: 1000px;
+    margin: 0 2rem;
+}
+
+.nav-search input {
+    width: 100%;
+    padding: 0.6rem 1rem 0.6rem 2.5rem;
+    border-radius: 9999px;
+    background-color: #0F2D37;
+    color: #e5e7eb;
+    border: 1px solid transparent;
+    outline: none;
+    font-size: 0.9rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.nav-search input:focus {
+    border-color: #3CB57C;
+}
+
+.nav-search .search-icon {
+    position: absolute;
+    left: 0.8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6b7280;
+    width: 20px;
+    height: 20px;
+}
+
+.nav-right svg {
+    width: 24px;
+    height: 24px;
+    color: #d1d5db;
+    cursor: pointer;
+    transition: color 0.2s, transform 0.2s;
+}
+
+.nav-right svg:hover {
+    color: #ffffff;
+    transform: scale(1.1);
+}
+
+/* --- 2. Sección Próximo Intercambio --- */
+.interchange-section {
+    margin-bottom: 2rem;
+}
+
+.interchange-box {
+    background-color: #143F4C;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border: 2px solid #3CB57C;
+}
+
+.interchange-empty {
+    text-align: center;
+    padding-top: 3rem;
+    padding-bottom: 2rem;
+}
+
+.interchange-empty p {
+    font-size: 1.125rem;
+    color: #d1d5db;
+    margin-bottom: 1.5rem;
+}
+
+.interchange-populated {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.interchange-populated-wrapper {
+    padding-bottom: 1rem;
+}
+
+.interchange-populated .arrow-icon {
+    font-family: 'Material Symbols Outlined';
+    font-weight: 600;
+    font-size: 60px;
+    color: #3CB57C;
+    flex-shrink: 0;
+    margin: 1rem 2rem;
+    user-select: none;
+}.interchange-populated .arrow-icon {
+
+    width: 60px;
+    height: 60px; 
+    color: #3CB57C;
+    flex-shrink: 0;
+    margin: 1rem 2rem;
+    user-select: none;
+}
+
+
+.interchange-half {
+    text-align: left;
+    flex-grow: 1;
+    max-width: 45%;
+}
+
+.interchange-half h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    padding-left: 0.5rem;
+}
+
+.interchange-skill-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background-color: #1F4E5D;
+    padding: 1rem;
+    border-radius: 0.5rem;
+}
+
+.interchange-skill-card img {
+    width: 100px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 0.375rem;
+}
+
+.interchange-skill-card div {
+    text-align: left;
+}
+
+.interchange-skill-card h4 {
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.interchange-skill-card p {
+    font-size: 0.9rem;
+    color: #d1d5db;
+    margin: 0.25rem 0;
+}
+
+.interchange-skill-card .skill-location {
+    color: #3CB57C;
+    font-weight: 500;
+}
+
+.confirmation-area {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    min-height: 50px;
+}
+
+.interchange-empty .confirmation-area {
+    border-top: none;
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.confirmation-area.disabled .status-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    background-color: #4b5563;
+    cursor: not-allowed;
+    color: #9ca3af;
+    border: 1px solid #4b5563;
+    padding: 0.6rem 1.25rem;
+    border-radius: 9999px;
+}
+
+.status-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #3CB57C;
+    padding: 0.6rem 1.25rem;
+    background-color: #0F2D37;
+    border: 1px solid #3CB57C;
+    border-radius: 9999px;
+}
+
+.btn-confirm {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background-color: #3CB57C;
+    color: #ffffff;
+    padding: 0.6rem 1.25rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.btn-confirm:hover:not(:disabled) {
+    background-color: #319b69;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    justify-content: center;
+}
+
+.action-buttons .btn {
+    padding: 1rem 0;
+    width: 250px;
+    border-radius: 9999px;
+    font-size: 1.125rem;
+    font-weight: 700;
+    transition: background-color 0.3s, transform 0.1s, opacity 0.1s, border-color 0.3s;
+}
+
+.action-buttons .btn:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+}
+
+.btn-primary {
+    background-color: #3CB57C;
+    color: #ffffff;
+    border: 2px solid #3CB57C;
+}
+
+.btn-primary:hover {
+    background-color: #319b69;
+}
+
+.btn-secondary {
+    background-color: transparent;
+    color: #ffffff;
+    border: 2px solid #3CB57C;
+}
+
+.btn-secondary:hover {
+    background-color: #1f4e5d;
+}
+
+.demo-toggle {
+    background: none;
+    border: none;
+    color: #22d3ee;
+    text-decoration: underline;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
+
+/* --- 3. Sección Intercambios Cerca de Ti --- */
+.nearby-section {
+    margin-top: 3rem;
+}
+
+.nearby-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.nearby-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.nearby-search {
+    position: relative;
+}
+
+.nearby-search input {
+    width: 280px;
+    padding: 0.6rem 1rem 0.6rem 2.5rem;
+    border-radius: 9999px;
+    background-color: #143F4C;
+    color: #e5e7eb;
+    border: 1px solid transparent;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.nearby-search input:focus {
+    border-color: #3CB57C;
+    box-shadow: 0 0 10px 0px rgba(60, 181, 124, 0.3);
+}
+
+.nearby-search .search-icon {
+    position: absolute;
+    left: 0.8rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6b7280;
+    width: 20px;
+    height: 20px;
+}
+
+.btn-filter {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #143F4C;
+    color: #e5e7eb;
+    padding: 0.6rem 1rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    transition: background-color 0.3s, filter 0.3s;
+}
+
+.btn-filter:hover {
+    background-color: #1F4E5D;
+    filter: brightness(1.2);
+}
+
+.btn-filter svg {
+    width: 20px;
+    height: 20px;
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+}
+
+.skill-card {
+    background-color: #1F4E5D;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.skill-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 15px 0px rgba(60, 181, 124, 0.4);
+}
+
+.card-image {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+}
+
+.card-content {
+    padding: 1rem;
+}
+
+.card-user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.card-user-info span {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #d1d5db;
+}
+
+.card-content h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: #9ca3af;
+}
+
+.card-footer span {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.card-footer .rating {
+    color: #F59E0B;
+}
+
+.card-footer svg {
+    width: 16px;
+    height: 16px;
+}
+
+.see-more-button {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.see-more-button .btn-primary {
+    padding: 1rem 0;
+    width: 250px;
+    transition: background-color 0.3s, transform 0.1s, opacity 0.1s, border-color 0.3s;
+}
+
+.see-more-button .btn-primary:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+}
+
+
+/* --- 4. Media Queries (Responsividad) --- */
+
+@media (max-width: 1024px) {
+    .card-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .interchange-populated {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .interchange-populated .arrow-icon {
+        transform: rotate(90deg);
+    }
+
+    .navbar {
+        padding: 1rem;
+    }
+
+    .nav-search {
+        margin: 0 1rem;
+
+    }
+
+    .nav-links {
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+
+    .nav-search {
+        max-width: 100%;
+        width: 100%;
+        margin: 0;
+        order: 3;
+    }
+
+    .nav-left {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .nav-right {
+        order: 2;
+        justify-content: flex-end;
+    }
+
+    .nav-links {
+        display: none;
+    }
+
+    .main-content {
+        padding: 1rem;
+    }
+
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .action-buttons .btn {
+        width: 100%;
+        max-width: 350px;
+    }
+
+    .nearby-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+
+    .nearby-search input {
+        width: 100%;
+    }
+}
