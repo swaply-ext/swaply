@@ -1,0 +1,125 @@
+<div class="page-container">
+
+  <app-app-navbar></app-app-navbar>
+  
+  <main class="main-content">
+
+    <section class="interchange-section">
+      <h2 class="section-title">Próximo Intercambio</h2>
+
+      <ng-container *ngIf="hasIntercambio(); else noIntercambio">
+        <div class="interchange-box interchange-populated-wrapper">
+          <div class="interchange-populated">
+
+            <div class="interchange-half">
+              <h3>Tu próxima habilidad para aprender</h3>
+              <div class="interchange-skill-card">
+                <img [src]="skillToLearn().img" alt="{{ skillToLearn().titulo }}">
+                <div>
+                  <h4>{{ skillToLearn().titulo }}</h4>
+                  <p>{{ skillToLearn().hora }}</p>
+                  <p class="skill-location">{{ skillToLearn().via }}</p>
+                </div>
+              </div>
+            </div>
+
+            <span class="material-symbols-outlined arrow-icon">swap_horiz</span>
+
+            <div class="interchange-half">
+              <h3>Tu próxima habilidad para enseñar</h3>
+              <div class="interchange-skill-card">
+                <img [src]="skillToTeach().img" alt="{{ skillToTeach().titulo }}">
+                <div>
+                  <h4>{{ skillToTeach().titulo }}</h4>
+                  <p>{{ skillToTeach().hora }}</p>
+                  <p class="skill-location">{{ skillToTeach().via }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="confirmation-area">
+            <ng-container *ngIf="isConfirmed(); else showButton">
+              <span class="status-text">
+                <span class="material-symbols-outlined">check_circle</span>
+                Asistencia confirmada
+              </span>
+            </ng-container>
+            <ng-template #showButton>
+              <button class="btn-confirm" (click)="toggleConfirmation()">
+                <span class="material-symbols-outlined">check_circle</span>
+                Confirmar asistencia
+              </button>
+            </ng-template>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #noIntercambio>
+        <div class="interchange-box interchange-empty">
+          <p>No tienes ningún intercambio programado.</p>
+          <div class="confirmation-area disabled">
+            <span class="status-text">
+              <span class="material-symbols-outlined">check_circle</span>
+              Asistencia confirmada
+            </span>
+          </div>
+        </div>
+      </ng-template>
+
+
+      <div class="action-buttons">
+        <button class="btn btn-primary">Buscar Intercambio</button>
+        <button class="btn btn-secondary">Crear Intercambio</button>
+      </div>
+
+      <button (click)="toggleIntercambio()" class="demo-toggle">
+        (Demo: Cambiar estado)
+      </button>
+    </section>
+
+    <section class="nearby-section">
+      <div class="nearby-header">
+        <h2 class="section-title">Intercambios Cerca de Ti</h2>
+        <div class="nearby-actions">
+          <div class="nearby-search">
+            <input type="text" placeholder="Buscar habilidad..." />
+            <span class="material-symbols-outlined search-icon">search</span>
+          </div>
+          <button class="btn-filter">
+            <span class="material-symbols-outlined">tune</span>
+            Filtrar
+          </button>
+        </div>
+      </div>
+
+      <div class="card-grid">
+        <div class="skill-card" *ngFor="let intercambio of intercambiosCerca()">
+          <img [src]="intercambio.img" [alt]="intercambio.titulo" class="card-image">
+          <div class="card-content">
+            <div class="card-user-info">
+              <img [src]="intercambio.userImg" [alt]="intercambio.user" class="user-avatar">
+              <span>{{ intercambio.user }}</span>
+            </div>
+            <h3>{{ intercambio.titulo }}</h3>
+            <div class="card-footer">
+              <span class="location">
+                <span class="material-symbols-outlined card-icon">location_on</span>
+                {{ intercambio.distancia }}
+              </span>
+              <span class="rating">
+                <span class="material-symbols-outlined card-icon">star</span>
+                {{ intercambio.rating }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="see-more-button">
+        <button class="btn btn-primary">Ver Más</button>
+      </div>
+
+    </section>
+  </main>
+</div>

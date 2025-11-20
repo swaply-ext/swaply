@@ -28,6 +28,7 @@ import { SkillSearchComponent } from './components/skill-search/skill-search.com
 import { AuthGuard } from './services/auth-guard.service';
 import { FilterSkillsComponent } from './components/filter-skills/filter-skills.component';
 import { EmailSentComponent } from './pages/email-sent/email-sent.component';
+import { HomePageComponent } from './pages/home-page/home-page.component';
 
 // Creamos una ruta para la verificación de correo
 // Ahora usamos el componente real EmailVerificationComponent
@@ -60,6 +61,7 @@ export const appRoutes: Routes = [
   { path: 'filter-skills', component: FilterSkillsComponent },
   { path: 'email-sent', component: EmailSentComponent },
   { path: '404', component: Error404Component },
+  { path: 'home-page', component: HomePageComponent },
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
   
 ];
