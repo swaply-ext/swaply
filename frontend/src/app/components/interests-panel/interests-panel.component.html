@@ -8,8 +8,8 @@
   </header>
 
   <div *ngIf="open" class="interest-grid">
-    <button *ngFor="let interest of interests" class="interest-card">
-      <span>{{ interest.name}}</span>
+    <button *ngFor="let interest of InterestsInput" class="interest-card">
+      <span>{{ interest.id}}</span>
       <span>{{ interest.level }}</span>
     </button>
   </div>

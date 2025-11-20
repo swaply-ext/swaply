@@ -2,9 +2,9 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
-interface Skill {
-  name: string;
-  level: string;
+interface SkillInput {
+  id: string;
+  level: number;
 }
 @Component({
   selector: 'app-interests-panel',
@@ -14,7 +14,7 @@ interface Skill {
   imports: [CommonModule]
 })
 export class InterestsPanelComponent {
-  @Input() interests: Array<Skill> = [];
+  @Input() InterestsInput: Array<SkillInput> = [];
 
   open = false;
 

@@ -8,7 +8,7 @@ import { AccountService } from '../../services/account.service';
 
 interface Skill {
   id: string;
-  level: string;
+  level: number;
 }
 
 interface ProfileData {

@@ -1,3 +1,4 @@
+import { SkillsService } from './../../services/skills.service';
 import { Component, OnChanges, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -6,14 +7,18 @@ import { Router } from '@angular/router';
 
 interface SkillInput {
   id: string;
-  level: string;
+  level: number;
 }
 
-interface Skills {
+interface SkillsModel {
   id: string;
   name: string;
   icon: string;
   category: string;
+}
+
+export interface SkillDisplay extends SkillsModel {
+  level: number;
 }
 
 @Component({
@@ -26,18 +31,30 @@ interface Skills {
 export class SkillsPanelComponent {
   @Input() SkillInput: Array<SkillInput> = [];
 
-skills = [
-  { name: 'OCIO DIGITAL', icon: '🖥️', level: 1, category: 'tech' },
-  { name: 'DIBUJO', icon: '🖌️', level: 1, category: 'art' },
-  { name: 'PADEL', icon: '🎾', level: 3, category: 'sport' }, // Nivel 3 será morado
-  { name: 'BATERÍA', icon: '🥁', level: 1, category: 'music' }
-];
+
+  skills: Array<SkillDisplay> = [];
+
 
   open = false;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private skillsService: SkillsService) { }
 
   ngOnChanges(): void {
+    if (this.SkillInput && this.SkillInput.length > 0) {
+      this.loadAllSkills();
+    }
+  }
+
+
+  loadAllSkills() {
+    this.skills = [];
+
+    this.SkillInput.forEach(input => {
+      this.skillsService.getSkillDisplay(input).subscribe({
+        next: (data) => this.skills.push(data),
+        error: (e) => console.error(e)
+      });
+    })
   }
 
   togglePanel() {
