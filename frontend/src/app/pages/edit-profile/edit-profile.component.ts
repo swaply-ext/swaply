@@ -54,7 +54,7 @@ export class EditProfileComponent implements OnInit {
   getProfileDataFromBackend(): void {
     this.accountService.getEditProfileData().subscribe({
       next: (user) => {
-        this.splitAndSendUser(user);
+        this.mapProfileData(user);
         console.log('Datos del perfil actuales:', this.profileData);
       },
       error: (err) => {
@@ -62,10 +62,7 @@ export class EditProfileComponent implements OnInit {
       }
     });
   }
-  // Dividir y asignar datos del usuario a las variables del componente
-  splitAndSendUser(user: any): void {
-    this.mapProfileData(user);
-  }
+  
   // Mapear datos del usuario a la estructura ProfileData
   mapProfileData(user: any): void {
     this.profileData = {
