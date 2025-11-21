@@ -70,7 +70,7 @@ export class EditProfileComponent implements OnInit {
   // Mapear datos del usuario a la estructura ProfileData
   mapProfileData(user: any): void {
     this.profileData = {
-      fullName: `${user.name} ${user.surname}`,
+      fullName: user.name,
       lastName: user.surname,
       username: user.username,
       description: user.description,
@@ -128,7 +128,6 @@ export class EditProfileComponent implements OnInit {
         console.error('Error al actualizar el perfil:', err);
       }
     });
-    this.refreshPage();
   }
   discard(){
     this.refreshPage();
