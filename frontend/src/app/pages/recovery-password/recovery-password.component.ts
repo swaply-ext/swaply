@@ -47,6 +47,9 @@ export class RecoveryPasswordComponent {
       next: response => {
         if (response.status == 200) {
           console.log('Código de recuperación enviado con éxito si existe');
+
+          this.router.navigate(['/link-sent-confirmation']);
+
         }
       },
         error: err => {
