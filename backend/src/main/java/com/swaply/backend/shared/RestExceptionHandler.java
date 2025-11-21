@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.swaply.backend.application.auth.exception.InvalidCredentialsException;
+import com.swaply.backend.application.auth.exception.NewPasswordMatchesOldException;
 import com.swaply.backend.application.auth.exception.UserAlreadyExistsException;
 import com.swaply.backend.shared.UserCRUD.exception.UserNotFoundException;
 
@@ -35,4 +36,9 @@ public class RestExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error inesperado: " + e.getMessage());
     }
+    @ExceptionHandler(NewPasswordMatchesOldException.class)
+    public ResponseEntity<String> handleNewPasswordMatchesOld(NewPasswordMatchesOldException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
+    
 }

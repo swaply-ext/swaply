@@ -186,6 +186,10 @@ app-profile-info {
   transition: border-color 0.2s ease, background 0.2s ease;
 }
 
+.profile-section option{
+  color: black;
+}
+
 .profile-section input:focus,
 .profile-section select:focus,
 .profile-section textarea:focus {
@@ -238,6 +242,22 @@ app-profile-info {
 .profile-section textarea:-ms-input-placeholder {
   color: rgba(255, 255, 255, 0.6);
 }
+
+/* === ESTILO ERRORES === */
+.error-message {
+  color: #ff4d4f;
+  font-size: 0.85rem;
+  margin-top: 5px;
+  padding-left: 5px;
+  text-align: left;
+}
+.input-error {
+  border: 2px solid #e53935 !important; /* rojo fuerte */
+  /* background-color: #fff5f5;             */
+  /* box-shadow: 0 0 0 3px rgba(229,57,53,0.08); */
+  /* outline: none; */
+}
+
 .profile-bottom-row {
   display: flex;
   width: 100%;

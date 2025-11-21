@@ -41,6 +41,10 @@ public interface UserRepository extends CosmosRepository<User, String> {
 
     boolean existsUserByTypeAndUsername(String type, String username);
 
+    List<User> findByTypeAndLocation(String type, String location);
+
+    boolean existsUserByTypeAndLocation(String type, String location);
+
     // Metodos con Derived Queries para no tener que definir type cada vez
 
     default List<User> findAllUsers() {
@@ -61,6 +65,14 @@ public interface UserRepository extends CosmosRepository<User, String> {
 
     default boolean existsUserByUsername(String username) {
         return existsUserByTypeAndUsername(type, username);
+    }
+
+    default List<User> findUserByLocation(String location) {
+        return findByTypeAndLocation(type, location);
+    }
+
+    default boolean existsUserByLocation(String location) {
+        return existsUserByTypeAndLocation (type, location);
     }
 
 }
