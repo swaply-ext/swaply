@@ -89,7 +89,12 @@ export class NewPasswordComponent implements OnInit {
         error: err => {
           console.error('Error al cambiar contraseña:', err);
           this.showError = true;
+          if (err.status === 400 && err.error) {
+            this.message = 'La contraseña no puede coincidir con las anteriores.';
+          }
+          else {
           this.message = 'Error de servidor. Intentalo de nuevo más tarde';
+          }
         }
       });
 

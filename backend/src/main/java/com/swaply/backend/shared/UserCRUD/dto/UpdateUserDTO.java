@@ -2,7 +2,7 @@ package com.swaply.backend.shared.UserCRUD.dto;
 
 import java.util.List;
 
-import com.swaply.backend.shared.UserCRUD.Model.Skills;
+import com.swaply.backend.shared.UserCRUD.Model.UserSkills;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,8 +20,8 @@ public class UpdateUserDTO {
     private String gender;
     private String description;
     private String phone;
-    private List<Skills> skills;
-    private List<Skills> interests;
+    private List<UserSkills> skills;
+    private List<UserSkills> interests;
     private boolean isVerified;
     private String profilePhotoUrl;
     private boolean isPremium;

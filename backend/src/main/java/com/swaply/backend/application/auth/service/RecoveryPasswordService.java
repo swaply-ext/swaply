@@ -2,6 +2,7 @@ package com.swaply.backend.application.auth.service;
 
 import com.swaply.backend.application.auth.AuthMapper;
 import com.swaply.backend.application.auth.dto.ResetPasswordDTO;
+import com.swaply.backend.application.auth.exception.NewPasswordMatchesOldException;
 import com.swaply.backend.shared.UserCRUD.UserService;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.shared.mail.MailService;
@@ -48,14 +49,25 @@ public class RecoveryPasswordService {
     public void resetPassword(ResetPasswordDTO dto) {
         try {
             String userId = jwtService.extractUserIdFromPasswordResetToken(dto.getToken());
+            String newRawPassword = dto.getPassword(); //nueva pass en texto plano para comparar
+            UserDTO currentUser = userService.getUserByID(userId); //obtenir la contraseña antigua para comparar
+            String currentHashedPassword = currentUser.getPassword();
+            if (passwordService.match(newRawPassword, currentHashedPassword)) { //if que hace condiciona si son iguales o no
+                throw new NewPasswordMatchesOldException("La nueva contraseña no puede ser igual a la anterior.");
+            }
+            userService.updateUserPassword(userId, newRawPassword);
             String newPassword = passwordService.hash(dto.getPassword());
             dto.setPassword(newPassword);
             System.out.println(dto.getPassword());
             UserDTO user = mapper.fromResetPasswordDTO(dto);
             userService.updateUser(userId, user);
             
-
-        } catch (Exception e) {
+            //excepcion cuando coincide passwd
+        } catch (NewPasswordMatchesOldException e) {
+            System.out.println("Error al resetear la contraseña: " + e.getMessage());
+            throw e;
+        }   
+        catch (Exception e) {
             // Hay que ver si creamos una exception aqui también
             System.out.println("Error al resetear la contraseña: " + e.getMessage());
             throw new RuntimeException("El enlace no es válido o ha expirado.", e);

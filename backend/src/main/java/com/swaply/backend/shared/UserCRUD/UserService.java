@@ -104,9 +104,14 @@ public class UserService {
     }
 
 
-    // public ProfileDataDTO getUserProfileDataByID(String id) {
-    //     User user = repository.findUserById(id)
-    //             .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
-    //     return mapper.userToProfileDataDTO(user);
-    // }
+    public List<UserDTO> getUsersByLocation(String location) {
+        return repository.findUserByLocation(location)
+                .stream()
+                .map(mapper::entityToDTO)
+                .collect(Collectors.toList());
+    }
+
+    public boolean existsUserByLocation(String location) {
+        return repository.existsUserByLocation(location);
+    }
 }

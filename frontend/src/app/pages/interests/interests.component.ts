@@ -47,6 +47,7 @@ export class InterestsComponent {
         { name: 'DIBUJO 🎨', id: 'drawing', selected: false },
         { name: 'COCINA 👨‍🍳', id: 'cooking', selected: false },
         { name: 'BAILE 💃', id: 'dancing', selected: false },
+        
         { name: 'MANUALIDADES 🛠️', id: 'crafts', selected: false },
         { name: 'OCIO DIGITAL 🖥️', id: 'digital', selected: false }
       ]
