@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
+import { HomeComponent } from './pages/home/home.component';
 import { SkillsComponent } from './pages/skills/skills.component';
 import { InterestsComponent } from './pages/interests/interests.component';
-import { HomeComponent } from './pages/home/home.component';
 import { RegisterFormComponent } from './pages/register-form/register-form.component';
 import { LoginFormComponent } from './pages/login-form/login-form.component';
 import { RecoveryPasswordComponent } from './pages/recovery-password/recovery-password.component';
@@ -28,11 +28,12 @@ import { SkillSearchComponent } from './components/skill-search/skill-search.com
 import { AuthGuard } from './services/auth-guard.service';
 import { FilterSkillsComponent } from './components/filter-skills/filter-skills.component';
 import { EmailSentComponent } from './pages/email-sent/email-sent.component';
-import { HomePageComponent } from './pages/home-page/home-page.component';
+import { IndexComponent } from './pages/index/index.component';
 
 // Creamos una ruta para la verificación de correo
 // Ahora usamos el componente real EmailVerificationComponent
 export const appRoutes: Routes = [
+  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] }, // ruta para ver HomeComponent
   { path: 'skills', component: SkillsComponent, canActivate: [AuthGuard] }, // ruta para ver SkillsComponent
   { path: 'interests', component: InterestsComponent, canActivate: [AuthGuard]  }, // ruta para ver InterestsComponent
   { path: '', component: HomeComponent }, // ruta principal muestra el componente Home
@@ -61,7 +62,7 @@ export const appRoutes: Routes = [
   { path: 'filter-skills', component: FilterSkillsComponent },
   { path: 'email-sent', component: EmailSentComponent },
   { path: '404', component: Error404Component },
-  { path: 'home-page', component: HomePageComponent },
+  { path: 'index', component: IndexComponent },
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
   
 ];
