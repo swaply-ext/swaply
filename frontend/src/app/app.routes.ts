@@ -26,9 +26,12 @@ import { Error404Component } from './pages/error-404/error-404.component';
 import { PrivateProfileComponent } from './pages/private-profile/private-profile.component';
 import { SkillSearchComponent } from './components/skill-search/skill-search.component';
 import { AuthGuard } from './services/auth-guard.service';
+import { LinkSentConfirmationComponent } from './pages/link-sent-confirmation/link-sent-confirmation.component';
+import { CodeSentConfirmationComponent } from './pages/code-sent-confirmation/code-sent-confirmation.component';
 import { FilterSkillsComponent } from './components/filter-skills/filter-skills.component';
 import { EmailSentComponent } from './pages/email-sent/email-sent.component';
 import { IndexComponent } from './pages/index/index.component';
+
 
 // Creamos una ruta para la verificación de correo
 // Ahora usamos el componente real EmailVerificationComponent
@@ -38,9 +41,11 @@ export const appRoutes: Routes = [
   { path: 'interests', component: InterestsComponent, canActivate: [AuthGuard]  }, // ruta para ver InterestsComponent
   { path: '', component: HomeComponent }, // ruta principal muestra el componente Home
   { path: 'register', component: RegisterFormComponent }, // ruta para el formulario de registro
+   { path: 'code-sent-confirmation', component: CodeSentConfirmationComponent },
   { path: 'verify', component: EmailVerificationComponent }, // ruta para la verificación de correo
   { path: 'login', component: LoginFormComponent }, // ruta para el login
   { path: 'recovery-password', component: RecoveryPasswordComponent }, // ruta para la recuperación de contraseña
+  { path: 'link-sent-confirmation', component: LinkSentConfirmationComponent },
   { path: 'new-password', component: NewPasswordComponent }, // nueva ruta para cambiar contraseña
   { path: 'personal-information', component: PersonalInformationComponent }, // ruta para información personal
   { path: 'confirmation', component: ConfirmationComponent }, // ruta para pantalla de confirmación antes de Home
@@ -60,7 +65,6 @@ export const appRoutes: Routes = [
   { path: 'private-profile', component: PrivateProfileComponent },
   { path: 'search-skills', component: SkillSearchComponent }, //baara de busqueda componente
   { path: 'filter-skills', component: FilterSkillsComponent },
-  { path: 'email-sent', component: EmailSentComponent },
   { path: '404', component: Error404Component },
   { path: 'index', component: IndexComponent },
   { path: '**', redirectTo: '/404', pathMatch: 'full' }

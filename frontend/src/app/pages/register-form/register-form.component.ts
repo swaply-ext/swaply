@@ -106,7 +106,7 @@ export class RegisterFormComponent {
       next: () => {
         // Guardamos datos y vamos a la siguiente pantalla
         this.registerDataService.setRegisterData(newUser);
-        this.router.navigateByUrl('/verify');
+        this.router.navigateByUrl('/code-sent-confirmation');
       },
       error: (err) => {
         if (err.message.includes('email')) {
