@@ -63,7 +63,6 @@ export const appRoutes: Routes = [
   { path: 'private-profile', component: PrivateProfileComponent },
   { path: 'search-skills', component: SkillSearchComponent }, //baara de busqueda componente
   { path: 'filter-skills', component: FilterSkillsComponent },
-  { path: 'email-sent', component: EmailSentComponent },
   { path: '404', component: Error404Component },
   { path: 'home-page', component: HomePageComponent },
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
