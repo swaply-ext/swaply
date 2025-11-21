@@ -1,20 +1,35 @@
-<div class="search-container">
-  <div class="input-wrapper">
-    <input
-      type="text"
-      placeholder="Buscar habilidad..."
-      [(ngModel)]="searchTerm"
-      (ngModelChange)="onSearchTermChanged($event)"
-      aria-label="Buscar habilidades"
-    />
-    <div *ngIf="isLoading()" class="spinner"></div>
+<div class="nearby-search">
+  
+  
+  <input 
+    type="text" 
+    placeholder="Buscar habilidad..." 
+    [ngModel]="searchTerm"
+    (ngModelChange)="onSearchTermChanged($event)"
+  />
+  
+  
+  <span class="material-symbols-outlined search-icon" *ngIf="!isLoading()">search</span>
+  
+  
+  <div class="spinner-mini" *ngIf="isLoading()"></div>
+
+  
+  <div class="search-dropdown" *ngIf="results().length > 0">
+    <ul>
+      <li *ngFor="let skill of results()" (click)="onSelectSkill(skill)">
+        <span class="dropdown-icon">{{ skill.icon }}</span>
+        <div class="dropdown-text">
+          <span class="dropdown-name">{{ skill.name }}</span>
+          <span class="dropdown-cat">{{ skill.category }}</span>
+        </div>
+      </li>
+    </ul>
   </div>
-  <ul class="results-list" *ngIf="results().length > 0">
-    <li *ngFor="let skill of results()">
-      {{ skill.name }}
-    </li>
-  </ul>
-  <div *ngIf="!isLoading() && results().length === 0 && searchTerm.length > 1" class="no-results">
-    No se encontraron resultados para "{{ searchTerm }}".
+
+ 
+  <div class="search-dropdown empty" *ngIf="!isLoading() && results().length === 0 && searchTerm.length > 0">
+    Sin resultados
   </div>
+
 </div>

@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.component";
+import { SkillSearchComponent } from '../../components/skill-search/skill-search.component'; 
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule,AppNavbarComponent],
+  imports: [CommonModule,AppNavbarComponent, SkillSearchComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
