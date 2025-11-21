@@ -8,9 +8,7 @@
     /* 100% de la altura de la ventana (Viewport Height) */
 
     /* 2. Centra el contenido (el <h1>) usando Flexbox */
-    display: flex;
-    justify-content: center;
-    /* Centra horizontalmente */
+
     align-items: center;
     /* Centra verticalmente */
 }
