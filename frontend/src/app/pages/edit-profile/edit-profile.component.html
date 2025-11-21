@@ -15,15 +15,16 @@
           <div class="profile-section names">
             <div class="profile-row">
               <div class="profile-section half">
-                <label for="fullName">Nombre completo</label>
-                <input id="fullName" type="text" placeholder="Juan" [(ngModel)]="fullName" (blur)="validate()"
-                  [ngClass]="{ 'input-error': errorMessages['fullName'] }" />
-                <small *ngIf="errorMessages['fullName']" class="error-message">{{ errorMessages['fullName'] }}</small>
+                <label for="name">Nombre completo</label>
+                <input id="name" type="text" placeholder="Juan" [(ngModel)]="name" (blur)="validate()"
+                  [ngClass]="{ 'input-error': errorMessages['name'] }" />
+                <small *ngIf="errorMessages['name']" class="error-message">{{ errorMessages['name'] }}</small>
               </div>
               <div class="profile-section half">
-                <label for="lastName">Apellido</label>
-                <input id="lastName" type="text" placeholder="Pérez" [(ngModel)]="lastName" (blur)="validate()" [ngClass]="{ 'input-error': errorMessages['lastName'] }"/>
-                <small *ngIf="errorMessages['lastName']" class="error-message">{{ errorMessages['lastName'] }}</small>
+                <label for="surname">Apellido</label>
+                <input id="surname" type="text" placeholder="Pérez" [(ngModel)]="surname" (blur)="validate()"
+                  [ngClass]="{ 'input-error': errorMessages['surname'] }" />
+                <small *ngIf="errorMessages['surname']" class="error-message">{{ errorMessages['surname'] }}</small>
               </div>
             </div>
             <div class="name-field">
@@ -45,17 +46,16 @@
         <div class="profile-row">
           <div class="profile-section half">
             <label for="email">Correo electrónico</label>
-            <input class="disable" id="email" type="email" placeholder="email@ejemplo.com" [(ngModel)]="email" (blur)="validate()"
-              [ngClass]="{ 'input-error': errorMessages['email'] }" disabled />
+            <input class="disable" id="email" type="email" placeholder="email@ejemplo.com" [(ngModel)]="email"
+              (blur)="validate()" [ngClass]="{ 'input-error': errorMessages['email'] }" disabled />
             <small *ngIf="errorMessages['email']" class="error-message">{{ errorMessages['email'] }}</small>
           </div>
 
           <div class="profile-section half">
             <label for="birthdate">Fecha de nacimiento</label>
-            <input  id="birthdate" type="date" [ngModel]="birthDate | date:'yyyy-MM-dd'"
-              (ngModelChange)="onBirthDateChange($event)" (blur)="validate()"
-              [value]="birthDate ? (birthDate | date:'yyyy-MM-dd'): ''"
+            <input id="birthdate" type="date" [(ngModel)]="birthDate" (blur)="validate()"
               [ngClass]="{ 'input-error': errorMessages['birthDate'] }">
+
             <small *ngIf="errorMessages['birthDate']" class="error-message">{{ errorMessages['birthDate'] }}</small>
           </div>
         </div>
@@ -85,7 +85,7 @@
           <app-discard-button (submit)="discard()"></app-discard-button>
           <app-save-button (submit)="save()"></app-save-button>
         </div>
-        
+
       </div>
     </div>
   </div>

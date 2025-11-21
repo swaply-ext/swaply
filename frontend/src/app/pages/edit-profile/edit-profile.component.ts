@@ -8,11 +8,11 @@ import { AccountService } from '../../services/account.service';
 import { DiscardButtonComponent } from '../../components/discard-button/discard-button.component';
 
 interface ProfileData {
-  fullName: string;
-  lastName: string;
+  name: string;
+  surname: string;
   username: string;
   description: string;
-  birthDate: Date | null;
+  birthDate: string;
   location: string;
   gender: string;
   email: string;
@@ -38,11 +38,11 @@ export class EditProfileComponent implements OnInit {
   constructor(private accountService: AccountService) { }
 
   // Variables individuales para enlazar con el formulario
-  fullName = "";
-  lastName = "";
+  name = "";
+  surname = "";
   username = "";
   description = "";
-  birthDate: Date | null = null;
+  birthDate: string = "";
   location = "";
   gender = "";
   email = "";
@@ -66,24 +66,24 @@ export class EditProfileComponent implements OnInit {
       }
     });
   }
-  
+
   // Mapear datos del usuario a la estructura ProfileData
   mapProfileData(user: any): void {
     this.profileData = {
-      fullName: user.name,
-      lastName: user.surname,
+      name: user.name,
+      surname: user.surname,
       username: user.username,
       description: user.description,
       location: user.location,
-      birthDate: user.birthDate ? new Date(user.birthDate) : null,
+      birthDate: user.birthDate ? new Date(user.birthDate).toISOString().substring(0, 10) : '',
       gender: user.gender,
       email: user.email,
       profilePhotoUrl: user.profilePhotoUrl
     };
 
     // Asignar también a las variables individuales que usa el template
-    this.fullName = this.profileData.fullName;
-    this.lastName = this.profileData.lastName;
+    this.name = this.profileData.name;
+    this.surname = this.profileData.surname;
     this.username = this.profileData.username;
     this.description = this.profileData.description;
     this.location = this.profileData.location;
@@ -105,8 +105,8 @@ export class EditProfileComponent implements OnInit {
     }
     //recoger los datos del formulario
     const updatedUser: ProfileData = {
-      fullName: this.fullName,
-      lastName: this.lastName,
+      name: this.name,
+      surname: this.surname,
       username: this.username.toLowerCase(),
       description: this.description,
       birthDate: this.birthDate,
@@ -129,28 +129,28 @@ export class EditProfileComponent implements OnInit {
       }
     });
   }
-  discard(){
+  discard() {
     this.refreshPage();
   }
 
-  onBirthDateChange(event: string): void {
-    this.birthDate = new Date(event);
-    this.profileData.birthDate = this.birthDate;
-  }
+  // onBirthDateChange(event: string): void {
+  //   this.birthDate = new Date(event);
+  //   this.profileData.birthDate = this.birthDate;
+  // }
   validate(): boolean {
     // Validar campos obligatorios
     if (!this.gender) this.errorMessages['gender'] = 'El género es obligatorio.';
 
-    // Validar fullName y lastName
-    if (!this.fullName.trim()) {
-      this.errorMessages['fullName'] = 'El nombre completo es obligatorio.';
+    // Validar name y surname
+    if (!this.name.trim()) {
+      this.errorMessages['name'] = 'El nombre completo es obligatorio.';
     } else {
-      delete this.errorMessages['fullName'];
+      delete this.errorMessages['name'];
     }
-    if (!this.lastName.trim()) {
-      this.errorMessages['lastName'] = 'El apellido es obligatorio.';
+    if (!this.surname.trim()) {
+      this.errorMessages['surname'] = 'El apellido es obligatorio.';
     } else {
-      delete this.errorMessages['lastName'];
+      delete this.errorMessages['surname'];
     }
 
     // Validar username
@@ -180,16 +180,21 @@ export class EditProfileComponent implements OnInit {
     // Validar birthDate
     if (!this.birthDate) {
       this.errorMessages['birthDate'] = 'La fecha de nacimiento es obligatoria.';
-    } else if (this.isFutureDate(this.birthDate) || this.isToday(this.birthDate)) {
-      this.errorMessages['birthDate'] = 'La fecha de nacimiento no es válida.';
     } else {
-      const age = this.calculateAge(this.birthDate);
-      if (age < 18 || age > 120) {
-        this.errorMessages['birthDate'] = 'La edad debe estar entre 18 y 120 años.';
+      const date = new Date(this.birthDate);
+
+      if (this.isFutureDate(date) || this.isToday(date)) {
+        this.errorMessages['birthDate'] = 'La fecha de nacimiento no es válida.';
       } else {
-        delete this.errorMessages['birthDate'];
+        const age = this.calculateAge(date);
+        if (age < 18 || age > 120) {
+          this.errorMessages['birthDate'] = 'La edad debe estar entre 18 y 120 años.';
+        } else {
+          delete this.errorMessages['birthDate'];
+        }
       }
     }
+
 
     //devolver si hay errores o no
     if (Object.keys(this.errorMessages).length > 0) {
@@ -249,5 +254,5 @@ export class EditProfileComponent implements OnInit {
     return age;
   }
 
-  
+
 }
