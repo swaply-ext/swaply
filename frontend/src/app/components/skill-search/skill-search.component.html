@@ -1,6 +1,5 @@
 <div class="nearby-search">
   
-  
   <input 
     type="text" 
     placeholder="Buscar habilidad..." 
@@ -8,13 +7,10 @@
     (ngModelChange)="onSearchTermChanged($event)"
   />
   
-  
   <span class="material-symbols-outlined search-icon" *ngIf="!isLoading()">search</span>
-  
   
   <div class="spinner-mini" *ngIf="isLoading()"></div>
 
-  
   <div class="search-dropdown" *ngIf="results().length > 0">
     <ul>
       <li *ngFor="let skill of results()" (click)="onSelectSkill(skill)">
@@ -27,7 +23,6 @@
     </ul>
   </div>
 
- 
   <div class="search-dropdown empty" *ngIf="!isLoading() && results().length === 0 && searchTerm.length > 0">
     Sin resultados
   </div>
