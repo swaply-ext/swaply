@@ -13,14 +13,23 @@
             <img [src]="profilePhotoUrl" alt="Imagen de perfil" class="profile-avatar">
           </div>
           <div class="profile-section names">
-            <div class="name-field">
-              <label for="fullName">Nombre completo</label>
-              <input id="fullName" type="text" placeholder="Juan Pérez" [(ngModel)]="fullName" (blur)="validate()" [ngClass]="{ 'input-error': errorMessages['fullName'] }"/>
-              <small *ngIf="errorMessages['fullName']" class="error-message">{{ errorMessages['fullName'] }}</small>
+            <div class="profile-row">
+              <div class="profile-section half">
+                <label for="fullName">Nombre completo</label>
+                <input id="fullName" type="text" placeholder="Juan" [(ngModel)]="fullName" (blur)="validate()"
+                  [ngClass]="{ 'input-error': errorMessages['fullName'] }" />
+                <small *ngIf="errorMessages['fullName']" class="error-message">{{ errorMessages['fullName'] }}</small>
+              </div>
+              <div class="profile-section half">
+                <label for="lastName">Apellido</label>
+                <input id="lastName" type="text" placeholder="Pérez" [(ngModel)]="lastName" (blur)="validate()" [ngClass]="{ 'input-error': errorMessages['lastName'] }"/>
+                <small *ngIf="errorMessages['lastName']" class="error-message">{{ errorMessages['lastName'] }}</small>
+              </div>
             </div>
             <div class="name-field">
               <label for="username">Username</label>
-              <input id="username" type="text" placeholder="@juanperez123" [(ngModel)]="username" (blur)="validate()" [ngClass]="{ 'input-error': errorMessages['username'] }"/>              
+              <input id="username" type="text" placeholder="@juanperez123" [(ngModel)]="username" (blur)="validate()"
+                [ngClass]="{ 'input-error': errorMessages['username'] }" />
               <small *ngIf="errorMessages['username']" class="error-message">{{ errorMessages['username'] }}</small>
             </div>
           </div>
@@ -36,13 +45,17 @@
         <div class="profile-row">
           <div class="profile-section half">
             <label for="email">Correo electrónico</label>
-            <input id="email" type="email" placeholder="email@ejemplo.com" [(ngModel)]="email" (blur)="validate()" [ngClass]="{ 'input-error': errorMessages['email'] }"/>
+            <input class="disable" id="email" type="email" placeholder="email@ejemplo.com" [(ngModel)]="email" (blur)="validate()"
+              [ngClass]="{ 'input-error': errorMessages['email'] }" disabled />
             <small *ngIf="errorMessages['email']" class="error-message">{{ errorMessages['email'] }}</small>
           </div>
 
           <div class="profile-section half">
             <label for="birthdate">Fecha de nacimiento</label>
-            <input id="birthdate" type="date" [ngModel]="birthDate | date:'yyyy-MM-dd'" (ngModelChange)="onBirthDateChange($event)" (blur)="validate()" [value]="birthDate ? (birthDate | date:'yyyy-MM-dd'): ''" [ngClass]="{ 'input-error': errorMessages['birthDate'] }">
+            <input  id="birthdate" type="date" [ngModel]="birthDate | date:'yyyy-MM-dd'"
+              (ngModelChange)="onBirthDateChange($event)" (blur)="validate()"
+              [value]="birthDate ? (birthDate | date:'yyyy-MM-dd'): ''"
+              [ngClass]="{ 'input-error': errorMessages['birthDate'] }">
             <small *ngIf="errorMessages['birthDate']" class="error-message">{{ errorMessages['birthDate'] }}</small>
           </div>
         </div>
@@ -52,7 +65,8 @@
           <div class="profile-section half">
             <label for="location">Ubicación</label>
 
-            <input id="location" type="text" placeholder="Tarragona, Cataluña, España" [(ngModel)]="location" (blur)="validate()"  [ngClass]="{ 'input-error': errorMessages['location'] }"/>
+            <input id="location" type="text" placeholder="Tarragona, Cataluña, España" [(ngModel)]="location"
+              (blur)="validate()" [ngClass]="{ 'input-error': errorMessages['location'] }" />
             <small *ngIf="errorMessages['location']" class="error-message">{{ errorMessages['location'] }}</small>
           </div>
 
@@ -67,9 +81,13 @@
             <small *ngIf="errorMessages['gender']" class="error-message">{{ errorMessages['gender'] }}</small>
           </div>
         </div>
-        <app-save-button (submit)="save()"></app-save-button>
+        <div class="button-row">
+          <app-discard-button (submit)="discard()"></app-discard-button>
+          <app-save-button (submit)="save()"></app-save-button>
+        </div>
+        
       </div>
     </div>
   </div>
-  
+
 </body>

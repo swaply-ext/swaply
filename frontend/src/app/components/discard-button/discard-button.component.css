@@ -1,0 +1,23 @@
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 20px;
+}
+
+#discard {
+  color: var(--error-color-1);
+  /*fondo transparente*/
+  background-color: transparent;
+  border: 2px solid var(--error-color-1);
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+#discard:hover {
+  background-color: var(--error-color-2);
+  border-color: var(--error-color-2);
+  color: white;
+}
