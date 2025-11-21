@@ -23,7 +23,7 @@
         [class.selected]="sub.selected"
         (click)="toggleSkill(category.id, sub.id); $event.stopPropagation()"
       >
-        {{ sub.name }}
+        {{ sub.name }} {{ sub.icon }}
       </div>
     </div>
 
