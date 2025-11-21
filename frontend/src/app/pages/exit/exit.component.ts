@@ -21,7 +21,30 @@ export class ExitComponent implements OnInit {
   ngOnInit(): void {
     localStorage.removeItem(this.TOKEN_KEY);
     console.log('Token borrado del localStorage.');
- //   this.startCountdown();
+    this.startCountdown();
+  }
+    startCountdown() {
+    this.intervalId = setInterval(() => {
+      this.countdown--; //incremento para el que entienda, 
+
+      if (this.countdown === 0) {
+        this.redirectToLogin();
+      }
+    }, 1000);
+  }
+  
+  redirectToLogin() {
+    this.clearTimer();
+    this.router.navigate(['/login']);
   }
 
+  private clearTimer() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
+  }
+  ngOnDestroy(): void {
+    this.clearTimer();
+  }
 }

@@ -12,3 +12,7 @@
     align-items: center;
     /* Centra verticalmente */
 }
+p {
+    text-align: center;
+    color: white;
+}
