@@ -48,6 +48,9 @@ export class RecoveryPasswordComponent {
         if (response.status == 200) {
           this.router.navigate(['/email-sent']);
           console.log('Código de recuperación enviado con éxito si existe');
+
+          this.router.navigate(['/link-sent-confirmation']);
+
         }
       },
         error: err => {
