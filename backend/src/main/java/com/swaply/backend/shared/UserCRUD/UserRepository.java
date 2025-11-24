@@ -20,14 +20,7 @@ public interface UserRepository extends CosmosRepository<User, String> {
     default boolean existsUserById(String id) {
         return findById(id, USER_PARTITION_KEY).isPresent();
     }
-    
-    // Nuevo método para buscar usuario por username con partición "user"
-    Optional<User> findUserByTypeAndUsername(String type, String username);
-
-    default Optional<User> findUserByUsername(String username) {
-        return findUserByTypeAndUsername(type, username);
-    }
-
+      
     default void deleteUserById(String id) {
         deleteById(id, USER_PARTITION_KEY);
     }
@@ -51,6 +44,8 @@ public interface UserRepository extends CosmosRepository<User, String> {
     List<User> findByTypeAndLocation(String type, String location);
 
     boolean existsUserByTypeAndLocation(String type, String location);
+
+    Optional<User> findUserByTypeAndUsername(String type, String username);
 
     // Metodos con Derived Queries para no tener que definir type cada vez
 
@@ -80,6 +75,10 @@ public interface UserRepository extends CosmosRepository<User, String> {
 
     default boolean existsUserByLocation(String location) {
         return existsUserByTypeAndLocation (type, location);
+    }
+    
+    default Optional<User> findUserByUsername(String username) {
+        return findUserByTypeAndUsername(type, username);
     }
 
 }
