@@ -41,11 +41,11 @@ export class DropdownMenuComponent {
   }
 
   goToMySwaps() {
-    this.router.navigate(['/myswaps']);
+    //this.router.navigate(['/myswaps']);
   }
 
   goToSettings() {
-    this.router.navigate(['/settings']);
+    //this.router.navigate(['/settings']);
   }
 
   logout() {
