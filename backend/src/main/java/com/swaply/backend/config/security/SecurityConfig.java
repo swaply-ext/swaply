@@ -26,7 +26,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/example/premium/**").hasRole("PREMIUM")
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
                 )
 
                 .sessionManagement(sess -> sess
