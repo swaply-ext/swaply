@@ -1,28 +1,33 @@
 <div class="profile-card">
+  <i class="material-icons edit-icon">edit</i>
+
   <img [src]="profileData.profilePhotoUrl" alt="User avatar" class="avatar" />
 
   <div class="info">
     <h2 class="name">{{ profileData.fullName }}</h2>
 
     <div class="username-row">
-      <p class="username">{{ profileData.username }}</p>
-
-      <!-- Condición: vista pública o privada -->
-      <div class="icon-group" [class.public]="isLoggedIn">
-        <ng-container *ngIf="isLoggedIn; else privateIcons">
-          <span class="material-icons">chat</span>
-          <span class="material-icons">favorite</span>
-          <span class="material-icons">share</span>
-        </ng-container>
-        <ng-template #privateIcons>
-        <a class="material-icons settings-icon" routerLink="/profile" title="Configuración">settings</a>
-          <span class="material-icons">share</span>
-        </ng-template>
-      </div>
+      <p class="username">{{ "@" + profileData.username }}</p>
+      <span class="material-icons share-icon">share</span>
     </div>
 
     <p class="location">{{ profileData.location }}</p>
+
+    <div class="rating">
+      <i class="material-icons" *ngFor="let starNum of starsArray">
+        {{
+          profileData.rating >= starNum
+            ? "star"
+            : profileData.rating >= starNum - 0.5
+            ? "star_half"
+            : "star_border"
+        }}
+      </i>
+      <span>{{ profileData.rating }}</span>
+    </div>
   </div>
 
-  <p class="description">{{ profileData.description }}</p>
+  <div class="description">
+    {{ profileData.description }}
+  </div>
 </div>

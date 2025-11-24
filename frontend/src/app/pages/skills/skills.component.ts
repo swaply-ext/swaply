@@ -18,11 +18,11 @@ export class SkillsComponent {
       id: 'sports',
       open: true,
       subcategories: [
-        { name: 'FÚTBOL ⚽', id: 'football', selected: false },
-        { name: 'PÁDEL 🎾', id: 'padel', selected: false },
-        { name: 'BÁSQUET 🏀', id: 'basketball', selected: false },
-        { name: 'VÓLEY 🏐', id: 'volleyball', selected: false },
-        { name: 'BOXEO 🥊', id: 'boxing', selected: false }
+        { name: 'FÚTBOL', icon: '⚽', id: 'football', selected: false },
+        { name: 'PÁDEL', icon: '🎾', id: 'padel', selected: false },
+        { name: 'BÁSQUET', icon: '🏀', id: 'basketball', selected: false },
+        { name: 'VÓLEY', icon: '🏐', id: 'volleyball', selected: false },
+        { name: 'BOXEO', icon: '🥊', id: 'boxing', selected: false }
       ]
     },
     {
@@ -30,11 +30,11 @@ export class SkillsComponent {
       id: 'music',
       open: true,
       subcategories: [
-        { name: 'GUITARRA 🎸', id: 'guitar', selected: false },
-        { name: 'PIANO 🎹', id: 'piano', selected: false },
-        { name: 'VIOLÍN 🎻', id: 'violin', selected: false },
-        { name: 'BATERÍA 🥁', id: 'drums', selected: false },
-        { name: 'SAXOFÓN 🎷', id: 'saxophone', selected: false }
+        { name: 'GUITARRA', icon: '🎸', id: 'guitar', selected: false },
+        { name: 'PIANO', icon: '🎹', id: 'piano', selected: false },
+        { name: 'VIOLÍN', icon: '🎻', id: 'violin', selected: false },
+        { name: 'BATERÍA', icon: '🥁', id: 'drums', selected: false },
+        { name: 'SAXOFÓN', icon: '🎷', id: 'saxophone', selected: false }
       ]
     },
     {
@@ -42,11 +42,11 @@ export class SkillsComponent {
       id: 'leisure',
       open: true,
       subcategories: [
-        { name: 'DIBUJO 🎨', id: 'drawing', selected: false },
-        { name: 'COCINA 👨‍🍳', id: 'cooking', selected: false },
-        { name: 'BAILE 💃', id: 'dancing', selected: false },
-        { name: 'MANUALIDADES 🛠️', id: 'crafts', selected: false },
-        { name: 'OCIO DIGITAL 🖥️', id: 'digital', selected: false }
+        { name: 'DIBUJO', icon: '🎨', id: 'drawing', selected: false },
+        { name: 'COCINA', icon: '👨‍🍳', id: 'cooking', selected: false },
+        { name: 'BAILE', icon: '💃', id: 'dancing', selected: false },
+        { name: 'MANUALIDADES', icon: '🛠️', id: 'crafts', selected: false },
+        { name: 'OCIO DIGITAL', icon: '🖥️', id: 'digital', selected: false }
       ]
     }
   ];
@@ -67,12 +67,14 @@ export class SkillsComponent {
 
   // Función para enviar las skills seleccionadas al backend
   submitSkills() {
-    const selectedSkills = this.categories
-      .flatMap(category => category.subcategories)
-      .filter(subcategory => subcategory.selected)
-      .map(subcategory => {
-        return { name: subcategory.id, level: 1 };
-      });
+    const selectedSkills = this.categories.flatMap(category => 
+      category.subcategories
+        .filter(sub => sub.selected)
+        .map(sub => ({
+          id: sub.id,                                  
+          level: 1                       
+        }))
+    );
 
     this.http.patch('http://localhost:8081/api/account/skills', { skills: selectedSkills })
       .subscribe({
