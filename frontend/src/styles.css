@@ -2,19 +2,29 @@
 /* Tipografia i colors globals */
 :root {
   --principal-color-1: #023047; /* Blau fosc */
-  --principal-color-2: #3CB57C; /* Verd menta */
+  --principal-color-2: #3cb57c; /* Verd menta */
 
-  --secundary-color-1: #FCFCFC; /* Blanc suau */
-  --secundary-color-2: #BFBFBF; /* Gris clar */
+  --secundary-color-1: #fcfcfc; /* Blanc suau */
+  --secundary-color-2: #bfbfbf; /* Gris clar */
   --secundary-color-3: #292929; /* Gris fosc */
 
-  --font-primary: 'Quicksand', sans-serif;
-  --font-secondary: 'Inter', sans-serif;
+  --font-primary: "Quicksand", sans-serif;
+  --font-secondary: "Inter", sans-serif;
+
+
+    --bg-panel: #022c38;
+    --bg-card: #00414b;
+    --border-color: #006979;
+    --button-hover: #e0e0e0;
+    --level-one-skill: #2ab57e;
+    --level-two-skill: #ffa62f;
+    --level-three-skill: #a05af3;
+
 }
 
 body {
   font-family: var(--font-primary);
-  background: linear-gradient(to bottom, #012534 0%, #00839E 100%);
+  background: linear-gradient(to bottom, #012534 0%, #00839e 100%);
   min-height: 100vh;
   margin: 0;
 }
@@ -59,13 +69,13 @@ h3 {
   margin: 50px auto; /* centrat i amb espai amunt i avall */
   padding: 20px;
 
-  border: 1px solid #315465; 
+  border: 1px solid #315465;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 
   background-color: #315465; /* mateix color de fons */
   color: #fcfcfc; /* text blanc */
-  
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -73,7 +83,6 @@ h3 {
 
   font-family: var(--font-secondary); /* seguim fent servir la teva font */
 }
-
 
 /* Botó personalitzat */
 .btn-mic {
@@ -83,8 +92,8 @@ h3 {
   border: none;
   transition: background-color 0.3s ease;
   border-radius: 8%;
-  padding: 5px 10px;  
-  cursor: pointer;    
+  padding: 5px 10px;
+  cursor: pointer;
   margin-top: 5%;
 }
 

@@ -38,7 +38,7 @@ import { IndexComponent } from './pages/index/index.component';
 export const appRoutes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] }, // ruta para ver HomeComponent
   { path: 'skills', component: SkillsComponent, canActivate: [AuthGuard] }, // ruta para ver SkillsComponent
-  { path: 'interests', component: InterestsComponent, canActivate: [AuthGuard]  }, // ruta para ver InterestsComponent
+  { path: 'interests', component: InterestsComponent, canActivate: [AuthGuard] }, // ruta para ver InterestsComponent
   { path: '', component: HomeComponent }, // ruta principal muestra el componente Home
   { path: 'register', component: RegisterFormComponent }, // ruta para el formulario de registro
    { path: 'code-sent-confirmation', component: CodeSentConfirmationComponent },
@@ -62,8 +62,8 @@ export const appRoutes: Routes = [
   { path: 'pass-verification', component: PassVerificationComponent },
   { path: 'side-menu', component: SideMenuComponent }, // ruta para el componente del menú lateral
   { path: 'exit', component: ExitComponent },
-  { path: 'private-profile', component: PrivateProfileComponent },
-  { path: 'search-skills', component: SkillSearchComponent }, //baara de busqueda componente
+  { path: 'myprofile', component: PrivateProfileComponent, canActivate: [AuthGuard] },
+  { path: 'search-skills', component: SkillSearchComponent }, //barra de busqueda componente
   { path: 'filter-skills', component: FilterSkillsComponent },
   { path: '404', component: Error404Component },
   { path: 'index', component: IndexComponent },

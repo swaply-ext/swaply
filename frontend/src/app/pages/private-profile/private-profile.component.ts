@@ -7,8 +7,8 @@ import { InterestsPanelComponent } from '../../components/interests-panel/intere
 import { AccountService } from '../../services/account.service';
 
 interface Skill {
-  name: string;
-  level: string;
+  id: string;
+  level: number;
 }
 
 interface ProfileData {
@@ -17,6 +17,7 @@ interface ProfileData {
   location: string;
   description: string;
   profilePhotoUrl: string;
+  rating: number;
 }
 @Component({
   selector: 'app-private-profile',
@@ -35,7 +36,6 @@ export class PrivateProfileComponent implements OnInit {
 
   public interests: Array<Skill> = [];
   public skills: Array<Skill> = [];
-  private levels: string[] = ['low', 'mid', 'high'];
   public profileData: ProfileData = {} as ProfileData;
 
   constructor(private accountService: AccountService) { }
@@ -57,10 +57,10 @@ export class PrivateProfileComponent implements OnInit {
   }
 
   splitAndSendUser(user: any): void {
-    this.interests = this.levelToString(user.interests);
-    this.skills = this.levelToString(user.skills);
+    this.interests = user.interests;
+    this.skills = user.skills;
     this.mapProfileData(user);
-    console.log('Intereses mapeados:', this.profileData);
+    console.log(this.skills);
   }
 
   mapProfileData(user: any): void {
@@ -70,15 +70,10 @@ export class PrivateProfileComponent implements OnInit {
       username: user.username,
       location: user.location,
       description: user.description,
-      profilePhotoUrl: user.profilePhotoUrl
+      profilePhotoUrl: user.profilePhotoUrl,
+      rating : 3.5,
     };
   }
 
-  levelToString(skills: Array<Skill>): Array<Skill> {
-    skills.forEach(skill => {
-      skill.level = this.levels[parseInt(skill.level) - 1];
-    });
-    return skills;
-  }
 
 }
