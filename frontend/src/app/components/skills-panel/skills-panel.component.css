@@ -1,22 +1,12 @@
-:host {
-  --bg-panel: #022c38;
-  --bg-card: #134e5e; /* Color cian oscuro de las tarjetas */
-  --border-color: #00d2d3;
-  --green-bar: #50e3a3;
-  --orange-bar: #ff8800;
-  --purple-bar: #a55eea;
-}
-
 .skills-panel-container {
-  width: 90vw;
-  max-width: 1200px;
-  margin: 2rem auto;
+  flex: 1;
+  flex-basis: 0;
   padding: 1.5rem 2rem;
   /* Borde y fondo estilo neón oscuro */
   border: 1px solid var(--border-color);
   border-radius: 12px;
   background-color: var(--bg-panel);
-  color: #fff;
+  color: #ffffff;
   font-family: "Quicksand", sans-serif;
 }
 
@@ -50,6 +40,10 @@ header h1 {
   padding: 0;
 }
 
+.toggle-btn:hover, .edit-btn:hover{
+  color: var(--button-hover);
+}
+
 .toggle-btn .material-icons,
 .edit-btn .material-icons {
   font-size: 1.8rem;
@@ -65,7 +59,7 @@ header h1 {
 
 /* --- DISEÑO DE LA TARJETA --- */
 .skill-card {
-  background-color: transparent;
+  background-color: var(--bg-card);
   border: 2px solid var(--border-color); /* Borde cian */
   border-radius: 12px; /* Bordes muy redondeados */
   padding: 1rem;
@@ -110,15 +104,19 @@ header h1 {
 
 /* Cuando el bloque está lleno (Verde por defecto) */
 .level-block.filled {
-  background-color: var(--green-bar);
-  border-color: var(--green-bar);
+  background-color: var(--level-one-skill);
+  border-color: var(--level-one-skill);
 }
 
-/* --- VARIANTE MORADA (Nivel alto / Padel) --- */
-/* Si la tarjeta tiene la clase .high-level, cambiamos los colores */
+.skill-card.mid-level .level-block.filled {
+  background-color: var( --level-two-skill);
+  border-color: var(--level-two-skill);
+}
+
+
 .skill-card.high-level .level-block.filled {
-  background-color: var(--purple-bar);
-  border-color: var(--purple-bar);
+  background-color: var( --level-three-skill);
+  border-color: var(--level-three-skill);
 }
 
 /* Ajustes Responsive */

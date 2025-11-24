@@ -17,6 +17,7 @@ interface ProfileData {
   location: string;
   description: string;
   profilePhotoUrl: string;
+  rating: number;
 }
 @Component({
   selector: 'app-private-profile',
@@ -59,6 +60,7 @@ export class PrivateProfileComponent implements OnInit {
     this.interests = user.interests;
     this.skills = user.skills;
     this.mapProfileData(user);
+    console.log(this.skills);
   }
 
   mapProfileData(user: any): void {
@@ -68,7 +70,8 @@ export class PrivateProfileComponent implements OnInit {
       username: user.username,
       location: user.location,
       description: user.description,
-      profilePhotoUrl: user.profilePhotoUrl
+      profilePhotoUrl: user.profilePhotoUrl,
+      rating : 3.5,
     };
   }
 

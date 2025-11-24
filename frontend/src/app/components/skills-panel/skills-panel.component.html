@@ -15,7 +15,6 @@
   </div>
 </div> -->
 
-
 <div class="skills-panel-container">
   <header>
     <button class="toggle-btn" (click)="togglePanel()">
@@ -30,8 +29,14 @@
   </header>
 
   <div *ngIf="open" class="skills-grid">
-    <div *ngFor="let skill of skills" class="skill-card" [ngClass]="{'high-level': skill.level >= 3}">
-
+    <div
+      *ngFor="let skill of skills"
+      class="skill-card"
+      [ngClass]="{
+        'mid-level': skill.level === 2,
+        'high-level': skill.level === 3
+      }"
+    >
       <div class="card-header">
         <span class="skill-name">{{ skill.name }}</span>
         <span class="skill-icon">{{ skill.icon }}</span>
@@ -42,7 +47,6 @@
         <div class="level-block" [class.filled]="skill.level >= 2"></div>
         <div class="level-block" [class.filled]="skill.level >= 3"></div>
       </div>
-
     </div>
   </div>
 </div>

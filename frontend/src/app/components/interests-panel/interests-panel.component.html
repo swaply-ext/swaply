@@ -1,4 +1,4 @@
-<div class="interests-panel-container">
+<!-- <div class="interests-panel-container">
   <header>
     <button class="toggle-btn" (click)="togglePanel()">
       {{ open ? '▲' : '▼' }}
@@ -12,5 +12,43 @@
       <span>{{ interest.id}}</span>
       <span>{{ interest.level }}</span>
     </button>
+  </div>
+</div>
+-->
+
+
+<div class="skills-panel-container">
+  <header>
+    <button class="toggle-btn" (click)="togglePanel()">
+      <span class="material-icons">keyboard_arrow_down</span>
+    </button>
+
+    <h1>Intereses</h1>
+
+    <button class="edit-btn">
+      <span class="material-icons">edit</span>
+    </button>
+  </header>
+
+  <div *ngIf="open" class="skills-grid">
+    <div
+      *ngFor="let skill of skills"
+      class="skill-card"
+      [ngClass]="{
+        'mid-level': skill.level === 2,
+        'high-level': skill.level === 3
+      }"
+    >
+      <div class="card-header">
+        <span class="skill-name">{{ skill.name }}</span>
+        <span class="skill-icon">{{ skill.icon }}</span>
+      </div>
+
+      <div class="level-bar">
+        <div class="level-block" [class.filled]="skill.level >= 1"></div>
+        <div class="level-block" [class.filled]="skill.level >= 2"></div>
+        <div class="level-block" [class.filled]="skill.level >= 3"></div>
+      </div>
+    </div>
   </div>
 </div>

@@ -3,9 +3,7 @@ body {
 }
 
 .profile-card {
-  width: 90vw;
-  max-width: 1200px; /* Ajustado para que no se estire demasiado */
-  min-width: 300px;
+  width: 100%;
   margin: 2rem auto;
   box-sizing: border-box;
   padding: 2rem;
@@ -19,8 +17,8 @@ body {
   gap: 2rem;
 
   position: relative; /* Necesario para el icono de editar */
-  border: 2px solid rgba(0, 186, 210, 0.3);
-  background-color: rgba(0, 0, 0, 0.1); /* Fondo sutil si es necesario */
+    border: 1px solid var(--border-color);
+  background-color: var(--bg-panel); /* Fondo sutil si es necesario */
 }
 
 /* --- Icono de Editar (Top Right) --- */
@@ -28,18 +26,18 @@ body {
   position: absolute;
   top: 1rem;
   right: 1rem;
-  color: #50e3a3;
+  background: none;
+  border: none;
+  color: var(--border-color); /* Color cian */
   cursor: pointer;
-  font-size: 1.5rem;
-  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
 }
 
-.edit-icon:hover {
-  color: #e0e0e0;
-}
-
-.share-icon:hover {
-  color: #e0e0e0;
+.edit-icon:hover, .share-icon:hover {
+  color: var(--button-hover);
 }
 
 /* --- Columna 1: Avatar --- */

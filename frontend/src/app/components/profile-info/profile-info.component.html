@@ -14,12 +14,16 @@
     <p class="location">{{ profileData.location }}</p>
 
     <div class="rating">
-      <i class="material-icons">star</i>
-      <i class="material-icons">star</i>
-      <i class="material-icons">star</i>
-      <i class="material-icons">star</i>
-      <i class="material-icons">star_half</i>
-      <span>4.5</span>
+      <i class="material-icons" *ngFor="let starNum of starsArray">
+        {{
+          profileData.rating >= starNum
+            ? "star"
+            : profileData.rating >= starNum - 0.5
+            ? "star_half"
+            : "star_border"
+        }}
+      </i>
+      <span>{{ profileData.rating }}</span>
     </div>
   </div>
 
