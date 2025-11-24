@@ -31,6 +31,7 @@ import { CodeSentConfirmationComponent } from './pages/code-sent-confirmation/co
 import { FilterSkillsComponent } from './components/filter-skills/filter-skills.component';
 import { EmailSentComponent } from './pages/email-sent/email-sent.component';
 import { IndexComponent } from './pages/index/index.component';
+import { DropdownMenuComponent } from './components/dropdown-menu/dropdown-menu.component';
 
 
 // Creamos una ruta para la verificación de correo
@@ -67,6 +68,7 @@ export const appRoutes: Routes = [
   { path: 'filter-skills', component: FilterSkillsComponent },
   { path: '404', component: Error404Component },
   { path: 'index', component: IndexComponent },
+  {path: 'dropdown-menu', component: DropdownMenuComponent},
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
   
 ];
