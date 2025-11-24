@@ -3,6 +3,7 @@ package com.swaply.backend.application.account;
 import com.swaply.backend.application.account.dto.ProfileDataDTO;
 import com.swaply.backend.application.account.dto.SkillsDTO;
 import com.swaply.backend.application.account.dto.PersonalInfoDTO;
+import com.swaply.backend.shared.UserCRUD.dto.EditProfileDTO;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import org.mapstruct.*;
 
@@ -26,4 +27,11 @@ public interface AccountMapper {
 
     @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE)
     UserDTO fromProfileDataDTO(ProfileDataDTO dto);
+
+    @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE)
+    EditProfileDTO editDatafromUserDTO(UserDTO dto);
+
+    @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE)
+    UserDTO fromEditProfileDataDTO(EditProfileDTO dto);
+
 }

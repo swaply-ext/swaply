@@ -1,0 +1,75 @@
+<body>
+  <app-app-navbar></app-app-navbar>
+
+  <div class="profile-page-container">
+    <div class="profile-bottom-row">
+      <div class="profile-side-layout">
+        <app-side-menu></app-side-menu>
+      </div>
+      <div class="profile-info-container">
+        <!-- IMAGEN DE PERFIL Y NOMBRES -->
+        <div class="profile-row">
+          <div class="profile-section image">
+            <img [src]="profilePhotoUrl" alt="Imagen de perfil" class="profile-avatar">
+          </div>
+          <div class="profile-section names">
+            <div class="name-field">
+              <label for="fullName">Nombre completo</label>
+              <input id="fullName" type="text" placeholder="Juan Pérez" [(ngModel)]="fullName" (blur)="validate()" [ngClass]="{ 'input-error': errorMessages['fullName'] }"/>
+              <small *ngIf="errorMessages['fullName']" class="error-message">{{ errorMessages['fullName'] }}</small>
+            </div>
+            <div class="name-field">
+              <label for="username">Username</label>
+              <input id="username" type="text" placeholder="@juanperez123" [(ngModel)]="username" (blur)="validate()" [ngClass]="{ 'input-error': errorMessages['username'] }"/>              
+              <small *ngIf="errorMessages['username']" class="error-message">{{ errorMessages['username'] }}</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- SOBRE MI -->
+        <div class="profile-section about">
+          <label for="about">Sobre mí</label>
+          <textarea id="about" placeholder="Escribe algo sobre ti..." [(ngModel)]="description"></textarea>
+        </div>
+
+        <!-- CORREO Y FECHA -->
+        <div class="profile-row">
+          <div class="profile-section half">
+            <label for="email">Correo electrónico</label>
+            <input id="email" type="email" placeholder="email@ejemplo.com" [(ngModel)]="email" (blur)="validate()" [ngClass]="{ 'input-error': errorMessages['email'] }"/>
+            <small *ngIf="errorMessages['email']" class="error-message">{{ errorMessages['email'] }}</small>
+          </div>
+
+          <div class="profile-section half">
+            <label for="birthdate">Fecha de nacimiento</label>
+            <input id="birthdate" type="date" [ngModel]="birthDate | date:'yyyy-MM-dd'" (ngModelChange)="onBirthDateChange($event)" (blur)="validate()" [value]="birthDate ? (birthDate | date:'yyyy-MM-dd'): ''" [ngClass]="{ 'input-error': errorMessages['birthDate'] }">
+            <small *ngIf="errorMessages['birthDate']" class="error-message">{{ errorMessages['birthDate'] }}</small>
+          </div>
+        </div>
+
+        <!-- UBICACIÓN Y GÉNERO -->
+        <div class="profile-row">
+          <div class="profile-section half">
+            <label for="location">Ubicación</label>
+
+            <input id="location" type="text" placeholder="Tarragona, Cataluña, España" [(ngModel)]="location" (blur)="validate()"  [ngClass]="{ 'input-error': errorMessages['location'] }"/>
+            <small *ngIf="errorMessages['location']" class="error-message">{{ errorMessages['location'] }}</small>
+          </div>
+
+          <div class="profile-section half">
+            <label for="gender">Género</label>
+            <select id="gender" [(ngModel)]="gender" (blur)="validate()" [class.error]="errorMessages['gender']">
+              <option value="masculino" selected>Hombre</option>
+              <option value="femenino">Mujer</option>
+              <option value="otro">Otro</option>
+              <option value="no_especificar">Prefiero no decirlo</option>
+            </select>
+            <small *ngIf="errorMessages['gender']" class="error-message">{{ errorMessages['gender'] }}</small>
+          </div>
+        </div>
+        <app-save-button (submit)="save()"></app-save-button>
+      </div>
+    </div>
+  </div>
+  
+</body>

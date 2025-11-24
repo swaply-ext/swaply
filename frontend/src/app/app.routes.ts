@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
+import { HomeComponent } from './pages/home/home.component';
 import { SkillsComponent } from './pages/skills/skills.component';
 import { InterestsComponent } from './pages/interests/interests.component';
-import { HomeComponent } from './pages/home/home.component';
 import { RegisterFormComponent } from './pages/register-form/register-form.component';
 import { LoginFormComponent } from './pages/login-form/login-form.component';
 import { RecoveryPasswordComponent } from './pages/recovery-password/recovery-password.component';
@@ -16,7 +16,7 @@ import { SkillsPanelComponent } from './components/skills-panel/skills-panel.com
 import { LoadingScreenComponent } from './components/loading-screen/loading-screen.component';
 import { InterestsPanelComponent } from './components/interests-panel/interests-panel.component';
 import { ProfileInfoComponent } from './components/profile-info/profile-info.component';
-import { ProfileComponent } from './pages/profile/profile.component';
+import { EditProfileComponent } from './pages/edit-profile/edit-profile.component';
 import { PublicProfileComponent } from './pages/public-profile/public-profile.component';
 import { RecoveryEmailComponent } from './pages/recovery-email/recovery-email.component';
 import { PassVerificationComponent } from './pages/pass-verification/pass-verification.component';
@@ -26,17 +26,26 @@ import { Error404Component } from './pages/error-404/error-404.component';
 import { PrivateProfileComponent } from './pages/private-profile/private-profile.component';
 import { SkillSearchComponent } from './components/skill-search/skill-search.component';
 import { AuthGuard } from './services/auth-guard.service';
+import { LinkSentConfirmationComponent } from './pages/link-sent-confirmation/link-sent-confirmation.component';
+import { CodeSentConfirmationComponent } from './pages/code-sent-confirmation/code-sent-confirmation.component';
+import { FilterSkillsComponent } from './components/filter-skills/filter-skills.component';
+import { EmailSentComponent } from './pages/email-sent/email-sent.component';
+import { IndexComponent } from './pages/index/index.component';
+
 
 // Creamos una ruta para la verificación de correo
 // Ahora usamos el componente real EmailVerificationComponent
 export const appRoutes: Routes = [
+  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] }, // ruta para ver HomeComponent
   { path: 'skills', component: SkillsComponent, canActivate: [AuthGuard] }, // ruta para ver SkillsComponent
   { path: 'interests', component: InterestsComponent, canActivate: [AuthGuard] }, // ruta para ver InterestsComponent
   { path: '', component: HomeComponent }, // ruta principal muestra el componente Home
   { path: 'register', component: RegisterFormComponent }, // ruta para el formulario de registro
+   { path: 'code-sent-confirmation', component: CodeSentConfirmationComponent },
   { path: 'verify', component: EmailVerificationComponent }, // ruta para la verificación de correo
   { path: 'login', component: LoginFormComponent }, // ruta para el login
   { path: 'recovery-password', component: RecoveryPasswordComponent }, // ruta para la recuperación de contraseña
+  { path: 'link-sent-confirmation', component: LinkSentConfirmationComponent },
   { path: 'new-password', component: NewPasswordComponent }, // nueva ruta para cambiar contraseña
   { path: 'personal-information', component: PersonalInformationComponent }, // ruta para información personal
   { path: 'confirmation', component: ConfirmationComponent }, // ruta para pantalla de confirmación antes de Home
@@ -47,7 +56,7 @@ export const appRoutes: Routes = [
   { path: 'loading', component: LoadingScreenComponent }, // ruta para la pantalla de carga
   { path: 'interests-panel', component: InterestsPanelComponent }, // ruta para el panel de intereses
   { path: 'profile-info', component: ProfileInfoComponent }, // ruta para la información personal (temporal)
-  { path: 'profile-edit', component: ProfileComponent, canActivate: [AuthGuard] }, // ruta para el perfil de usuario
+  { path: 'profile-edit', component: EditProfileComponent , canActivate: [AuthGuard] }, // ruta para el perfil de usuario
   { path: 'public-profile', component: PublicProfileComponent }, // ruta para el perfil público
   { path: 'recovery-email', component: RecoveryEmailComponent }, // ruta para la recuperación de correo
   { path: 'pass-verification', component: PassVerificationComponent },
@@ -55,6 +64,9 @@ export const appRoutes: Routes = [
   { path: 'exit', component: ExitComponent },
   { path: 'myprofile', component: PrivateProfileComponent, canActivate: [AuthGuard] },
   { path: 'search-skills', component: SkillSearchComponent }, //barra de busqueda componente
+  { path: 'filter-skills', component: FilterSkillsComponent },
   { path: '404', component: Error404Component },
+  { path: 'index', component: IndexComponent },
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
+  
 ];

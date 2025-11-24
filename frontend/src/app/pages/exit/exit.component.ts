@@ -1,27 +1,50 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-exit',
   templateUrl: './exit.component.html',
-  styleUrls: ['./exit.component.css']
+  styleUrls: ['./exit.component.css'],
 })
 export class ExitComponent implements OnInit {
 
-  // 👇 ¡IMPORTANTE! 
-  // Cambia 'token' por el nombre exacto de tu clave en localStorage.
   private readonly TOKEN_KEY = 'authToken'; 
-
-  constructor() { }
+  countdown: number = 5;
+  private intervalId: any;
+  constructor(
+    private router: Router
+  ) {}
 
   /**
    * ngOnInit se ejecuta automáticamente cuando este componente se carga.
    */
   ngOnInit(): void {
-    // 1. Borra el token del localStorage del navegador
     localStorage.removeItem(this.TOKEN_KEY);
-    
-    // 2. Opcionalmente, puedes verificar que se borró (para depurar)
     console.log('Token borrado del localStorage.');
+    this.startCountdown();
+  }
+    startCountdown() {
+    this.intervalId = setInterval(() => {
+      this.countdown--; //incremento para el que entienda, 
+
+      if (this.countdown === 0) {
+        this.redirectToLogin();
+      }
+    }, 1000);
+  }
+  
+  redirectToLogin() {
+    this.clearTimer();
+    this.router.navigate(['/login']);
   }
 
+  private clearTimer() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
+  }
+  ngOnDestroy(): void {
+    this.clearTimer();
+  }
 }
