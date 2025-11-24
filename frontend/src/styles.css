@@ -8,7 +8,9 @@
   --secundary-color-2: #BFBFBF; /* Gris clar */
   --secundary-color-3: #292929; /* Gris fosc */
   --error-color-1: #E53935; /* Vermell clar */
-  --error-color-2: #B71C1C; /* Vermell fosc */
+  --error-color-2: #B71C1C; /* Vermell neutre */
+  --error-color-3: #751414; /* Vermell fosc */
+  
 
   --font-primary: 'Quicksand', sans-serif;
   --font-secondary: 'Inter', sans-serif;

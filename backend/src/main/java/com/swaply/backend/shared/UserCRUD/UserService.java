@@ -37,6 +37,12 @@ public class UserService {
         return repository.existsUserByUsername(username);
     }
 
+    public UserDTO getUserByUsername(String username) {
+        User user = repository.findUserByUsername(username)
+            .orElseThrow(() -> new UserNotFoundException("User not found with username: " + username));
+        return mapper.entityToDTO(user);
+    }
+
     public UserDTO getUserByEmail(String email) {
         User user = repository.findUserByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));

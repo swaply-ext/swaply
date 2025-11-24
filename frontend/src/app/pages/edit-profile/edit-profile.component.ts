@@ -126,6 +126,15 @@ export class EditProfileComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al actualizar el perfil:', err);
+
+        // Detectar si el usuario ya existen 
+        if (err.status === 409 || (err.error && err.error.message && err.error.message.includes('username already exists'))) {
+          if (this.username.toLowerCase() === this.profileData.username.toLowerCase()) {
+            console.log('El nombre de usuario es el mismo que el actual, no se muestra error.');
+          } else {
+            this.errorMessages['username'] = 'El nombre de usuario ya está en uso. Por favor, elige otro diferente.';
+          }
+        }
       }
     });
   }
@@ -173,7 +182,7 @@ export class EditProfileComponent implements OnInit {
     if (!this.location) {
       this.errorMessages['location'] = 'La ubicación es obligatoria.';
     } else if (this.validateLocationFormat(this.location)) {
-      this.errorMessages['location'] = 'La ubicación debe tener entre 3 y 30 caracteres, solo letras y espacios.';
+      this.errorMessages['location'] = 'La ubicación debe tener entre 3 y 30 caracteres. Solo letras, espacios, comas y guiones.';
     } else {
       delete this.errorMessages['location'];
     }
@@ -223,7 +232,7 @@ export class EditProfileComponent implements OnInit {
   private validateLocationFormat(location: string): boolean {
     const minLength = 3;
     const maxLength = 30;
-    const requeriments = /^[A-Za-z ]+$/
+    const requeriments = /^[A-Za-z ,-]+$/
 
     if (location.length < minLength) return true;
     if (location.length > maxLength) return true;
