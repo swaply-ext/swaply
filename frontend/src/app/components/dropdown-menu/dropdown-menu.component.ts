@@ -22,7 +22,7 @@ export class DropdownMenuComponent {
 
   constructor(private router: Router, private authService: AuthService) {}
 
-  getStars(rating: number): string[] {
+  getStars(rating: number): { icon: string; filled: boolean }[] {
     const safeRating = Math.max(0, Math.min(5, rating));
     const fullStars = Math.floor(safeRating);
     const decimal = safeRating - fullStars;
@@ -30,11 +30,13 @@ export class DropdownMenuComponent {
     const emptyStars = 5 - fullStars - halfStar;
 
     return [
-      ...Array(fullStars).fill('star'),
-      ...Array(halfStar).fill('star_half'),
-      ...Array(emptyStars).fill('star_border')
+      ...Array(fullStars).fill({ icon: 'star', filled: true }),
+      ...Array(halfStar).fill({ icon: 'star_half', filled: true }),
+      ...Array(emptyStars).fill({ icon: 'star', filled: false })
     ];
   }
+
+
 
   goToMyProfile() {
     this.router.navigate(['/private-profile']);

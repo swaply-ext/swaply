@@ -9,8 +9,9 @@
         <p class="username">&#64;{{ dropdownMenuData.username }}</p>
         <div class="rating" *ngIf="dropdownMenuData.rating !== undefined">
           <span *ngFor="let star of getStars(dropdownMenuData.rating)" 
-                class="material-symbols-outlined star-icon">
-            {{ star }}
+                class="material-symbols-outlined star-icon"
+                [ngClass]="{ 'filled': star.filled, 'empty': !star.filled }">
+            {{ star.icon }}
           </span>
           <span class="rating-value">{{ dropdownMenuData.rating }}</span>
         </div>

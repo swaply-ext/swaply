@@ -23,12 +23,14 @@
     <span class="material-symbols-outlined nav-icon">chat_bubble</span>
     <span class="material-symbols-outlined nav-icon">notifications</span>
 
-    <span class="material-symbols-outlined nav-icon profile-icon" (click)="toggleDropdown()">
-      person
-    </span>
+    <div class="profile-wrapper">
+      <span class="material-symbols-outlined nav-icon profile-icon" (click)="toggleDropdown()">
+        person
+      </span>
 
-    <div class="dropdown-overlay" *ngIf="showDropdown" [class.show]="showDropdown">
-      <app-dropdown-menu [dropdownMenuData]="userData"></app-dropdown-menu>
+      <div class="dropdown-overlay" *ngIf="showDropdown" [class.show]="showDropdown">
+        <app-dropdown-menu [dropdownMenuData]="userData"></app-dropdown-menu>
+      </div>
     </div>
   </div>
 </nav>

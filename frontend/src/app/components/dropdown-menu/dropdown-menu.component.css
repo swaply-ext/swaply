@@ -1,24 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined');
-
-.nav-right {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  position: relative;
-}
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1');
 
 .dropdown-overlay {
   position: absolute;
-  top: 3rem;
-  right: 1rem;
-  width: 15rem;
-  min-height: 12rem;
-  max-height: 20rem;
-  overflow-y: auto;
+  top: 100%;
+  right: 0;
+  left: auto;
+  width: fit-content;
+  min-width: 15rem;
+  max-width: calc(100vw - 1rem);
+  padding: 1rem;
+  box-sizing: border-box;
+  overflow: hidden;
   opacity: 0;
-  transform: translateY(-0.5rem);
+  transform: translateY(8px);
   pointer-events: none;
-  transition: opacity 0.25s ease, transform 0.25s ease;
+  transition: opacity 0.2s ease, transform 0.2s ease;
   z-index: 1000;
 }
 
@@ -30,19 +26,18 @@
 
 .profile-card-wrapper {
   display: block;
-  padding: 0.5rem;
-  width: auto;
+  width: 100%;
 }
 
 .profile-card {
-  width: 100%;
-  border: 0.0625rem solid #3CB57C;
+  width: fit-content;
+  max-width: 100%;
+  border: 0.0625rem solid var(--principal-color-2);
   border-radius: 0.625rem;
-  background: #16414D;
-  box-shadow: 0 0.25rem 0.75rem rgba(0,0,0,0.15);
-  color: #3CB57C;
+  background: var(--principal-color-1);
+  color: var(--principal-color-2);
+  font-family: var(--font-primary);
   overflow: hidden;
-  font-family: Arial, sans-serif;
 }
 
 .profile-header {
@@ -50,14 +45,14 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
-  box-shadow: inset 0 -0.0625rem #CCCCCC;
+  box-shadow: inset 0 -0.0625rem var(--secundary-color-2);
 }
 
 .profile-pic {
   width: 4rem;
   height: 4rem;
   border-radius: 50%;
-  border: 0.125rem solid #00BAD2;
+  border: 0.125rem solid var(--profile-pic-border);
 }
 
 .profile-info {
@@ -67,40 +62,67 @@
   justify-content: center;
   align-items: flex-start;
   text-align: left;
+  min-width: 0;
+  max-width: 100%;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  gap: 0.25rem;
 }
 
 .name {
   margin: 0;
   font-size: 1rem;
   font-weight: bold;
-  color: #3CB57C;
+  color: var(--principal-color-2);
+  font-family: var(--font-secondary);
+  text-align: left;
 }
 
 .username {
-  margin: 0.25rem 0 0;
+  margin: 0;
   font-size: 0.875rem;
-  color: #3CB57C;
+  color: var(--principal-color-2);
+  font-family: var(--font-secondary);
+  max-width: 100%;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .rating {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  margin-top: 0.25rem;
-  flex-wrap: wrap;
-}
-
-.star-icon {
-  color: #f1c40f;
-  font-size: 1rem;
-  line-height: 1;
+  flex-wrap: nowrap;
+  white-space: nowrap;
 }
 
 .rating-value {
   font-size: 0.875rem;
-  color: #BFBFBF;
-  margin-left: 0.5rem;
+  color: var(--secundary-color-2);
+  margin-left: 0.25rem;
   line-height: 1;
+  flex-shrink: 0;
+}
+
+
+
+.star-icon {
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--star-color);
+  font-variation-settings: 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.star-icon.filled {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  color: var(--star-color);
+}
+
+.star-icon.empty {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  color: var(--star-color);
 }
 
 .profile-body {
@@ -108,7 +130,7 @@
 }
 
 .profile-logout {
-  box-shadow: inset 0 0.0625rem #CCCCCC;
+  box-shadow: inset 0 0.0625rem var(--secundary-color-2);
   padding-top: 0.75rem;
   margin-left: -0.75rem;
   margin-right: -0.75rem;
@@ -116,12 +138,9 @@
   padding-right: 0.75rem;
 }
 
-.material-symbols-outlined {
-  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-}
-
 .icon {
-  color: #3CB57C;
+  color: var(--principal-color-2);
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 }
 
 .profile-actions {
@@ -141,7 +160,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #BFBFBF;
+  color: var(--secundary-color-2);
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 

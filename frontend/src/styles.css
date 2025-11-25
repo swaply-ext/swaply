@@ -8,6 +8,10 @@
   --secundary-color-2: #BFBFBF; /* Gris clar */
   --secundary-color-3: #292929; /* Gris fosc */
 
+  --pic-border-color: #00BAD2; /* Color del borde de la foto de perfil*/
+  --star-color: #f1c40f ; /* Color d'estrella */
+
+
   --font-primary: 'Quicksand', sans-serif;
   --font-secondary: 'Inter', sans-serif;
 }
