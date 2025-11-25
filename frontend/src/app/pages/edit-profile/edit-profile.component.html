@@ -16,20 +16,20 @@
             <div class="profile-row">
               <div class="profile-section half">
                 <label for="name">Nombre completo</label>
-                <input id="name" type="text" placeholder="Juan" [(ngModel)]="name" (blur)="validate()"
+                <input id="name" type="text" placeholder="Mi nombre" [(ngModel)]="name" (blur)="validate()"
                   [ngClass]="{ 'input-error': errorMessages['name'] }" />
                 <small *ngIf="errorMessages['name']" class="error-message">{{ errorMessages['name'] }}</small>
               </div>
               <div class="profile-section half">
                 <label for="surname">Apellido</label>
-                <input id="surname" type="text" placeholder="Pérez" [(ngModel)]="surname" (blur)="validate()"
+                <input id="surname" type="text" placeholder="Mis apellidos" [(ngModel)]="surname" (blur)="validate()"
                   [ngClass]="{ 'input-error': errorMessages['surname'] }" />
                 <small *ngIf="errorMessages['surname']" class="error-message">{{ errorMessages['surname'] }}</small>
               </div>
             </div>
             <div class="name-field">
               <label for="username">Username</label>
-              <input id="username" type="text" placeholder="@juanperez123" [(ngModel)]="username" (blur)="validate()"
+              <input id="username" type="text" placeholder="@username" [(ngModel)]="username" (blur)="validate()"
                 [ngClass]="{ 'input-error': errorMessages['username'] }" />
               <small *ngIf="errorMessages['username']" class="error-message">{{ errorMessages['username'] }}</small>
             </div>

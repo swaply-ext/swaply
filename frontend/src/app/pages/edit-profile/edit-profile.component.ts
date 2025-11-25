@@ -128,7 +128,7 @@ export class EditProfileComponent implements OnInit {
         console.error('Error al actualizar el perfil:', err);
 
         // Detectar si el usuario ya existen 
-        if (err.status === 409 || (err.error && err.error.message && err.error.message.includes('username already exists'))) {
+        if (err.status === 409) {
           if (this.username.toLowerCase() === this.profileData.username.toLowerCase()) {
             console.log('El nombre de usuario es el mismo que el actual, no se muestra error.');
           } else {
@@ -142,10 +142,6 @@ export class EditProfileComponent implements OnInit {
     this.refreshPage();
   }
 
-  // onBirthDateChange(event: string): void {
-  //   this.birthDate = new Date(event);
-  //   this.profileData.birthDate = this.birthDate;
-  // }
   validate(): boolean {
     // Validar campos obligatorios
     if (!this.gender) this.errorMessages['gender'] = 'El género es obligatorio.';
@@ -203,7 +199,6 @@ export class EditProfileComponent implements OnInit {
         }
       }
     }
-
 
     //devolver si hay errores o no
     if (Object.keys(this.errorMessages).length > 0) {
