@@ -1,4 +1,3 @@
-import { ProfileComponent } from './../../pages/profile/profile.component';
 import { Component, OnChanges, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router'; // <--- Afegeix Router
