@@ -51,20 +51,21 @@ public class AccountService /* implements UserRepository */ {
         UserDTO userDto = mapper.fromProfileDataDTO(dto);
         userService.updateUser(userId, userDto);
     }
-    
+
     public EditProfileDTO getEditProfileData(String userId) {
         UserDTO userDTO = userService.getUserByID(userId);
         return mapper.editDatafromUserDTO(userDTO);
     }
-public void updateEditProfileData(String userId, EditProfileDTO dto) {
-    UserDTO userDto = mapper.fromEditProfileDataDTO(dto);
 
-    if (userService.existsByUsername(dto.getUsername())) {
-        UserDTO userWithSameUsername = userService.getUserByUsername(dto.getUsername());
-        if (!userWithSameUsername.getId().equals(userId)) {
-            throw new UserAlreadyExistsException("El usuario: " + dto.getUsername() + " ya esta en uso.");
+    public void updateEditProfileData(String userId, EditProfileDTO dto) {
+        UserDTO newUserDTO = mapper.fromEditProfileDataDTO(dto);
+        UserDTO currentUserDTO = userService.getUserByID(userId);
+        //Comprobar si el username ha cambiado y si el nuevo ya existe
+        if (!currentUserDTO.getUsername().equals(dto.getUsername())) {
+            if (userService.existsByUsername(dto.getUsername())) {
+                throw new UserAlreadyExistsException("El usuario: " + dto.getUsername() + " ya esta en uso.");
+            }
         }
+        userService.updateUser(userId, newUserDTO);
     }
-    userService.updateUser(userId, userDto);
-}
 }
