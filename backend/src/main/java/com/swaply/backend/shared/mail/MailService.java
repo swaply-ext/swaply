@@ -1,5 +1,10 @@
 package com.swaply.backend.shared.mail;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -21,7 +26,7 @@ public class MailService {
         this.templateEngine = templateEngine;
     }
 
-    private void sendHtmlEmail(String to, String subject, String htmlBody) {
+    private void sendHtmlEmail(String to, String subject, String htmlBody, Map<String, Resource> inlineImages) {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         try {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
@@ -30,6 +35,11 @@ public class MailService {
             messageHelper.setSubject(subject);
             messageHelper.setText(htmlBody, true);
 
+            if (inlineImages != null) {
+                for (Map.Entry<String, Resource> entry : inlineImages.entrySet()) {
+                    messageHelper.addInline(entry.getKey(), entry.getValue());
+                }
+            }
 
             javaMailSender.send(mimeMessage);
 
@@ -42,15 +52,19 @@ public class MailService {
         Context context = new Context();
         context.setVariable("code", code);
         String htmlBody = templateEngine.process("email/RegisterVerificationCode", context);
-        sendHtmlEmail(email, "Tu Código de Verificación de Swaply", htmlBody);
+        Map<String, Resource> inlineImages = new HashMap<>();
+        inlineImages.put("logo_swp_invert", new ClassPathResource("templates/email/images/logo_swp_invert.png"));
+        inlineImages.put("swaply_hands", new ClassPathResource("templates/email/images/Swaply-hands.png"));
+        sendHtmlEmail(email, "Tu Código de Verificación de Swaply", htmlBody, inlineImages);
     }
 
     public void sendPasswordResetEmail(String email, String resetUrl) {
         Context context = new Context();
         context.setVariable("resetUrl", resetUrl);
         String htmlBody = templateEngine.process("email/PasswordReset.html", context);
-        sendHtmlEmail(email, "Restablece tu contraseña de Swaply", htmlBody);
+        Map<String, Resource> inlineImages = new HashMap<>();
+        inlineImages.put("logo_swp_invert", new ClassPathResource("templates/email/images/logo_swp_invert.png"));
+        inlineImages.put("swaply_hands", new ClassPathResource("templates/email/images/Swaply-hands.png"));
+        sendHtmlEmail(email, "Restablece tu contraseña de Swaply", htmlBody, inlineImages);
     }
-
-    
 }
