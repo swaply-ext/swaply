@@ -5,12 +5,14 @@ import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.compo
 import { SideMenuComponent } from '../../components/side-menu/side-menu.component';
 import { SaveButtonComponent } from '../../components/save-button/save-button.component';
 import { AccountService } from '../../services/account.service';
+import { DiscardButtonComponent } from '../../components/discard-button/discard-button.component';
 
 interface ProfileData {
-  fullName: string;
+  name: string;
+  surname: string;
   username: string;
   description: string;
-  birthDate: Date | null;
+  birthDate: string;
   location: string;
   gender: string;
   email: string;
@@ -25,7 +27,8 @@ interface ProfileData {
     FormsModule,
     AppNavbarComponent,
     SideMenuComponent,
-    SaveButtonComponent
+    SaveButtonComponent,
+    DiscardButtonComponent
   ],
   templateUrl: './edit-profile.component.html',
   styleUrls: ['./edit-profile.component.css']
@@ -35,10 +38,11 @@ export class EditProfileComponent implements OnInit {
   constructor(private accountService: AccountService) { }
 
   // Variables individuales para enlazar con el formulario
-  fullName = "";
+  name = "";
+  surname = "";
   username = "";
   description = "";
-  birthDate: Date | null = null;
+  birthDate: string = "";
   location = "";
   gender = "";
   email = "";
@@ -62,22 +66,24 @@ export class EditProfileComponent implements OnInit {
       }
     });
   }
-  
+
   // Mapear datos del usuario a la estructura ProfileData
   mapProfileData(user: any): void {
     this.profileData = {
-      fullName: `${user.name} ${user.surname}`,
+      name: user.name,
+      surname: user.surname,
       username: user.username,
       description: user.description,
       location: user.location,
-      birthDate: user.birthDate ? new Date(user.birthDate) : null,
+      birthDate: user.birthDate ? new Date(user.birthDate).toISOString().substring(0, 10) : '',
       gender: user.gender,
       email: user.email,
       profilePhotoUrl: user.profilePhotoUrl
     };
 
     // Asignar también a las variables individuales que usa el template
-    this.fullName = this.profileData.fullName;
+    this.name = this.profileData.name;
+    this.surname = this.profileData.surname;
     this.username = this.profileData.username;
     this.description = this.profileData.description;
     this.location = this.profileData.location;
@@ -86,21 +92,72 @@ export class EditProfileComponent implements OnInit {
     this.email = this.profileData.email;
     this.profilePhotoUrl = this.profileData.profilePhotoUrl;
   }
+  save() {
+    // Resetear errores al inicio
+    this.errorMessages = {};
+    // Validar los campos del formulario
+    this.validate();
 
-  onBirthDateChange(event: string): void {
-    this.birthDate = new Date(event);
-    this.profileData.birthDate = this.birthDate;
+    // Si hay errores, no continuar
+    if (Object.keys(this.errorMessages).length > 0) {
+      console.error('No se pudo actualizar el perfil: campos obligatorios incompletos o formatos inválidos.');
+      return;
+    }
+    //recoger los datos del formulario
+    const updatedUser: ProfileData = {
+      name: this.name,
+      surname: this.surname,
+      username: this.username.toLowerCase(),
+      description: this.description,
+      birthDate: this.birthDate,
+      location: this.location,
+      gender: this.gender,
+      email: this.email.toLowerCase(),
+      profilePhotoUrl: this.profilePhotoUrl
+    };
+    //llamar al servicio para actualizar los datos y sobrecribir los datos actuales
+    this.accountService.updateEditProfileData(updatedUser).subscribe({
+      next: (success) => {
+        if (success) {
+          console.log('Perfil actualizado con éxito.');
+        } else {
+          console.error('Error al actualizar el perfil: respuesta negativa del servidor.');
+        }
+      },
+      error: (err) => {
+        console.error('Error al actualizar el perfil:', err);
+
+        // Detectar si el usuario ya existen 
+        if (err.status === 409) {
+          if (this.username.toLowerCase() === this.profileData.username.toLowerCase()) {
+            console.log('El nombre de usuario es el mismo que el actual, no se muestra error.');
+          } else {
+            this.errorMessages['username'] = 'El nombre de usuario ya está en uso. Por favor, elige otro diferente.';
+          }
+        }
+      }
+    });
   }
+  discard() {
+    this.refreshPage();
+  }
+
   validate(): boolean {
     // Validar campos obligatorios
     if (!this.gender) this.errorMessages['gender'] = 'El género es obligatorio.';
 
-    // Validar fullName
-    if (!this.fullName.trim()) {
-      this.errorMessages['fullName'] = 'El nombre completo es obligatorio.';
+    // Validar name y surname
+    if (!this.name.trim()) {
+      this.errorMessages['name'] = 'El nombre completo es obligatorio.';
     } else {
-      delete this.errorMessages['fullName'];
+      delete this.errorMessages['name'];
     }
+    if (!this.surname.trim()) {
+      this.errorMessages['surname'] = 'El apellido es obligatorio.';
+    } else {
+      delete this.errorMessages['surname'];
+    }
+
     // Validar username
     if (!this.username.trim()) {
       this.errorMessages['username'] = 'El nombre de usuario es obligatorio.';
@@ -121,17 +178,26 @@ export class EditProfileComponent implements OnInit {
     if (!this.location) {
       this.errorMessages['location'] = 'La ubicación es obligatoria.';
     } else if (this.validateLocationFormat(this.location)) {
-      this.errorMessages['location'] = 'La ubicación debe tener entre 3 y 30 caracteres, solo letras y espacios.';
+      this.errorMessages['location'] = 'La ubicación debe tener entre 3 y 30 caracteres. Solo letras, espacios, comas y guiones.';
     } else {
       delete this.errorMessages['location'];
     }
     // Validar birthDate
     if (!this.birthDate) {
       this.errorMessages['birthDate'] = 'La fecha de nacimiento es obligatoria.';
-    } else if (this.isFutureDate(this.birthDate) || this.isToday(this.birthDate)) {
-      this.errorMessages['birthDate'] = 'La fecha de nacimiento no es válida.';
     } else {
-      delete this.errorMessages['birthDate'];
+      const date = new Date(this.birthDate);
+
+      if (this.isFutureDate(date) || this.isToday(date)) {
+        this.errorMessages['birthDate'] = 'La fecha de nacimiento no es válida.';
+      } else {
+        const age = this.calculateAge(date);
+        if (age < 18 || age > 120) {
+          this.errorMessages['birthDate'] = 'La edad debe estar entre 18 y 120 años.';
+        } else {
+          delete this.errorMessages['birthDate'];
+        }
+      }
     }
 
     //devolver si hay errores o no
@@ -161,7 +227,7 @@ export class EditProfileComponent implements OnInit {
   private validateLocationFormat(location: string): boolean {
     const minLength = 3;
     const maxLength = 30;
-    const requeriments = /^[A-Za-z ]+$/
+    const requeriments = /^[A-Za-z ,-]+$/
 
     if (location.length < minLength) return true;
     if (location.length > maxLength) return true;
@@ -182,41 +248,15 @@ export class EditProfileComponent implements OnInit {
     return date > today;
   }
 
-  save() {
-    // Resetear errores al inicio
-    this.errorMessages = {};
-    // Validar los campos del formulario
-    this.validate();
-
-    // Si hay errores, no continuar
-    if (Object.keys(this.errorMessages).length > 0) {
-      console.error('No se pudo actualizar el perfil: campos obligatorios incompletos o formatos inválidos.');
-      return;
+  private calculateAge(birthDate: Date): number {
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
     }
-    //recoger los datos del formulario
-    const updatedUser: ProfileData = {
-      fullName: this.fullName,
-      username: this.username.toLowerCase(),
-      description: this.description,
-      birthDate: this.birthDate,
-      location: this.location,
-      gender: this.gender,
-      email: this.email.toLowerCase(),
-      profilePhotoUrl: this.profilePhotoUrl
-    };
-    //llamar al servicio para actualizar los datos y sobrecribir los datos actuales
-    this.accountService.updateEditProfileData(updatedUser).subscribe({
-      next: (success) => {
-        if (success) {
-          console.log('Perfil actualizado con éxito.');
-        } else {
-          console.error('Error al actualizar el perfil: respuesta negativa del servidor.');
-        }
-      },
-      error: (err) => {
-        console.error('Error al actualizar el perfil:', err);
-      }
-    });
-    this.refreshPage();
+    return age;
   }
+
+
 }

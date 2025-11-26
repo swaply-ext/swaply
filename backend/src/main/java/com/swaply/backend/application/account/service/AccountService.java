@@ -3,6 +3,7 @@ package com.swaply.backend.application.account.service;
 import com.swaply.backend.application.account.dto.PersonalInfoDTO;
 import com.swaply.backend.application.account.dto.ProfileDataDTO;
 import com.swaply.backend.application.account.dto.SkillsDTO;
+import com.swaply.backend.application.auth.exception.UserAlreadyExistsException;
 import com.swaply.backend.shared.UserCRUD.UserService;
 import com.swaply.backend.shared.UserCRUD.dto.EditProfileDTO;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
@@ -50,13 +51,21 @@ public class AccountService /* implements UserRepository */ {
         UserDTO userDto = mapper.fromProfileDataDTO(dto);
         userService.updateUser(userId, userDto);
     }
-    
+
     public EditProfileDTO getEditProfileData(String userId) {
         UserDTO userDTO = userService.getUserByID(userId);
         return mapper.editDatafromUserDTO(userDTO);
     }
+
     public void updateEditProfileData(String userId, EditProfileDTO dto) {
-        UserDTO userDto = mapper.fromEditProfileDataDTO(dto);
-        userService.updateUser(userId, userDto);
+        UserDTO newUserDTO = mapper.fromEditProfileDataDTO(dto);
+        UserDTO currentUserDTO = userService.getUserByID(userId);
+        //Comprobar si el username ha cambiado y si el nuevo ya existe
+        if (!currentUserDTO.getUsername().equals(dto.getUsername())) {
+            if (userService.existsByUsername(dto.getUsername())) {
+                throw new UserAlreadyExistsException("El usuario: " + dto.getUsername() + " ya esta en uso.");
+            }
+        }
+        userService.updateUser(userId, newUserDTO);
     }
 }

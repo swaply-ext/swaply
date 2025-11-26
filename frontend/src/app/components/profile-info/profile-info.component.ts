@@ -9,7 +9,10 @@ interface ProfileData {
   location: string;
   description: string;
   profilePhotoUrl: string;
+  rating: number;
 }
+
+
 @Component({
   selector: 'app-profile-info',
   standalone: true,
@@ -20,11 +23,14 @@ interface ProfileData {
 export class ProfileInfoComponent {
   @Input() profileData: ProfileData = {} as ProfileData;
 
+
+
   ngOnChanges(): void {
     console.log('ProfileData changed:', this.profileData);
   }
 
   constructor(private authService: AuthService) { } // <--- Injecció de Router
+  starsArray = [1, 2, 3, 4, 5];
   get isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
   }
