@@ -1,0 +1,48 @@
+<div class="profile-card-wrapper">
+  <div class="profile-card">
+    <!-- Cabecera del perfil -->
+    <div class="profile-header">
+      <img [src]="dropdownMenuData.profilePhotoUrl || 'https://via.placeholder.com/64'" 
+           alt="Foto de perfil" class="profile-pic">
+      <div class="profile-info">
+        <h3 class="name">{{ dropdownMenuData.fullName }}</h3>
+        <p class="username">&#64;{{ dropdownMenuData.username }}</p>
+        <div class="rating" *ngIf="dropdownMenuData.rating !== undefined">
+          <span *ngFor="let star of getStars(dropdownMenuData.rating)" 
+                class="material-symbols-outlined star-icon"
+                [ngClass]="{ 'filled': star.filled, 'empty': !star.filled }">
+            {{ star.icon }}
+          </span>
+          <span class="rating-value">{{ dropdownMenuData.rating }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botones -->
+    <div class="profile-body">
+      <div class="profile-actions">
+        <button class="menu-btn" (click)="goToMyProfile()">
+          <span class="material-symbols-outlined icon">person</span>
+          Ver Perfil
+        </button>
+
+        <button class="menu-btn" (click)="goToMySwaps()">
+          <span class="material-symbols-outlined icon">compare_arrows</span>
+          Mis intercambios
+        </button>
+
+        <button class="menu-btn" (click)="goToSettings()">
+          <span class="material-symbols-outlined icon">settings</span>
+          Ajustes
+        </button>
+      </div>
+
+      <div class="profile-logout">
+        <button class="menu-btn logout-btn" (click)="logout()">
+          <span class="material-symbols-outlined icon">logout</span>
+          Cerrar sesión
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

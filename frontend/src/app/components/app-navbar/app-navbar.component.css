@@ -52,7 +52,6 @@
   color: #ffffff;
 }
 
-/* --- Estilos Premium --- */
 .nav-premium {
   color: #B89230;
   font-weight: 600;
@@ -63,13 +62,11 @@
   text-decoration: none;
 }
 
-
 .premium-icon {
   font-size: 27px;
   color: #B89230;
 }
 
-/* --- Estilos Buscador --- */
 .nav-search {
   position: relative;
   flex-grow: 1;
@@ -79,7 +76,7 @@
 
 .nav-search input {
   width: 100%;
-  padding: 0.6rem 1rem 0.6rem 2.8rem; 
+  padding: 0.6rem 1rem 0.6rem 2.8rem;
   border-radius: 9999px;
   background-color: #0F2D37;
   color: #e5e7eb;
@@ -93,7 +90,6 @@
   border-color: #3CB57C;
 }
 
-
 .nav-search .search-icon {
   position: absolute;
   left: 0.8rem;
@@ -105,21 +101,18 @@
   user-select: none;
 }
 
-/* --- Estilos Iconos Derecha --- */
-
 .nav-icon {
   font-size: 29px;
   color: #d1d5db;
   cursor: pointer;
   transition: color 0.2s, transform 0.2s;
-  user-select: none; 
+  user-select: none;
 }
 
 .nav-icon:hover {
   color: #ffffff;
   transform: scale(1.1);
 }
-
 
 .profile-icon {
   font-size: 30px;
@@ -165,4 +158,40 @@
   .nav-links {
     display: none;
   }
+}
+
+.profile-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-overlay {
+  position: absolute;
+  top: 100%;
+  right: -0.75rem;
+  left: auto;
+  transform: translateY(0.5rem);
+  width: fit-content;
+  min-width: 15rem;
+  max-width: calc(100vw - 1rem);
+  padding: 1rem;
+  box-sizing: border-box;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 1000;
+}
+
+.dropdown-overlay.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+
+.dropdown-overlay.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
 }

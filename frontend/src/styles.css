@@ -24,6 +24,8 @@
     --level-two-skill: #ffa62f;
     --level-three-skill: #a05af3;
 
+  --pic-border-color: #00BAD2; /* Color del borde de la foto de perfil*/
+  --star-color: #f1c40f ; /* Color d'estrella */
 }
 
 body {
