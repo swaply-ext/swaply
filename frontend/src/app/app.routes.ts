@@ -66,7 +66,7 @@ export const appRoutes: Routes = [
   { path: 'filter-skills', component: FilterSkillsComponent },
   { path: '404', component: Error404Component },
   { path: 'home-page', component: HomePageComponent },
-  { path: 'privacy-and-security', component: PrivacyAndSecurityComponent },
+  { path: 'privacy-and-security', component: PrivacyAndSecurityComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
   
 ];
