@@ -132,7 +132,6 @@ export class FilterSkillsComponent {
   }
 
   toggleSub(sub: any) {
-  sub.selected = !sub.selected;
 
   const selected = this.getSelectedIds();
   console.log('Skills seleccionadas:', selected); // <-- Debug
