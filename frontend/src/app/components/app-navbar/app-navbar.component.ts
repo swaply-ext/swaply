@@ -21,6 +21,8 @@ export class AppNavbarComponent implements OnInit {
     this.accountService.getProfileData().subscribe({
       next: (user) => {
         this.userData = {
+          
+          //Aquí deberia de llegar un DTO que contenga estos campos, actualmente no es así
           fullName: `${user.name} ${user.surname}`,
           username: user.username,
           profilePhotoUrl: user.profilePhotoUrl,
