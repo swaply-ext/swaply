@@ -30,6 +30,7 @@ import { LinkSentConfirmationComponent } from './pages/link-sent-confirmation/li
 import { CodeSentConfirmationComponent } from './pages/code-sent-confirmation/code-sent-confirmation.component';
 import { FilterSkillsComponent } from './components/filter-skills/filter-skills.component';
 import { HomePageComponent } from './pages/home-page/home-page.component';
+import { PrivacyAndSecurityComponent } from './pages/privacy-and-security/privacy-and-security.component';
 
 
 // Creamos una ruta para la verificación de correo
@@ -65,6 +66,7 @@ export const appRoutes: Routes = [
   { path: 'filter-skills', component: FilterSkillsComponent },
   { path: '404', component: Error404Component },
   { path: 'home-page', component: HomePageComponent },
+  { path: 'privacy-and-security', component: PrivacyAndSecurityComponent },
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
   
 ];
