@@ -109,17 +109,21 @@ export class RegisterFormComponent {
         this.router.navigateByUrl('/code-sent-confirmation');
       },
       error: (err) => {
-        if (err.message.includes('email')) {
+        console.log('Conflicto backend:', err.message);
+
+        const typeError = err.message;
+        console.log(typeError.includes('email'));
+         if (typeError.includes('email')) {
           this.showError = true;
           this.hasErrorAll = true;
           this.message = 'El correo ya está registrado';
-        } else if (err.message.includes('username')) {
+        } else if (typeError.includes('username')) {
           this.showError = true;
           this.hasErrorAll = true;
           this.message = 'El username ya está registrado';
         } else {
           this.showError = true;
-          this.message = 'Error al registrar el usuario';
+          this.message = 'Error, inténtelo más tarde';
         }
       }
     });
