@@ -5,13 +5,15 @@
     placeholder="Buscar habilidad..." 
     [ngModel]="searchTerm"
     (ngModelChange)="onSearchTermChanged($event)"
+    (focus)="onInputFocus()" 
+    (click)="onInputFocus()"
   />
   
   <span class="material-symbols-outlined search-icon" *ngIf="!isLoading()">search</span>
   
   <div class="spinner-mini" *ngIf="isLoading()"></div>
 
-  <div class="search-dropdown" *ngIf="results().length > 0">
+  <div class="search-dropdown" *ngIf="results().length > 0 && showDropdown()">
     <ul>
       <li *ngFor="let skill of results()" (click)="onSelectSkill(skill)">
         <span class="dropdown-icon">{{ skill.icon }}</span>
@@ -23,7 +25,7 @@
     </ul>
   </div>
 
-  <div class="search-dropdown empty" *ngIf="!isLoading() && results().length === 0 && searchTerm.length > 0">
+  <div class="search-dropdown empty" *ngIf="!isLoading() && results().length === 0 && searchTerm.length > 0 && showDropdown()">
     Sin resultados
   </div>
 
