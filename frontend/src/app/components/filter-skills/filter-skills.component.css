@@ -40,6 +40,18 @@
   z-index: 50;
   overflow: hidden;
 }
+
+/* Estilo del scrollbar para que quede bonito en dark mode */
+.filter-dropdown::-webkit-scrollbar {
+  width: 8px;
+}
+.filter-dropdown::-webkit-scrollbar-track {
+  background: #0f172a; 
+}
+.filter-dropdown::-webkit-scrollbar-thumb {
+  background-color: #334155; 
+  border-radius: 4px;
+}
  
 .category {
   padding: 0.75rem 1rem;
@@ -65,8 +77,41 @@
 }
  
 .subcategory input[type="checkbox"] {
-  accent-color: var(--principal-color-2);
-  border-radius: 50%;
+  appearance: none;
+  -webkit-appearance: none;
+  
+  width: 20px;
+  height: 20px;
+  border-radius: 50%; 
+  
+  border: 2px solid #3CB57C; 
+  background-color: transparent;
+  cursor: pointer;
+  
+  display: grid;
+  place-content: center;
+  transition: all 0.2s ease;
+  margin: 0; 
+}
+
+.subcategory input[type="checkbox"]:checked {
+  background-color: #3CB57C; 
+}
+
+.subcategory input[type="checkbox"]::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  transform: scale(0);
+  transition: 0.2s transform ease-in-out;
+  background-color: white;
+  transform-origin: center;
+  /* Forma de Check usando clip-path */
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+
+.subcategory input[type="checkbox"]:checked::before {
+  transform: scale(1);
 }
  
 hr {

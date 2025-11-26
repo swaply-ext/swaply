@@ -2,7 +2,9 @@ import {
   Component, 
   ChangeDetectionStrategy, 
   inject, 
-  signal 
+  signal,
+  ElementRef,
+  HostListener 
 } from '@angular/core';
 import { HttpClient, HttpClientModule, HttpContext, HttpParams } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -49,7 +51,7 @@ class FilterSkillsService {
 })
 export class FilterSkillsComponent {
   private service = inject(FilterSkillsService);
-
+  private el = inject(ElementRef)
   isOpen = signal(false);
 
   results = signal<Skill[]>([]);
@@ -113,6 +115,14 @@ export class FilterSkillsComponent {
     ).subscribe(results => this.results.set(results));
   }
 
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: Event) {
+    // Si el clic no es dentro del filtro, se cierra el dropdown
+    if (!this.el.nativeElement.contains(event.target)) {
+      this.isOpen.set(false);
+    }
+  }
+
   toggleFilter() {
     this.isOpen.update(open => !open);
   }
@@ -122,12 +132,11 @@ export class FilterSkillsComponent {
   }
 
   toggleSub(sub: any) {
-  sub.selected = !sub.selected;
 
   const selected = this.getSelectedIds();
-  console.log('Skills seleccionadas:', selected); // <-- DEBUG
+  console.log('Skills seleccionadas:', selected); // <-- Debug
   this.searchSubject.next(selected);
-}
+  }
 
   // Obtiene IDs seleccionados como cadena separada por comas
   private getSelectedIds(): string {
