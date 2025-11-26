@@ -20,8 +20,4 @@ public class ProfileDataDTO {
     private List<UserSkills> interests;
     private List<UserSkills>skills;
     private String profilePhotoUrl;
-
 }
-
-// NO TOCAR --- EN DESARROLLO ALEIX I ARNAU, NOOOOO TOCAR !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// Hace falta el maper y el service para entrar en lógica y hacer el funcionamiento del flujo.

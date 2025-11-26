@@ -2,34 +2,37 @@
   <h1>Selecciona tus intereses</h1>
 
   <div class="category-block" *ngFor="let category of categories">
-
-    <div class="category-header" (click)="toggleCategory(category.id)">
+    <div class="category-header" (click)="toggleCategory(category.name)">
       <span class="category-title">{{ category.name }}</span>
 
-      <span class="arrow" [class.open]="category.open">
-        <svg xmlns="http://www.w3.org/2000/svg" height="24px"
-             viewBox="0 -960 960 960" width="24px" fill="#3CB57C">
-          <path d="M400-80 0-480l400-400 71 71-329 329 329 329-71 71Z"/>
+      <span class="arrow" [class.open]="category.isOpen">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          height="24px"
+          viewBox="0 -960 960 960"
+          width="24px"
+          fill="#3CB57C"
+        >
+          <path d="M400-80 0-480l400-400 71 71-329 329 329 329-71 71Z" />
         </svg>
       </span>
     </div>
 
-    <div class="chips-container" [class.open]="category.open">
-
+    <div class="chips-container" [class.open]="category.isOpen">
       <div
         class="chip"
-        *ngFor="let sub of category.subcategories"
+        *ngFor="let sub of category.skills"
         [class.selected]="sub.selected"
-        (click)="toggleInterest(category.id, sub.id); $event.stopPropagation()"
+        (click)="
+          toggleSkill(category.name, sub.id); $event.stopPropagation()
+        "
       >
-        {{ sub.name }}
+        {{ sub.name }} {{ sub.icon }}
       </div>
-
     </div>
-
   </div>
 
   <div class="actions">
-    <button class="save-btn" (click)="submitInterests()">Guardar</button>
+    <button class="save-btn" (click)="submitSkills()">Guardar</button>
   </div>
 </div>
