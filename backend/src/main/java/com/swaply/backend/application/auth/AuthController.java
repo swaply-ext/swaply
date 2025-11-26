@@ -2,11 +2,15 @@ package com.swaply.backend.application.auth;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.application.auth.service.AuthService;
 import com.swaply.backend.application.auth.service.RecoveryPasswordService;
+import com.swaply.backend.config.security.SecurityUser;
+import com.swaply.backend.application.auth.service.ChangePasswordService;
+import com.swaply.backend.application.auth.dto.ChangePasswordDTO;
 import com.swaply.backend.application.auth.dto.LoginDTO;
 import com.swaply.backend.application.auth.dto.RegisterActivationDTO;
 import com.swaply.backend.application.auth.dto.RegisterInitialDTO;
@@ -20,10 +24,12 @@ public class AuthController {
 
     private final AuthService service;
     private final RecoveryPasswordService recoveryPasswordService;
+    private final ChangePasswordService changePasswordService;
 
-    public AuthController(AuthService service, RecoveryPasswordService recoveryPasswordService) {
+    public AuthController(AuthService service, RecoveryPasswordService recoveryPasswordService, ChangePasswordService changePasswordService) {
         this.service = service;
         this.recoveryPasswordService = recoveryPasswordService;
+        this.changePasswordService = changePasswordService;
     }
 
     @PostMapping("/register")
@@ -53,6 +59,12 @@ public class AuthController {
     @PostMapping("/passwordReset")
     public ResponseEntity<Boolean> resetPassword(@RequestBody ResetPasswordDTO dto) {
         recoveryPasswordService.resetPassword(dto);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
+    }
+
+    @PostMapping("/passwordChange")
+    public ResponseEntity<Boolean> changePassword(@AuthenticationPrincipal SecurityUser SecurityUser, @RequestBody String newPassword, String password) {
+        changePasswordService.changePassword(SecurityUser.getUsername(), newPassword, password);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
     }
 
