@@ -54,30 +54,5 @@ public class ChangePasswordService {
         } catch (Exception e) { 
             System.out.println("Error al cambiar la contraseña: " + e.getMessage());
         }
-            // Codigo de resetPassword, como referencia
-            /*
-             * try {
-             * String newRawPassword = dto.getPassword(); //nueva pass en texto plano para
-             * comparar
-             * UserDTO currentUser = userService.getUserByID(userId); //obtenir la
-             * contraseña antigua para comparar
-             * String currentHashedPassword = currentUser.getPassword();
-             * if (passwordService.match(newRawPassword, currentHashedPassword)) { //if que
-             * hace condiciona si son iguales o no
-             * throw new
-             * NewPasswordMatchesOldException("La nueva contraseña no puede ser igual a la anterior."
-             * );
-             * }
-             * userService.updateUserPassword(userId, newRawPassword);
-             * 
-             * UserDTO user = mapper.fromResetPasswordDTO(dto);
-             * userService.updateUser(userId, user);
-             * 
-             * catch (Exception e) {
-             * // Hay que ver si creamos una exception aqui también
-             * System.out.println("Error al resetear la contraseña: " + e.getMessage());
-             * }
-             */
-        
     }
 }
