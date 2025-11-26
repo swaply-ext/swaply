@@ -1,4 +1,4 @@
-package com.swaply.backend.shared.UserCRUD.dto;
+package com.swaply.backend.application.account.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,5 +19,4 @@ public class EditProfileDTO {
     private Date birthDate;
     private String location;
     private String gender;
-
 }
