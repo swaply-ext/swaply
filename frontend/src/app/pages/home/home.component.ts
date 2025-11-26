@@ -72,7 +72,7 @@ export class HomeComponent {
       user: 'Ana López',
       userImg: 'assets/people_demo/ana_lopez.jpg',
       img: 'assets/photos_skills/sports/padel.jpg',
-      titulo: 'Partido de Pádel',
+      titulo: 'Clase de Pádel',
       distancia: 'A 1.1 km',
       rating: 4.8,
     },
