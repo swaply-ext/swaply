@@ -31,7 +31,6 @@ import { CodeSentConfirmationComponent } from './pages/code-sent-confirmation/co
 import { FilterSkillsComponent } from './components/filter-skills/filter-skills.component';
 import { EmailSentComponent } from './pages/email-sent/email-sent.component';
 import { IndexComponent } from './pages/index/index.component';
-import { DropdownMenuComponent } from './components/dropdown-menu/dropdown-menu.component';
 
 
 // Creamos una ruta para la verificación de correo
