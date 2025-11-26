@@ -68,7 +68,6 @@ export const appRoutes: Routes = [
   { path: 'filter-skills', component: FilterSkillsComponent },
   { path: '404', component: Error404Component },
   { path: 'index', component: IndexComponent },
-  {path: 'dropdown-menu', component: DropdownMenuComponent},
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
   
 ];

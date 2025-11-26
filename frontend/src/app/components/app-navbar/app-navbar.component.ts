@@ -13,16 +13,16 @@ import { AccountService } from '../../services/account.service';
 })
 export class AppNavbarComponent implements OnInit {
   showDropdown = false;
-  userData!: DropdownMenuData;
+  dropdownMenuData!: DropdownMenuData;
 
   constructor(private accountService: AccountService) {}
 
   ngOnInit(): void {
     this.accountService.getProfileData().subscribe({
       next: (user) => {
-        this.userData = {
+        this.dropdownMenuData = {
           
-          //Aquí deberia de llegar un DTO que contenga estos campos, actualmente no es así
+          //Aquí deberia de llegar un DTO específico co nestso campos, actualmente se utiliza un DTO erroneo para hacer el apaño
           fullName: `${user.name} ${user.surname}`,
           username: user.username,
           profilePhotoUrl: user.profilePhotoUrl,
