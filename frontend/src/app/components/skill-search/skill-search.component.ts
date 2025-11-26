@@ -4,7 +4,7 @@ import {
   inject,
   signal
 } from '@angular/core';
-import { HttpClient, HttpClientModule, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HttpContext, HttpParams } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Injectable } from '@angular/core';
@@ -17,6 +17,7 @@ import {
   filter,
   catchError
 } from 'rxjs/operators';
+import { SKIP_LOADING } from '../../interceptors/loading.interceptor';
 
 
 export interface Skill {
@@ -40,7 +41,7 @@ class SkillSearchService {
       return of([]);
     }
     const params = new HttpParams().set('query', query);
-    return this.http.get<Skill[]>(this.apiUrl, { params });
+    return this.http.get<Skill[]>(this.apiUrl, { params, context: new HttpContext().set(SKIP_LOADING, true) });
   }
 }
 
