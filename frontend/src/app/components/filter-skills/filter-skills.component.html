@@ -9,6 +9,7 @@
  
     <div class="category-header" (click)="toggleCategory(cat)">
       {{ cat.name }}
+      <span class="material-symbols-outlined" [style.transform]="cat.open ? 'rotate(180deg)' : 'rotate(0deg)'">expand_more</span>
     </div>
  
     <div class="subcategory" *ngIf="cat.open">
