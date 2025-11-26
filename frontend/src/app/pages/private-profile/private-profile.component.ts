@@ -47,7 +47,7 @@ export class PrivateProfileComponent implements OnInit {
   getProfileDataFromBackend(): void {
     this.accountService.getProfileData().subscribe({
       next: (user) => {
-        // console.log('Datos recibidos del backend:', data);
+        console.log('Datos recibidos del backend:', user);
         this.splitAndSendUser(user);
       },
       error: (err) => {

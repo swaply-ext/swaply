@@ -29,7 +29,7 @@ export interface SkillDisplay extends SkillsModel {
 export class InterestsPanelComponent {
   @Input() InterestsInput: Array<SkillInput> = [];
 
-  skills: Array<SkillDisplay> = [];
+  interests: Array<SkillDisplay> = [];
 
   open = false;
 
@@ -37,17 +37,17 @@ export class InterestsPanelComponent {
 
   ngOnChanges(): void {
     if (this.InterestsInput && this.InterestsInput.length > 0) {
-      this.loadAllSkills();
+      this.loadAllSkills([...this.InterestsInput]);
     }
   }
 
 
-  loadAllSkills() {
-    this.skills = [];
+  loadAllSkills(InterestsInput: SkillInput[]) {
+    this.interests = [];
 
-    this.InterestsInput.forEach(input => {
+    InterestsInput.forEach(input => {
       this.skillsService.getSkillDisplay(input).subscribe({
-        next: (data) => this.skills.push(data),
+        next: (data) => this.interests.push(data),
         error: (e) => console.error(e)
       });
     })

@@ -7,13 +7,13 @@
     <h1>Intereses</h1>
 
     <button class="edit-btn">
-      <span class="material-icons">edit</span>
+      <span (click)="goToInterests()" class="material-icons">edit</span>
     </button>
   </header>
 
   <div *ngIf="open" class="skills-grid">
     <div
-      *ngFor="let skill of skills"
+      *ngFor="let skill of interests"
       class="skill-card"
       [ngClass]="{
         'mid-level': skill.level === 2,
