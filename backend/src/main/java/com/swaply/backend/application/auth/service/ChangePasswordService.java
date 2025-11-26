@@ -3,6 +3,7 @@ package com.swaply.backend.application.auth.service;
 import com.swaply.backend.application.auth.AuthMapper;
 import com.swaply.backend.application.auth.dto.ChangePasswordDTO;
 import com.swaply.backend.application.auth.dto.ResetPasswordDTO;
+import com.swaply.backend.application.auth.exception.InvalidCredentialsException;
 import com.swaply.backend.application.auth.exception.NewPasswordMatchesOldException;
 import com.swaply.backend.shared.UserCRUD.UserService;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
@@ -34,27 +35,49 @@ public class ChangePasswordService {
 
     public void changePassword(String userId, String newPassword, String password) {
 
-        //Codigo de resetPassword, como referencia
-       /* 
         try {
-            String newRawPassword = dto.getPassword(); //nueva pass en texto plano para comparar
-            UserDTO currentUser = userService.getUserByID(userId); //obtenir la contraseña antigua para comparar
+            // verifica que la contraseña nueva no sea igual a la antigua
+            UserDTO currentUser = userService.getUserByID(userId);
             String currentHashedPassword = currentUser.getPassword();
-            if (passwordService.match(newRawPassword, currentHashedPassword)) { //if que hace condiciona si son iguales o no
+            if (passwordService.match(newPassword, currentHashedPassword)) {
                 throw new NewPasswordMatchesOldException("La nueva contraseña no puede ser igual a la anterior.");
             }
-            userService.updateUserPassword(userId, newRawPassword);
-            String newPassword = passwordService.hash(dto.getPassword());
-            dto.setPassword(newPassword);
-            System.out.println(dto.getPassword());
-            UserDTO user = mapper.fromResetPasswordDTO(dto);
-            userService.updateUser(userId, user);
- 
-        catch (Exception e) {
-            // Hay que ver si creamos una exception aqui también
-            System.out.println("Error al resetear la contraseña: " + e.getMessage());
-        }
-        */
-    }
+            // verifica la contraseña actual
+            if (!passwordService.match(password, currentHashedPassword)) {
+                throw new InvalidCredentialsException("La  contraseña no coincide con la anterior.");
+            }
+            // actuliza la contraseña
+            userService.updateUserPassword(userId, newPassword);
+            System.out.println(newPassword);
+            
 
+        } catch (Exception e) { 
+            System.out.println("Error al cambiar la contraseña: " + e.getMessage());
+        }
+            // Codigo de resetPassword, como referencia
+            /*
+             * try {
+             * String newRawPassword = dto.getPassword(); //nueva pass en texto plano para
+             * comparar
+             * UserDTO currentUser = userService.getUserByID(userId); //obtenir la
+             * contraseña antigua para comparar
+             * String currentHashedPassword = currentUser.getPassword();
+             * if (passwordService.match(newRawPassword, currentHashedPassword)) { //if que
+             * hace condiciona si son iguales o no
+             * throw new
+             * NewPasswordMatchesOldException("La nueva contraseña no puede ser igual a la anterior."
+             * );
+             * }
+             * userService.updateUserPassword(userId, newRawPassword);
+             * 
+             * UserDTO user = mapper.fromResetPasswordDTO(dto);
+             * userService.updateUser(userId, user);
+             * 
+             * catch (Exception e) {
+             * // Hay que ver si creamos una exception aqui también
+             * System.out.println("Error al resetear la contraseña: " + e.getMessage());
+             * }
+             */
+        
+    }
 }
