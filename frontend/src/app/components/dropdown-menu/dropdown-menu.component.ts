@@ -39,7 +39,7 @@ export class DropdownMenuComponent {
 
 
   goToMyProfile() {
-    this.router.navigate(['/private-profile']);
+    this.router.navigate(['/myprofile']);
   }
 
   goToMySwaps() {
