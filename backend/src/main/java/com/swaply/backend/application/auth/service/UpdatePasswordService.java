@@ -1,7 +1,9 @@
 package com.swaply.backend.application.auth.service;
 
 import com.swaply.backend.application.auth.AuthMapper;
+import com.swaply.backend.application.auth.dto.ChangePasswordDTO;
 import com.swaply.backend.application.auth.dto.ResetPasswordDTO;
+import com.swaply.backend.application.auth.exception.InvalidCredentialsException;
 import com.swaply.backend.application.auth.exception.NewPasswordMatchesOldException;
 import com.swaply.backend.shared.UserCRUD.UserService;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
@@ -13,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
-public class RecoveryPasswordService {
+public class UpdatePasswordService {
 
     private final UserService userService; //
     private final MailService mailService;
@@ -24,7 +26,7 @@ public class RecoveryPasswordService {
     @Value("${frontend.reset-password-url}")
     private String resetPasswordBaseUrl;
 
-    public RecoveryPasswordService(UserService userService,
+    public UpdatePasswordService(UserService userService,
             MailService mailService,
             JwtService jwtService, AuthMapper mapper, PasswordService passwordService) {
         this.userService = userService;
@@ -71,6 +73,30 @@ public class RecoveryPasswordService {
             // Hay que ver si creamos una exception aqui también
             System.out.println("Error al resetear la contraseña: " + e.getMessage());
             throw new RuntimeException("El enlace no es válido o ha expirado.", e);
+        }
+    }
+
+    public void changePassword(String userId, ChangePasswordDTO dto) {
+
+        try {
+            // verifica que la contraseña nueva no sea igual a la antigua
+            UserDTO currentUser = userService.getUserByID(userId);
+            String currentHashedPassword = currentUser.getPassword();
+            if (passwordService.match(dto.getNewPassword(), currentHashedPassword)) {
+                throw new NewPasswordMatchesOldException("La nueva contraseña no puede ser igual a la anterior.");
+            }
+            // verifica la contraseña actual
+            if (!passwordService.match(dto.getPassword(), currentHashedPassword)) {
+                throw new InvalidCredentialsException("Contraseña incorrecta");
+            }
+            // actualiza la contraseña
+            userService.updateUserPassword(userId, dto.getNewPassword());
+            System.out.println(dto.getNewPassword());
+            
+
+        } catch (Exception e) { 
+            System.out.println("Error al cambiar la contraseña: " + e.getMessage());
+            throw new RuntimeException("Se ha producido un error al cambiar la contraseña.", e);
         }
     }
 
