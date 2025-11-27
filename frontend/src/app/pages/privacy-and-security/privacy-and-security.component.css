@@ -1,0 +1,296 @@
+/* GLOBAL */
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: linear-gradient(to bottom, #012534 0%, #00839E 100%);
+  font-family: "Quicksand", sans-serif;
+}
+
+/* PAGE WRAPPER */
+.privacy-security-page {
+  display: flex;
+  justify-content: center;
+  padding-top: 90px;
+  width: 80%;
+  margin: 0 auto;
+}
+
+/* MAIN LAYOUT */
+.privacy-security-layout {
+  display: flex;
+  width: 100%;
+  max-width: 1300px;
+}
+
+.privacy-security-sidebar {
+  width: 260px;
+  margin-right: 30px;
+  flex-shrink: 0;
+}
+
+.privacy-security-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* PANELS */
+.panel {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: #fff;
+}
+
+.panel h2 {
+  margin-bottom: 15px;
+  font-size: 1.28rem;
+  font-weight: 600;
+}
+
+.panel-description {
+  font-size: 0.95rem;
+  opacity: 0.9;
+  margin-bottom: 12px;
+}
+
+/* FORM FIELDS */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+  position: relative; /* for toggle icon */
+}
+
+.form-group input {
+  width: 100%;
+  max-width: 280px;
+  padding: 8px 10px;
+  padding-right: 30px; /* space for toggle icon */
+  border: 1px solid #00bcd4;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+/* On focus: slightly brighter background and border */
+.panel-security .form-group input:focus,
+.panel-security .form-group-inline input:focus {
+  border-color: #00eaff;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* INLINE INPUTS (New + Confirm + Button row) */
+.form-group-inline {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  flex-wrap: nowrap;
+  align-items: center;
+}
+
+.password-wrapper {
+  position: relative;
+  flex: 1;
+  max-width: 280px;
+   overflow: hidden; 
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 30px; /* space for toggle icon */
+}
+
+/* TOGGLE ICON */
+.toggle-icon {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #fff;
+  font-size: 20px;
+  user-select: none;
+}
+
+/* LINKS */
+.forgot-password-link {
+  display: block;
+  margin-top: -5px;
+  margin-bottom: 15px;
+  color: #8fd3f4;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.forgot-password-link:hover {
+  text-decoration: none;
+}
+
+/* BUTTONS */
+.btn {
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.btn-primary {
+  background-color: var(--principal-color-2);
+  color: white;
+  transition: 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: #2fa16f;
+}
+
+.btn-small {
+  padding: 7px 14px;
+  font-size: 0.85rem;
+  width: 240px;
+  height: 40px;
+}
+
+.btn-large {
+  padding: 12px 24px;
+  font-size: 1rem;
+  width: 160px;
+}
+
+.send-button {
+  height: 40px;
+  margin-left: 10px; /* spacing in inline row */
+}
+
+/* ERROR MESSAGE */
+.error-message {
+  color: #ff6b6b;
+  font-size: 0.9rem;
+  margin-top: 8px;
+  padding-left: 5px;
+  text-align: left;
+}
+
+.input-error {
+  border: 2px solid #e53935 !important; /* red border */
+  background-color: rgba(131, 219, 153, 0.1); /* subtle red background */
+}
+
+/* ACTION ROWS */
+.action-row {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.footer-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-bottom: 35px;
+}
+
+/* BLOCKED USERS */
+.blocked-users-card {
+  background-color: rgba(0, 0, 0, 0.25);
+  padding: 18px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.blocked-users-title {
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.blocked-users-description {
+  opacity: 0.85;
+  font-size: 0.9rem;
+}
+
+/* DELETE ACCOUNT LINK */
+.delete-account-link {
+  color: #f14c4c;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.delete-account-link:hover {
+  color: #fff6f6;
+}
+
+/* TOGGLE SWITCH */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 52px;
+  height: 26px;
+}
+
+.toggle-switch input {
+  display: none;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  background: #757575;
+  border-radius: 26px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transition: 0.3s;
+}
+
+.toggle-slider:before {
+  content: "";
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background: white;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+input:checked + .toggle-slider {
+  background: #2ecc71;
+}
+
+input:checked + .toggle-slider:before {
+  transform: translateX(26px);
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .privacy-security-layout {
+    flex-direction: column;
+  }
+
+  .form-group-inline {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .send-button {
+    margin-left: 0;
+    margin-top: 10px;
+    width: 100%;
+    max-width: 280px;
+  }
+}

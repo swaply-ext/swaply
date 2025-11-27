@@ -29,6 +29,8 @@ import { AuthGuard } from './services/auth-guard.service';
 import { LinkSentConfirmationComponent } from './pages/link-sent-confirmation/link-sent-confirmation.component';
 import { CodeSentConfirmationComponent } from './pages/code-sent-confirmation/code-sent-confirmation.component';
 import { FilterSkillsComponent } from './components/filter-skills/filter-skills.component';
+import { HomePageComponent } from './pages/home-page/home-page.component';
+import { PrivacyAndSecurityComponent } from './pages/privacy-and-security/privacy-and-security.component';
 import { EmailSentComponent } from './pages/email-sent/email-sent.component';
 import { IndexComponent } from './pages/index/index.component';
 
@@ -66,6 +68,7 @@ export const appRoutes: Routes = [
   { path: 'search-skills', component: SkillSearchComponent }, //barra de busqueda componente
   { path: 'filter-skills', component: FilterSkillsComponent },
   { path: '404', component: Error404Component },
+  { path: 'privacy-and-security', component: PrivacyAndSecurityComponent, canActivate: [AuthGuard] },
   { path: 'index', component: IndexComponent },
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
   
