@@ -60,7 +60,7 @@ export class DropdownMenuComponent {
   }
 
   goToSettings() {
-    //this.router.navigate(['/settings']);
+    this.router.navigate(['/profile-edit']);
   }
 
   logout() {
