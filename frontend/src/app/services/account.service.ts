@@ -25,4 +25,16 @@ export class AccountService {
   updateEditProfileData(data: any): Observable<boolean> {
     return this.http.patch<boolean>(`${this.apiUrl}/editProfileData`, data);
   }
+
+   uploadProfilePhoto(file: File): Observable<string> {
+    const formData = new FormData();
+    formData.append('file', file); 
+
+    // 'responseType: text' es vital porque el backend devuelve un String plano (la URL)
+    return this.http.post(
+      `${this.apiUrl}/upload-photo`, 
+      formData, 
+      { responseType: 'text' } 
+    );
+  }
 }
