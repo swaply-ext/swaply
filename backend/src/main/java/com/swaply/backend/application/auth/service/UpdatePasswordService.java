@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
-public class RecoveryPasswordService {
+public class UpdatePasswordService {
 
     private final UserService userService; //
     private final MailService mailService;
@@ -26,7 +26,7 @@ public class RecoveryPasswordService {
     @Value("${frontend.reset-password-url}")
     private String resetPasswordBaseUrl;
 
-    public RecoveryPasswordService(UserService userService,
+    public UpdatePasswordService(UserService userService,
             MailService mailService,
             JwtService jwtService, AuthMapper mapper, PasswordService passwordService) {
         this.userService = userService;
