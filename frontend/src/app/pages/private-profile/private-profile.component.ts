@@ -71,7 +71,7 @@ export class PrivateProfileComponent implements OnInit {
       location: user.location,
       description: user.description,
       profilePhotoUrl: user.profilePhotoUrl,
-      rating : 3.5,
+      rating : 3.8,
     };
   }
 

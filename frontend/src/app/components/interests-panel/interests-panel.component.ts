@@ -31,7 +31,7 @@ export class InterestsPanelComponent {
 
   skills: Array<SkillDisplay> = [];
 
-  open = false;
+  open = true;
 
   constructor(private router: Router, private skillsService: SkillsService) { }
 
