@@ -83,11 +83,20 @@
         </div>
         <div class="button-row">
           <app-discard-button (submit)="discard()"></app-discard-button>
-          <app-save-button (submit)="save()"></app-save-button>
+          <a routerLink="/myprofile"><app-save-button (submit)="save()"></app-save-button></a>
         </div>
-
+        
       </div>
     </div>
-  </div>
-
+    <div class="profile-panels-container">
+      <app-skills-panel
+        class="profile-skills"
+        [SkillInput]="skills"
+      ></app-skills-panel>
+      <app-interests-panel
+        class="profile-interests"
+        [InterestsInput]="interests"
+      ></app-interests-panel>
+    </div>
+    </div>
 </body>

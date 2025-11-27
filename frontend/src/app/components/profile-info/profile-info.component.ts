@@ -2,6 +2,7 @@ import { Component, OnChanges, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router'; // <--- Afegeix Router
 import { AuthService } from '../../services/auth.service';
+import { RouterLink } from '@angular/router';
 
 interface ProfileData {
   fullName: string;

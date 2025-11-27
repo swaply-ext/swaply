@@ -1,7 +1,7 @@
 import { SkillsService } from './../../services/skills.service';
 import { Component, OnChanges, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 
 

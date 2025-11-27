@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { RouterLink } from '@angular/router';
 
 interface SkillDTO {
   id: string;
@@ -34,7 +35,7 @@ interface Account {
 @Component({
   selector: 'app-interests',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, RouterLink],
   templateUrl: './interests.component.html',
   styleUrls: ['./interests.component.css']
 })
