@@ -142,7 +142,7 @@ export class InterestsComponent {
         }))
     );
 
-    this.http.patch('http://localhost:8081/api/account/interests', { skills: selectedSkills })
+    this.http.patch('http://localhost:8081/api/account/interests', { interests: selectedSkills })
       .subscribe({
         next: response => console.log('Resputesta del backend:', response),
         error: err => console.error('Error enviando skills:', err)

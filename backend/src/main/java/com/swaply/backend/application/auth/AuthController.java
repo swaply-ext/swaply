@@ -2,11 +2,14 @@ package com.swaply.backend.application.auth;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.application.auth.service.AuthService;
-import com.swaply.backend.application.auth.service.RecoveryPasswordService;
+import com.swaply.backend.application.auth.service.UpdatePasswordService;
+import com.swaply.backend.config.security.SecurityUser;
+import com.swaply.backend.application.auth.dto.ChangePasswordDTO;
 import com.swaply.backend.application.auth.dto.LoginDTO;
 import com.swaply.backend.application.auth.dto.RegisterActivationDTO;
 import com.swaply.backend.application.auth.dto.RegisterInitialDTO;
@@ -19,11 +22,11 @@ public class AuthController {
     // Classe per rebre el JSON del frontend
 
     private final AuthService service;
-    private final RecoveryPasswordService recoveryPasswordService;
+    private final UpdatePasswordService updatePasswordService;
 
-    public AuthController(AuthService service, RecoveryPasswordService recoveryPasswordService) {
+    public AuthController(AuthService service, UpdatePasswordService updatePasswordService) {
         this.service = service;
-        this.recoveryPasswordService = recoveryPasswordService;
+        this.updatePasswordService = updatePasswordService;
     }
 
     @PostMapping("/register")
@@ -46,13 +49,19 @@ public class AuthController {
 
     @PostMapping("/recoveryMail")
     public ResponseEntity<String> generateAndSendResetLink(@RequestBody String email) {
-        recoveryPasswordService.generateAndSendResetLink(email);
+        updatePasswordService.generateAndSendResetLink(email);
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
     @PostMapping("/passwordReset")
     public ResponseEntity<Boolean> resetPassword(@RequestBody ResetPasswordDTO dto) {
-        recoveryPasswordService.resetPassword(dto);
+        updatePasswordService.resetPassword(dto);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
+    }
+
+    @PostMapping("/passwordChange")
+    public ResponseEntity<Boolean> changePassword(@AuthenticationPrincipal SecurityUser securityUser, @RequestBody ChangePasswordDTO dto) {
+        updatePasswordService.changePassword(securityUser.getUsername(), dto);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
     }
 
