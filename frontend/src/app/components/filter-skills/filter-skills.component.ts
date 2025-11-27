@@ -2,14 +2,17 @@ import {
   Component, 
   ChangeDetectionStrategy, 
   inject, 
-  signal 
+  signal,
+  ElementRef,
+  HostListener 
 } from '@angular/core';
-import { HttpClient, HttpClientModule, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HttpContext, HttpParams } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Injectable } from '@angular/core';
 import { Observable, Subject, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, tap, catchError } from 'rxjs/operators';
+import { SKIP_LOADING } from '../../interceptors/loading.interceptor';
 
 export interface Skill {
   id: string;
@@ -30,7 +33,7 @@ class FilterSkillsService {
       return of([]);
     }
     const params = new HttpParams().set('query', query);
-    return this.http.get<Skill[]>(this.apiUrl, { params });
+    return this.http.get<Skill[]>(this.apiUrl, { params, context: new HttpContext().set(SKIP_LOADING, true) });
   }
 }
 
@@ -48,7 +51,7 @@ class FilterSkillsService {
 })
 export class FilterSkillsComponent {
   private service = inject(FilterSkillsService);
-
+  private el = inject(ElementRef)
   isOpen = signal(false);
 
   results = signal<Skill[]>([]);
@@ -112,6 +115,14 @@ export class FilterSkillsComponent {
     ).subscribe(results => this.results.set(results));
   }
 
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: Event) {
+    // Si el clic no es dentro del filtro, se cierra el dropdown
+    if (!this.el.nativeElement.contains(event.target)) {
+      this.isOpen.set(false);
+    }
+  }
+
   toggleFilter() {
     this.isOpen.update(open => !open);
   }
@@ -121,12 +132,11 @@ export class FilterSkillsComponent {
   }
 
   toggleSub(sub: any) {
-  sub.selected = !sub.selected;
 
   const selected = this.getSelectedIds();
-  console.log('Skills seleccionadas:', selected); // <-- DEBUG
+  console.log('Skills seleccionadas:', selected); // <-- Debug
   this.searchSubject.next(selected);
-}
+  }
 
   // Obtiene IDs seleccionados como cadena separada por comas
   private getSelectedIds(): string {

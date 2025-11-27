@@ -2,9 +2,11 @@ import {
   Component,
   ChangeDetectionStrategy,
   inject,
-  signal
+  signal,
+  ElementRef,   
+  HostListener
 } from '@angular/core';
-import { HttpClient, HttpClientModule, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HttpContext, HttpParams } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Injectable } from '@angular/core';
@@ -17,6 +19,7 @@ import {
   filter,
   catchError
 } from 'rxjs/operators';
+import { SKIP_LOADING } from '../../interceptors/loading.interceptor';
 
 
 export interface Skill {
@@ -40,7 +43,7 @@ class SkillSearchService {
       return of([]);
     }
     const params = new HttpParams().set('query', query);
-    return this.http.get<Skill[]>(this.apiUrl, { params });
+    return this.http.get<Skill[]>(this.apiUrl, { params, context: new HttpContext().set(SKIP_LOADING, true) });
   }
 }
 
@@ -58,12 +61,13 @@ class SkillSearchService {
 })
 export class SkillSearchComponent {
   private skillSearchService = inject(SkillSearchService);
-
+  private el = inject(ElementRef);
 
   searchTerm = '';
   // el signal sirve para almacenar variables que cambian con el tiempo
   results = signal<Skill[]>([]);
   isLoading = signal(false);
+  showDropdown = signal(false);
 
   //esto srive para no tener que hacer una peticion cada vez que se escribe una letra
   private searchTermSubject = new Subject<string>();
@@ -92,7 +96,26 @@ export class SkillSearchComponent {
     ).subscribe(results => {
       // Actualiza los resulyados
       this.results.set(results);
+
+      if (results.length > 0) {
+        this.showDropdown.set(true);
+      }
     });
+  }
+
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: Event) {
+    // Si el clic no es dentro de este componente, cierra el dropdown
+    if (!this.el.nativeElement.contains(event.target)) {
+      this.showDropdown.set(false); 
+    }
+  }
+
+  //Al hacer clic en el input, volvemos a mostrar el dropdown si hay datos
+  onInputFocus() {
+    if (this.results().length > 0) {
+      this.showDropdown.set(true);
+    }
   }
 
   onSearchTermChanged(term: string): void {
@@ -102,6 +125,8 @@ export class SkillSearchComponent {
   // esto aun no funciona, es para cuando se seleccione una skill de los resultados
   onSelectSkill(skill: Skill): void {
     console.log('Skill seleccionada:', skill);
-
+    this.searchTerm = skill.name; 
+    this.results.set([]); 
+    this.showDropdown.set(false);
   }
 }

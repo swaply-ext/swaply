@@ -1,6 +1,6 @@
 <nav class="navbar">
   <div class="nav-left">
-    <a href="/">
+    <a routerLink="/index" class="nav-logo">
       <img src="assets/logo_swp_invert.png" alt="Swaply Logo" class="nav-logo-img">
     </a>
     <div class="nav-links">
@@ -21,9 +21,16 @@
 
   <div class="nav-right">
     <span class="material-symbols-outlined nav-icon">chat_bubble</span>
-    
     <span class="material-symbols-outlined nav-icon">notifications</span>
 
-    <span class="material-symbols-outlined nav-icon profile-icon">person</span>
+    <div class="profile-wrapper">
+      <span class="material-symbols-outlined nav-icon profile-icon" (click)="toggleDropdown(); $event.stopPropagation()">
+        person
+      </span>
+
+      <div class="dropdown-overlay" *ngIf="showDropdown" [class.show]="showDropdown">
+        <app-dropdown-menu [dropdownMenuData]="dropdownMenuData" (closeMenu)="showDropdown = false"></app-dropdown-menu>
+      </div>
+    </div>
   </div>
 </nav>

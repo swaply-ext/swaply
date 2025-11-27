@@ -1,12 +1,11 @@
 package com.swaply.backend.application.account;
 
-
-import com.swaply.backend.shared.UserCRUD.dto.EditProfileDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import com.swaply.backend.application.account.dto.EditProfileDTO;
 import com.swaply.backend.application.account.dto.PersonalInfoDTO;
 import com.swaply.backend.application.account.dto.ProfileDataDTO;
 import com.swaply.backend.application.account.dto.SkillsDTO;
@@ -23,6 +22,13 @@ public class AccountController {
 
     public AccountController(AccountService service) {
         this.service = service;
+    }
+
+    @GetMapping
+    public ResponseEntity<ProfileDataDTO> getAccount(
+            @AuthenticationPrincipal SecurityUser SecurityUser) {
+        ProfileDataDTO dto = service.getAccount(SecurityUser.getUsername());
+        return ResponseEntity.status(HttpStatus.OK).body(dto);
     }
 
     @PostMapping("/personalInfo")
@@ -69,7 +75,8 @@ public class AccountController {
     }
 
     @PatchMapping("/editProfileData")
-    public ResponseEntity<Boolean> updateEditProfileData(@AuthenticationPrincipal SecurityUser SecurityUser, @RequestBody EditProfileDTO dto) {
+    public ResponseEntity<Boolean> updateEditProfileData(@AuthenticationPrincipal SecurityUser SecurityUser,
+            @RequestBody EditProfileDTO dto) {
         service.updateEditProfileData(SecurityUser.getUsername(), dto);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
     }

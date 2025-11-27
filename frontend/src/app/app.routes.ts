@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
+import { HomeComponent } from './pages/home/home.component';
 import { SkillsComponent } from './pages/skills/skills.component';
 import { InterestsComponent } from './pages/interests/interests.component';
-import { HomeComponent } from './pages/home/home.component';
 import { RegisterFormComponent } from './pages/register-form/register-form.component';
 import { LoginFormComponent } from './pages/login-form/login-form.component';
 import { RecoveryPasswordComponent } from './pages/recovery-password/recovery-password.component';
@@ -31,16 +31,19 @@ import { CodeSentConfirmationComponent } from './pages/code-sent-confirmation/co
 import { FilterSkillsComponent } from './components/filter-skills/filter-skills.component';
 import { HomePageComponent } from './pages/home-page/home-page.component';
 import { PrivacyAndSecurityComponent } from './pages/privacy-and-security/privacy-and-security.component';
+import { EmailSentComponent } from './pages/email-sent/email-sent.component';
+import { IndexComponent } from './pages/index/index.component';
 
 
 // Creamos una ruta para la verificación de correo
 // Ahora usamos el componente real EmailVerificationComponent
 export const appRoutes: Routes = [
+  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] }, // ruta para ver HomeComponent
   { path: 'skills', component: SkillsComponent, canActivate: [AuthGuard] }, // ruta para ver SkillsComponent
-  { path: 'interests', component: InterestsComponent, canActivate: [AuthGuard]  }, // ruta para ver InterestsComponent
-  { path: '', component: HomeComponent }, // ruta principal muestra el componente Home
+  { path: 'interests', component: InterestsComponent, canActivate: [AuthGuard] }, // ruta para ver InterestsComponent
+  { path: '', component: HomeComponent, canActivate: [AuthGuard]}, // ruta principal muestra el componente Home
   { path: 'register', component: RegisterFormComponent }, // ruta para el formulario de registro
-   { path: 'code-sent-confirmation', component: CodeSentConfirmationComponent },
+  { path: 'code-sent-confirmation', component: CodeSentConfirmationComponent },
   { path: 'verify', component: EmailVerificationComponent }, // ruta para la verificación de correo
   { path: 'login', component: LoginFormComponent }, // ruta para el login
   { path: 'recovery-password', component: RecoveryPasswordComponent }, // ruta para la recuperación de contraseña
@@ -61,12 +64,12 @@ export const appRoutes: Routes = [
   { path: 'pass-verification', component: PassVerificationComponent },
   { path: 'side-menu', component: SideMenuComponent }, // ruta para el componente del menú lateral
   { path: 'exit', component: ExitComponent },
-  { path: 'private-profile', component: PrivateProfileComponent },
-  { path: 'search-skills', component: SkillSearchComponent }, //baara de busqueda componente
+  { path: 'myprofile', component: PrivateProfileComponent, canActivate: [AuthGuard] },
+  { path: 'search-skills', component: SkillSearchComponent }, //barra de busqueda componente
   { path: 'filter-skills', component: FilterSkillsComponent },
   { path: '404', component: Error404Component },
-  { path: 'home-page', component: HomePageComponent },
   { path: 'privacy-and-security', component: PrivacyAndSecurityComponent, canActivate: [AuthGuard] },
+  { path: 'index', component: IndexComponent },
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
   
 ];

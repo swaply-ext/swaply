@@ -130,7 +130,7 @@ export class PersonalInformationComponent {
   private validateLocation(location: string): boolean {
     const minLength = 3;
     const maxLength = 50;
-    const requirements = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9\s,'ºª-]+$/;
+    const requirements = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñçÇïÏ0-9\s,'ºª-]+$/;
     
     if (location.length < minLength) return true;
     if (location.length > maxLength) return true;
