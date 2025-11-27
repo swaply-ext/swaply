@@ -9,7 +9,6 @@ import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.application.auth.service.AuthService;
 import com.swaply.backend.application.auth.service.RecoveryPasswordService;
 import com.swaply.backend.config.security.SecurityUser;
-import com.swaply.backend.application.auth.service.ChangePasswordService;
 import com.swaply.backend.application.auth.dto.ChangePasswordDTO;
 import com.swaply.backend.application.auth.dto.LoginDTO;
 import com.swaply.backend.application.auth.dto.RegisterActivationDTO;
@@ -24,12 +23,10 @@ public class AuthController {
 
     private final AuthService service;
     private final RecoveryPasswordService recoveryPasswordService;
-    private final ChangePasswordService changePasswordService;
 
-    public AuthController(AuthService service, RecoveryPasswordService recoveryPasswordService, ChangePasswordService changePasswordService) {
+    public AuthController(AuthService service, RecoveryPasswordService recoveryPasswordService) {
         this.service = service;
         this.recoveryPasswordService = recoveryPasswordService;
-        this.changePasswordService = changePasswordService;
     }
 
     @PostMapping("/register")
@@ -64,7 +61,7 @@ public class AuthController {
 
     @PostMapping("/passwordChange")
     public ResponseEntity<Boolean> changePassword(@AuthenticationPrincipal SecurityUser securityUser, @RequestBody ChangePasswordDTO dto) {
-        changePasswordService.changePassword(securityUser.getUsername(), dto);
+        recoveryPasswordService.changePassword(securityUser.getUsername(), dto);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
     }
 
