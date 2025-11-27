@@ -64,7 +64,7 @@ public class AuthController {
 
     @PostMapping("/passwordChange")
     public ResponseEntity<Boolean> changePassword(@AuthenticationPrincipal SecurityUser securityUser, @RequestBody ChangePasswordDTO dto) {
-        changePasswordService.changePassword(securityUser.getUsername(), dto.getNewPassword(), dto.getPassword());
+        changePasswordService.changePassword(securityUser.getUsername(), dto);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
     }
 
