@@ -14,4 +14,5 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class SkillsDTO {
     private List<UserSkills> skills;
+    private List<UserSkills> interests;
 }
