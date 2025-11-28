@@ -7,18 +7,21 @@ import { InterestsComponent } from './interests/interests.component';
 export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(Routes)]
 };*/
-import { Routes } from '@angular/router';
-import { SkillsComponent } from './pages/skills/skills.component';
-import { InterestsComponent } from './pages/interests/interests.component';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideRouter } from '@angular/router';
+import { appRoutes } from './app.routes';
+import { importProvidersFrom } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
-export const appRoutes: Routes = [
-  { path: 'skills', component: SkillsComponent },
-  { path: 'interests', component: InterestsComponent },
-  { path: '', redirectTo: '/skills', pathMatch: 'full' }
-];
+import { authInterceptor } from './interceptors/auth.interceptor';
+import { loadingInterceptor } from './interceptors/loading.interceptor';
 
 export const appConfig = {
-  providers: [provideHttpClient()],
-  imports: []
+  providers: [
+    importProvidersFrom(FormsModule),
+    provideRouter(appRoutes),
+    provideHttpClient(withInterceptors([authInterceptor])),
+    provideHttpClient(withInterceptors([loadingInterceptor])),
+  ]
 };
+

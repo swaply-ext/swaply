@@ -1,37 +1,119 @@
-<div class="home-container">
-  <h1>Bienvenido a Swaply</h1>
-  <p class="text">La plataforma para intercambiar habilidades y conocimientos</p>
- 
-  <div class="home-content">
-    <p>En Swaply puedes:</p>
-    <ul>
-      <li>Registrar tus habilidades para compartir con otros</li>
-      <li>Descubrir nuevas habilidades que quieres aprender</li>
-      <li>Conectar con personas que tienen intereses similares</li>
-    </ul>
-  </div>
- 
-  <div class="home-actions">
-    <p>Explora las opciones en el menú superior para comenzar:</p>
-    <ul>
-      <li><a routerLink="/skills"><strong>Mis habilidades</strong></a> - Registra lo que ya sabes hacer</li>
-      <li><a routerLink="/interests"><strong>Habilidades que quiero aprender</strong></a> - Indica lo que te gustaría aprender</li>
-      <li><a routerLink="/register"><strong>Registro</strong></a> - Crea tu cuenta en Swaply</li>
-      <li><a routerLink="/login"><strong>Inicio de sesión</strong></a> - Inicia sesión tu cuenta en Swaply</li>
-      <li><a routerLink="/personal-information"><strong>Información personal</strong></a> - Revisa y actualiza tu información personal</li>
-      <li><a routerLink="/verify"><strong>Verificación de correo</strong></a> - Verifica tu correo electrónico</li>
-      <li><a routerLink="/recovery-password"><strong>Recuperar contraseña</strong></a> - Recupera tu contraseña</li>
-      <li><a routerLink="/confirmation"><strong>Confirmación final Verificación</strong></a> - Confirmación de tu Verificación</li>
-      <li><a routerLink="/confirm-password"><strong>Confirmación cambio contraseña</strong></a> - Confirma el cambio de tu contraseña</li>
-      <li><a routerLink="/error-auth"><strong>Error autenticación</strong></a> - Pantalla de error de autenticación</li>
-      <li><a routerLink="/new-password"><strong>Nueva contraseña</strong></a> - Establece una nueva contraseña</li>
-      <li><a routerLink="/skills-panel"><strong>Panel de habilidades</strong></a> - Accede al panel de habilidades</li>
-      <li><a routerLink="/interests-panel"><strong>Panel de intereses</strong></a> - Accede al panel de intereses</li>
-      <li><a routerLink="/profile-info"><strong>Información del perfil</strong></a> - Pantalla de perfil</li>
-      <li><a routerLink="/profile"><strong>Perfil Propio</strong></a> - Edita la información de tu perfil</li>
-      <li><a routerLink="/loading"><strong>Pantalla de carga</strong></a> - Ve la pantalla de carga</li>
-      <li><a routerLink="/public-profile"><strong>Perfil público</strong></a> - Ve el perfil público de un usuario</li>
-      <li><a routerLink="/recovery-email"><strong>Recuperar correo</strong></a> - Recupera tu correo electrónico</li>
-    </ul>
-  </div>
+<div class="page-container">
+
+  <app-app-navbar></app-app-navbar>
+
+  <main class="main-content">
+
+    <section class="interchange-section">
+      <h2 class="section-title">Próximo Intercambio</h2>
+
+      <ng-container *ngIf="hasIntercambio(); else noIntercambio">
+        <div class="interchange-box interchange-populated-wrapper">
+          <div class="interchange-populated">
+
+            <div class="interchange-half">
+              <h3>Tu próxima habilidad para aprender</h3>
+              <div class="interchange-skill-card">
+                <img [src]="skillToLearn().img" alt="{{ skillToLearn().titulo }}">
+                <div>
+                  <h4>{{ skillToLearn().titulo }}</h4>
+                  <p>{{ skillToLearn().hora }}</p>
+                  <p class="skill-location">{{ skillToLearn().via }}</p>
+                </div>
+              </div>
+            </div>
+
+            <span class="material-symbols-outlined arrow-icon">swap_horiz</span>
+
+            <div class="interchange-half">
+              <h3>Tu próxima habilidad para enseñar</h3>
+              <div class="interchange-skill-card">
+                <img [src]="skillToTeach().img" alt="{{ skillToTeach().titulo }}">
+                <div>
+                  <h4>{{ skillToTeach().titulo }}</h4>
+                  <p>{{ skillToTeach().hora }}</p>
+                  <p class="skill-location">{{ skillToTeach().via }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="confirmation-area">
+            <ng-container *ngIf="isConfirmed(); else showButton">
+              <span class="status-text">
+                <span class="material-symbols-outlined">check_circle</span>
+                Asistencia confirmada
+              </span>
+            </ng-container>
+            <ng-template #showButton>
+              <button class="btn-confirm" (click)="toggleConfirmation()">
+                <span class="material-symbols-outlined">check_circle</span>
+                Confirmar asistencia
+              </button>
+            </ng-template>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #noIntercambio>
+        <div class="interchange-box interchange-empty">
+          <p>No tienes ningún intercambio programado.</p>
+          <div class="confirmation-area disabled">
+            <span class="status-text">
+              <span class="material-symbols-outlined">check_circle</span>
+              Asistencia confirmada
+            </span>
+          </div>
+        </div>
+      </ng-template>
+
+
+      <div class="action-buttons">
+        <button class="btn btn-primary">Buscar Intercambio</button>
+        <button class="btn btn-secondary">Crear Intercambio</button>
+      </div>
+
+      <button (click)="toggleIntercambio()" class="demo-toggle">
+        (Demo: Cambiar estado)
+      </button>
+    </section>
+
+    <section class="nearby-section">
+      <div class="nearby-header">
+        <h2 class="section-title">Intercambios Cerca de Ti</h2>
+        <div class="nearby-actions">
+          <app-skill-search></app-skill-search>
+          <app-filter-skills></app-filter-skills>
+        </div>
+      </div>
+
+      <div class="card-grid">
+        <div class="skill-card" *ngFor="let intercambio of intercambiosCerca()">
+          <img [src]="intercambio.img" [alt]="intercambio.titulo" class="card-image">
+          <div class="card-content">
+            <div class="card-user-info">
+              <img [src]="intercambio.userImg" [alt]="intercambio.user" class="user-avatar">
+              <span>{{ intercambio.user }}</span>
+            </div>
+            <h3>{{ intercambio.titulo }}</h3>
+            <div class="card-footer">
+              <span class="location">
+                <span class="material-symbols-outlined card-icon">location_on</span>
+                {{ intercambio.distancia }}
+              </span>
+              <span class="rating">
+                <span class="material-symbols-outlined card-icon">star</span>
+                {{ intercambio.rating }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="see-more-button">
+        <button class="btn btn-primary">Ver Más</button>
+      </div>
+
+    </section>
+  </main>
 </div>

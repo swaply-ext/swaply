@@ -1,0 +1,16 @@
+<app-app-navbar></app-app-navbar>
+<body>
+    <app-profile-info [profileData]="profileData"></app-profile-info>
+
+    <div class="profile-panels-container">
+      <!--Importación de los componentes-->
+      <app-skills-panel
+        class="profile-skills"
+        [SkillInput]="skills"
+      ></app-skills-panel>
+      <app-interests-panel
+        class="profile-interests"
+        [InterestsInput]="interests"
+      ></app-interests-panel>
+    </div>
+</body>

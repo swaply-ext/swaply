@@ -3,6 +3,10 @@
 
   <!--Formulario de registro con componentes personalizados-->
   <form>
+    <app-username-input
+      [(username)]="username"
+      [hasError]="hasErrorAll">
+    </app-username-input>
     <app-email-input
       [(email)]="email"
       [hasError]="hasErrorAll">
@@ -15,6 +19,7 @@
 
     <app-password-input
       [(password)]="password"
+      (passwordChange)="onPasswordChange($event)"
       [hasError]="hasErrorAll">
     </app-password-input>
 
@@ -24,7 +29,7 @@
     </app-confirm-password-input>
 
     <small *ngIf="showError" class="error-message">
-      El correo o la contraseña no coinciden.
+      {{message}}
     </small>
 
     <app-terms-checkbox (checkedChange)="accepted = $event"></app-terms-checkbox>

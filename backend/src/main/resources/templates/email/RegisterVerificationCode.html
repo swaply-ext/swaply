@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+</head>
+
+<body style="font-family: Arial, sans-serif; background-color: #FCFCFC;">
+    <div class="container"
+        style="max-width: 40rem; margin: 1rem auto; background-color: #FCFCFC; border-radius: 1rem; box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1); text-align: center;">
+
+        <div class="header"
+            style="background-color: #023047; padding: 1rem; margin-bottom: 1rem; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+            <img src="cid:logo_swp_invert" alt="Swaply" style="width: 15rem;">
+        </div>
+
+        <div>
+            <h1 style="color: #292929; margin-bottom: 1.3rem; font-size: 1.5rem;">¡Bienvenido a Swaply!</h1>
+
+            <p style="color: #292929; line-height: 1.6; text-align: justify; padding-left: 2rem; padding-right: 2rem;">Gracias por unirte a nuestra comunidad. Estás a un solo paso de conectar con personas cerca de ti para enseñar lo que sabes y aprender algo nuevo</p>
+            <p style="color: #292929; line-height: 1.6; margin-bottom: 1rem; text-align: justify; padding-left: 2rem; padding-right: 2rem;">Para activar tu cuenta y comenzar a explorar habilidades, por favor confirma tu dirección de correo electrónico introduciendo el siguiente código en el proceso de registro:</p>
+
+            <img src="cid:swaply_hands" style="width: 12rem;">
+            <br>
+            <h2 th:text="${code}" style="font-size: 3rem;">123456</h2>
+
+            <p style="color: #292929; line-height: 1.6; margin-bottom: 1rem; font-size: 0.8rem;">Si no has creado una cuenta en Swaply, puedes ignorar este mensaje con seguridad.</p>
+        </div>
+
+        <div class="footer-separator"
+            style="border-top: 0.3rem solid #9e9d9d; margin-top: 2rem; padding-top: 1.2rem; margin-left: 2rem;  margin-right: 2rem;">
+            <p style="margin-top: 0.6rem; padding-bottom: 0.8rem; font-size: 0.6rem; color: #555555;">© 2024 Swaply Inc. | Política de Privacidad |
+                Soporte</p>
+        </div>
+    </div>
+</body>
+
+</html>

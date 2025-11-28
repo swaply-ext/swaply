@@ -1,13 +1,35 @@
 <div class="skills-panel-container">
-  <div class="header">
+  <header>
     <button class="toggle-btn" (click)="togglePanel()">
-      {{ open ? '▲' : '▼' }}
+      <span class="material-icons">keyboard_arrow_down</span>
     </button>
+
     <h1>Habilidades</h1>
-    <button *ngIf="!isPublic" class="add-btn-circle" (click)="goToSkills()">+</button>
-  </div>
+
+    <button class="edit-btn" (click)="goToSkills()">
+      <span class="material-icons">edit</span>
+    </button>
+  </header>
 
   <div *ngIf="open" class="skills-grid">
-    <button *ngFor="let skill of skills" class="skill-card">{{ skill }}</button>
+    <div
+      *ngFor="let skill of skills"
+      class="skill-card"
+      [ngClass]="{
+        'mid-level': skill.level === 2,
+        'high-level': skill.level === 3
+      }"
+    >
+      <div class="card-header">
+        <span class="skill-name">{{ skill.name }}</span>
+        <span class="skill-icon">{{ skill.icon }}</span>
+      </div>
+
+      <div class="level-bar">
+        <div class="level-block" [class.filled]="skill.level >= 1"></div>
+        <div class="level-block" [class.filled]="skill.level >= 2"></div>
+        <div class="level-block" [class.filled]="skill.level >= 3"></div>
+      </div>
+    </div>
   </div>
 </div>

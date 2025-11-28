@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { HttpClientModule } from '@angular/common/http';
 
 interface User {
   email: string;
@@ -13,13 +12,14 @@ interface User {
 @Component({
   selector: 'app-recovery-email',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './recovery-email.component.html',
   styleUrls: ['./recovery-email.component.css']
 })
 export class RecoveryEmailComponent {
   // Variable para almacenar el correo electrónico del usuario
   email: string = '';
+  showError = false;
   // Variable para almacenar el código de verificación recibido del backend
   constructor(
     private router: Router,
@@ -28,11 +28,20 @@ export class RecoveryEmailComponent {
   ) {}
 
   // Función para manejar el envío del formulario
-  enviarCodigo() {
+   sendCode() {
+    this.showError = false;
+    this.email = this.email.toLowerCase();
+
     if (!this.email) {
-      alert('Por favor, introduce tu correo electrónico.');
+      this.showError = true;
       return;
     }
+
+    if (!this.validateEmail(this.email)) {
+      this.showError = true;
+      return;
+    }
+
     // Envía una petición POST al backend con el correo electrónico
     this.http.post('http://localhost:8081/api/account/verifyCode', this.email)
       .subscribe({
@@ -46,7 +55,12 @@ export class RecoveryEmailComponent {
     console.log('Código de recuperación enviado a', this.email);
   }
 
-  volverAtras() {
+  goBack() {
     this.location.back();
+  }
+
+  private validateEmail(email: string): boolean {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
   }
 }

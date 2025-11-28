@@ -1,16 +1,18 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { EmailInputComponent } from '../../components/email-input/email-input.component';
 import { ConfirmEmailInputComponent } from '../../components/confirm-email-input/confirm-email-input.component';
 import { PasswordInputComponent } from '../../components/password-input/password-input.component';
 import { ConfirmPasswordInputComponent } from '../../components/confirm-password-input/confirm-password-input.component';
 import { TermsCheckboxComponent } from '../../components/terms-checkbox/terms-checkbox.component';
 import { ActionButtonsComponent } from '../../components/action-buttons/action-buttons.component';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { UsernameInputComponent } from "../../components/username-input/username-input.component";
 import { RegisterDataService } from '../../services/register-data.service';
 
 interface User {
+  username: string;
   email: string;
   password: string;
   acceptedTerms: boolean;
@@ -21,19 +23,20 @@ interface User {
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     EmailInputComponent,
     ConfirmEmailInputComponent,
     PasswordInputComponent,
     ConfirmPasswordInputComponent,
     TermsCheckboxComponent,
     ActionButtonsComponent,
-    HttpClientModule
-    ],
+    UsernameInputComponent
+  ],
   templateUrl: './register-form.component.html',
   styleUrls: ['./register-form.component.css']
 })
 export class RegisterFormComponent {
-  // Propiedades que almacenan el estado del formulario
+  username = '';
   email = '';
   confirmEmail = '';
   password = '';
@@ -41,52 +44,91 @@ export class RegisterFormComponent {
   accepted = false;
   showError = false;
   hasErrorAll = false;
+  message = '';
 
+  constructor(
+    private router: Router,
+    private registerDataService: RegisterDataService
+  ) { }
 
-  // Constructor con inyección de dependencias: Router para navegación, HttpClient para peticiones HTTP, RegisterDataService para compartir datos entre componentes
-  constructor(private router: Router, private http: HttpClient, private registerDataService: RegisterDataService) {}
-
-  // Función que maneja el registro del usuario
   register() {
     this.showError = false;
+    this.username = this.username.toLowerCase();
+    this.email = this.email.toLowerCase();
+    this.confirmEmail = this.confirmEmail.toLowerCase();
 
     if (!this.accepted) {
-      alert('Debes aceptar los términos');
+      this.showError = true;
+      this.hasErrorAll = true;
+      this.message = 'Debes aceptar los términos';
       return;
     }
 
-    if (!this.email || !this.confirmEmail || !this.password || !this.confirmPassword) {
-      alert('Debes rellenar todos los campos');
+    if (!this.username || !this.email || !this.confirmEmail || !this.password || !this.confirmPassword) {
+      this.showError = true;
+      this.hasErrorAll = true;
+      this.message = 'Debes rellenar todos los campos';
+      return;
+    }
+
+    if (!this.username || this.validateUsername(this.username)) {
+      this.showError = true;
+      this.hasErrorAll = true;
+      this.message = 'Debes introducir un nombre de usuario válido';
       return;
     }
 
     if (!this.validateEmail(this.email)) {
-      alert('Correo inválido. Debe contener "@" y formato correcto.');
+      this.showError = true;
+      this.hasErrorAll = true;
+      this.message = 'Correo inválido. Debe contener "@" y formato correcto';
       return;
     }
 
     const passwordValidation = this.validatePassword(this.password);
     if (!passwordValidation.valid) {
-      alert('Contraseña inválida:\n' + passwordValidation.message);
+      this.showError = true;
+      this.hasErrorAll = true;
+      this.message = 'Contraseña inválida:\n' + passwordValidation.message;
       return;
     }
 
     if (this.email !== this.confirmEmail || this.password !== this.confirmPassword) {
       this.showError = true;
       this.hasErrorAll = true;
+      this.message = 'El correo o la contraseña no coinciden';
       return;
     }
 
-    const newUser = {
-      email: this.email,
-      password: this.password
-    };
-    // estem guardant les dades al servei per acumular-los i enviarlos a commponent personal-info
-    this.registerDataService.setRegisterData(newUser);
+    // 🔹 Registro inicial (verifica email y username en backend)
+    const newUser = { username: this.username, email: this.email, password: this.password };
+    this.registerDataService.initialRegister(newUser).subscribe({
+      next: () => {
+        // Guardamos datos y vamos a la siguiente pantalla
+        this.registerDataService.setRegisterData(newUser);
+        this.router.navigateByUrl('/code-sent-confirmation');
+      },
+      error: (err) => {
+        console.log('Conflicto backend:', err.message);
 
-    this.router.navigateByUrl('/personal-information');
+        const typeError = err.message;
+        console.log(typeError.includes('email'));
+         if (typeError.includes('email')) {
+          this.showError = true;
+          this.hasErrorAll = true;
+          this.message = 'El correo ya está registrado';
+        } else if (typeError.includes('username')) {
+          this.showError = true;
+          this.hasErrorAll = true;
+          this.message = 'El username ya está registrado';
+        } else {
+          this.showError = true;
+          this.message = 'Error, inténtelo más tarde';
+        }
+      }
+    });
   }
-  
+
   private validateEmail(email: string): boolean {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
@@ -94,6 +136,7 @@ export class RegisterFormComponent {
 
   private validatePassword(password: string): { valid: boolean; message: string } {
     const minLength = 8;
+    const maxLength = 64;
     const uppercase = /[A-Z]/;
     const lowercase = /[a-z]/;
     const number = /[0-9]/;
@@ -101,12 +144,37 @@ export class RegisterFormComponent {
     const simpleSeq = /(1234|abcd|password|qwerty)/i;
 
     if (password.length < minLength) return { valid: false, message: `Debe tener al menos ${minLength} caracteres.` };
+    if (password.length > maxLength) return { valid: false, message: `Debe tener como máximo ${maxLength} caracteres.` };
     if (!uppercase.test(password)) return { valid: false, message: 'Debe contener al menos una letra mayúscula.' };
     if (!lowercase.test(password)) return { valid: false, message: 'Debe contener al menos una letra minúscula.' };
     if (!number.test(password)) return { valid: false, message: 'Debe contener al menos un número.' };
     if (!special.test(password)) return { valid: false, message: 'Debe contener al menos un carácter especial (!@#$%^&*?).' };
     if (simpleSeq.test(password)) return { valid: false, message: 'No use secuencias simples o información personal.' };
+    if (password.toLowerCase() == this.email.toLowerCase()) return { valid: false, message: `No use su correo electrónico` };
+    if (password.toLowerCase() == this.username.toLowerCase()) return { valid: false, message: `No use su nombre de usuario` };
 
     return { valid: true, message: '' };
+  }
+  onPasswordChange(password: string) {
+    this.password = password;
+    const passwordValidation = this.validatePassword(password);
+    if (!passwordValidation.valid) {
+      this.showError = true;
+      this.message = 'Contraseña inválida:\n' + passwordValidation.message;
+    } else {
+      this.showError = false;
+      this.message = '';
+    }
+  }
+
+  private validateUsername(username: string): boolean {
+    const minLength = 3;
+    const maxLength = 30;
+    const requeriments = /^[a-z0-9_-]+$/
+
+    if (username.length < minLength) return true;
+    if (username.length > maxLength) return true;
+    if (!requeriments.test(username)) return true;
+    else return false;
   }
 }

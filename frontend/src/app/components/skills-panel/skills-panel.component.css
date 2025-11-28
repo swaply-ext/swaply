@@ -1,76 +1,127 @@
 .skills-panel-container {
-  max-width: 500px;
-  margin: 2rem auto;
-  padding: 1rem;
-  border: 1px solid #315465;
-  border-radius: 8px;
-  background-color: #315465;
-  color: #fff;
+  flex: 1;
+  flex-basis: 0;
+  padding: 1.5rem 2rem;
+  /* Borde y fondo estilo neón oscuro */
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background-color: var(--bg-panel);
+  color: #ffffff;
+  font-family: "Quicksand", sans-serif;
 }
 
-.header {
+header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1rem;
-}
-
-.header h1 {
-  margin: 0;
-  font-size: 1.5rem;
-}
-
-.toggle-btn {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: var(--principal-color-2);
-}
-
-.add-btn-circle {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  border: none;
-  background-color: var(--principal-color-2, #2a9d8f);
-  color: #315465;
-  font-size: 1.8rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.3s, transform 0.2s;
-}
-
-.add-btn-circle:hover {
-  background-color: #21867a;
-  transform: scale(1.1);
-}
-
-.skills-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-  gap: 0.5rem;
-}
-
-.skill-card {
-  padding: 0.6rem;
-  background-color: #bfbfbf;
-  border-radius: 6px;
-  text-align: center;
-  font-weight: 500;
-  color: #000;
-  border: none;
-}
-
-.header {
+  margin-bottom: 1.5rem;
   position: relative;
 }
 
-.header h1 {
+header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+  /* Centrado absoluto para asegurar que esté en medio */
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
 }
 
+/* Botones del header (flecha y editar) */
+.toggle-btn, .edit-btn {
+  background: none;
+  border: none;
+  color: var(--border-color); /* Color cian */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.toggle-btn:hover, .edit-btn:hover{
+  color: var(--button-hover);
+}
+
+.toggle-btn .material-icons,
+.edit-btn .material-icons {
+  font-size: 1.8rem;
+}
+
+/* --- GRID DE TARJETAS --- */
+.skills-grid {
+  display: grid;
+  /* Responsive: intenta meter 3 columnas si hay espacio (aprox 250px cada una) */
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+/* --- DISEÑO DE LA TARJETA --- */
+.skill-card {
+  background-color: var(--bg-card);
+  border: 2px solid var(--border-color); /* Borde cian */
+  border-radius: 12px; /* Bordes muy redondeados */
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 90px; /* Altura rectangular */
+  box-sizing: border-box;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.8rem;
+}
+
+.skill-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.skill-icon {
+  font-size: 1.2rem;
+}
+
+/* --- BARRA DE PROGRESO (BLOQUES) --- */
+.level-bar {
+  display: flex;
+  gap: 0.5rem; /* Espacio entre los bloquecitos */
+}
+
+.level-block {
+  flex: 1; /* Ocupan el mismo ancho */
+  height: 12px;
+  border-radius: 4px;
+  border: 2px solid var(--border-color); /* Borde por defecto (vacío) */
+  background-color: transparent;
+}
+
+/* Cuando el bloque está lleno (Verde por defecto) */
+.level-block.filled {
+  background-color: var(--level-one-skill);
+  border-color: var(--level-one-skill);
+}
+
+.skill-card.mid-level .level-block.filled {
+  background-color: var( --level-two-skill);
+  border-color: var(--level-two-skill);
+}
+
+
+.skill-card.high-level .level-block.filled {
+  background-color: var( --level-three-skill);
+  border-color: var(--level-three-skill);
+}
+
+/* Ajustes Responsive */
+@media (max-width: 768px) {
+  .skills-grid {
+    grid-template-columns: 1fr; /* Una columna en móvil */
+  }
+}

@@ -1,90 +1,154 @@
 // Importaciones necesarias desde Angular
-import { NgFor, NgIf } from '@angular/common';         
-import { Component } from '@angular/core';             
-import { FormsModule, NgModel } from '@angular/forms'; 
-import { CommonModule } from '@angular/common';        
-import { HttpClient } from '@angular/common/http';    
-import { HttpClientModule } from '@angular/common/http';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+
+interface SkillDTO {
+  id: string;
+  name: string;
+  category: string;
+  icon: string;
+}
+
+interface SkillItem {
+  id: string;
+  name: string;
+  icon: string;
+  selected: boolean;
+}
+
+interface Category {
+  name: string;
+  isOpen: boolean;
+  skills: SkillItem[];
+}
+
+interface Account {
+  interests: { id: string, level: number }[]
+}
+
+
 
 // Decorador que define el componente
 @Component({
-  selector: 'app-interests',                  
-  standalone: true,                           
-  imports: [FormsModule, CommonModule, HttpClientModule], 
-  templateUrl: './interests.component.html',   
-  styleUrls: ['./interests.component.css']     
+  selector: 'app-interests',
+  standalone: true,
+  imports: [FormsModule, CommonModule],
+  templateUrl: './interests.component.html',
+  styleUrls: ['./interests.component.css']
 })
 export class InterestsComponent {
-  
-  // ===  Definición de las categorías principales y sus subcategorías ===
-  categories = [
-    {
-      name: 'DEPORTES',
-      id: 'sports',
-      subcategories: [
-        { name: 'FÚTBOL', id: 'football', selected: false },
-        { name: 'PÁDEL', id: 'padel', selected: false },
-        { name: 'BÁSQUET', id: 'basketball', selected: false },
-        { name: 'BOXEO', id: 'boxing', selected: false },
-        { name: 'VÓLEY', id: 'volleyball', selected: false }
-      ]
-    },
-    {
-      name: 'MÚSICA',
-      id: 'music',
-      subcategories: [
-        { name: 'GUITARRA', id: 'guitar', selected: false },
-        { name: 'PIANO', id: 'piano', selected: false },
-        { name: 'VIOLÍN', id: 'violin', selected: false },
-        { name: 'BATERÍA', id: 'drums', selected: false },
-        { name: 'SAXO', id: 'saxophone', selected: false }
-      ]
-    },
-    {
-      name: 'OCIO',
-      id: 'leisure',
-      subcategories: [
-        { name: 'COCINA', id: 'cooking', selected: false },
-        { name: 'DIBUJO Y PINTURA', id: 'drawing', selected: false },
-        { name: 'BAILE', id: 'dancing', selected: false },
-        { name: 'MANUALIDADES', id: 'crafts', selected: false },
-        { name: 'OCIO DIGITAL', id: 'digital', selected: false }
-      ]
-    }
-  ];
 
-  // ===  Guarda la categoría seleccionada por el usuario ===
-  selectedCategory: string | null = null;
 
-  // === Inyección del servicio HttpClient para hacer peticiones HTTP ===
-  constructor(private http: HttpClient) {}
+  categories: Category[] = [];
 
-  // === Función que se ejecuta cuando el usuario selecciona una categoría ===
-  selectCategory(categoryId: string): void {
-    this.selectedCategory = categoryId;
-    // Esto actualiza qué subcategorías se muestran en pantalla
+  // Inyectar HttpClient para hacer peticiones HTTP
+  constructor(private http: HttpClient, private router: Router) { }
+
+
+  ngOnInit(): void {
+    this.getAllSkills('http://localhost:8081/api/skills');
+
   }
 
-  // === Devuelve las subcategorías de la categoría actualmente seleccionada ===
-  getSelectedSubcategories() {
-    const selected = this.categories.find(cat => cat.id === this.selectedCategory);
-    return selected ? selected.subcategories : [];
-  }
 
-  // === Envía las subcategorías marcadas al backend ===
-  submitInterests(): void {
-    // Filtra todas las subcategorías de todas las categorías
-    // y se queda solo con las que tienen selected = true
-    const selectedInterests = this.categories
-      .flatMap(category => category.subcategories)  
-      .filter(subcategory => subcategory.selected)  
-      .map(subcategory => subcategory.name);        
-
-    // Envía los intereses seleccionados al servidor
-    this.http.post('http://localhost:8081/api/interests/save', { interests: selectedInterests })
+  getAllSkills(URI: string) {
+    this.http.get<SkillDTO[]>(URI)
       .subscribe({
-        next: response => console.log('Respuesta del backend:', response), 
-        error: err => console.error('Error enviando intereses:', err)      
+        next: (response) => {
+          console.log(response);
+          this.organizeSkillsByCategory(response);
+          this.getMySkills('http://localhost:8081/api/account');
+        },
+        error: (err) => console.error('Error obteniendo skills:', err)
+      });
+  }
+
+
+  getMySkills(URI: string) {
+    this.http.get<Account>(URI)
+      .subscribe({
+        next: (account) => {
+          if (account.interests && account.interests.length > 0) {
+            console.log("----------", account.interests)
+            this.markSkills(account.interests);
+          }
+        },
+        error: (err) => console.error('Error obteniendo account:', err)
+      });
+
+  }
+
+  private markSkills(mySkills: { id: string; level: number }[]) {
+    this.categories.forEach(category => {
+      category.skills.forEach(skill => {
+        const match = mySkills.find(us => us.id === skill.id);
+        if (match) {
+          skill.selected = true;
+        }
+      })
+    });
+  }
+
+
+
+  private organizeSkillsByCategory(skills: SkillDTO[]) {
+    const grouped: Category[] = [];
+
+    skills.forEach(skill => {
+      let category = grouped.find(c => c.name === skill.category.toUpperCase());
+
+      if (!category) {
+        category = {
+          name: skill.category.toUpperCase(),
+
+          isOpen: true, // Por defecto abierta
+          skills: []
+        };
+        grouped.push(category);
+      }
+
+      category.skills.push({
+        name: skill.name,
+        icon: skill.icon,
+        id: skill.id,
+        selected: false
+      });
+    });
+    this.categories = grouped;
+  }
+
+  toggleCategory(categoryId: string) {
+    const category = this.categories.find(c => c.name === categoryId);
+    if (category) category.isOpen = !category.isOpen;
+  }
+
+  toggleSkill(categoryName: string, skillId: string) {
+    const category = this.categories.find(c => c.name === categoryName);
+    const sub = category?.skills.find(s => s.id === skillId);
+    if (sub) sub.selected = !sub.selected;
+  }
+
+  // Función para enviar las skills seleccionadas al backend
+  submitSkills() {
+    const selectedSkills = this.categories.flatMap(category =>
+      category.skills
+        .filter(skill => skill.selected)
+        .map(sub => ({
+          id: sub.id,
+          level: 1
+        }))
+    );
+
+    this.http.patch('http://localhost:8081/api/account/interests', { interests: selectedSkills })
+      .subscribe({
+        next: response => {
+          console.log('Resputesta del backend:', response);
+          this.router.navigate(['/myprofile']);
+        },
+        error: err => console.error('Error enviando skills:', err)
       });
   }
 }

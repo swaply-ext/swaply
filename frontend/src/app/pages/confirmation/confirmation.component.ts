@@ -19,6 +19,6 @@ export class ConfirmationComponent implements OnInit {
 
   
   continueToHome() {
-    this.router.navigate(['/']); 
+    this.router.navigate(['/personal-information']); 
   }
 }

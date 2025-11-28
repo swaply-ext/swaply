@@ -1,225 +1,108 @@
-/* === OCULTAR EL MARCO ANTIGUO DEL TÍTULO === */
-.title-box {
-  display: none;  /* ya no lo usamos */
+.interests-container {
+  width: 480px;
+  margin: 40px auto;
+  padding: 30px;
+  background: #315465;
+  border-radius: 20px;
 }
 
-/* === CENTRADO Y ZOOM DEL PANEL === */
-.interests-screen {
-  display: flex;
-  flex-direction: column;  
-  align-items: center;      
-  justify-content: center; 
-  min-height: 100vh;        
-  zoom: 1;                  
-}
-
-
-/* === PANEL SEMITRANSPARENTE GENERAL (AHORA ENVUELVE EL H1) === */
-/* .content-box es la capa con fondo semitransparente:
-   - Proporciona padding interior
-   - Organiza hijos en columna con separación uniforme
-   - Redondea las esquinas inferiores */
-.content-box {
-  background-color: rgba(255,255,255,0.05); 
-  padding: 40px;                           
-  display: flex;
-  flex-direction: column;                   
-  gap: 32px;                              
-  border-bottom-left-radius: 12px;          
-  border-radius: 35px; 
-  
-}
-
-
-/* === TÍTULO PRINCIPAL DENTRO DEL MARCO === */
-
-.content-box > .main-title {
-  margin: 0 0 24px;    
-  font-size: 3rem;     
-  font-weight: 800;   
-  color: #3CB57C;     
+h1 {
   text-align: center;
-  border-radius: 8px;   
+  color: #3ed598;
+  margin-bottom: 25px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 26px;
 }
 
+.category-block {
+  background: #43697e;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
 
-/* === WRAPPER UNIFICADO PARA CATEGORÍAS Y SUBCATEGORÍAS === */
-/* .selection-wrapper agrupa subtítulo, grid de categorías y subcategorías:
-   - Fondo semitransparente distinto
-   - Padding interior y esquinas redondeadas
-   - Flex vertical con gap */
-
-.selection-wrapper {
-  background-color: rgba(255,255,255,0.07); 
-  padding: 24px;                           
-  border-radius: 8px;                      
+.category-header {
   display: flex;
-  flex-direction: column;                
-  gap: 24px;                              
-}
-
-
-/* === TÍTULO DE CATEGORÍAS === */
-/* Estilo del subtítulo dentro del wrapper */
-.category-title {
-  margin: 0;              
-  text-align: center;    
-  color: #3CB57C;        
-  font-size: 1.32rem;     
-  font-weight: 800;       
-  transition: background 0.2s, transform 0.1s;
-  cursor: pointer; 
-}
-
-
-/* === GRID DE DOS COLUMNAS === */
-/* .grid contiene las dos columnas: categorías y subcategorías */
-.grid {
-  display: flex;
-  justify-content: center;     
-  align-items: center;         
-  min-height: 300px;
-  transition: all 0.4s ease;   
-}
-
-.grid.shifted {
-  justify-content: flex-start; 
-  align-items: flex-start;     
-  gap: 40px;                  
-}
-
-.grid.only-categories {
-  justify-content: center;   
-  align-items: center;      
-  min-height: 250px;       
-}
-
-
-/* === COLUMNA DE CATEGORÍAS === */
-/* .category-column organiza botones en columna */
-.category-column {
-  display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  transition: transform 0.4s ease;
+  cursor: pointer;
 }
-.category-buttons {
+
+.category-title {
+  color: #3ed598;
+  font-weight: 600;
+  font-size: 18px;
+  font-family: "Montserrat", sans-serif;
+}
+
+/* Arrow styling */
+.arrow {
+  transition: transform 0.25s ease;
+  color: #3ed598;
+  font-size: 20px;
+}
+.arrow.open {
+  transform: rotate(-90deg);
+}
+
+/* Smooth slide container */
+.chips-container {
+  margin-top: 5px;
   display: flex;
-  flex-direction: column;
-  gap: 43px;
-  transform: scale(1.05);
-  margin-top: 7px; 
-  width: 180px;
-}
-.category-buttons button {
-  background-color: #3CB57C; 
-  color: #FFFFFF;            
-  border: none;           
-  border-radius: 20px;       
-  padding: 15px;             
-  font-weight: 650;          
-  cursor: pointer;           
-  transition: background 0.2s; 
-  text-transform: uppercase; 
-  
-}
-.category-buttons button.selected,
-.category-buttons button:hover {
-  background-color: #1fa67a; 
+  flex-wrap: wrap;
+  gap: 15px;
+
+  overflow: hidden;
+  max-height: 0;
+  padding-top: 0;
+
+  transition:
+    max-height 0.35s ease,
+    padding-top 0.35s ease;
 }
 
-
-
-/* === COLUMNA DE SUBCATEGORÍAS === */
-
-.subcategory-column {
-  flex: 2;                  
-  display: flex;
-  flex-direction: column;    
-  padding-left: 28px;    
-    
+.chips-container.open {
+  max-height: 500px;
+  padding-top: 15px;
 }
 
-.grid.shifted .subcategory-column {
-  opacity: 1;
-  transform: translateX(0);
+.chip {
+  padding: 8px 14px;
+  border-radius: 12px;
+  background: rgba(191, 191, 191, 0.3);
+  color: white;
+  font-family: "Inter", sans-serif;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  user-select: none;
 }
 
-/* === LISTA DE SUBCATEGORÍAS COMO GRID PARA ALINEACIÓN PERFECTA === */
-.subcategory-list {
-  background-color: rgba(255,255,255,0.07); 
-  padding: 14px;           
-  display: grid;                      
-  grid-template-columns: max-content; 
-  row-gap: 30px;                      
-  justify-content: center;           
-  width: 100%;              
-  align-self: stretch;
-  border-radius: 8px;          
-
+.chip.selected {
+  background: #3ed598;
+  color: #083344;
 }
 
-
-
-/* === OPCIONES INDIVIDUALES (checkbox + etiqueta) === */
-.subcategory-option {
-  display: flex;         
-  align-items: center;   
-  gap: 12px;             
-  color: #FFFFFF;           
-  font-size: 0.95rem;        
-  cursor: pointer;          
-
+.chip:hover {
+  background: #3ed598aa;
 }
-
-
-
-/* === CHECKBOX SIN CAMBIOS === */
-.subcategory-option input[type="checkbox"] {
-  width: 12px;               
-  height: 18px;              
-  accent-color: #3CB57C;     
-}
-
-
-
-
-/* === BOTÓN GUARDAR === */
 
 .actions {
-  text-align: center;       
+  text-align: center;
+  margin-top: 25px;
 }
-.submit-button {
-  background-color: #3CB57C;
-  color: #FFFFFF;            
-  border: none;              
-  border-radius: 6px;      
-  padding: 12px 28px;       
-  font-size: 1rem;           
-  font-weight: 700;        
-  cursor: pointer;           
-  transition: background 0.2s, transform 0.1s;
-  text-transform: uppercase; 
-}
-.submit-button:hover {
-  background-color: #1fa67a; 
-  transform: translateY(-2px); 
+.save-btn {
+  width: 120px;
+  color: var(--principal-color-2);
+  background-color: #315465;
+  border: 2px solid var(--principal-color-2);
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
 }
 
-
-/* === RESPONSIVE === */
-
-@media (max-width: 600px) {
-  .grid {
-    flex-direction: column; 
-    align-items: stretch;   
-  }
-  .panel {
-    width: 90%;             
-  }
-  .category-buttons,
-  .subcategory-list {
-    margin-top: 0;         
-    margin-bottom: 0;
-  }
+.save-btn:hover {
+  background-color: var(--principal-color-2);
+  color: var(--secundary-color-1);
 }

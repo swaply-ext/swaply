@@ -1,0 +1,18 @@
+/* ":host" es un selector especial de Angular.
+  Se refiere al elemento raíz de *este* componente (en este caso, <app-exit>).
+*/
+:host {
+    /* 1. Hace que el componente ocupe toda la altura de la vista */
+    display: block;
+    height: 100vh;
+    /* 100% de la altura de la ventana (Viewport Height) */
+
+    /* 2. Centra el contenido (el <h1>) usando Flexbox */
+
+    align-items: center;
+    /* Centra verticalmente */
+}
+p {
+    text-align: center;
+    color: white;
+}

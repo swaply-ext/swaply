@@ -3,12 +3,12 @@ import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { RecoveryDataService } from '../../services/recovery-data.service.service';
-import { HttpClientModule } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-pass-verification',
   standalone: true,
-  imports: [HttpClientModule],
+  imports: [CommonModule],
   templateUrl: './pass-verification.component.html',
   styleUrls: ['./pass-verification.component.css']
 })
@@ -16,6 +16,7 @@ export class PassVerificationComponent implements OnInit {
   code: string[] = ['', '', '', '', '', ''];
   expectedCode?: string;
   recoveryObject = { id: '', email: '' };
+  showError = false;
 
   constructor(
     private location: Location,
@@ -53,7 +54,7 @@ export class PassVerificationComponent implements OnInit {
   verifyCode(): void {
     const fullCode = this.code.join('');
     if (fullCode.length < 6) {
-      alert('Introduce los 6 dígitos antes de continuar.');
+      this.showError = true;
       return;
     }
 
@@ -61,7 +62,7 @@ export class PassVerificationComponent implements OnInit {
       // Codi correcte → ja tenim id al servei. Anem a new-password
       this.router.navigate(['/new-password']);
     } else {
-      alert('Código incorrecto');
+      this.showError = true;
     }
   }
 

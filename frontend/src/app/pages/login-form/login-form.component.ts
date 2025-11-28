@@ -1,15 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { EmailInputComponent } from '../../components/email-input/email-input.component';
 import { PasswordInputComponent } from '../../components/password-input/password-input.component';
 import { TermsCheckboxComponent } from '../../components/terms-checkbox/terms-checkbox.component';
 import { LoginRegisterButtonsComponent } from '../../components/login-register-buttons/login-register-buttons.component';
 import { RouterLink } from '@angular/router';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
 
 interface User {
   email: string;
-  password: string; 
+  password: string;
 }
 
 @Component({
@@ -21,7 +23,7 @@ interface User {
     TermsCheckboxComponent,
     RouterLink,
     LoginRegisterButtonsComponent,
-    HttpClientModule
+    CommonModule
   ],
   templateUrl: './login-form.component.html', // Ruta al archivo HTML
   styleUrls: ['./login-form.component.css']   // Ruta al archivo CSS
@@ -31,47 +33,45 @@ export class LoginFormComponent {
   email = '';
   password = '';
   accepted = false;
+  showError = false;
+  private authService = inject(AuthService);
 
   constructor(private router: Router, private http: HttpClient) { }
 
   login() {
-    // Habria que cambiar el alert por algo mas bonito
+
+    this.showError = false;
+    this.email = this.email.toLowerCase();
+
     if (!this.accepted) {
-      alert('Debes aceptar los términos');
+      this.showError = true;
       return;
     }
     if (!this.email || !this.password) {
-      alert('Debes rellenar todos los campos');
+      this.showError = true;
       return;
     }
-    // Crea el objeto usuario con los datos del formulario
+
     const newUser: User = {
       email: this.email,
       password: this.password
     };
 
-    this.http.post('http://localhost:8081/api/account/login', newUser, { responseType: 'text' })
-      .subscribe({
-        next: (response: string) => {
-          console.log('Respuesta del backend:', response);
-
-          // Si hay un token/UUID -> login correcto
-          if (response && response.length > 0) {
-            this.router.navigate(['/']);
-          } else {
-            // Contraseña incorrecta o usuario no encontrado -> /error-auth
-            this.router.navigate(['/error-auth']);
-          }
-        },
-        error: err => {
-          console.error('Error enviando login:', err);
-          // Error de conexión -> también /error-auth
+    this.authService.login(newUser).subscribe({
+      next: () => {
+        this.router.navigate(['/']);
+      },
+      error: (err) => {
+        if (err.status == 401) {
+          this.router.navigate(['/error-auth']);
+        } else {
           this.router.navigate(['/error-auth']);
         }
-      });
+      }
+    });
   }
 
   register() {
-    this.router.navigate(['/register']); 
+    this.router.navigate(['/register']);
   }
 }
