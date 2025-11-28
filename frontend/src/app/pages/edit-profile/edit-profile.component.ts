@@ -171,6 +171,7 @@ export class EditProfileComponent implements OnInit {
       next: (success) => {
         if (success) {
           console.log('Perfil actualizado con éxito.');
+          window.location.reload();
         } else {
           console.error('Error al actualizar el perfil: respuesta negativa del servidor.');
         }
