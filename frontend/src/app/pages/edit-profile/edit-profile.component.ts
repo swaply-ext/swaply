@@ -1,12 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.component";
 import { SideMenuComponent } from '../../components/side-menu/side-menu.component';
 import { SaveButtonComponent } from '../../components/save-button/save-button.component';
 import { AccountService } from '../../services/account.service';
 import { DiscardButtonComponent } from '../../components/discard-button/discard-button.component';
-
+import { SkillsPanelComponent } from '../../components/skills-panel/skills-panel.component';
+import { InterestsPanelComponent } from '../../components/interests-panel/interests-panel.component';
+import { RouterLink } from '@angular/router';
+interface Skill {
+  id: string;
+  level: number;
+}
 interface ProfileData {
   name: string;
   surname: string;
@@ -28,12 +35,18 @@ interface ProfileData {
     AppNavbarComponent,
     SideMenuComponent,
     SaveButtonComponent,
-    DiscardButtonComponent
-  ],
+    DiscardButtonComponent,
+    SkillsPanelComponent,
+    InterestsPanelComponent,
+    RouterLink
+    ],
   templateUrl: './edit-profile.component.html',
   styleUrls: ['./edit-profile.component.css']
 })
 export class EditProfileComponent implements OnInit {
+
+  public interests: Array<Skill> = [];
+  public skills: Array<Skill> = [];
   public profileData: ProfileData = {} as ProfileData;
   constructor(private accountService: AccountService) { }
 
@@ -58,13 +71,21 @@ export class EditProfileComponent implements OnInit {
   getProfileDataFromBackend(): void {
     this.accountService.getEditProfileData().subscribe({
       next: (user) => {
-        this.mapProfileData(user);
-        console.log('Datos del perfil actuales:', this.profileData);
+        console.log('Datos recibidos del backend', user);
+        this.splitAndSendUser(user);
       },
       error: (err) => {
         console.error('Error al obtener datos del perfil:', err);
       }
     });
+  }
+
+    splitAndSendUser(user: any): void {
+    this.interests = user.interests;
+    this.skills = user.skills;
+    this.mapProfileData(user);
+    console.log(this.skills);
+    console.log(this.interests)
   }
 
   // Mapear datos del usuario a la estructura ProfileData
@@ -102,6 +123,7 @@ export class EditProfileComponent implements OnInit {
     if (Object.keys(this.errorMessages).length > 0) {
       console.error('No se pudo actualizar el perfil: campos obligatorios incompletos o formatos inválidos.');
       return;
+    
     }
     //recoger los datos del formulario
     const updatedUser: ProfileData = {
