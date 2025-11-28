@@ -1,0 +1,8 @@
+spring:
+  cloud:
+    azure:
+      keyvault:
+        secret:
+          property-sources:
+            - name: swaply-key
+              endpoint: https://swaply-key.vault.azure.net/

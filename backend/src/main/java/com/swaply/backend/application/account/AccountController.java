@@ -4,7 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
+import com.swaply.backend.shared.storage.StorageService; 
+import org.springframework.web.multipart.MultipartFile;
 import com.swaply.backend.application.account.dto.EditProfileDTO;
 import com.swaply.backend.application.account.dto.PersonalInfoDTO;
 import com.swaply.backend.application.account.dto.ProfileDataDTO;
@@ -19,10 +20,14 @@ public class AccountController {
     // Classe per rebre el JSON del frontend
 
     private final AccountService service;
+    private final StorageService storageService;
 
-    public AccountController(AccountService service) {
+    public AccountController(AccountService service, StorageService storageService) {
         this.service = service;
+        this.storageService = storageService;
     }
+
+    
 
     @GetMapping
     public ResponseEntity<ProfileDataDTO> getAccount(
@@ -81,4 +86,14 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
     }
 
+     @PostMapping("/upload-photo")
+    public ResponseEntity<String> uploadPhoto(@RequestParam("file") MultipartFile file) {
+        try {
+            String signedUrl = storageService.uploadFile(file);            
+            return ResponseEntity.ok(signedUrl);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body("Error al subir imagen: " + e.getMessage());
+        }
+    }
 }

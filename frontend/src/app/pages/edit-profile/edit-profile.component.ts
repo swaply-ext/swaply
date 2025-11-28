@@ -45,6 +45,9 @@ export class EditProfileComponent implements OnInit {
   public interests: Array<Skill> = [];
   public skills: Array<Skill> = [];
   public profileData: ProfileData = {} as ProfileData;
+
+  isUploadingPhoto = false;
+
   constructor(private accountService: AccountService) { }
 
   // Variables individuales para enlazar con el formulario
@@ -96,7 +99,7 @@ export class EditProfileComponent implements OnInit {
       birthDate: user.birthDate ? new Date(user.birthDate).toISOString().substring(0, 10) : '',
       gender: user.gender,
       email: user.email,
-      profilePhotoUrl: user.profilePhotoUrl
+      profilePhotoUrl: user.profilePhotoUrl || this.profilePhotoUrl
     };
 
     // Asignar también a las variables individuales que usa el template
@@ -108,7 +111,37 @@ export class EditProfileComponent implements OnInit {
     this.birthDate = this.profileData.birthDate;
     this.gender = this.profileData.gender;
     this.email = this.profileData.email;
-    this.profilePhotoUrl = this.profileData.profilePhotoUrl;
+    if(this.profileData.profilePhotoUrl) {
+        this.profilePhotoUrl = this.profileData.profilePhotoUrl;
+    }
+  }
+
+  onPhotoSelected(event: any): void {
+    const file = event.target.files[0];
+    
+    if (file) {
+      // Validación de tamaño (2MB)
+      if (file.size > 2 * 1024 * 1024) {
+        alert('La imagen es demasiado grande. Máximo 2MB.');
+        return;
+      }
+
+      this.isUploadingPhoto = true;
+
+      // Subimos directamente al backend (que lo subirá a Azure)
+      this.accountService.uploadProfilePhoto(file).subscribe({
+        next: (url) => {
+          console.log('Foto subida correctamente:', url);
+          // Actualizamos la vista con la nueva URL de Azure
+          this.profilePhotoUrl = url; 
+          this.isUploadingPhoto = false;
+        },
+        error: (err) => {
+          console.error('Error subiendo foto:', err);
+          this.isUploadingPhoto = false;
+        }
+      });
+    }
   }
   save() {
     // Resetear errores al inicio
