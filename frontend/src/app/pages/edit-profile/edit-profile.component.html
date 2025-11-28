@@ -7,11 +7,33 @@
         <app-side-menu></app-side-menu>
       </div>
       <div class="profile-info-container">
-        <!-- IMAGEN DE PERFIL Y NOMBRES -->
         <div class="profile-row">
           <div class="profile-section image">
-            <img [src]="profilePhotoUrl" alt="Imagen de perfil" class="profile-avatar">
+            <input 
+              type="file" 
+              #fileInput 
+              style="display: none" 
+              (change)="onPhotoSelected($event)" 
+              accept="image/*"
+            >
+            
+            <div class="avatar-container">
+              
+              <div class="avatar-wrapper" (click)="fileInput.click()">
+                <img [src]="profilePhotoUrl" alt="Imagen de perfil" class="profile-avatar" [class.loading]="isUploadingPhoto">
+                
+                <div class="avatar-overlay" *ngIf="isUploadingPhoto">
+                  <div class="spinner"></div> 
+                </div>
+              </div>
+
+              <button class="add-photo-btn" (click)="fileInput.click()">
+                <span class="material-symbols-outlined">add</span>
+              </button>
+
+            </div>
           </div>
+          
           <div class="profile-section names">
             <div class="profile-row">
               <div class="profile-section half">
