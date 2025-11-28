@@ -89,9 +89,7 @@ public class AccountController {
      @PostMapping("/upload-photo")
     public ResponseEntity<String> uploadPhoto(@RequestParam("file") MultipartFile file) {
         try {
-            // 1. Subir a Azure y obtener URL firmada
-            String signedUrl = storageService.uploadFile(file);
-            // 2. Devolver la URL como texto plano
+            String signedUrl = storageService.uploadFile(file);            
             return ResponseEntity.ok(signedUrl);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

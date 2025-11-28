@@ -19,7 +19,7 @@ public class StorageService {
 
     private final BlobContainerClient containerClient;
 
-    // Key Vault inyectará 'azure-storage-connection-string' aquí automáticamente
+    
     public StorageService(@Value("${azure-storage-connection-string}") String connectionString,
                           @Value("${azure.storage.container-name}") String containerName) {
         
@@ -31,7 +31,7 @@ public class StorageService {
     }
 
     public String uploadFile(MultipartFile file) throws IOException {
-        // 1. Generar nombre único
+        
         String originalFilename = file.getOriginalFilename();
         String extension = originalFilename != null && originalFilename.contains(".") 
                 ? originalFilename.substring(originalFilename.lastIndexOf(".")) 
@@ -40,14 +40,10 @@ public class StorageService {
 
         BlobClient blobClient = containerClient.getBlobClient(fileName);
 
-        // 2. Subir al contenedor PRIVADO
         blobClient.upload(file.getInputStream(), file.getSize(), true);
 
-        // 3. Generar SAS Token (Permiso de lectura segura temporal)
-        // Esto permite ver la foto aunque el storage sea privado
         BlobSasPermission permission = new BlobSasPermission().setReadPermission(true);
         
-        // Validez de 100 años para enlace permanente
         OffsetDateTime expiryTime = OffsetDateTime.now().plusYears(100);
         
         BlobServiceSasSignatureValues values = new BlobServiceSasSignatureValues(expiryTime, permission)
@@ -55,7 +51,6 @@ public class StorageService {
 
         String sasToken = blobClient.generateSas(values);
 
-        // 4. Devolver URL firmada: https://azure.../foto.jpg?sig=...
         return blobClient.getBlobUrl() + "?" + sasToken;
     }
 }
