@@ -286,3 +286,45 @@ app-profile-info {
 .profile-info-container {
   flex: 1;
 }
+/*CSS DEL SUBCOMPONENTE SKILLS PANEL*/
+
+.profile-panels-container {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
+}
+
+.profile-skills,
+.profile-interests {
+  border-radius: 12px;
+  padding: 0;
+  flex: 1;
+  box-sizing: border-box;
+}
+
+.profile-skills {
+  justify-content: flex-start;
+}
+
+.profile-interests {
+  justify-content: flex-end;
+}
+@media (max-width: 900px) {
+  .profile-skills,
+  .profile-interests {
+    flex: 1 1 100%;
+    max-width: 100%;
+    min-width: unset;
+    justify-content: center;
+    padding: 12px;
+    min-height: auto;
+  }
+
+  .profile-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
