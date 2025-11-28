@@ -98,6 +98,7 @@ export class PrivacyAndSecurityComponent {
       this.message = 'Contraseña inválida:\n' + passwordValidation.message;
       return;
     }
+    
 
     // Confirm passwords match
     if (this.newPassword !== this.confirmPassword) {
@@ -108,12 +109,12 @@ export class PrivacyAndSecurityComponent {
 
     // Prepare payload
     const payload = {
-      currentPassword: this.currentPassword,
+      password: this.currentPassword,
       newPassword: this.newPassword
     };
 
     // Call backend API 
-    this.http.post('http://localhost:8081/api/auth/changePassword', payload, { observe: 'response' })
+    this.http.post('http://localhost:8081/api/auth/passwordChange', payload, { observe: 'response' })
       .subscribe({
         next: response => {
           if (response.status === 200) {

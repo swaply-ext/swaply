@@ -29,7 +29,6 @@ import { AuthGuard } from './services/auth-guard.service';
 import { LinkSentConfirmationComponent } from './pages/link-sent-confirmation/link-sent-confirmation.component';
 import { CodeSentConfirmationComponent } from './pages/code-sent-confirmation/code-sent-confirmation.component';
 import { FilterSkillsComponent } from './components/filter-skills/filter-skills.component';
-import { HomePageComponent } from './pages/home-page/home-page.component';
 import { PrivacyAndSecurityComponent } from './pages/privacy-and-security/privacy-and-security.component';
 import { EmailSentComponent } from './pages/email-sent/email-sent.component';
 import { IndexComponent } from './pages/index/index.component';
