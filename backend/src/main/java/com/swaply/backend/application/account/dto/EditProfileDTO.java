@@ -5,6 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
+
+import com.swaply.backend.shared.UserCRUD.Model.UserSkills;
 
 @Data
 @NoArgsConstructor
@@ -14,6 +17,8 @@ public class EditProfileDTO {
     private String name;
     private String surname;
     private String username;
+    private List<UserSkills> skills;
+    private List<UserSkills> interests;
     private String description;
     private String email;
     private Date birthDate;

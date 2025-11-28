@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.component";
 import { SkillSearchComponent } from '../../components/skill-search/skill-search.component'; 
 import { FilterSkillsComponent } from '../../components/filter-skills/filter-skills.component';
-
+import { AccountService } from '../../services/account.service';
 @Component({
   selector: 'app-home',
   standalone: true,
@@ -13,6 +13,9 @@ import { FilterSkillsComponent } from '../../components/filter-skills/filter-ski
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent {
+
+  constructor(private accountService: AccountService) { }
+  
 
   hasIntercambio = signal(true);
   isConfirmed = signal(false);

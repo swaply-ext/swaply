@@ -29,9 +29,13 @@ export class ProfileInfoComponent {
     console.log('ProfileData changed:', this.profileData);
   }
 
-  constructor(private authService: AuthService) { } // <--- Injecció de Router
+  constructor(private authService: AuthService, private router: Router ) { } // <--- Injecció de Router
   starsArray = [1, 2, 3, 4, 5];
   get isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
+  }
+
+  goToEdit(){
+    this.router.navigate(['/profile-edit']);
   }
 }

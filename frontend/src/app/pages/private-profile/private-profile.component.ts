@@ -61,6 +61,7 @@ export class PrivateProfileComponent implements OnInit {
     this.skills = user.skills;
     this.mapProfileData(user);
     console.log(this.skills);
+    console.log(this.interests);
   }
 
   mapProfileData(user: any): void {
@@ -71,7 +72,7 @@ export class PrivateProfileComponent implements OnInit {
       location: user.location,
       description: user.description,
       profilePhotoUrl: user.profilePhotoUrl,
-      rating : 3.5,
+      rating : 3.8,
     };
   }
 

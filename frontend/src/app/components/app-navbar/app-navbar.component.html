@@ -24,9 +24,16 @@
     <span class="material-symbols-outlined nav-icon">notifications</span>
 
     <div class="profile-wrapper">
-      <span class="material-symbols-outlined nav-icon profile-icon" (click)="toggleDropdown(); $event.stopPropagation()">
-        person
-      </span>
+      
+    <span *ngIf="isLoggedIn" (click)="toggleDropdown(); $event.stopPropagation()">
+      <img [src]="dropdownMenuData.profilePhotoUrl" 
+          alt="Foto de perfil" class="profile-pic">
+    </span>
+    <span *ngIf="!isLoggedIn" class="material-symbols-outlined nav-icon profile-icon" 
+          (click)="toggleDropdown(); $event.stopPropagation()">
+      person
+    </span>
+
 
       <div class="dropdown-overlay" *ngIf="showDropdown" [class.show]="showDropdown">
         <app-dropdown-menu [dropdownMenuData]="dropdownMenuData" (closeMenu)="showDropdown = false"></app-dropdown-menu>

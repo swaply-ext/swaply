@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 interface SkillDTO {
   id: string;
@@ -44,7 +45,7 @@ export class InterestsComponent {
   categories: Category[] = [];
 
   // Inyectar HttpClient para hacer peticiones HTTP
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
 
   ngOnInit(): void {
@@ -141,9 +142,12 @@ export class InterestsComponent {
         }))
     );
 
-    this.http.patch('http://localhost:8081/api/account/interests', { skills: selectedSkills })
+    this.http.patch('http://localhost:8081/api/account/interests', { interests: selectedSkills })
       .subscribe({
-        next: response => console.log('Resputesta del backend:', response),
+        next: response => {
+          console.log('Resputesta del backend:', response);
+          this.router.navigate(['/myprofile']);
+        },
         error: err => console.error('Error enviando skills:', err)
       });
   }

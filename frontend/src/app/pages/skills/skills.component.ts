@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { timeInterval } from 'rxjs';
+import { Router } from '@angular/router';
 
 interface SkillDTO {
   id: string;
@@ -41,7 +42,7 @@ export class SkillsComponent {
   categories: Category[] = [];
 
   // Inyectar HttpClient para hacer peticiones HTTP
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   ngOnInit(): void {
     this.getAllSkills('http://localhost:8081/api/skills');
@@ -136,10 +137,13 @@ export class SkillsComponent {
 
     this.http.patch('http://localhost:8081/api/account/skills', { skills: selectedSkills })
       .subscribe({
-        next: response => console.log('Resputesta del backend:', response),
+        next: response => {
+          console.log('Resputesta del backend:', response);
+          this.router.navigate(['/myprofile']);
+        },
         error: err => console.error('Error enviando skills:', err)
       });
-  }
+    }
 }
 
 
