@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { timeInterval } from 'rxjs';
+import { RouterLink } from '@angular/router';
 
 interface SkillDTO {
   id: string;
@@ -31,7 +32,7 @@ interface Account {
 @Component({
   selector: 'app-skills',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './skills.component.html',
   styleUrls: ['./skills.component.css']
 })

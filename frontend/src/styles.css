@@ -10,7 +10,7 @@
   --error-color-1: #E53935; /* Vermell clar */
   --error-color-2: #B71C1C; /* Vermell neutre */
   --error-color-3: #751414; /* Vermell fosc */
-  
+
 
   --font-primary: "Quicksand", sans-serif;
   --font-secondary: "Inter", sans-serif;
@@ -18,7 +18,7 @@
 
     --bg-panel: #022c38;
     --bg-card: #00414b;
-    --border-color: #006979;
+    --border-color: #00a1b7;
     --button-hover: #e0e0e0;
     --level-one-skill: #2ab57e;
     --level-two-skill: #ffa62f;

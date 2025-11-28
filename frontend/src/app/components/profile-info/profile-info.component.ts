@@ -2,6 +2,7 @@ import { Component, OnChanges, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router'; // <--- Afegeix Router
 import { AuthService } from '../../services/auth.service';
+import { RouterLink } from '@angular/router';
 
 interface ProfileData {
   fullName: string;
@@ -29,9 +30,13 @@ export class ProfileInfoComponent {
     console.log('ProfileData changed:', this.profileData);
   }
 
-  constructor(private authService: AuthService) { } // <--- Injecció de Router
+  constructor(private authService: AuthService, private router: Router ) { } // <--- Injecció de Router
   starsArray = [1, 2, 3, 4, 5];
   get isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
+  }
+
+  goToEdit(){
+    this.router.navigate(['/profile-edit']);
   }
 }
