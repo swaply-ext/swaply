@@ -3,8 +3,6 @@ import { Component, OnChanges, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
-
-
 interface SkillInput {
   id: string;
   level: number;
@@ -28,13 +26,13 @@ export interface SkillDisplay extends SkillsModel {
   standalone: true,
   imports: [CommonModule]
 })
-export class SkillsPanelComponent {
+export class SkillsPanelComponent implements OnChanges {
   @Input() SkillInput: Array<SkillInput> = [];
-
+  
+  // SOLUCIÓN: Añadimos el input
+  @Input() isReadOnly: boolean = false;
 
   skills: Array<SkillDisplay> = [];
-
-
   open = true;
 
   constructor(private router: Router, private skillsService: SkillsService) { }
@@ -45,10 +43,8 @@ export class SkillsPanelComponent {
     }
   }
 
-
   loadAllSkills() {
     this.skills = [];
-
     this.SkillInput.forEach(input => {
       this.skillsService.getSkillDisplay(input).subscribe({
         next: (data) => this.skills.push(data),
@@ -62,6 +58,8 @@ export class SkillsPanelComponent {
   }
 
   goToSkills() {
-    this.router.navigate(['/skills']);
+    if (!this.isReadOnly) {
+      this.router.navigate(['/skills']);
+    }
   }
 }

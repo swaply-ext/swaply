@@ -1,5 +1,6 @@
 <div class="profile-card">
-    <button class="material-icons edit-icon" (click)="goToEdit()">edit</button>
+  <i class="material-icons edit-icon" *ngIf="!isReadOnly" (click)="goToEdit()">edit</i>
+
   <img [src]="profileData.profilePhotoUrl" alt="User avatar" class="avatar" />
 
   <div class="info">
