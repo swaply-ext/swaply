@@ -12,24 +12,12 @@
   </header>
 
   <div *ngIf="open" class="skills-grid">
-    <div
-      *ngFor="let skill of skills"
-      class="skill-card"
-      [ngClass]="{
-        'mid-level': skill.level === 2,
-        'high-level': skill.level === 3
-      }"
-    >
-      <div class="card-header">
-        <span class="skill-name">{{ skill.name }}</span>
-        <span class="skill-icon">{{ skill.icon }}</span>
-      </div>
-
-      <div class="level-bar">
-        <div class="level-block" [class.filled]="skill.level >= 1"></div>
-        <div class="level-block" [class.filled]="skill.level >= 2"></div>
-        <div class="level-block" [class.filled]="skill.level >= 3"></div>
-      </div>
-    </div>
+    <app-skill-card
+      *ngFor="let item of InterestsInput"
+      [id]="item.id"
+      [level]="item.level"
+      [editable]="true"
+      (levelChange)="handleLevelChange($event)">
+    </app-skill-card>
   </div>
 </div>
