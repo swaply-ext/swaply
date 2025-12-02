@@ -1,9 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-// Importamos el hijo
 import { SkillCardComponent } from '../skill-card/skill-card.component';
-// Importamos la interfaz compartida desde el servicio
 import { SkillInput } from '../../services/skills.service';
 
 @Component({
@@ -11,18 +9,14 @@ import { SkillInput } from '../../services/skills.service';
   templateUrl: './skills-panel.component.html',
   styleUrls: ['./skills-panel.component.css'],
   standalone: true,
-  // ¡Importante! Añadir SkillCardComponent a los imports
   imports: [CommonModule, SkillCardComponent]
 })
 export class SkillsPanelComponent {
-  // Recibimos solo la lista de IDs y niveles (data ligera)
   @Input() SkillInput: Array<SkillInput> = [];
 
   open = true;
 
-  constructor(private router: Router) {
-    // Ya no necesitamos inyectar el SkillsService aquí
-  }
+  constructor(private router: Router) {}
 
   togglePanel() {
     this.open = !this.open;

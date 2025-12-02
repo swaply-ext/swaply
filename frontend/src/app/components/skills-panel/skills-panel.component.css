@@ -1,12 +1,10 @@
-/* skills-panel.component.css */
 .skills-panel-container {
   flex: 1;
   flex-basis: 0;
   padding: 1.5rem 2rem;
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
+  border: 0.1rem solid var(--border-color);
+  border-radius: 0.8rem;
   background-color: var(--bg-panel);
-  color: #ffffff;
   font-family: "Quicksand", sans-serif;
 }
 
@@ -47,16 +45,8 @@ header h1 {
   font-size: 1.8rem;
 }
 
-/* --- GRID DE TARJETAS --- */
-/* El grid se queda en el padre porque es quien organiza a los hijos */
 .skills-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 1.5rem;
-}
-
-@media (max-width: 768px) {
-  .skills-grid {
-    grid-template-columns: 1fr;
-  }
 }
