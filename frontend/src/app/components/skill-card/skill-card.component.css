@@ -1,0 +1,91 @@
+.skill-card {
+  background-color: var(--bg-card);
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 90px;
+  box-sizing: border-box;
+  transition: transform 0.2s ease, border-color 0.3s ease;
+}
+
+/* Header de la tarjeta */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.8rem;
+}
+
+.skill-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #ffffff;
+}
+
+.skill-icon {
+  font-size: 1.2rem;
+}
+
+/* Barras de nivel */
+.level-bar {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.level-block {
+  flex: 1;
+  height: 12px;
+  border-radius: 4px;
+  border: 2px solid var(--border-color);
+  background-color: transparent;
+}
+
+/* Colores de relleno (se asume que las variables CSS están en styles.css global o heredadas) */
+.level-block.filled {
+  background-color: var(--level-one-skill, #4caf50);
+  border-color: var(--level-one-skill, #4caf50);
+}
+
+/* Estilos dinámicos */
+.skill-card.mid-level .level-block.filled {
+  background-color: var(--level-two-skill);
+  border-color: var(--level-two-skill);
+}
+
+.skill-card.high-level .level-block.filled {
+  background-color: var(--level-three-skill);
+  border-color: var(--level-three-skill);
+}
+
+/* Estilos para modo editable */
+.skill-card.is-editable {
+  cursor: pointer;
+}
+
+.skill-card.is-editable:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.edit-icon {
+  font-size: 1rem;
+  color: var(--border-color);
+  margin-left: 5px;
+}
+
+
+.skill-card.is-editable .level-block {
+  cursor: pointer;
+  transition: transform 0.1s ease, background-color 0.2s;
+}
+
+/* Efecto hover en los bloques para saber que se pueden tocar */
+.skill-card.is-editable .level-block:hover {
+  opacity: 0.8;
+  transform: scaleY(1.2); /* Un pequeño efecto de crecimiento */
+}

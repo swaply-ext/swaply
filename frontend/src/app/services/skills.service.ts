@@ -3,12 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {map} from 'rxjs/operators';
 
-interface SkillInput {
+export interface SkillInput {
   id: string;
   level: number;
 }
 
-interface SkillsModel {
+export interface SkillsModel {
   id: string;
   name: string;
   icon: string;

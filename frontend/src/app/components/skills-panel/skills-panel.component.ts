@@ -1,60 +1,27 @@
-import { SkillsService } from './../../services/skills.service';
-import { Component, OnChanges, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-
-
-
-interface SkillInput {
-  id: string;
-  level: number;
-}
-
-interface SkillsModel {
-  id: string;
-  name: string;
-  icon: string;
-  category: string;
-}
-
-export interface SkillDisplay extends SkillsModel {
-  level: number;
-}
+// Importamos el hijo
+import { SkillCardComponent } from '../skill-card/skill-card.component';
+// Importamos la interfaz compartida desde el servicio
+import { SkillInput } from '../../services/skills.service';
 
 @Component({
   selector: 'app-skills-panel',
   templateUrl: './skills-panel.component.html',
   styleUrls: ['./skills-panel.component.css'],
   standalone: true,
-  imports: [CommonModule]
+  // ¡Importante! Añadir SkillCardComponent a los imports
+  imports: [CommonModule, SkillCardComponent]
 })
 export class SkillsPanelComponent {
+  // Recibimos solo la lista de IDs y niveles (data ligera)
   @Input() SkillInput: Array<SkillInput> = [];
-
-
-  skills: Array<SkillDisplay> = [];
-
 
   open = true;
 
-  constructor(private router: Router, private skillsService: SkillsService) { }
-
-  ngOnChanges(): void {
-    if (this.SkillInput && this.SkillInput.length > 0) {
-      this.loadAllSkills();
-    }
-  }
-
-
-  loadAllSkills() {
-    this.skills = [];
-
-    this.SkillInput.forEach(input => {
-      this.skillsService.getSkillDisplay(input).subscribe({
-        next: (data) => this.skills.push(data),
-        error: (e) => console.error(e)
-      });
-    })
+  constructor(private router: Router) {
+    // Ya no necesitamos inyectar el SkillsService aquí
   }
 
   togglePanel() {
@@ -64,4 +31,9 @@ export class SkillsPanelComponent {
   goToSkills() {
     this.router.navigate(['/skills']);
   }
+
+  handleLevelChange(event: {id: string, newLevel: number}) {
+  console.log(`Guardar en BD: ID ${event.id} ahora es nivel ${event.newLevel}`);
+  // Aquí llamarías a un servicio para guardar
+}
 }
