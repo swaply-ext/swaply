@@ -11,64 +11,95 @@
   z-index: 9999;
 }
 
-
-.loader {
-  font-size: 80px;
-  width: 1em;
-  height: 1em;
-  border-radius: 50%;
-  position: relative;
-  transform: translateZ(0);
-  color: var(--principal-color-2);
-  animation: mltShdSpin 1.1s infinite ease, round 1.1s infinite ease;
+.p-loader {
+  width: 180px;
+  height: 180px;
+  overflow: visible; /* Importante para que no se corten las puntas */
 }
 
-@keyframes mltShdSpin {
+/* --- ESTILOS DE LÍNEA --- */
+.static-line, .growing-line {
+  fill: none;
+  stroke: var(--principal-color-2);
+  stroke-width: 10;
+  stroke-linecap: round; /* Bordes redondeados */
+  stroke-linejoin: round;
+}
+
+/* Color de las puntas de flecha (relleno sólido) */
+.arrow-head-static, .arrow-head-moving {
+  fill: var(--principal-color-2);
+  stroke: none;
+}
+
+/* --- ANIMACIONES --- */
+
+/* 1. La línea que dibuja la P */
+.growing-line {
+  /* Longitud total aproximada del camino = 220 */
+  stroke-dasharray: 230;
+  stroke-dashoffset: 230; /* Empieza escondida */
+  animation: drawLine 3s ease-in-out infinite;
+}
+
+/* 2. La flecha que viaja sobre la línea */
+.moving-arrow-group {
+  /* La magia: vinculamos este elemento al path SVG */
+  offset-path: path("M 50 50 L 75 50 A 20 20 0 1 0 50 25 L 50 95");
+  offset-rotate: auto; /* La flecha gira automáticamente siguiendo la curva */
+
+  /* Estado inicial */
+  offset-distance: 0%;
+  opacity: 0; /* Oculta al principio hasta que empiece a moverse */
+
+  animation: moveArrow 3s ease-in-out infinite;
+}
+
+/* KEYFRAMES SINCRONIZADOS */
+/* Es vital que los porcentajes sean idénticos para que la flecha esté en la punta de la línea */
+
+@keyframes drawLine {
   0% {
-    box-shadow: 0 -0.83em 0 -0.4em,
-                0 -0.83em 0 -0.42em,
-                0 -0.83em 0 -0.44em,
-                0 -0.83em 0 -0.46em,
-                0 -0.83em 0 -0.477em;
+    stroke-dashoffset: 230; /* Línea oculta */
   }
-  5%, 95% {
-    box-shadow: 0 -0.83em 0 -0.4em,
-                0 -0.83em 0 -0.42em,
-                0 -0.83em 0 -0.44em,
-                0 -0.83em 0 -0.46em,
-                0 -0.83em 0 -0.477em;
+  10% {
+    stroke-dashoffset: 230; /* Pequeña pausa inicial */
   }
-  10%, 59% {
-    box-shadow: 0 -0.83em 0 -0.4em,
-                -0.087em -0.825em 0 -0.42em,
-                -0.173em -0.812em 0 -0.44em,
-                -0.256em -0.789em 0 -0.46em,
-                -0.297em -0.775em 0 -0.477em;
+  50% {
+    stroke-dashoffset: 0;   /* Línea completa (P formada) */
   }
-  20% {
-    box-shadow: 0 -0.83em 0 -0.4em,
-                -0.338em -0.758em 0 -0.42em,
-                -0.555em -0.617em 0 -0.44em,
-                -0.671em -0.488em 0 -0.46em,
-                -0.749em -0.34em 0 -0.477em;
-  }
-  38% {
-    box-shadow: 0 -0.83em 0 -0.4em,
-                -0.377em -0.74em 0 -0.42em,
-                -0.645em -0.522em 0 -0.44em,
-                -0.775em -0.297em 0 -0.46em,
-                -0.82em -0.09em 0 -0.477em;
+  60% {
+    stroke-dashoffset: 0;   /* Mantiene la P completa un momento */
   }
   100% {
-    box-shadow: 0 -0.83em 0 -0.4em,
-                0 -0.83em 0 -0.42em,
-                0 -0.83em 0 -0.44em,
-                0 -0.83em 0 -0.46em,
-                0 -0.83em 0 -0.477em;
+    stroke-dashoffset: 230; /* Se retrae hacia atrás */
   }
 }
 
-@keyframes round {
-  0% { transform: rotate(0deg) }
-  100% { transform: rotate(360deg) }
+@keyframes moveArrow {
+  0% {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  1% {
+    opacity: 1; /* Aparece justo al empezar */
+  }
+  10% {
+    offset-distance: 0%; /* Espera con la línea */
+  }
+  50% {
+    offset-distance: 100%; /* Llega al final (punta de la P) */
+    opacity: 1;
+  }
+  60% {
+    offset-distance: 100%; /* Se queda quieta al final */
+    opacity: 1;
+  }
+  99% {
+    opacity: 1;
+  }
+  100% {
+    offset-distance: 0%; /* Vuelve al inicio */
+    opacity: 0;
+  }
 }

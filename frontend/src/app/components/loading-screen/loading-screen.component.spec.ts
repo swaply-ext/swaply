@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { LoadingScreenComponent } from './loading-screen.component';
 
 describe('LoadingScreenComponent', () => {
@@ -19,5 +18,12 @@ describe('LoadingScreenComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should render the manual svg arrow heads', () => {
+    const compiled = fixture.nativeElement as HTMLElement;
+    // Buscamos las clases específicas de las nuevas flechas manuales
+    expect(compiled.querySelector('.arrow-head-static')).toBeTruthy();
+    expect(compiled.querySelector('.moving-arrow-group')).toBeTruthy();
   });
 });
