@@ -89,6 +89,14 @@ public class AccountController {
      @PostMapping("/upload-photo")
     public ResponseEntity<String> uploadPhoto(@RequestParam("file") MultipartFile file) {
         try {
+            // valida formato de imagen
+            String filename = file.getOriginalFilename();
+            if (filename == null || !(filename.toLowerCase().endsWith(".jpg") ||
+                                     filename.toLowerCase().endsWith(".jpeg") ||
+                                     filename.toLowerCase().endsWith(".png"))) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                    .body("Solo se permiten imágenes en formato JPG o PNG.");
+        }
             String signedUrl = storageService.uploadFile(file);            
             return ResponseEntity.ok(signedUrl);
         } catch (Exception e) {
