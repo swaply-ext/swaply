@@ -124,10 +124,10 @@ export class EditProfileComponent implements OnInit {
 
     if (file) {
       // validación del formato
-      const validExtensions = ['jpeg', 'jpg', 'png'];
+      const validExtensions = ['jpeg', 'jpg', 'png', 'webp', 'heic', 'heif'];
       const fileExtension = file.name.split('.').pop().toLowerCase();
       if (!fileExtension || !validExtensions.includes(fileExtension)) {
-        this.errorMessages['profilePhoto'] = 'Solo se permiten imágenes JPG o PNG.';
+        this.errorMessages['profilePhoto'] = 'Solo se permiten imágenes JPG, PNG, WEBP, HEIC o HEIF.';
         return;
       }
       // Validación de tamaño (2MB)
