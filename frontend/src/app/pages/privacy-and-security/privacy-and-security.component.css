@@ -188,6 +188,21 @@ body {
   background-color: rgba(131, 219, 153, 0.1); /* subtle red background */
 }
 
+/* SUCCESS MESSAGE */
+.success-message {
+  color: var(--principal-color-2);
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  font-weight: 600;
+  background-color: #005c50;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  max-width: 18rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* ACTION ROWS */
 .action-row {
   display: flex;

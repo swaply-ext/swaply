@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 
 
 @Component({
@@ -13,6 +14,7 @@ import { FormsModule } from '@angular/forms';
     AppNavbarComponent,
     SideMenuComponent,
     CommonModule,
+    RouterLink,
     FormsModule
     ],
   standalone: true,
@@ -32,6 +34,9 @@ export class PrivacyAndSecurityComponent {
 
   showError: boolean = false;
   message: string = '';
+
+  showSuccess: boolean = false;
+  successMessage: string = 'Contraseña cambiada correctamente';
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -83,6 +88,8 @@ export class PrivacyAndSecurityComponent {
   // Submit form
   submitNewPassword() {
     this.showError = false;
+    this.showSuccess = false;
+    this.successMessage = 'Contraseña cambiada correctamente';
 
     // Check all fields are filled
     if (!this.currentPassword || !this.newPassword || !this.confirmPassword) {
@@ -119,8 +126,8 @@ export class PrivacyAndSecurityComponent {
         next: response => {
           if (response.status === 200) {
             this.showError = false;
-            alert('Contraseña cambiada correctamente');
-            this.router.navigate(['/']); // redirect 
+            this.showSuccess = true;
+            this.router.navigate(['/privacy-and-security']); // redirect 
           } else {
             this.showError = true;
             this.message = 'Error cambiando la contraseña';

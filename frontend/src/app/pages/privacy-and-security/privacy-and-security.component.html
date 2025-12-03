@@ -74,6 +74,9 @@
           <!-- ERROR MESSAGE -->
         <p *ngIf="showError" class="error-message">{{ message }}</p>
 
+          <!-- SUCCESS MESSAGE -->
+        <p *ngIf="showSuccess" class="success-message">{{ successMessage }}</p>
+
           <a routerLink="/recovery-password" class="forgot-password-link">
             <strong>He olvidado la contraseña.</strong>
           </a>
