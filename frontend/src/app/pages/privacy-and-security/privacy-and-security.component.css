@@ -1,0 +1,331 @@
+/* GLOBAL */
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: linear-gradient(to bottom, #012534 0%, #00839E 100%);
+  font-family: "Quicksand", sans-serif;
+}
+
+/* PAGE WRAPPER */
+.privacy-security-page {
+  display: flex;
+  justify-content: center;
+  padding-top: 5.625rem;
+  width: 80%;
+  margin: 0 auto;
+}
+
+/* MAIN LAYOUT */
+.privacy-security-layout {
+  display: flex;
+  width: 100%;
+  max-width: 81.25rem;
+}
+
+.privacy-security-sidebar {
+  width: 16.25rem;
+  margin-right: 1.875rem;
+  flex-shrink: 0;
+}
+
+.privacy-security-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.875rem;
+}
+
+/* WRAPPER PARA CONTRASEÑA + 2FA */
+.panel-row {
+  display: flex;
+  gap: 1.875rem;
+  flex-wrap: wrap; 
+}
+
+/* PANELS */
+.panel {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 1rem;
+  padding: 1.875rem;
+  box-shadow: 0 0.25rem 0.9375rem rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 0.3125rem;
+  color: #fff;
+  flex: 1;
+  min-width: 20rem;
+}
+
+.panel h2 {
+  margin-bottom: 1rem;
+  margin-left: 0rem;
+  font-size: 1.28rem;
+  font-weight: 600;
+  text-align: left;
+}
+
+.panel-description {
+  font-size: 0.95rem;
+  opacity: 0.9;
+  margin-bottom: 0.75rem;
+}
+
+/* FORM FIELDS */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  position: relative; /* for toggle icon */
+}
+
+.form-group input {
+  width: 100%;
+  max-width: 17.5rem;
+  padding: 0.5rem 0.625rem;
+  padding-right: 1.875rem; /* space for toggle icon */
+  border: 1px solid #00bcd4;
+  border-radius: 0.5rem;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+/* On focus: slightly brighter background and border */
+.panel-security .form-group input:focus,
+.panel-security .form-group-inline input:focus {
+  border-color: #00eaff;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* INLINE INPUTS (New + Confirm + Button row) */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-width: 20rem;
+  margin: 1;
+}
+
+.password-wrapper {
+  position: relative;
+  flex: 1;
+  max-width: 17.5rem;
+  overflow: hidden; 
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 1.875rem; /* space for toggle icon */
+  max-inline-size: 20rem;
+}
+
+/* TOGGLE ICON */
+.toggle-icon {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #fff;
+  font-size: 1.25rem;
+  user-select: none;
+}
+
+/* LINKS */
+.forgot-password-link {
+  display: block;
+  margin-top: -0.3125rem;
+  margin-bottom: 0.9375rem;
+  color: #8fd3f4;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.forgot-password-link:hover {
+  text-decoration: none;
+}
+
+/* BUTTONS */
+.btn {
+  border: none;
+  padding: 0.625rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.btn-primary {
+  background-color: var(--principal-color-2);
+  color: white;
+  transition: 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: #2fa16f;
+}
+
+.btn-small {
+  padding: 0.4375rem 0.875rem;
+  font-size: 0.85rem;
+  width: 15rem;
+  height: 2.5rem;
+}
+
+.btn-large {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  width: 10rem;
+}
+
+.send-button {
+  margin-top: 0.5rem;
+  height: 2.5rem;
+  margin-left: 0rem; /* spacing in inline row */
+  max-width: 8rem;
+}
+
+/* ERROR MESSAGE */
+.error-message {
+  color: #ff6b6b;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  padding-left: 0.3125rem;
+  text-align: left;
+}
+
+.input-error {
+  border: 0.125rem solid #e53935 !important; /* red border */
+  background-color: rgba(131, 219, 153, 0.1); /* subtle red background */
+}
+
+/* SUCCESS MESSAGE */
+.success-message {
+  color: var(--principal-color-2);
+  font-size: 0.9rem;
+  margin-top: 0.0625rem;
+  font-weight: 600;
+  background-color: #005c50;
+  border-radius: 0.5rem;
+  padding: 0.3125rem 0.46875rem;
+  max-width: 18rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ACTION ROWS */
+.action-row {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.footer-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-bottom: 2.1875rem;
+}
+
+/* BLOCKED USERS */
+.blocked-users-card {
+  background-color: rgba(255, 255, 255, 0.15);
+  padding: 1.125rem;
+  border-radius: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.blocked-users-title {
+  background-color: (0, 0, 0, 0.25);
+  font-weight: 600;
+  margin-bottom: 0.375rem;
+}
+
+.blocked-users-description {
+  opacity: 0.85;
+  font-size: 0.9rem;
+}
+
+/* DELETE ACCOUNT LINK */
+.delete-account-link {
+  color: #f14c4c;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.delete-account-link:hover {
+  color: #fff6f6;
+}
+
+/* TOGGLE SWITCH */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 3.25rem;
+  height: 1.625rem;
+}
+
+.toggle-switch input {
+  display: none;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  background: #757575;
+  border-radius: 1.625rem;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transition: 0.3s;
+}
+
+.toggle-slider:before {
+  content: "";
+  position: absolute;
+  height: 1.25rem;
+  width: 1.25rem;
+  left: 0.1875rem;
+  bottom: 0.1875rem;
+  background: white;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+input:checked + .toggle-slider {
+  background: #2ecc71;
+}
+
+input:checked + .toggle-slider:before {
+  transform: translateX(1.625rem);
+}
+
+/* RESPONSIVE */
+@media (max-width: 56.25rem) {
+
+  .panel-row {
+    flex-direction: column;
+  }
+
+  .privacy-security-layout {
+    flex-direction: column;
+  }
+
+  .form-group-inline {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .send-button {
+    margin-left: 0;
+    margin-top: 0.625rem;
+    width: 100%;
+    max-width: 17.5rem;
+  }
+}
