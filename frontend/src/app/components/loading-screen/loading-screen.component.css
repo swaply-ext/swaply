@@ -1,5 +1,8 @@
-:host{
+/* Variables globales del componente */
+:host {
   --animation-time: 2.5s;
+  --loader-size: 30vmin;
+  --stroke-thickness: 14;
 }
 
 .loading-container {
@@ -16,8 +19,11 @@
 }
 
 .p-loader {
-  width: 200px;
-  height: 200px;
+
+  width: var(--loader-size);
+  height: var(--loader-size);
+
+  min-width: 150px;
   overflow: visible;
 }
 
@@ -26,7 +32,7 @@
 .growing-line {
   fill: none;
   stroke: var(--principal-color-2);
-  stroke-width: 14;
+  stroke-width: var(--stroke-thickness);
   stroke-linecap: butt;
   stroke-linejoin: round;
 }
@@ -39,6 +45,7 @@
 /* --- ANIMACIONES --- */
 
 .growing-line {
+  /* Unidades relativas al viewBox del SVG  */
   stroke-dasharray: 220;
   stroke-dashoffset: 220;
   will-change: stroke-dashoffset;
@@ -57,54 +64,30 @@
 /* --- KEYFRAMES --- */
 
 @keyframes drawLine {
-  /* PAUSA INICIAL */
-  0% {
-    stroke-dashoffset: 220;
-  }
+  0%,
   10% {
     stroke-dashoffset: 220;
-  }
-
-  /* EXPANSIÓN */
-  50% {
-    stroke-dashoffset: 0;
-  }
-
-  /* PAUSA FINAL */
+  } /* Pausa inicial */
+  50%,
   60% {
     stroke-dashoffset: 0;
-  }
-
-  /* COMPRESIÓN */
+  } /* Pausa final */
   100% {
     stroke-dashoffset: 220;
-  }
+  } /* Retracción */
 }
 
 @keyframes moveArrow {
-  /* PAUSA INICIAL */
-  0% {
+  0%,
+  10% {
     offset-distance: 0%;
     opacity: 1;
   }
-  10% {
-    offset-distance: 0%; /* Sigue en el inicio hasta el 10% */
-    opacity: 1;
-  }
-
-  /* EXPANSIÓN */
-  50% {
-    offset-distance: 100%;
-    opacity: 1;
-  }
-
-  /* PAUSA FINAL */
+  50%,
   60% {
     offset-distance: 100%;
     opacity: 1;
   }
-
-  /* COMPRESIÓN */
   100% {
     offset-distance: 0%;
     opacity: 1;

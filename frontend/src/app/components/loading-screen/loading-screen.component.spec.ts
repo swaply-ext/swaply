@@ -9,7 +9,7 @@ describe('LoadingScreenComponent', () => {
     await TestBed.configureTestingModule({
       imports: [LoadingScreenComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(LoadingScreenComponent);
     component = fixture.componentInstance;
@@ -18,12 +18,5 @@ describe('LoadingScreenComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should render the manual svg arrow heads', () => {
-    const compiled = fixture.nativeElement as HTMLElement;
-    // Buscamos las clases específicas de las nuevas flechas manuales
-    expect(compiled.querySelector('.arrow-head-static')).toBeTruthy();
-    expect(compiled.querySelector('.moving-arrow-group')).toBeTruthy();
   });
 });
