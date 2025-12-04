@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { SkillsService } from '../../services/skills.service';
@@ -26,11 +26,13 @@ export interface SkillDisplay extends SkillsModel {
   standalone: true,
   imports: [CommonModule]
 })
-export class InterestsPanelComponent {
+export class InterestsPanelComponent implements OnChanges {
   @Input() InterestsInput: Array<SkillInput> = [];
+  
+  
+  @Input() isReadOnly: boolean = false;
 
   skills: Array<SkillDisplay> = [];
-
   open = true;
 
   constructor(private router: Router, private skillsService: SkillsService) { }
@@ -41,10 +43,8 @@ export class InterestsPanelComponent {
     }
   }
 
-
   loadAllSkills() {
     this.skills = [];
-
     this.InterestsInput.forEach(input => {
       this.skillsService.getSkillDisplay(input).subscribe({
         next: (data) => this.skills.push(data),
@@ -53,12 +53,13 @@ export class InterestsPanelComponent {
     })
   }
 
-
   togglePanel() {
     this.open = !this.open;
   }
 
   goToInterests() {
-    this.router.navigate(['/interests']);
+    if (!this.isReadOnly) {
+      this.router.navigate(['/interests']);
+    }
   }
 }
