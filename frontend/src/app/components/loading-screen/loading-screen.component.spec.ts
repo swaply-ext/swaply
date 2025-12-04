@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { LoadingScreenComponent } from './loading-screen.component';
 
 describe('LoadingScreenComponent', () => {
@@ -10,7 +9,7 @@ describe('LoadingScreenComponent', () => {
     await TestBed.configureTestingModule({
       imports: [LoadingScreenComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(LoadingScreenComponent);
     component = fixture.componentInstance;

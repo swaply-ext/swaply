@@ -1,3 +1,31 @@
 <div class="loading-container">
-  <span class="loader"></span>
+  <svg viewBox="-10 -10 120 120" class="p-loader">
+    <!-- === PARTE 1: FLECHA ESTÁTICA (IZQUIERDA) === -->
+
+    <!-- Línea base -->
+    <line x1="51" y1="50" x2="20" y2="50" class="static-line" />
+
+    <!-- Punta estática -->
+    <polygon points="0,50 22,37 22,63" class="arrow-head" />
+
+    <!-- === PARTE 2: FLECHA ANIMADA (LA "P" PERFECTA) === -->
+
+    <!-- Camino invisible de guía -->
+    <path
+      id="guide-path"
+      d="M 50 50 L 75 50 A 25 25 0 1 0 50 25 L 50 95"
+      fill="none"
+    />
+
+    <!-- Línea visible -->
+    <path
+      d="M 50 50 L 75 50 A 25 25 0 1 0 50 25 L 50 95"
+      class="growing-line"
+    />
+
+    <!-- Flecha móvil -->
+    <g class="moving-arrow-group">
+      <polygon points="20,0 -2,-13 -2,13" class="arrow-head" />
+    </g>
+  </svg>
 </div>

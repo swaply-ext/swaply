@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { SkillCardComponent } from '../skill-card/skill-card.component';
@@ -11,7 +11,7 @@ import { SkillInput } from '../../services/skills.service';
   standalone: true,
   imports: [CommonModule, SkillCardComponent]
 })
-export class InterestsPanelComponent {
+export class InterestsPanelComponent implements OnChanges {
   @Input() InterestsInput: Array<SkillInput> = [];
   @Input() editable: boolean = false;
 
@@ -24,7 +24,9 @@ export class InterestsPanelComponent {
   }
 
   goToInterests() {
-    this.router.navigate(['/interests']);
+    if (!this.isReadOnly) {
+      this.router.navigate(['/interests']);
+    }
   }
 
   handleLevelChange(event: {id: string, newLevel: number}) {

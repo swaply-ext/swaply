@@ -1,3 +1,10 @@
+/* Variables globales del componente */
+:host {
+  --animation-time: 2.5s;
+  --loader-size: 30vmin;
+  --stroke-thickness: 14;
+}
+
 .loading-container {
   position: fixed;
   top: 0;
@@ -7,68 +14,82 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--principal-color-1);
+  background-color: var(--principal-color-3);
   z-index: 9999;
 }
 
+.p-loader {
 
-.loader {
-  font-size: 80px;
-  width: 1em;
-  height: 1em;
-  border-radius: 50%;
-  position: relative;
-  transform: translateZ(0);
-  color: var(--principal-color-2);
-  animation: mltShdSpin 1.1s infinite ease, round 1.1s infinite ease;
+  width: var(--loader-size);
+  height: var(--loader-size);
+
+  min-width: 150px;
+  overflow: visible;
 }
 
-@keyframes mltShdSpin {
-  0% {
-    box-shadow: 0 -0.83em 0 -0.4em,
-                0 -0.83em 0 -0.42em,
-                0 -0.83em 0 -0.44em,
-                0 -0.83em 0 -0.46em,
-                0 -0.83em 0 -0.477em;
+/* --- ESTILOS COMUNES --- */
+.static-line,
+.growing-line {
+  fill: none;
+  stroke: var(--principal-color-2);
+  stroke-width: var(--stroke-thickness);
+  stroke-linecap: butt;
+  stroke-linejoin: round;
+}
+
+.arrow-head {
+  fill: var(--principal-color-2);
+  stroke: none;
+}
+
+/* --- ANIMACIONES --- */
+
+.growing-line {
+  /* Unidades relativas al viewBox del SVG  */
+  stroke-dasharray: 220;
+  stroke-dashoffset: 220;
+  will-change: stroke-dashoffset;
+  animation: drawLine var(--animation-time) ease-in-out infinite;
+}
+
+.moving-arrow-group {
+  offset-path: path("M 50 50 L 75 50 A 25 25 0 1 0 50 25 L 50 95");
+  offset-rotate: auto;
+
+  offset-distance: 0%;
+  will-change: offset-distance;
+  animation: moveArrow var(--animation-time) ease-in-out infinite;
+}
+
+/* --- KEYFRAMES --- */
+
+@keyframes drawLine {
+  0%,
+  10% {
+    stroke-dashoffset: 220;
+  } /* Pausa inicial */
+  50%,
+  60% {
+    stroke-dashoffset: 0;
+  } /* Pausa final */
+  100% {
+    stroke-dashoffset: 220;
+  } /* Retracción */
+}
+
+@keyframes moveArrow {
+  0%,
+  10% {
+    offset-distance: 0%;
+    opacity: 1;
   }
-  5%, 95% {
-    box-shadow: 0 -0.83em 0 -0.4em,
-                0 -0.83em 0 -0.42em,
-                0 -0.83em 0 -0.44em,
-                0 -0.83em 0 -0.46em,
-                0 -0.83em 0 -0.477em;
-  }
-  10%, 59% {
-    box-shadow: 0 -0.83em 0 -0.4em,
-                -0.087em -0.825em 0 -0.42em,
-                -0.173em -0.812em 0 -0.44em,
-                -0.256em -0.789em 0 -0.46em,
-                -0.297em -0.775em 0 -0.477em;
-  }
-  20% {
-    box-shadow: 0 -0.83em 0 -0.4em,
-                -0.338em -0.758em 0 -0.42em,
-                -0.555em -0.617em 0 -0.44em,
-                -0.671em -0.488em 0 -0.46em,
-                -0.749em -0.34em 0 -0.477em;
-  }
-  38% {
-    box-shadow: 0 -0.83em 0 -0.4em,
-                -0.377em -0.74em 0 -0.42em,
-                -0.645em -0.522em 0 -0.44em,
-                -0.775em -0.297em 0 -0.46em,
-                -0.82em -0.09em 0 -0.477em;
+  50%,
+  60% {
+    offset-distance: 100%;
+    opacity: 1;
   }
   100% {
-    box-shadow: 0 -0.83em 0 -0.4em,
-                0 -0.83em 0 -0.42em,
-                0 -0.83em 0 -0.44em,
-                0 -0.83em 0 -0.46em,
-                0 -0.83em 0 -0.477em;
+    offset-distance: 0%;
+    opacity: 1;
   }
-}
-
-@keyframes round {
-  0% { transform: rotate(0deg) }
-  100% { transform: rotate(360deg) }
 }

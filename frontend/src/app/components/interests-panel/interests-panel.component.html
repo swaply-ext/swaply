@@ -6,7 +6,8 @@
 
     <h1>Intereses</h1>
 
-    <button class="edit-btn" (click)="goToInterests()">
+
+    <button class="edit-btn" *ngIf="!isReadOnly" (click)="goToInterests()">
       <span class="material-icons">edit</span>
     </button>
   </header>
