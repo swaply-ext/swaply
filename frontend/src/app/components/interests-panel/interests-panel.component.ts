@@ -11,7 +11,7 @@ import { SkillInput } from '../../services/skills.service';
   standalone: true,
   imports: [CommonModule, SkillCardComponent]
 })
-export class InterestsPanelComponent implements OnChanges {
+export class InterestsPanelComponent {
   @Input() InterestsInput: Array<SkillInput> = [];
   @Input() editable: boolean = false;
 
@@ -24,9 +24,7 @@ export class InterestsPanelComponent implements OnChanges {
   }
 
   goToInterests() {
-    if (!this.isReadOnly) {
       this.router.navigate(['/interests']);
-    }
   }
 
   handleLevelChange(event: {id: string, newLevel: number}) {

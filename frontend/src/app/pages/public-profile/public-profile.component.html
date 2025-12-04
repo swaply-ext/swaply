@@ -3,14 +3,13 @@
 <!-- Contenedor principal -->
 <div class="main-content">
 
-  <app-profile-info [profileData]="profileData" [isReadOnly]="true">
+  <app-profile-info [profileData]="profileData">
   </app-profile-info>
 
   <div class="profile-panels-container">
-    <app-skills-panel class="profile-skills" [SkillInput]="skills" [isReadOnly]="true"></app-skills-panel>
+    <app-skills-panel class="profile-skills" [SkillInput]="skills"></app-skills-panel>
 
-    <app-interests-panel class="profile-interests" [InterestsInput]="interests"
-      [isReadOnly]="true"></app-interests-panel>
+    <app-interests-panel class="profile-interests" [InterestsInput]="interests"></app-interests-panel>
   </div>
 
   <section class="history-panel">
