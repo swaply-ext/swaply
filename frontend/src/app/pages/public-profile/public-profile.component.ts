@@ -14,8 +14,9 @@ interface Skill {
 }
 
 interface ProfileData {
-  fullName: string;
   username: string;
+  name: string;
+  surname: string;
   location: string;
   description: string;
   profilePhotoUrl: string;
