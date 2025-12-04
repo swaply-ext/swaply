@@ -16,7 +16,7 @@
       *ngFor="let item of InterestsInput"
       [id]="item.id"
       [level]="item.level"
-      [editable]="true"
+      [editable]="editable"
       (levelChange)="handleLevelChange($event)">
     </app-skill-card>
   </div>

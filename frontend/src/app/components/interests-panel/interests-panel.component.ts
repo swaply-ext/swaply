@@ -13,6 +13,7 @@ import { SkillInput } from '../../services/skills.service';
 })
 export class InterestsPanelComponent {
   @Input() InterestsInput: Array<SkillInput> = [];
+  @Input() editable: boolean = false;
 
   open = true;
 
