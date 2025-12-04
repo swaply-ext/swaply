@@ -95,7 +95,7 @@
       <!-- GRID DE TARJETAS REALES -->
       <div class="card-grid" *ngIf="!isLoadingMatches()">
         
-        <div class="skill-card" *ngFor="let card of cards()">
+        <div class="skill-card" *ngFor="let card of cards()" (click)="goToSwap(card)" style="cursor: pointer;">
           
           <!-- IMAGEN: Si hay URL la usa, si no, usa el Icono/Emoji del backend -->
           <ng-container *ngIf="card.skillImage; else iconTemplate">

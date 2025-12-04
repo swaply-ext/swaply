@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.component";
 import { SkillSearchComponent } from '../../components/skill-search/skill-search.component'; 
 import { FilterSkillsComponent } from '../../components/filter-skills/filter-skills.component';
@@ -26,7 +27,8 @@ export interface CardModel {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent implements OnInit {
-  private searchService = inject(SearchService);
+  private searchService = inject(SearchService)
+  private router = inject(Router);
 
   cards = signal<CardModel[]>([]); 
   isLoadingMatches = signal(false);
@@ -81,8 +83,11 @@ export class HomeComponent implements OnInit {
     this.cards.set(mappedCards);
   }
 
-  
- 
+  // Método para navegar al SwapComponent
+  goToSwap(card: CardModel) {
+    if (!card.userId) return;
+    this.router.navigate(['/swap', card.userId]);
+  }
 
   hasIntercambio = signal(true);
   isConfirmed = signal(false);

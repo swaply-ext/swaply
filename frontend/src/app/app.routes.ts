@@ -32,6 +32,7 @@ import { FilterSkillsComponent } from './components/filter-skills/filter-skills.
 import { PrivacyAndSecurityComponent } from './pages/privacy-and-security/privacy-and-security.component';
 import { EmailSentComponent } from './pages/email-sent/email-sent.component';
 import { IndexComponent } from './pages/index/index.component';
+import { SwapComponent } from './pages/swap/swap.component';
 
 
 // Creamos una ruta para la verificación de correo
@@ -68,6 +69,7 @@ export const appRoutes: Routes = [
   { path: 'filter-skills', component: FilterSkillsComponent },
   { path: '404', component: Error404Component },
   { path: 'privacy-and-security', component: PrivacyAndSecurityComponent, canActivate: [AuthGuard] },
+  { path: 'swap/:targetId', component: SwapComponent, canActivate: [AuthGuard] },
   { path: 'index', component: IndexComponent },
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
   

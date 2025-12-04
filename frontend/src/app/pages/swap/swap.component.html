@@ -1,0 +1,64 @@
+<div class="swap-container">
+  <app-app-navbar></app-app-navbar>
+
+  <div class="swap-content">
+
+    <!-- SKILL QUE QUIERO APRENDER (DEL OTRO USUARIO) -->
+    <div class="swap-half">
+      <h2>Lo que quieres aprender</h2>
+
+      <div class="swap-card">
+        <img class="skill-img" 
+             [src]="targetUser()?.skillIcon || 'default.png'">
+
+        <div class="info">
+          <h3>{{ targetUser()?.skillName }}</h3>
+          <p class="location">
+            <span class="material-symbols-outlined">location_on</span>
+            {{ targetUser()?.location }}
+          </p>
+          <p class="username">@{{ targetUser()?.username }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- FLECHA -->
+    <span class="material-symbols-outlined swap-arrow">swap_horiz</span>
+
+    <!-- SKILL QUE ENSEÑO (MI USUARIO) -->
+    <div class="swap-half">
+      <h2>Lo que puedes ofrecer</h2>
+
+      <div class="skill-list">
+        <div class="skill-option"
+             *ngFor="let s of myUser()?.skills"
+             (click)="chooseTeachSkill(s)"
+             [class.selected]="selectedTeachSkill()?.id === s.id">
+
+          <img [src]="s.icon || 'default.png'" class="skill-img-small">
+          <span>{{ s.name }}</span>
+        </div>
+      </div>
+
+      <div class="selected-wrapper" *ngIf="selectedTeachSkill()">
+        <div class="swap-card selected">
+          <img class="skill-img" 
+               [src]="selectedTeachSkill()?.icon || 'default.png'">
+
+          <div class="info">
+            <h3>{{ selectedTeachSkill()?.name }}</h3>
+            <p class="location">
+              <span class="material-symbols-outlined">location_on</span>
+              {{ myUser()?.location }}
+            </p>
+            <p class="username">@{{ myUser()?.username }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn-create" (click)="createInterest()">
+    Crear Interés
+  </button>
+</div>

@@ -23,8 +23,9 @@ export interface UserSwapDTO {
   providedIn: 'root'
 })
 export class SearchService {
-  private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8081/api'; 
+  private apiUrl = 'http://localhost:8081/api';
+
+  constructor(private http: HttpClient) {}
 
   getMatches(skill: string): Observable<UserSwapDTO[]> {
     const params = new HttpParams().set('skill', skill);
