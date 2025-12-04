@@ -28,7 +28,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/example/premium/**").hasRole("PREMIUM")
                         .anyRequest().authenticated()
                 )
-
+                
                 .sessionManagement(sess -> sess
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
