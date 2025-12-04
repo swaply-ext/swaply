@@ -2,11 +2,13 @@ package com.swaply.backend.shared.UserCRUD;
 
 import com.azure.cosmos.models.PartitionKey;
 import com.azure.spring.data.cosmos.repository.CosmosRepository;
+import com.azure.spring.data.cosmos.repository.Query;
 import com.swaply.backend.shared.UserCRUD.Model.User;
 
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -47,6 +49,14 @@ public interface UserRepository extends CosmosRepository<User, String> {
 
     Optional<User> findUserByTypeAndUsername(String type, String username);
 
+    // Busqueda por 1 skill "la del buscador"
+    @Query(value = "SELECT * FROM c WHERE c.type = 'user' AND EXISTS(SELECT VALUE s FROM s IN c.skills WHERE CONTAINS(s.id, @skillId, true))")
+    List<User> findUsersBySingleSkillId(@Param("skillId") String skillId);
+
+    // Busqueda por multiples skills "esta es para el filtro"
+    @Query(value = "SELECT * FROM c WHERE c.type = 'user' AND EXISTS(SELECT VALUE s FROM s IN c.skills WHERE ARRAY_CONTAINS(@skillIds, s.id))")
+    List<User> findUsersByMultipleSkillIds(@Param("skillIds") List<String> skillIds);
+
     // Metodos con Derived Queries para no tener que definir type cada vez
 
     default List<User> findAllUsers() {
@@ -80,5 +90,12 @@ public interface UserRepository extends CosmosRepository<User, String> {
     default Optional<User> findUserByUsername(String username) {
         return findUserByTypeAndUsername(type, username);
     }
+
+    default List<User> findUserBySkillId(String skillId) {
+        return findUsersBySingleSkillId(skillId);
+    }
+
+
+    
 
 }

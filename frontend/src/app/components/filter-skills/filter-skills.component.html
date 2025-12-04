@@ -13,9 +13,9 @@
  
     <div class="subcategory" *ngIf="cat.open">
       <label *ngFor="let sub of cat.subcategories">
-        <input
-          type="checkbox"
-          [(ngModel)]="sub.selected"
+        <input 
+          type="checkbox" 
+          [checked]="sub.selected" 
           (change)="toggleSub(sub)"
         >
         {{ sub.name }}
