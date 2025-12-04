@@ -1,57 +1,23 @@
-import { SkillsService } from './../../services/skills.service';
-import { Component, OnChanges, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-
-interface SkillInput {
-  id: string;
-  level: number;
-}
-
-interface SkillsModel {
-  id: string;
-  name: string;
-  icon: string;
-  category: string;
-}
-
-export interface SkillDisplay extends SkillsModel {
-  level: number;
-}
+import { SkillCardComponent } from '../skill-card/skill-card.component';
+import { SkillInput } from '../../services/skills.service';
 
 @Component({
   selector: 'app-skills-panel',
   templateUrl: './skills-panel.component.html',
   styleUrls: ['./skills-panel.component.css'],
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule, SkillCardComponent]
 })
 export class SkillsPanelComponent implements OnChanges {
   @Input() SkillInput: Array<SkillInput> = [];
-  
-  // SOLUCIÓN: Añadimos el input
-  @Input() isReadOnly: boolean = false;
+  @Input() editable: boolean = false;
 
-  skills: Array<SkillDisplay> = [];
   open = true;
 
-  constructor(private router: Router, private skillsService: SkillsService) { }
-
-  ngOnChanges(): void {
-    if (this.SkillInput && this.SkillInput.length > 0) {
-      this.loadAllSkills();
-    }
-  }
-
-  loadAllSkills() {
-    this.skills = [];
-    this.SkillInput.forEach(input => {
-      this.skillsService.getSkillDisplay(input).subscribe({
-        next: (data) => this.skills.push(data),
-        error: (e) => console.error(e)
-      });
-    })
-  }
+  constructor(private router: Router) {}
 
   togglePanel() {
     this.open = !this.open;
@@ -62,4 +28,9 @@ export class SkillsPanelComponent implements OnChanges {
       this.router.navigate(['/skills']);
     }
   }
+
+  handleLevelChange(event: {id: string, newLevel: number}) {
+  console.log(`Guardar en BD: ID ${event.id} ahora es nivel ${event.newLevel}`);
+  // Aquí llamarías a un servicio para guardar
+}
 }
