@@ -8,6 +8,4 @@ import { CommonModule } from '@angular/common';
   templateUrl: './loading-screen.component.html',
   styleUrls: ['./loading-screen.component.css']
 })
-export class LoadingScreenComponent {
-  // Componente visual puro
-}
+export class LoadingScreenComponent {}

@@ -1,3 +1,7 @@
+:host{
+  --animation-time: 2.5s;
+}
+
 .loading-container {
   position: fixed;
   top: 0;
@@ -7,99 +11,102 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--principal-color-1);
+  background-color: var(--principal-color-3);
   z-index: 9999;
 }
 
 .p-loader {
-  width: 180px;
-  height: 180px;
-  overflow: visible; /* Importante para que no se corten las puntas */
+  width: 200px;
+  height: 200px;
+  overflow: visible;
 }
 
-/* --- ESTILOS DE LÍNEA --- */
-.static-line, .growing-line {
+/* --- ESTILOS COMUNES --- */
+.static-line,
+.growing-line {
   fill: none;
   stroke: var(--principal-color-2);
-  stroke-width: 10;
-  stroke-linecap: round; /* Bordes redondeados */
+  stroke-width: 14;
+  stroke-linecap: butt;
   stroke-linejoin: round;
 }
 
-/* Color de las puntas de flecha (relleno sólido) */
-.arrow-head-static, .arrow-head-moving {
+.arrow-head {
   fill: var(--principal-color-2);
   stroke: none;
 }
 
 /* --- ANIMACIONES --- */
 
-/* 1. La línea que dibuja la P */
 .growing-line {
-  /* Longitud total aproximada del camino = 220 */
-  stroke-dasharray: 230;
-  stroke-dashoffset: 230; /* Empieza escondida */
-  animation: drawLine 3s ease-in-out infinite;
+  stroke-dasharray: 220;
+  stroke-dashoffset: 220;
+  will-change: stroke-dashoffset;
+  animation: drawLine var(--animation-time) ease-in-out infinite;
 }
 
-/* 2. La flecha que viaja sobre la línea */
 .moving-arrow-group {
-  /* La magia: vinculamos este elemento al path SVG */
-  offset-path: path("M 50 50 L 75 50 A 20 20 0 1 0 50 25 L 50 95");
-  offset-rotate: auto; /* La flecha gira automáticamente siguiendo la curva */
+  offset-path: path("M 50 50 L 75 50 A 25 25 0 1 0 50 25 L 50 95");
+  offset-rotate: auto;
 
-  /* Estado inicial */
   offset-distance: 0%;
-  opacity: 0; /* Oculta al principio hasta que empiece a moverse */
-
-  animation: moveArrow 3s ease-in-out infinite;
+  will-change: offset-distance;
+  animation: moveArrow var(--animation-time) ease-in-out infinite;
 }
 
-/* KEYFRAMES SINCRONIZADOS */
-/* Es vital que los porcentajes sean idénticos para que la flecha esté en la punta de la línea */
+/* --- KEYFRAMES --- */
 
 @keyframes drawLine {
+  /* PAUSA INICIAL */
   0% {
-    stroke-dashoffset: 230; /* Línea oculta */
+    stroke-dashoffset: 220;
   }
   10% {
-    stroke-dashoffset: 230; /* Pequeña pausa inicial */
+    stroke-dashoffset: 220;
   }
+
+  /* EXPANSIÓN */
   50% {
-    stroke-dashoffset: 0;   /* Línea completa (P formada) */
+    stroke-dashoffset: 0;
   }
+
+  /* PAUSA FINAL */
   60% {
-    stroke-dashoffset: 0;   /* Mantiene la P completa un momento */
+    stroke-dashoffset: 0;
   }
+
+  /* COMPRESIÓN */
   100% {
-    stroke-dashoffset: 230; /* Se retrae hacia atrás */
+    stroke-dashoffset: 220;
   }
 }
 
 @keyframes moveArrow {
+  /* PAUSA INICIAL */
   0% {
     offset-distance: 0%;
-    opacity: 0;
-  }
-  1% {
-    opacity: 1; /* Aparece justo al empezar */
+    opacity: 1;
   }
   10% {
-    offset-distance: 0%; /* Espera con la línea */
+    offset-distance: 0%; /* Sigue en el inicio hasta el 10% */
+    opacity: 1;
   }
+
+  /* EXPANSIÓN */
   50% {
-    offset-distance: 100%; /* Llega al final (punta de la P) */
+    offset-distance: 100%;
     opacity: 1;
   }
+
+  /* PAUSA FINAL */
   60% {
-    offset-distance: 100%; /* Se queda quieta al final */
+    offset-distance: 100%;
     opacity: 1;
   }
-  99% {
-    opacity: 1;
-  }
+
+  /* COMPRESIÓN */
   100% {
-    offset-distance: 0%; /* Vuelve al inicio */
-    opacity: 0;
+    offset-distance: 0%;
+    opacity: 1;
   }
 }

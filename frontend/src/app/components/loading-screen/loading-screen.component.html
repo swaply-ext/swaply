@@ -1,30 +1,29 @@
 <div class="loading-container">
-  <svg viewBox="0 0 100 100" class="p-loader">
+  <svg viewBox="-10 -10 120 120" class="p-loader">
 
-    <!-- 1. GRUPO ESTÁTICO (Flecha Izquierda) -->
-    <!-- Línea recta fija -->
-    <line x1="50" y1="50" x2="15" y2="50" class="static-line" />
-    <!-- Punta de flecha dibujada manualmente (Triángulo apuntando a la izquierda) -->
-    <!-- Puntos: (15,50) es la punta. (22,45) y (22,55) es la base. -->
-    <polygon points="15,50 22,45 22,55" class="arrow-head-static" />
+    <!-- === PARTE 1: FLECHA ESTÁTICA (IZQUIERDA) === -->
+
+    <!-- Línea base -->
+    <line x1="50" y1="50" x2="20" y2="50" class="static-line" />
+
+    <!-- Punta estática -->
+    <polygon points="0,50 22,37 22,63" class="arrow-head" />
 
 
-    <!-- 2. GRUPO ANIMADO (La P) -->
-    <!-- El camino invisible que guía a la flecha (Debe coincidir con la línea visible) -->
-    <!-- M50,50 -> L75,50 -> Arco -> L50,95 -->
+    <!-- === PARTE 2: FLECHA ANIMADA (LA "P" PERFECTA) === -->
+
+    <!-- Camino invisible de guía -->
     <path id="guide-path"
-          d="M 50 50 L 75 50 A 20 20 0 1 0 50 25 L 50 95"
-          fill="none" stroke="none"/>
+          d="M 50 50 L 75 50 A 25 25 0 1 0 50 25 L 50 95"
+          fill="none" />
 
-    <!-- La línea visible que crece (Stroke animation) -->
-    <path d="M 50 50 L 75 50 A 20 20 0 1 0 50 25 L 50 95"
+    <!-- Línea visible -->
+    <path d="M 50 50 L 75 50 A 25 25 0 1 0 50 25 L 50 95"
           class="growing-line" />
 
-    <!-- La punta de flecha que viaja -->
-    <!-- Usamos un grupo para moverla y dentro el polígono para dibujarla -->
+    <!-- Flecha móvil -->
     <g class="moving-arrow-group">
-      <!-- Un triángulo apuntando a la derecha (0 grados) que rotará siguiendo el camino -->
-      <polygon points="0,0 -8,-4 -8,4" class="arrow-head-moving" />
+      <polygon points="20,0 -2,-13 -2,13" class="arrow-head" />
     </g>
 
   </svg>
