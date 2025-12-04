@@ -10,7 +10,8 @@
 
       <!-- MAIN CONTENT -->
       <main class="privacy-security-content">
-        <!-- PASSWORD CHANGE -->
+        <div class="panel-row">
+          <!-- PASSWORD CHANGE -->
         <section class="panel panel-security">
           <h2>Cambiar Contraseña</h2>
 
@@ -29,10 +30,6 @@
                 {{ showCurrent ? "visibility_off" : "visibility" }}
               </span>
             </div>
-          </div>
-
-          <!-- NEW + CONFIRM + BUTTON ROW -->
-          <div class="form-group form-group-inline">
             <div class="password-wrapper">
               <input
                 [type]="showNew ? 'text' : 'password'"
@@ -67,7 +64,7 @@
               type="button"
               (click)="submitNewPassword()"
             >
-              Guardar contraseña
+              Guardar
             </button>
           </div>
 
@@ -97,6 +94,7 @@
             <span class="toggle-slider"></span>
           </label>
         </section>
+        </div>
 
         <!-- PRIVACY SETTINGS -->
         <section class="panel panel-privacy">
