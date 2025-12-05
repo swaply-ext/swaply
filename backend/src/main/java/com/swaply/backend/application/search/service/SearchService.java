@@ -138,4 +138,36 @@ public class SearchService {
         }
         return dto;
     }
+    public UserSwapDTO getUserById(String userId) {
+        Optional<User> userOpt = userRepository.findUserById(userId);
+
+        if (userOpt.isEmpty()) {
+            return null;
+        }
+
+    User user = userOpt.get();
+
+    UserSwapDTO dto = new UserSwapDTO();
+    dto.setUserId(user.getId());
+    dto.setName(user.getName());
+    dto.setUsername(user.getUsername());
+    dto.setProfilePhotoUrl(user.getProfilePhotoUrl());
+    dto.setLocation(user.getLocation());
+
+    // Si tiene skills, usamos la primera
+    if (user.getSkills() != null && !user.getSkills().isEmpty()) {
+        UserSkills s = user.getSkills().get(0);
+        dto.setSkillName(s.getName() != null ? s.getName() : s.getId());
+        dto.setSkillIcon(s.getIcon() != null ? s.getIcon() : "🎓");
+        dto.setSkillLevel(s.getLevel());
+        dto.setSkillCategory(s.getCategory());
+    }
+
+    dto.setRating(4.8);
+    dto.setDistance("Cerca de ti");
+    dto.setSwapMatch(false);
+
+    return dto;
+}
+
 }

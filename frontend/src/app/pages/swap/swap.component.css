@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
 
-/* --- Configuración Global y Fuentes --- */
 ::ng-deep * {
   font-family: 'Inter', sans-serif !important;
   box-sizing: border-box;
@@ -11,7 +10,7 @@
   font-family: 'Material Symbols Outlined' !important;
   font-weight: normal;
   font-style: normal;
-  font-size: 1.5rem;
+  font-size: clamp(1rem, 1.5vw, 1.5rem);
   display: inline-block;
   line-height: 1;
   text-transform: none;
@@ -33,4 +32,155 @@
   display: block;
   background: linear-gradient(to bottom, #012534 0%, #00839E 100%);
   min-height: 100vh;
+}
+
+.swap-container {
+  width: 100%;
+  min-height: 100vh;
+  padding: 1.25rem;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.swap-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(1rem, 2vw, 2rem);
+  width: 100%;
+  max-width: 90%;
+  margin-top: clamp(0.5rem, 1vw, 1.5rem);
+  border: 0.125rem solid var(--principal-color-2);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  box-sizing: border-box;
+  background: transparent;
+}
+
+.swap-half {
+  width: 45%;
+  text-align: center;
+}
+
+.swap-half h2 {
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.swap-card {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  backdrop-filter: blur(0.375rem);
+  border: 0.0625rem solid rgba(255, 255, 255, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.swap-card.selected {
+  border: 0.125rem solid #00e1ff;
+  background: rgba(0, 225, 255, 0.15);
+}
+
+.skill-img {
+  width: clamp(5rem, 10vw, 7rem);
+  height: clamp(5rem, 10vw, 7rem);
+  border-radius: 1rem;
+  object-fit: cover;
+}
+
+.info h3 {
+  margin: 0;
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  font-weight: 600;
+}
+
+.info .location,
+.info .username {
+  margin: 0.25rem 0;
+  opacity: 0.85;
+  font-size: clamp(0.8rem, 1vw, 0.95rem);
+}
+
+.swap-arrow {
+  font-size: clamp(2.5rem, 5vw, 3.75rem) !important;
+  color: var(--principal-color-2);
+}
+
+.skill-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(0.5rem, 1vw, 0.75rem);
+  justify-content: center;
+}
+
+.skill-option {
+  padding: clamp(0.5rem, 1vw, 0.75rem) clamp(0.75rem, 2vw, 1rem);
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 0.75rem;
+  display: flex;
+  gap: 0.625rem;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.2s;
+  border: 0.0625rem solid transparent;
+}
+
+.skill-option:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.skill-option.selected {
+  border-color: #00e1ff;
+  background: rgba(0, 225, 255, 0.15);
+}
+
+.skill-img-small {
+  width: clamp(1.5rem, 3vw, 2.25rem);
+  height: clamp(1.5rem, 3vw, 2.25rem);
+  border-radius: 0.625rem;
+  object-fit: cover;
+}
+
+.btn-create {
+  margin-top: 2rem;
+  padding: 0.875rem 2.25rem;
+  border: none;
+  border-radius: 1.5rem;
+  background: var(--principal-color-2);
+  color: #002631;
+  font-weight: 700;
+  font-size: clamp(1rem, 1.5vw, 1.1rem);
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.btn-create:hover {
+  background: var(--principal-color-2);
+}
+
+.swap-card .info .user-avatar {
+  width: clamp(1.5rem, 3vw, 1.875rem);
+  height: clamp(1.5rem, 3vw, 1.875rem);
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.username {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: flex-start;
+}
+
+.small-avatar {
+  width: clamp(1.5rem, 3vw, 1.875rem);
+  height: clamp(1.5rem, 3vw, 1.875rem);
+  border-radius: 50%;
+  object-fit: cover;
 }

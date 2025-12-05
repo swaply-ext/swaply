@@ -1,17 +1,16 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AppNavbarComponent } from '../../components/app-navbar/app-navbar.component';
 import { AccountService } from '../../services/account.service';
-import { HttpClient } from '@angular/common/http';
 import { SearchService, UserSwapDTO } from '../../services/search.services';
 
-// Definimos un tipo para el perfil del usuario
 interface UserProfile {
   username: string;
   name: string;
   location?: string;
   skills?: any[];
+  profilePhotoUrl?: string;
 }
 
 @Component({
@@ -37,29 +36,44 @@ export class SwapComponent implements OnInit {
     const targetUserId = this.route.snapshot.paramMap.get('targetId');
     console.log('TargetId obtenido de la ruta:', targetUserId);
 
-    // cargar mis datos
-    this.accountService.getProfileData().subscribe((me: UserProfile) => {
-      this.myUser.set(me);
+    // Cargar mis datos
+    this.accountService.getProfileData().subscribe({
+      next: (me: UserProfile) => {
+        this.myUser.set(me);
+        console.log('Mis datos cargados:', me);
+
+        // Seleccionamos automáticamente la primera skill si existe
+        if(me.skills && me.skills.length > 0) {
+          this.selectedTeachSkill.set(me.skills[0]);
+        }
+      },
+      error: (err) => console.error('Error al cargar mi perfil:', err)
     });
 
-    // cargar datos del usuario objetivo
+    // Cargar datos del usuario objetivo
     if (targetUserId) {
-      this.searchService.getMatches('').subscribe((users: UserSwapDTO[]) => {
-        const user: UserSwapDTO | null = users.find((u: UserSwapDTO) => u.userId === targetUserId) || null;
-        this.targetUser.set(user);
-
-        // VERIFICAR usuario encontrado
-      console.log('Usuario objetivo encontrado:', user);
+      this.searchService.getUserById(targetUserId).subscribe({
+        next: (user) => {
+          if (user) {
+            this.targetUser.set(user);
+            console.log('Usuario objetivo encontrado:', user);
+          } else {
+            console.warn('Usuario objetivo no encontrado para targetId:', targetUserId);
+          }
+        },
+        error: (err) => console.error('Error al obtener usuario objetivo:', err)
       });
+    } else {
+      console.warn('No se encontró targetId en la ruta.');
     }
   }
 
   chooseTeachSkill(skill: any) {
     this.selectedTeachSkill.set(skill);
   }
-
+  
   createInterest() {
-    if (!this.selectedTeachSkill()) return;
+    if (!this.selectedTeachSkill() || !this.targetUser()) return;
 
     const payload = {
       requesterId: this.myUser()?.username,
@@ -69,6 +83,5 @@ export class SwapComponent implements OnInit {
     };
 
     console.log("Enviando interés", payload);
-    // TODO: llamar a tu endpoint real POST /api/interests
   }
 }

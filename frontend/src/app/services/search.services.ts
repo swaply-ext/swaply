@@ -35,4 +35,8 @@ export class SearchService {
   getRecommendations(): Observable<UserSwapDTO[]> {   
     return this.http.get<UserSwapDTO[]>(`${this.apiUrl}/home/recommendations`);
   }
+
+  getUserById(userId: string): Observable<UserSwapDTO> {
+    return this.http.get<UserSwapDTO>(`${this.apiUrl}/search/user/${userId}`);
+  }
 }
