@@ -80,9 +80,9 @@ export class SkillSearchComponent {
   private placeholders = [
     'Buscar "Guitarra"...', 
     'Buscar "Fútbol"...', 
-    'Buscar "Inglés"...', 
+    'Buscar "Violín"...', 
     'Buscar "Cocina"...',
-    'Buscar "Programación"...'
+    'Buscar "Ocio Digital"...'
   ];
   private placeholderSub?: Subscription;
   private currentIndex = 0;
@@ -153,7 +153,17 @@ export class SkillSearchComponent {
   }
 
   onSearchTermChanged(term: string): void {
-    this.searchTermSubject.next(term);
+    this.searchTerm = term;
+    
+    if (!term.trim()) {
+      // Si el usuario borra todo, ocultamos dropdown y avisamos al padre para resetear
+      this.results.set([]);
+      this.showDropdown.set(false);
+      this.skillSelected.emit(''); // Emitimos cadena vacía
+    } else {
+      // Si hay texto, seguimos con la búsqueda normal del autocomplete
+      this.searchTermSubject.next(term);
+    }
   }
 
   // esto aun no funciona, es para cuando se seleccione una skill de los resultados

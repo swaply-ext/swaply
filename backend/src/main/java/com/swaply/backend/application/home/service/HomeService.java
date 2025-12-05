@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @Service
 public class HomeService {
 
-    // Solo necesitamos el Repositorio
+
     private final UserRepository userRepository;
 
     public HomeService(UserRepository userRepository) {
@@ -21,12 +21,11 @@ public class HomeService {
     }
 
     public List<UserSwapDTO> getRecommendedMatches(String currentUserId) {
-        // CORRECCIÓN: Usamos el repositorio para obtener la Entidad 'User' (no el DTO)
+        
         User currentUser = userRepository.findUserById(currentUserId).orElse(null);
         
         if (currentUser == null) return List.of();
 
-        // Protección contra nulos
         if (currentUser.getInterests() == null || currentUser.getInterests().isEmpty()) {
             return List.of(); 
         }
@@ -36,7 +35,6 @@ public class HomeService {
                 .collect(Collectors.toList());
 
         // Buscamos usuarios que ofrezcan esos intereses
-        // (Asegúrate de tener 'findUsersByMultipleSkillIds' en tu UserRepository, ver punto 2 abajo)
         List<User> matchedUsers = userRepository.findUsersByMultipleSkillIds(interestIds);
 
         List<UserSwapDTO> recommendations = new ArrayList<>();

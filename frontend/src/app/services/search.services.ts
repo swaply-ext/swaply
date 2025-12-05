@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
+import { SKIP_LOADING } from '../interceptors/loading.interceptor'; 
 export interface UserSwapDTO {
   userId: string;
   name: string;
@@ -23,20 +23,25 @@ export interface UserSwapDTO {
   providedIn: 'root'
 })
 export class SearchService {
-  private apiUrl = 'http://localhost:8081/api';
-
-  constructor(private http: HttpClient) {}
+  private http = inject(HttpClient);
+  private apiUrl = 'http://localhost:8081/api'; 
 
   getMatches(skill: string): Observable<UserSwapDTO[]> {
     const params = new HttpParams().set('skill', skill);
-    return this.http.get<UserSwapDTO[]>(`${this.apiUrl}/search/match`, { params });
+    return this.http.get<UserSwapDTO[]>(`${this.apiUrl}/search/match`, { 
+      params,
+      context: new HttpContext().set(SKIP_LOADING, true) 
+    });
   }
 
   getRecommendations(): Observable<UserSwapDTO[]> {   
-    return this.http.get<UserSwapDTO[]>(`${this.apiUrl}/home/recommendations`);
+    return this.http.get<UserSwapDTO[]>(`${this.apiUrl}/home/recommendations`, {
+      context: new HttpContext().set(SKIP_LOADING, true)
+    });
   }
-
+  
   getUserById(userId: string): Observable<UserSwapDTO> {
     return this.http.get<UserSwapDTO>(`${this.apiUrl}/search/user/${userId}`);
   }
+  
 }

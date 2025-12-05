@@ -1,16 +1,16 @@
 <div class="page-container">
 
   <app-app-navbar></app-app-navbar>
-
+  
   <main class="main-content">
 
+    <!-- SECCIÓN 1: PRÓXIMO INTERCAMBIO (Sin cambios) -->
     <section class="interchange-section">
-      <h2 class="section-title">Próximo Intercambio</h2>
-
-      <ng-container *ngIf="hasIntercambio(); else noIntercambio">
+       <h2 class="section-title">Próximo Intercambio</h2>
+       
+       <ng-container *ngIf="hasIntercambio(); else noIntercambio">
         <div class="interchange-box interchange-populated-wrapper">
           <div class="interchange-populated">
-
             <div class="interchange-half">
               <h3>Tu próxima habilidad para aprender</h3>
               <div class="interchange-skill-card">
@@ -22,9 +22,7 @@
                 </div>
               </div>
             </div>
-
             <span class="material-symbols-outlined arrow-icon">swap_horiz</span>
-
             <div class="interchange-half">
               <h3>Tu próxima habilidad para enseñar</h3>
               <div class="interchange-skill-card">
@@ -37,77 +35,59 @@
               </div>
             </div>
           </div>
-
           <div class="confirmation-area">
             <ng-container *ngIf="isConfirmed(); else showButton">
-              <span class="status-text">
-                <span class="material-symbols-outlined">check_circle</span>
-                Asistencia confirmada
-              </span>
+              <span class="status-text"><span class="material-symbols-outlined">check_circle</span> Asistencia confirmada</span>
             </ng-container>
             <ng-template #showButton>
-              <button class="btn-confirm" (click)="toggleConfirmation()">
-                <span class="material-symbols-outlined">check_circle</span>
-                Confirmar asistencia
-              </button>
+              <button class="btn-confirm" (click)="toggleConfirmation()"><span class="material-symbols-outlined">check_circle</span> Confirmar asistencia</button>
             </ng-template>
           </div>
         </div>
       </ng-container>
-
-      <ng-template #noIntercambio>
-        <div class="interchange-box interchange-empty">
+       
+       <ng-template #noIntercambio>
+          <div class="interchange-box interchange-empty">
           <p>No tienes ningún intercambio programado.</p>
-          <div class="confirmation-area disabled">
-            <span class="status-text">
-              <span class="material-symbols-outlined">check_circle</span>
-              Asistencia confirmada
-            </span>
-          </div>
+          <div class="confirmation-area disabled"><span class="status-text"><span class="material-symbols-outlined">check_circle</span> Asistencia confirmada</span></div>
         </div>
-      </ng-template>
-
-
+       </ng-template>
+       
       <div class="action-buttons">
         <button class="btn btn-primary">Buscar Intercambio</button>
         <button class="btn btn-secondary">Crear Intercambio</button>
       </div>
 
-      <button (click)="toggleIntercambio()" class="demo-toggle">
-        (Demo: Cambiar estado)
-      </button>
+      <button (click)="toggleIntercambio()" class="demo-toggle">(Demo: Cambiar estado)</button>
     </section>
 
+    <!-- SECCIÓN 2: NEARBY -->
     <section class="nearby-section">
       <div class="nearby-header">
         <h2 class="section-title">Intercambios Cerca de Ti</h2>
         <div class="nearby-actions">
-          <app-skill-search>(skillSelected)="performMatchSearch($event)"></app-skill-search>
-          <app-filter-skills>(filterChange)="performMatchSearch($event)"</app-filter-skills>
+          <app-skill-search style="width: auto; display: block;" (skillSelected)="performMatchSearch($event)"></app-skill-search>
+          <app-filter-skills (filterChange)="performMatchSearch($event)"></app-filter-skills>
         </div>
       </div>
 
-     <div *ngIf="isLoadingMatches()" style="text-align: center; color: white; padding: 3rem;">
-         <span class="material-symbols-outlined" style="animation: spin 1s linear infinite; font-size: 2rem;">sync</span>
-         <p>Buscando coincidencias...</p>
+      <div *ngIf="isLoadingMatches()" style="text-align: center; color: white; padding: 2rem;">
+        <div class="spinner-mini" style="position:relative; display:inline-block; margin-right: 10px;"></div> Cargando resultados...
       </div>
 
-      <!-- GRID DE TARJETAS REALES -->
       <div class="card-grid" *ngIf="!isLoadingMatches()">
+        <div class="skill-card" *ngFor="let card of cards()">
+          
         
-        <div class="skill-card" *ngFor="let card of cards()" (click)="goToSwap(card)" style="cursor: pointer;">
-          
-          <!-- IMAGEN: Si hay URL la usa, si no, usa el Icono/Emoji del backend -->
-          <ng-container *ngIf="card.skillImage; else iconTemplate">
-             <img [src]="card.skillImage" [alt]="card.skillTitle" class="card-image">
-          </ng-container>
-          
-          <ng-template #iconTemplate>
-             <!-- Placeholder bonito para el emoji -->
-             <div class="card-image-placeholder" style="height: 160px; background: #143F4C; display: flex; justify-content: center; align-items: center; font-size: 4rem; border-radius: 0.5rem 0.5rem 0 0; user-select: none;">
-                {{ card.skillIcon || '🎓' }}
-             </div>
-          </ng-template>
+          <img *ngIf="card.skillImage" 
+               [src]="card.skillImage" 
+               [alt]="card.skillTitle" 
+               class="card-image"
+               (error)="card.skillImage = undefined"> 
+
+          <div *ngIf="!card.skillImage" class="card-image-placeholder" style="height: 160px; background: #143F4C; display: flex; justify-content: center; align-items: center; font-size: 4rem; border-radius: 0.5rem 0.5rem 0 0; user-select: none;">
+             {{ card.skillIcon || '🎓' }}
+          </div>
           
           <div class="card-content">
             <div class="card-user-info">
@@ -117,36 +97,28 @@
             
             <h3>{{ card.skillTitle }}</h3>
             
-            <!-- ETIQUETA DE MATCH -->
             <div *ngIf="card.isMatch" style="color: #3CB57C; font-weight: bold; font-size: 0.85rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 4px;">
                 <span class="material-symbols-outlined" style="font-size: 16px;">bolt</span> ¡MATCH! Le interesa lo tuyo
             </div>
 
             <div class="card-footer">
-              <span class="location">
-                <span class="material-symbols-outlined card-icon">location_on</span>
-                {{ card.distance }}
-              </span>
-              <span class="rating">
-                <span class="material-symbols-outlined card-icon">star</span>
-                {{ card.rating }}
-              </span>
+              <span class="location"><span class="material-symbols-outlined card-icon">location_on</span> {{ card.distance }}</span>
+              <span class="rating"><span class="material-symbols-outlined card-icon">star</span> {{ card.rating }}</span>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- MENSAJES DE ESTADO -->
       <div class="see-more-button" *ngIf="!isLoadingMatches() && cards().length === 0 && hasSearched()">
          <p style="color: #9ca3af; font-size: 1.1rem;">No se encontraron usuarios con esa habilidad.</p>
       </div>
       
-      <div class="see-more-button" *ngIf="!isLoadingMatches() && !hasSearched()">
+      <div class="see-more-button" *ngIf="!isLoadingMatches() && !hasSearched() && cards().length === 0">
          <p style="color: #6b7280;">Usa el buscador o los filtros para encontrar gente.</p>
       </div>
 
-      <div class="see-more-button" *ngIf="cards().length > 0">
-        <button class="btn btn-primary">Ver Más</button>
+      <div class="see-more-button" *ngIf="canLoadMore() && !isLoadingMatches()">
+        <button class="btn btn-primary" (click)="loadMore()">Ver Más</button>
       </div>
 
     </section>
