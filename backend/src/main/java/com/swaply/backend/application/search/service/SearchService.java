@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 public class SearchService {
 
     private final UserRepository userRepository;
+    
 
     public SearchService(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -27,114 +28,106 @@ public class SearchService {
         return pattern.matcher(normalized).replaceAll("").toLowerCase();
     }
 
+
     public List<UserSwapDTO> searchUsersWithMatch(String query, String myUserId) {
-        System.out.println("--- BÚSQUEDA INICIADA ---");
-        System.out.println("Buscando: " + query + " | Usuario: " + myUserId);
-        System.out.println("Mi ID: " + myUserId);
-        // Validación básica
         if (query == null || query.trim().isEmpty()) {
             return List.of();
         }
+
         List<User> candidates;
         String cleanQuery = normalizeString(query);
-
+        
+        // 1. BÚSQUEDA EN BD (Obtener candidatos)
         if (query.contains(",")) {
-            // Si viene con comas, es una lista de IDs del filtro
             List<String> skillIds = Arrays.stream(query.split(","))
                     .map(String::trim)
                     .map(this::normalizeString)
                     .collect(Collectors.toList());
-            
             candidates = userRepository.findUsersByMultipleSkillIds(skillIds);
         } else {
-            // Búsqueda normal de texto
             candidates = userRepository.findUsersBySingleSkillId(cleanQuery);
         }
-        System.out.println(" Candidatos encontrados en BD: " + candidates.size());
-        candidates.forEach(u -> System.out.println("   -> Candidato: " + u.getUsername() + " (ID: " + u.getId() + ", Loc: " + u.getLocation() + ")"));
 
-
-
-
-        // OBTENER MIS DATOS (¡Aquí usamos myUserId!)
-        // Usamos tu método optimizado 'findUserById' que incluye la Partition Key
+    // 2. MIS DATOS (Para comparar)
         User me = userRepository.findUserById(myUserId).orElse(null);
         
-        if (me == null) {
-            System.out.println("ERROR CRÍTICO: No se encontró al usuario logueado en la BD.");
-            // Continuamos para debug, pero esto debería devolver vacío en producción
-        } else {
-            System.out.println("👤 Mis datos cargados: " + me.getUsername() + ", Loc: " + me.getLocation());
-        }
-
-        // Sacamos los IDs de TUS skills para comparar
+        // Mis ofertas para el Match
         Set<String> myOfferingIds = (me != null && me.getSkills() != null) 
                 ? me.getSkills().stream().map(UserSkills::getId).collect(Collectors.toSet())
                 : Collections.emptySet();
         
+        // Mi ubicación normalizada
         String myLocation = (me != null && me.getLocation() != null) 
                 ? me.getLocation().toLowerCase().trim() : "";
 
-        // 3. FILTRAR Y MAPEAR
-        List<UserSwapDTO> results = candidates.stream()
-            // FILTRO 1: ¡Aquí usamos myUserId otra vez! (Para no mostrarte a ti mismo)
+        return candidates.stream()
+            // Filtro 1: No mostrarme a mí mismo
             .filter(candidate -> !candidate.getId().equals(myUserId)) 
             
-            // FILTRO 2: Ubicación
-            .filter(candidate -> filterByLocation(candidate, myLocation))
-            
-            // MAPEO: Calculamos el Match
             .map(candidate -> {
+                // A. Lógica de Match (Intereses cruzados)
                 boolean isMatch = false;
                 if (candidate.getInterests() != null) {
                     isMatch = candidate.getInterests().stream()
                             .anyMatch(interest -> myOfferingIds.contains(interest.getId()));
                 }
                 
-                return mapToUserSwapDTO(candidate, query, isMatch);
-            })
-            .sorted(Comparator.comparing(UserSwapDTO::isSwapMatch).reversed())
-            .collect(Collectors.toList());
+                // B. Lógica de Ubicación (Cerca/Lejos)
+                boolean isClose = checkLocationMatch(candidate, myLocation);
+                String distanceLabel = isClose ? "Cerca de ti" : "Lejos de ti";
 
-            System.out.println("Resultados finales enviados: " + results.size());
-            return results;
+                return mapToUserSwapDTO(candidate, query, isMatch, distanceLabel, isClose);
+            })
+            //ordena
+            .sorted(
+                Comparator.comparing(UserSwapDTO::isSwapMatch, Comparator.reverseOrder())
+                .thenComparing(dto -> isCloseFromLabel(dto.getDistance()), Comparator.reverseOrder())
+            )
+            .collect(Collectors.toList());
     }
 
-    private boolean filterByLocation(User candidate, String myLocation) {
-        if (myLocation.isEmpty()) return true;
+    private boolean isCloseFromLabel(String label) {
+        return "Cerca de ti".equals(label);
+    }
+
+    private boolean checkLocationMatch(User candidate, String myLocation) {
+        if (myLocation.isEmpty()) return false;
         if (candidate.getLocation() == null) return false;
         
         String candidateLoc = candidate.getLocation().toLowerCase();
         return candidateLoc.contains(myLocation) || myLocation.contains(candidateLoc);
     }
 
-    private UserSwapDTO mapToUserSwapDTO(User user, String query, boolean isMatch) {
+    private UserSwapDTO mapToUserSwapDTO(User user, String query, boolean isMatch, String distanceLabel, boolean isClose) {
         UserSwapDTO dto = new UserSwapDTO();
         
         dto.setUserId(user.getId());
         dto.setName(user.getName());
         dto.setUsername(user.getUsername());
         dto.setProfilePhotoUrl(user.getProfilePhotoUrl());
-        dto.setLocation(user.getLocation());
+        dto.setLocation(user.getLocation()); 
         dto.setRating(4.8); 
-        dto.setDistance("Cerca de ti"); 
+        dto.setDistance(distanceLabel); 
         dto.setSwapMatch(isMatch);
 
-        if (user.getSkills() != null) {
+         if (user.getSkills() != null) {
             List<String> searchTerms = query.contains(",") 
                     ? Arrays.asList(query.split(",")) 
                     : List.of(query);
+
             user.getSkills().stream()
                     .filter(s -> s.getId() != null && searchTerms.stream().anyMatch(term -> s.getId().contains(term.trim())))
                     .findFirst()
                     .ifPresent(s -> {
-                        // Importante: UserSkills debe tener estos getters
-                       dto.setSkillName(s.getName() != null ? s.getName() : s.getId()); 
-                        // Si el icono es null, ponemos un emoji por defecto
+                        dto.setSkillName(s.getName() != null ? s.getName() : s.getId()); 
                         dto.setSkillIcon(s.getIcon() != null ? s.getIcon() : "🎓");
                         dto.setSkillCategory(s.getCategory());
                         dto.setSkillLevel(s.getLevel());
                     });
+        }
+        if (dto.getSkillName() == null) {
+             dto.setSkillName(query);
+             dto.setSkillIcon("🎓");
         }
         return dto;
     }
