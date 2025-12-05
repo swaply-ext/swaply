@@ -4,7 +4,7 @@
   
   <main class="main-content">
 
-    <!-- SECCIÓN 1: PRÓXIMO INTERCAMBIO (Sin cambios) -->
+    <!-- SECCIÓN 1: PRÓXIMO INTERCAMBIO -->
     <section class="interchange-section">
        <h2 class="section-title">Próximo Intercambio</h2>
        
@@ -76,14 +76,12 @@
       </div>
 
       <div class="card-grid" *ngIf="!isLoadingMatches()">
-        <div class="skill-card" *ngFor="let card of cards()">
+        <div class="skill-card" *ngFor="let card of cards()" (click)="goToSwap(card)">
           
-        
           <img *ngIf="card.skillImage" 
                [src]="card.skillImage" 
                [alt]="card.skillTitle" 
-               class="card-image"
-               (error)="card.skillImage = undefined"> 
+               class="card-image"> 
 
           <div *ngIf="!card.skillImage" class="card-image-placeholder" style="height: 160px; background: #143F4C; display: flex; justify-content: center; align-items: center; font-size: 4rem; border-radius: 0.5rem 0.5rem 0 0; user-select: none;">
              {{ card.skillIcon || '🎓' }}

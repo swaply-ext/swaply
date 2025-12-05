@@ -61,7 +61,7 @@
 
 .swap-half {
   width: 45%;
-  text-align: center;
+  text-align: left;
 }
 
 .swap-half h2 {
@@ -88,23 +88,52 @@
 }
 
 .skill-img {
-  width: clamp(5rem, 10vw, 7rem);
-  height: clamp(5rem, 10vw, 7rem);
+  width: clamp(9rem, 14vw, 14rem);
+  height: clamp(7rem, 12vw, 9rem);
   border-radius: 1rem;
   object-fit: cover;
 }
 
+/* Contenedor de toda la info del usuario */
+.info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+}
+
 .info h3 {
   margin: 0;
-  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  font-size: 1.5rem; 
   font-weight: 600;
 }
 
 .info .location,
 .info .username {
-  margin: 0.25rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.25rem;
   opacity: 0.85;
-  font-size: clamp(0.8rem, 1vw, 0.95rem);
+  margin: 0;
+}
+
+.location-icon {
+  font-size: 2rem;
+  width: 2rem;
+  height: 2rem;
+  color: var(--principal-color-2);
+}
+
+.location-text {
+  font-size: 1.25rem;
+}
+
+.small-avatar {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .swap-arrow {
@@ -141,8 +170,8 @@
 }
 
 .skill-img-small {
-  width: clamp(1.5rem, 3vw, 2.25rem);
-  height: clamp(1.5rem, 3vw, 2.25rem);
+  width: 1.5rem;
+  height: 1.5rem;
   border-radius: 0.625rem;
   object-fit: cover;
 }
@@ -155,7 +184,7 @@
   background: var(--principal-color-2);
   color: #002631;
   font-weight: 700;
-  font-size: clamp(1rem, 1.5vw, 1.1rem);
+  font-size: 1.125rem;
   cursor: pointer;
   transition: 0.2s ease;
 }
@@ -165,8 +194,8 @@
 }
 
 .swap-card .info .user-avatar {
-  width: clamp(1.5rem, 3vw, 1.875rem);
-  height: clamp(1.5rem, 3vw, 1.875rem);
+  width: 1.875rem;
+  height: 1.875rem;
   border-radius: 50%;
   object-fit: cover;
 }
@@ -176,11 +205,4 @@
   align-items: center;
   gap: 0.5rem;
   justify-content: flex-start;
-}
-
-.small-avatar {
-  width: clamp(1.5rem, 3vw, 1.875rem);
-  height: clamp(1.5rem, 3vw, 1.875rem);
-  border-radius: 50%;
-  object-fit: cover;
 }
