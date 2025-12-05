@@ -1,13 +1,21 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.component";
-import { SkillSearchComponent } from '../../components/skill-search/skill-search.component'; 
+import { SkillSearchComponent } from '../../components/skill-search/skill-search.component';
 import { FilterSkillsComponent } from '../../components/filter-skills/filter-skills.component';
 import { AccountService } from '../../services/account.service';
+import { NextSwapComponent } from '../../components/next-swap/next-swap.component';
+
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule,AppNavbarComponent, SkillSearchComponent, FilterSkillsComponent],
+  imports: [
+    CommonModule, 
+    AppNavbarComponent, 
+    SkillSearchComponent, 
+    FilterSkillsComponent,
+    NextSwapComponent
+  ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -15,41 +23,7 @@ import { AccountService } from '../../services/account.service';
 export class HomeComponent {
 
   constructor(private accountService: AccountService) { }
-  
 
-  hasIntercambio = signal(true);
-  isConfirmed = signal(false);
-
-  // --- DATOS PARA "PRÓXIMO INTERCAMBIO" ---
-  skillToLearn = signal({
-    titulo: 'Clase de Guitarra Acústica',
-    img: 'assets/photos_skills/music/guitar.jpg',
-    hora: 'Hoy, 18:00h',
-    via: 'Vía Napoli 5',
-    user: '@arnaldo05asdasdasdasd'
-  });
-
-  skillToTeach = signal({
-    titulo: 'Taller de Manualidades',
-    img: 'assets/photos_skills/leisure/crafts.jpg',
-    hora: 'Hoy, 18:00h',
-    via: 'Vía Napoli 5',
-    user: '@pepe'
-
-  });
-
-  // --- FUNCIONES DE LOS BOTONES ---
-  toggleIntercambio() {
-    this.hasIntercambio.update(value => !value);
-    this.isConfirmed.set(false);
-  }
-
-  toggleConfirmation() {
-    this.isConfirmed.update(value => !value);
-  }
-  toggleDeny() {
-    this.isConfirmed.set(false);
-  }
 
   // --- DATOS DE EJEMPLO PARA "INTERCAMBIOS CERCA DE TI" ---
   intercambiosCerca = signal([
