@@ -4,7 +4,6 @@ import com.swaply.backend.application.search.dto.UserSwapDTO;
 import com.swaply.backend.shared.UserCRUD.Model.User;
 import com.swaply.backend.shared.UserCRUD.Model.UserSkills;
 import com.swaply.backend.shared.UserCRUD.UserRepository;
-
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -60,6 +59,7 @@ public class HomeService {
         dto.setName(user.getName());
         dto.setUsername(user.getUsername());
         dto.setProfilePhotoUrl(user.getProfilePhotoUrl());
+        
         dto.setSkillName("Clase de " + (skill.getName() != null ? skill.getName() : skill.getId()));     
         dto.setSkillCategory(skill.getCategory());
         dto.setSkillLevel(skill.getLevel());

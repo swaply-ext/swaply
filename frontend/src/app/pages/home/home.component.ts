@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.component";
 import { SkillSearchComponent } from '../../components/skill-search/skill-search.component'; 
 import { FilterSkillsComponent } from '../../components/filter-skills/filter-skills.component';
@@ -96,6 +97,14 @@ export class HomeComponent implements OnInit {
       rating: m.rating || 0,
       isMatch: m.isSwapMatch
     }));
+    this.cards.set(mappedCards);
+  }
+
+  // Método para navegar al SwapComponent
+  goToSwap(card: CardModel) {
+    if (!card.userId) return;
+    this.router.navigate(['/swap', card.userId]);
+  }
 
     this.itemsToShow.set(6);
     this.updateView();

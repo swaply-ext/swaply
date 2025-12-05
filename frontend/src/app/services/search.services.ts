@@ -39,4 +39,9 @@ export class SearchService {
       context: new HttpContext().set(SKIP_LOADING, true)
     });
   }
+  
+  getUserById(userId: string): Observable<UserSwapDTO> {
+    return this.http.get<UserSwapDTO>(`${this.apiUrl}/search/user/${userId}`);
+  }
+  
 }

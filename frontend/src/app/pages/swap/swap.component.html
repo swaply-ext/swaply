@@ -1,0 +1,64 @@
+<div class="swap-container">
+  <app-app-navbar></app-app-navbar>
+
+  <div class="swap-content">
+
+    <!-- SKILL QUE QUIERO APRENDER (DEL OTRO USUARIO) -->
+    <div class="swap-half">
+      <h2>Lo que quieres aprender</h2>
+
+      <div class="swap-card" *ngIf="targetUser() as target">
+        <img class="skill-img"
+             [src]="target.skillIcon || 'assets/default-avatar.png'">
+
+        <div class="info">
+          <h3>{{ target.skillName }}</h3>
+          <p class="location">
+            <span class="material-symbols-outlined">location_on</span>
+            {{ target.location }}
+          </p>
+          <p class="username">
+            <img class="small-avatar" [src]="target.profilePhotoUrl || 'assets/default-avatar.png'" alt="Avatar del usuario">
+            &#64;{{ target.username }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- FLECHA -->
+    <span class="material-symbols-outlined swap-arrow">swap_horiz</span>
+
+    <!-- SKILL QUE ENSEÑO (MI USUARIO) -->
+    <div class="swap-half">
+      <h2>Lo que puedes ofrecer</h2>
+
+      <!-- Card de mi usuario siempre visible -->
+      <div class="swap-card my-user-card" *ngIf="myUser() as me">
+        <img class="skill-img"
+             [src]="selectedTeachSkill()?.icon || 'assets/default-avatar.png'">
+
+        <div class="info">
+          <h3>{{ me.name }}</h3>
+          <p class="location">
+            <span class="material-symbols-outlined">location_on</span>
+            {{ me.location }}
+          </p>
+          <p class="username">
+            <img class="small-avatar" [src]="me.profilePhotoUrl || 'assets/default-avatar.png'" alt="Mi avatar">
+            &#64;{{ me.username }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Lista de skills para elegir próximamente -->
+      
+
+    </div> 
+
+  </div> 
+
+  <button class="btn-create" (click)="createInterest()">
+    Crear Interés
+  </button>
+
+</div>
