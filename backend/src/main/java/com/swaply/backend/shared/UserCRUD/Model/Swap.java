@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Swap {
+    private String id;
     private String requestingUser;
     private String requestedUser;
     private String skill;
