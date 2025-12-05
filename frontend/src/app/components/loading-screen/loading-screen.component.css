@@ -1,6 +1,6 @@
 /* Variables globales del componente */
 :host {
-  --animation-time: 2.5s;
+  --animation-time: 2s;
   --loader-size: 30vmin;
   --stroke-thickness: 14;
 }
@@ -14,12 +14,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--principal-color-3);
+  background: var(--background-gradient);
   z-index: 9999;
 }
 
 .p-loader {
-
   width: var(--loader-size);
   height: var(--loader-size);
 
