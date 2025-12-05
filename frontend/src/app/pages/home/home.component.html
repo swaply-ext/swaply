@@ -18,7 +18,17 @@
                 <div>
                   <h4>{{ skillToLearn().titulo }}</h4>
                   <p>{{ skillToLearn().hora }}</p>
-                  <p class="skill-location">{{ skillToLearn().via }}</p>
+                  <p class="skill-location">
+                    <span class="material-symbols-outlined location">location_on</span>
+                    {{ skillToLearn().via }}
+                  </p>
+                  <p class="skill-location">
+                    <span class="material-symbols-outlined">
+                      <img src="assets/people_demo/juan_perez.png" alt="Foto de perfil" class="user-avatar">
+                    </span>
+                    {{ skillToLearn().user }}
+                  </p>
+
                 </div>
               </div>
             </div>
@@ -32,7 +42,16 @@
                 <div>
                   <h4>{{ skillToTeach().titulo }}</h4>
                   <p>{{ skillToTeach().hora }}</p>
-                  <p class="skill-location">{{ skillToTeach().via }}</p>
+                  <p class="skill-location">
+                    <span class="material-symbols-outlined location">location_on</span>
+                    {{ skillToTeach().via }}
+                  </p>
+                  <p class="skill-location">
+                    <span class="material-symbols-outlined">
+                      <img src="assets/people_demo/juan_perez.png" alt="Foto de perfil" class="user-avatar">
+                    </span>
+                    {{ skillToTeach().user }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -42,13 +61,17 @@
             <ng-container *ngIf="isConfirmed(); else showButton">
               <span class="status-text">
                 <span class="material-symbols-outlined">check_circle</span>
-                Asistencia confirmada
+                intercambio confirmada
               </span>
             </ng-container>
             <ng-template #showButton>
+              <button class="btn-deny" (click)="toggleDeny()">
+                <span class="material-symbols-outlined">cancel</span>
+                Rechazar intercambio
+              </button>
               <button class="btn-confirm" (click)="toggleConfirmation()">
                 <span class="material-symbols-outlined">check_circle</span>
-                Confirmar asistencia
+                Confirmar intercambio
               </button>
             </ng-template>
           </div>
@@ -61,21 +84,11 @@
           <div class="confirmation-area disabled">
             <span class="status-text">
               <span class="material-symbols-outlined">check_circle</span>
-              Asistencia confirmada
+              intercambio confirmada
             </span>
           </div>
         </div>
       </ng-template>
-
-
-      <div class="action-buttons">
-        <button class="btn btn-primary">Buscar Intercambio</button>
-        <button class="btn btn-secondary">Crear Intercambio</button>
-      </div>
-
-      <button (click)="toggleIntercambio()" class="demo-toggle">
-        (Demo: Cambiar estado)
-      </button>
     </section>
 
     <section class="nearby-section">

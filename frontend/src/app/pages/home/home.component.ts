@@ -25,14 +25,17 @@ export class HomeComponent {
     titulo: 'Clase de Guitarra Acústica',
     img: 'assets/photos_skills/music/guitar.jpg',
     hora: 'Hoy, 18:00h',
-    via: 'Vía Napoli 5'
+    via: 'Vía Napoli 5',
+    user: '@arnaldo05asdasdasdasd'
   });
 
   skillToTeach = signal({
     titulo: 'Taller de Manualidades',
     img: 'assets/photos_skills/leisure/crafts.jpg',
     hora: 'Hoy, 18:00h',
-    via: 'Vía Napoli 5'
+    via: 'Vía Napoli 5',
+    user: '@pepe'
+
   });
 
   // --- FUNCIONES DE LOS BOTONES ---
@@ -43,6 +46,9 @@ export class HomeComponent {
 
   toggleConfirmation() {
     this.isConfirmed.update(value => !value);
+  }
+  toggleDeny() {
+    this.isConfirmed.set(false);
   }
 
   // --- DATOS DE EJEMPLO PARA "INTERCAMBIOS CERCA DE TI" ---

@@ -20,6 +20,7 @@
 
     --bg-panel: #022c38;
     --bg-card: #00414b;
+    --bg-location: #00333c;
     --border-color: #00a1b7;
     --button-hover: #e0e0e0;
     --level-one-skill: #2ab57e;
@@ -28,6 +29,7 @@
 
   --pic-border-color: #00BAD2; /* Color del borde de la foto de perfil*/
   --star-color: #f1c40f ; /* Color d'estrella */
+  --shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Color de sombra */
 }
 
 body {

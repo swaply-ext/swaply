@@ -22,10 +22,10 @@
   font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24 !important;
 }
 
-::ng-deep input, 
-::ng-deep button, 
-::ng-deep select, 
-::ng-deep textarea, 
+::ng-deep input,
+::ng-deep button,
+::ng-deep select,
+::ng-deep textarea,
 ::ng-deep ::placeholder {
   font-family: 'Inter', sans-serif !important;
 }
@@ -139,8 +139,8 @@ img {
 }
 
 .interchange-skill-card img {
-  width: 100px;
-  height: 70px;
+  width: 10rem;
+  height: 7rem;
   object-fit: cover;
   border-radius: 0.375rem;
 }
@@ -161,8 +161,33 @@ img {
 }
 
 .interchange-skill-card .skill-location {
-  color: #3CB57C;
+  color: var(--principal-color-2);
   font-weight: 500;
+}
+
+.skill-location {
+  border: 1px solid var(--bg-location);
+  background-color: var(--bg-location);
+  width: fit-content;
+  height: 3rem;
+  border-radius: 9999px;
+  box-shadow: var(--shadow);
+  padding: 0.25rem 0.75rem;
+  /*ajustar*/
+  display: flex;
+  align-items: center;
+}
+
+.skill-location img {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 0.5rem;
+}
+.location{
+  margin-right: 0.5rem;
+
 }
 
 .confirmation-area {
@@ -234,6 +259,29 @@ img {
 
 .btn-confirm:hover:not(:disabled) {
   background-color: #319b69;
+}
+
+.btn-deny {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: transparent;
+  color: var(--secundary-color-1);
+  padding: 0.6rem 1.25rem;
+  border: 2px solid var(--error-color-2);
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.btn-deny .material-symbols-outlined {
+  font-size: 20px;
+}
+
+.btn-deny:hover:not(:disabled) {
+  background-color: var(--error-color-2);
+  
 }
 
 .action-buttons {
@@ -417,7 +465,7 @@ img {
   font-weight: 600;
   color: #ffffff;
   /* Margen solo abajo, 0 a la izquierda */
-  margin: 0 0 0.5rem 0; 
+  margin: 0 0 0.5rem 0;
   /* Padding 0 absoluto */
   padding: 0;
   white-space: nowrap;
@@ -514,7 +562,7 @@ img {
   :host {
     display: inline-block;
   }
-  
+
   .filter-box {
     display: flex;
     align-items: center;
