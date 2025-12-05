@@ -4,7 +4,9 @@ import {
   inject, 
   signal,
   ElementRef,
-  HostListener 
+  HostListener,
+  Output,
+  EventEmitter 
 } from '@angular/core';
 import { HttpClient, HttpClientModule, HttpContext, HttpParams } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -52,8 +54,10 @@ class FilterSkillsService {
 export class FilterSkillsComponent {
   private service = inject(FilterSkillsService);
   private el = inject(ElementRef)
-  isOpen = signal(false);
 
+  @Output() filterChange = new EventEmitter<string>();
+
+  isOpen = signal(false);
   results = signal<Skill[]>([]);
   isLoading = signal(false);
 
@@ -133,9 +137,9 @@ export class FilterSkillsComponent {
 
   toggleSub(sub: any) {
 
-  const selected = this.getSelectedIds();
-  console.log('Skills seleccionadas:', selected); // <-- Debug
-  this.searchSubject.next(selected);
+    sub.selected = !sub.selected;
+    const selected = this.getSelectedIds();
+    this.filterChange.emit(selected);
   }
 
   // Obtiene IDs seleccionados como cadena separada por comas
