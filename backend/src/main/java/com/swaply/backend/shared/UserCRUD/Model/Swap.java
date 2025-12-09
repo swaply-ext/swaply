@@ -13,7 +13,7 @@ public class Swap {
     private String skill;
     private String interest;
     private Status status;
-    private Boolean isRequested;
+    private Boolean isRequester;
 
     public enum Status {
         ACCEPTED,
