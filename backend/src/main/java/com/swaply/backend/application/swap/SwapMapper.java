@@ -13,6 +13,6 @@ import com.swaply.backend.shared.UserCRUD.Model.Swap;
 public interface SwapMapper {
 
         @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE)
-        Swap fromSwapDTO(SwapDTO dto);
+        Swap toEntity(SwapDTO dto);
 
 }
