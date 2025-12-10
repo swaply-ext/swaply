@@ -1,5 +1,7 @@
 package com.swaply.backend.application.search.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,6 +23,7 @@ public class UserSwapDTO {
     private String skillCategory;
 
     // Info del Match
+    @JsonProperty("isSwapMatch")
     private boolean isSwapMatch;  
     private Double rating;        
     private String distance;

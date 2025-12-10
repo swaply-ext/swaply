@@ -61,8 +61,8 @@
       <button (click)="toggleIntercambio()" class="demo-toggle">(Demo: Cambiar estado)</button>
     </section>
 
-    <!-- SECCIÓN 2: NEARBY -->
     <section class="nearby-section">
+      <!-- ... (Header buscador igual) ... -->
       <div class="nearby-header">
         <h2 class="section-title">Intercambios Cerca de Ti</h2>
         <div class="nearby-actions">
@@ -78,49 +78,54 @@
       <div class="card-grid" *ngIf="!isLoadingMatches()">
         <div class="skill-card" *ngFor="let card of cards()">
           
-        
-          <img *ngIf="card.skillImage" 
-               [src]="card.skillImage" 
-               [alt]="card.skillTitle" 
-               class="card-image"
-               (error)="card.skillImage = undefined"> 
-
+          <!-- Imagen -->
+          <img *ngIf="card.skillImage" [src]="card.skillImage" [alt]="card.skillTitle" class="card-image" (error)="card.skillImage = undefined"> 
           <div *ngIf="!card.skillImage" class="card-image-placeholder" style="height: 160px; background: #143F4C; display: flex; justify-content: center; align-items: center; font-size: 4rem; border-radius: 0.5rem 0.5rem 0 0; user-select: none;">
              {{ card.skillIcon || '🎓' }}
           </div>
           
           <div class="card-content">
             <div class="card-user-info">
-              <img [src]="card.userAvatar" [alt]="card.userName" class="user-avatar">
+              <img [src]="card.userAvatar" class="user-avatar"> 
               <span>{{ card.userName }}</span>
             </div>
-            
-            <h3>{{ card.skillTitle }}</h3>
-            
-            <div *ngIf="card.isMatch" style="color: #3CB57C; font-weight: bold; font-size: 0.85rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 4px;">
-                <span class="material-symbols-outlined" style="font-size: 16px;">bolt</span> ¡MATCH! Le interesa lo tuyo
+  
+          <h3>{{ card.skillTitle }}</h3>
+
+          <ng-container *ngIf="hasSearched()">
+  
+            <div *ngIf="card.isMatch" class="match-status is-match">
+                <span class="material-symbols-outlined">bolt</span> 
+                ¡MATCH! Le interesa lo tuyo
             </div>
 
-            <div class="card-footer">
-              <span class="location"><span class="material-symbols-outlined card-icon">location_on</span> {{ card.distance }}</span>
+            <div *ngIf="!card.isMatch" class="match-status no-match">
+                <span class="material-symbols-outlined">person</span> 
+                Solo enseña
+            </div>
+
+          </ng-container>
+
+          <div class="card-footer">
+              <span class="location" [class.nearby]="card.distance === 'Cerca de ti'">
+                  <span class="material-symbols-outlined card-icon">location_on</span> {{ card.distance }}
+                </span>
               <span class="rating"><span class="material-symbols-outlined card-icon">star</span> {{ card.rating }}</span>
             </div>
           </div>
         </div>
       </div>
-
+      
+      <!-- ... (Resto de mensajes igual) ... -->
       <div class="see-more-button" *ngIf="!isLoadingMatches() && cards().length === 0 && hasSearched()">
          <p style="color: #9ca3af; font-size: 1.1rem;">No se encontraron usuarios con esa habilidad.</p>
       </div>
-      
       <div class="see-more-button" *ngIf="!isLoadingMatches() && !hasSearched() && cards().length === 0">
-         <p style="color: #6b7280;">Usa el buscador o los filtros para encontrar gente.</p>
+         <p style="color: #6b7280;">Añade intereses a tu perfil para ver recomendaciones.</p>
       </div>
-
       <div class="see-more-button" *ngIf="canLoadMore() && !isLoadingMatches()">
         <button class="btn btn-primary" (click)="loadMore()">Ver Más</button>
       </div>
-
     </section>
   </main>
 </div>

@@ -466,6 +466,29 @@ img {
   opacity: 0.9;
 }
 
+.match-status {
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0;
+}
+
+.match-status.is-match {
+  color: #3CB57C; /* Tu color verde corporativo */
+}
+
+
+.match-status.no-match {
+  color: #94a3b8;
+}
+
+.match-status .material-symbols-outlined {
+  font-size: 18px;
+}
+
 /* --- Responsive --- */
 @media (max-width: 1024px) {
   .card-grid {
