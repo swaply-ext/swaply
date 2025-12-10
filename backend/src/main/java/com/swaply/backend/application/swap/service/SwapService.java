@@ -1,5 +1,6 @@
 package com.swaply.backend.application.swap.service;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,7 +26,7 @@ public class SwapService {
 
     public Swap createSwap(String sendingUser, SwapDTO dto) {
         String id = UUID.randomUUID().toString();
-        
+
         Swap sentSwap = mapper.toEntity(dto);
         sentSwap.setStatus(Swap.Status.STANDBY);
         sentSwap.setIsRequester(true);
@@ -34,6 +35,9 @@ public class SwapService {
         Optional<User> sender = repository.findUserById(sendingUser);
         if (sender.isPresent()) {
             User user = sender.get();
+            if (user.getSwaps() == null) {
+                user.setSwaps(new ArrayList<>());
+            }
             user.getSwaps().add(sentSwap);
             repository.save(user);
         }
@@ -47,9 +51,12 @@ public class SwapService {
         receivedSwap.setIsRequester(false);
         receivedSwap.setId(id);
 
-        Optional<User> receiver = repository.findUserById(sentSwap.getUserId());
+        Optional<User> receiver = repository.findUserById(sentSwap.getRequestedUserId());
         if (receiver.isPresent()) {
             User user = receiver.get();
+            if (user.getSwaps() == null) {
+                user.setSwaps(new ArrayList<>());
+            }
             user.getSwaps().add(receivedSwap);
             repository.save(user);
         }

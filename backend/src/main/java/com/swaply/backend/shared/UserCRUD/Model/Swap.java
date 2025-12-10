@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Swap {
     private String id;
-    private String userId;
+    private String requestedUserId;
     private String skill;
     private String interest;
     private Status status;

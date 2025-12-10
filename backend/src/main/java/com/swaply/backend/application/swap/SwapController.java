@@ -24,8 +24,7 @@ public class SwapController {
 
     @PatchMapping("/request")
     public ResponseEntity<Swap> request(@AuthenticationPrincipal SecurityUser SecurityUser, @RequestBody SwapDTO dto) {
-        Swap newSwap = service.createSwap(SecurityUser.getUsername(), dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newSwap); //solo para testeo
-       // return ResponseEntity.status(HttpStatus.CREATED).build();
+        service.createSwap(SecurityUser.getUsername(), dto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }
