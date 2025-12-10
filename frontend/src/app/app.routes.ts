@@ -33,7 +33,8 @@ import { PrivacyAndSecurityComponent } from './pages/privacy-and-security/privac
 import { EmailSentComponent } from './pages/email-sent/email-sent.component';
 import { IndexComponent } from './pages/index/index.component';
 import { SwapComponent } from './pages/swap/swap.component';
-
+import { SwapSkillsComponent } from './components/swap-skills/swap-skills.component';
+import { SwapInterestsComponent } from './components/swap-interests/swap-interests.component';
 
 // Creamos una ruta para la verificación de correo
 // Ahora usamos el componente real EmailVerificationComponent
@@ -67,6 +68,8 @@ export const appRoutes: Routes = [
   { path: 'myprofile', component: PrivateProfileComponent, canActivate: [AuthGuard] },
   { path: 'search-skills', component: SkillSearchComponent }, //barra de busqueda componente
   { path: 'filter-skills', component: FilterSkillsComponent },
+  { path: 'swap-skills', component: SwapSkillsComponent },
+  { path: 'swap-interests', component: SwapInterestsComponent },
   { path: '404', component: Error404Component },
   { path: 'privacy-and-security', component: PrivacyAndSecurityComponent, canActivate: [AuthGuard] },
   { path: 'swap/:targetId', component: SwapComponent, canActivate: [AuthGuard] },

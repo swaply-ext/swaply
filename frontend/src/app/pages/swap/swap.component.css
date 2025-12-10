@@ -47,7 +47,7 @@
 .swap-content {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   gap: clamp(1rem, 2vw, 2rem);
   width: 100%;
   max-width: 90%;
@@ -57,10 +57,12 @@
   padding: 1.25rem;
   box-sizing: border-box;
   background: transparent;
+  flex-wrap: wrap;
 }
 
 .swap-half {
-  width: 45%;
+  flex: 1 1 45%;
+  min-width: 21.25rem;
   text-align: left;
 }
 
@@ -94,7 +96,6 @@
   object-fit: cover;
 }
 
-/* Contenedor de toda la info del usuario */
 .info {
   display: flex;
   flex-direction: column;
@@ -177,7 +178,6 @@
 }
 
 .btn-create {
-  margin-top: 2rem;
   padding: 0.875rem 2.25rem;
   border: none;
   border-radius: 1.5rem;
@@ -187,6 +187,7 @@
   font-size: 1.125rem;
   cursor: pointer;
   transition: 0.2s ease;
+  margin-top: 2rem;
 }
 
 .btn-create:hover {
@@ -205,4 +206,28 @@
   align-items: center;
   gap: 0.5rem;
   justify-content: flex-start;
+}
+
+.panel-actions {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  width: 100%;
+  max-width: 90%;
+  margin: 2rem 10rem 0 10rem;
+  flex-wrap: wrap;
+}
+
+.panel-actions .panel {
+  flex: 1;
+  min-width: 18.75rem;
+  max-width: 45%;
+}
+
+.btn-container {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  max-width: 90%;
+  margin: 10rem;
 }

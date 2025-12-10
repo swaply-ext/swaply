@@ -44,4 +44,10 @@ export class SearchService {
     return this.http.get<UserSwapDTO>(`${this.apiUrl}/search/user/${userId}`);
   }
   
+  // search.services.ts
+  sendSwapRequest(payload: { requesterId: string, targetId: string, learnSkill: string, teachSkill: string }) {
+    return this.http.post(`${this.apiUrl}/swap/request`, payload);
+  }
+
+
 }

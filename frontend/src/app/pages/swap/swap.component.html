@@ -3,7 +3,7 @@
 
   <div class="swap-content">
 
-    <!-- SKILL QUE QUIERO APRENDER (DEL OTRO USUARIO) -->
+    <!-- LO QUE QUIERES APRENDER -->
     <div class="swap-half" *ngIf="selectedTargetSkill() as targetSkill">
       <h2>Lo que quieres aprender</h2>
 
@@ -14,51 +14,67 @@
 
         <div class="info">
           <h3>{{ getTargetSkillName() }}</h3>
-          
+
           <div class="location">
             <span class="material-symbols-outlined location-icon">location_on</span>
             <span class="location-text">{{ targetSkill.location || targetUser()?.location }}</span>
           </div>
-          
+
           <div class="username">
             <img class="small-avatar" [src]="targetUser()?.profilePhotoUrl || 'assets/default-avatar.png'" alt="Avatar del usuario">
-            &#64;{{ targetUser()?.username }}
+            {{ targetUser()?.username }}
           </div>
         </div>
       </div>
     </div>
 
-    <!-- FLECHA -->
     <span class="material-symbols-outlined swap-arrow">swap_horiz</span>
 
-    <!-- SKILL QUE ENSEÑO (MI USUARIO) -->
-    <div class="swap-half">
+    <!-- LO QUE PUEDES OFRECER -->
+    <div class="swap-half" *ngIf="myUser() as me">
       <h2>Lo que puedes ofrecer</h2>
 
-      <div class="swap-card my-user-card" *ngIf="myUser() as me">
-        <img class="skill-img"
-             [src]="selectedTeachSkill()?.icon || 'assets/default-avatar.png'">
+      <div class="swap-card">
+        <img class="skill-img" [src]="selectedTeachSkill()?.icon || 'assets/default-avatar.png'" alt="Skill a enseñar">
 
         <div class="info">
           <h3>{{ me.name }}</h3>
-          
+
           <div class="location">
             <span class="material-symbols-outlined location-icon">location_on</span>
             <span class="location-text">{{ me.location }}</span>
           </div>
-          
+
           <div class="username">
             <img class="small-avatar" [src]="me.profilePhotoUrl || 'assets/default-avatar.png'" alt="Mi avatar">
-            &#64;{{ me.username }}
+            {{ me.username }}
           </div>
         </div>
       </div>
+    </div>
 
-    </div> 
+  </div>
 
-  </div> 
+  <!-- PANEL DE INTERESES E HABILIDADES -->
+  <div class="panel-actions">
 
-  <button class="btn-create" (click)="createInterest()">
-    Crear Interés
-  </button>
+    <div class="panel interests-panel" *ngIf="targetUserInterests() as interests">
+      <app-swap-interests
+        [InterestsInput]="interests"
+        [editable]="false"
+        [targetUser]="targetUser()">
+      </app-swap-interests>
+    </div>
+
+    <div class="panel skills-panel" *ngIf="myUser() as me">
+      <app-swap-skills
+        [SkillsInput]="me.skills || []"
+        [editable]="false"
+        (skillSelected)="chooseTeachSkill($event)">
+      </app-swap-skills>
+    </div>
+
+  </div>
+
+  <button class="btn-create" (click)="createSwap()">SWAP</button>
 </div>

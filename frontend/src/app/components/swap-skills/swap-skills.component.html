@@ -1,0 +1,18 @@
+<div class="skills-panel-container">
+  <header>
+    <button class="toggle-btn" (click)="togglePanel()">
+      <span class="material-symbols-outlined">keyboard_arrow_down</span>
+    </button>
+    <h1>Habilidades a ofrecer</h1>
+  </header>
+
+  <div *ngIf="open" class="skills-grid">
+    <app-skill-card
+      *ngFor="let item of SkillsInput"
+      [id]="item.id"
+      [level]="item.level"
+      [editable]="editable"
+      (levelChange)="handleLevelChange($event)">
+    </app-skill-card>
+  </div>
+</div>
