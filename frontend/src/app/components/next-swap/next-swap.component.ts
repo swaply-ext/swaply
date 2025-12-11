@@ -1,16 +1,13 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AccountService } from '../../services/account.service';
 
 interface profileToTeach {
-  titleSkill: string;
   profilePhotoUrl: string;
-  date: string;
   location: string;
   username: string;
 }
 interface profileToLearn {
-  titleInterest: string;
   profilePhotoUrl: string;
   date: string;
   location: string;
@@ -19,9 +16,11 @@ interface profileToLearn {
 
 @Component({
   selector: 'app-next-swap',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './next-swap.component.html',
-  styleUrl: './next-swap.component.css'
+  styleUrl: './next-swap.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NextSwapComponent {
   constructor(private accountService: AccountService) { }
