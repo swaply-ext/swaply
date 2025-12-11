@@ -5,7 +5,9 @@ import {
   signal,
   ElementRef,
   HostListener,
-  Input
+  Input,
+  Output,
+  EventEmitter
 } from '@angular/core';
 import { HttpClient, HttpClientModule, HttpContext, HttpParams } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -62,6 +64,8 @@ class LocationSearchService {
 export class LocationSearchComponent {
 
   @Input() placeholder: string = 'Buscar Ubicación...';
+
+  @Output() locationSelected = new EventEmitter<location | null>();
 
   private locationSearchService = inject(LocationSearchService);
   private el = inject(ElementRef);
@@ -125,11 +129,12 @@ export class LocationSearchComponent {
     this.searchTermSubject.next(term);
   }
 
-  // esto aun no funciona, es para cuando se seleccione una location de los resultados
   onSelectlocation(location: location): void {
-    console.log('location seleccionada:', location);
-    this.searchTerm = location.displayName;
-    this.results.set([]);
-    this.showDropdown.set(false);
-  }
+  console.log('location seleccionada:', location);
+  this.searchTerm = location.displayName;
+  this.results.set([]);
+  this.showDropdown.set(false);
+  
+  this.locationSelected.emit(location); 
+}
 }

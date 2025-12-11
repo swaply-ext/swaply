@@ -46,7 +46,7 @@ interface ProfileData {
     DiscardButtonComponent,
     SkillsPanelComponent,
     InterestsPanelComponent
-    ,LocationSearchComponent
+    , LocationSearchComponent
   ],
   templateUrl: './edit-profile.component.html',
   styleUrls: ['./edit-profile.component.css']
@@ -341,6 +341,21 @@ export class EditProfileComponent implements OnInit {
       age--;
     }
     return age;
+  }
+
+  onLocationSelected(newLocation: Location | null): void {
+    // 1. Guarda el objeto Location completo para el envío al backend
+    this.locationData = newLocation; // locationData ahora es tipo location | null
+
+    if (newLocation) {
+      // 2. Actualiza la variable `location` (el string de display)
+      this.location = newLocation.displayName;
+    } else {
+      // Manejar la limpieza si el usuario borra la ubicación
+      this.location = '';
+    }
+    // Llamar a validate para mostrar errores si fuera necesario
+    this.validate();
   }
 
 
