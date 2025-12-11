@@ -1,0 +1,124 @@
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: 'Quicksand', sans-serif;
+  margin: 0;
+  /* Mantenemos tu fondo degradado original */
+  background: linear-gradient(to bottom, #012534 0%, #00839E 100%);
+}
+
+/* Contenedor principal (nombre actualizado) */
+.delete-account-confirmation-container {
+  background: #356B8A;
+  padding: 3rem 2rem; /* Un poco más de espacio lateral */
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  text-align: center;
+  max-width: 450px;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 60px; /* Para dar espacio al icono flotante */
+}
+
+/* Círculo del icono */
+.icon-circle {
+  width: 140px;
+  height: 140px;
+  /* CAMBIO: Color rojo/naranja para indicar advertencia/peligro en lugar de verde */
+  background-color: #e74c3c; 
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: -100px; /* Hace que flote fuera de la tarjeta hacia arriba */
+  margin-bottom: 1.5rem;
+  border: 5px solid #356B8A; /* Opcional: crea un borde del color de la tarjeta para separar */
+}
+
+.icon-circle .material-icons {
+  color: #fff;
+  font-size: 7rem;
+}
+
+/* Títulos y textos */
+.delete-account-confirmation-container h2 {
+  color: #fff;
+  margin: 0 0 1rem 0;
+  font-weight: 700;
+}
+
+.delete-account-confirmation-container p {
+  color: #f0f0f0;
+  font-size: 1rem;
+  margin: 0.25rem 0;
+  line-height: 1.5;
+}
+
+/* Wrapper de los botones */
+.button-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 15px; /* Espacio entre botones */
+  margin-top: 2.5rem;
+  width: 100%;
+}
+
+/* Estilos bases para ambos botones */
+button {
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  font-family: inherit;
+}
+
+/* Botón Cancelar (Estilo secundario/transparente) */
+.btn-cancel {
+  background-color: transparent;
+  color: #fff;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.btn-cancel:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: #fff;
+}
+
+/* Botón Eliminar (Estilo peligro/rojo) */
+.btn-delete {
+  background-color: #c0392b; /* Rojo oscuro */
+  color: #fff;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.btn-delete:hover {
+  background-color: #a93226; /* Rojo más intenso al hover */
+  transform: translateY(-2px); /* Pequeño efecto de elevación */
+  box-shadow: 0 6px 8px rgba(0,0,0,0.2);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .delete-account-confirmation-container {
+    padding: 1.5rem;
+    width: 90%;
+    margin-top: 80px;
+  }
+
+  .button-wrapper {
+    flex-direction: column-reverse; /* Pone Cancelar abajo en móviles */
+    gap: 10px;
+  }
+
+  button {
+    width: 100%;
+    padding: 1rem;
+  }
+}

@@ -10,13 +10,13 @@ import { AccountService } from '../../services/account.service';
 
 @Component({
   selector: 'app-privacy-and-security',
-  imports: [ 
+  imports: [
     AppNavbarComponent,
     SideMenuComponent,
     CommonModule,
     RouterLink,
     FormsModule
-    ],
+  ],
   standalone: true,
   templateUrl: './privacy-and-security.component.html',
   styleUrls: ['./privacy-and-security.component.css']
@@ -39,10 +39,10 @@ export class PrivacyAndSecurityComponent {
   successMessage: string = 'Contraseña cambiada correctamente';
 
   constructor(
-    private http: HttpClient, 
+    private http: HttpClient,
     private router: Router,
-    private accountService: AccountService 
-  ) {}
+    private accountService: AccountService
+  ) { }
 
   // Password visibility
   toggleVisibility(field: 'current' | 'new' | 'confirm') {
@@ -105,7 +105,7 @@ export class PrivacyAndSecurityComponent {
       this.message = 'Contraseña inválida:\n' + passwordValidation.message;
       return;
     }
-    
+
     // Confirm passwords match
     if (this.newPassword !== this.confirmPassword) {
       this.showError = true;
@@ -143,25 +143,13 @@ export class PrivacyAndSecurityComponent {
             this.message = 'Error de servidor. Inténtalo de nuevo más tarde';
           }
         }
-      });     
+      });
   }
 
   // Método para eliminar cuenta usando accountService
   onDeleteAccount(): void {
-    const confirmation = window.confirm('¿Estás seguro de que deseas eliminar tu cuenta permanentemente? Esta acción no se puede deshacer.');
-
-    if (confirmation) {
-      this.accountService.deleteAccount().subscribe({
-        next: () => {
-          alert('Tu cuenta ha sido eliminada.');
-          this.router.navigate(['/login']); 
-        },
-        error: (error) => {
-          console.error('Error eliminando cuenta:', error);
-          alert('Hubo un error al eliminar la cuenta.');
-        }
-      });
-    }
-  }
-
+    this.router.navigate(['/delete-account-confirmation']);
+  };
 }
+
+
