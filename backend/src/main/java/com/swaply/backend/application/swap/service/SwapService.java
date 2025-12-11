@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.swaply.backend.application.swap.SwapMapper;
 import com.swaply.backend.application.swap.dto.SwapDTO;
 import com.swaply.backend.shared.UserCRUD.UserRepository;
+import com.swaply.backend.shared.UserCRUD.UserService;
 import com.swaply.backend.shared.UserCRUD.Model.Swap;
 import com.swaply.backend.shared.UserCRUD.Model.User;
 import com.swaply.backend.shared.UserCRUD.exception.UserNotFoundException;
@@ -18,10 +19,12 @@ public class SwapService {
 
     private final UserRepository repository;
     private final SwapMapper mapper;
+    private final UserService userService;
 
-    public SwapService(SwapMapper mapper, UserRepository repository) {
+    public SwapService(SwapMapper mapper, UserRepository repository, UserService userService) {
         this.mapper = mapper;
         this.repository = repository;
+        this.userService = userService;
     }
 
     public Swap createSwap(String sendingUser, SwapDTO dto) {
@@ -31,6 +34,7 @@ public class SwapService {
         sentSwap.setStatus(Swap.Status.STANDBY);
         sentSwap.setIsRequester(true);
         sentSwap.setId(id);
+        sentSwap.setRequestedUserId(userService.getUserByUsername(dto.getRequestedUsername()).getId()); //obtiene el id a partir del username
 
         Optional<User> sender = repository.findUserById(sendingUser);
         if (sender.isPresent()) {
@@ -46,10 +50,11 @@ public class SwapService {
         }
 
 
-        Swap receivedSwap = mapper.toEntity(invertSwap(sendingUser, dto));
+        Swap receivedSwap = mapper.toEntity(invertSwap(dto));
         receivedSwap.setStatus(Swap.Status.STANDBY);
         receivedSwap.setIsRequester(false);
         receivedSwap.setId(id);
+        receivedSwap.setRequestedUserId(sendingUser);
 
         Optional<User> receiver = repository.findUserById(sentSwap.getRequestedUserId());
         if (receiver.isPresent()) {
@@ -67,11 +72,10 @@ public class SwapService {
         return sentSwap;
     }
 
-    private SwapDTO invertSwap(String sendingUser, SwapDTO dto) {
+    private SwapDTO invertSwap(SwapDTO dto) {
         SwapDTO newdto = new SwapDTO();
         newdto.setInterest(dto.getSkill());
         newdto.setSkill(dto.getInterest());
-        newdto.setRequestedUserId(sendingUser);
         return newdto;
     }
 

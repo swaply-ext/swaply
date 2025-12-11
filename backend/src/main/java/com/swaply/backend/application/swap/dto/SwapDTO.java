@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SwapDTO {
-    private String requestedUserId;
+    private String requestedUsername;
     private String skill;
     private String interest;
 }
