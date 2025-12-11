@@ -45,4 +45,5 @@ public class User {
     private String profilePhotoUrl;
     private boolean isPremium;
     private boolean isModerator;
+    private List<Swap> swaps;
 }
