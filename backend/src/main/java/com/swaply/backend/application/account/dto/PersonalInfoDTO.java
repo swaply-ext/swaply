@@ -4,6 +4,8 @@ import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.swaply.backend.shared.UserCRUD.Model.Location;
+
 
 @Data
 @NoArgsConstructor
@@ -14,6 +16,6 @@ public class PersonalInfoDTO {
     private Date birthDate;
     private String gender;
     private String phone;
-    private String location;
+    private Location location;
     private String postalCode;
 }
