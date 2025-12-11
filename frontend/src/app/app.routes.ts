@@ -1,3 +1,4 @@
+import { LocationSearchComponent } from './components/location-search/location-search.component';
 import { Routes } from '@angular/router';
 import { HomeComponent } from './pages/home/home.component';
 import { SkillsComponent } from './pages/skills/skills.component';
@@ -66,9 +67,10 @@ export const appRoutes: Routes = [
   { path: 'myprofile', component: PrivateProfileComponent, canActivate: [AuthGuard] },
   { path: 'search-skills', component: SkillSearchComponent }, //barra de busqueda componente
   { path: 'filter-skills', component: FilterSkillsComponent },
+  {path: 'location-search', component: LocationSearchComponent },
   { path: '404', component: Error404Component },
   { path: 'privacy-and-security', component: PrivacyAndSecurityComponent, canActivate: [AuthGuard] },
   { path: 'index', component: IndexComponent },
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
-  
+
 ];
