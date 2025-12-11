@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.swaply.backend.shared.UserCRUD.Model.Location;
+
 
 @RestController
 @RequestMapping("/api/locations")
@@ -22,10 +24,10 @@ public class LocationController {
     }
 
     @GetMapping("/autocomplete")
-    public ResponseEntity <List<LocationResponse>> autocompleteLocation(
+    public ResponseEntity <List<Location>> autocompleteLocation(
             @RequestParam(required = false) String query) {
         if(query != null){
-            List<LocationResponse> results = locationService.test(query);
+            List<Location> results = locationService.getLocations(query);
             return ResponseEntity.ok(results);
         }
         throw new IllegalArgumentException("Query parameter is required");

@@ -10,49 +10,29 @@
 .nearby-search {
   position: relative;
   width: 100%;
+  border-color: #00bcd4;
+
 }
 
 .nearby-search input {
-  width: max-content;
-  padding: 0.6rem 1rem 0.6rem 2.5rem;
-  border-radius: 9999px;
-  background-color: #143F4C;
-  color: #e5e7eb;
-  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid #00bcd4;
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #fff;
+  font-size: 0.95rem;
   outline: none;
-  transition: border-color 0.3s, box-shadow 0.3s;
-  font-size: 1rem;
+  transition: border-color 0.2s ease, background 0.2s ease;
+  width: 100%;
 }
 
 .nearby-search input:focus {
-  border-color: #3CB57C;
+  border-color: #00eaff;
   box-shadow: 0 0 10px 0px rgba(60, 181, 124, 0.3);
 }
 
-.nearby-search .search-icon {
-  position: absolute;
-  left: 0.8rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #6b7280;
-  font-size: 20px;
-  pointer-events: none;
-  user-select: none;
-}
 
-.spinner-mini {
-  position: absolute;
-  left: 0.8rem;
-  top: 50%;
-  margin-top: -8px;
-  width: 16px;
-  height: 16px;
-  border: 2px solid #6b7280;
-  border-top: 2px solid #3CB57C;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
 
 /* CORREGIDO: position absolute para que flote sobre las tarjetas */
 .search-dropdown {
@@ -63,7 +43,8 @@
   min-width: 280px;
   background-color: #143F4C;
   border: 1px solid #3CB57C;
-  border-radius: 0.5rem;
+  border-radius: 12px;
+
   margin-top: 0.5rem;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
   z-index: 50;
@@ -94,9 +75,6 @@
   background-color: #1F4E5D;
 }
 
-.dropdown-icon {
-  font-size: 1.2rem;
-}
 
 .dropdown-text {
   display: flex;

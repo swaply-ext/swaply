@@ -10,6 +10,15 @@ import { HttpClient } from '@angular/common/http';
 import { RegisterDataService } from '../../services/register-data.service';
 import { GenderInputComponent } from '../../components/gender-input/gender-input.component';
 import { CommonModule } from '@angular/common';
+import { LocationSearchComponent } from '../../components/location-search/location-search.component';
+
+interface Location {
+  placeId: string;
+  lat: number;
+  lon: number;
+  displayName: string;
+}
+
 
 @Component({
   selector: 'app-personal-information',
@@ -20,8 +29,8 @@ import { CommonModule } from '@angular/common';
     BirthDateComponent,
     GenderInputComponent,
     PhoneInputComponent,
-    AddressInputComponent,
-    CommonModule
+    CommonModule,
+    LocationSearchComponent
   ],
   standalone: true,
   styleUrls: ['./personal-information.component.css'],
@@ -32,7 +41,7 @@ export class PersonalInformationComponent {
   surname = '';
   birthDate!: Date;
   gender = '';
-  location = '';
+  location: Location | null = null;
   phone = 0;
   postalCode = 0;
 
@@ -71,7 +80,7 @@ export class PersonalInformationComponent {
     if (!this.gender) return this.setError('Debes seleccionar un género');
     if (!this.phone || this.validatePhone(this.phone)) return this.setError('Debes introducir un número de teléfono válido');
     if (!this.postalCode || this.validatePostal(this.postalCode)) return this.setError('Debes introducir un código postal válido');
-    if (!this.location || this.validateLocation(this.location)) return this.setError('Debes introducir una dirección válida');
+
 
     const personalData = {
       name: this.name,
@@ -127,16 +136,7 @@ export class PersonalInformationComponent {
     else return false;
   }
 
-  private validateLocation(location: string): boolean {
-    const minLength = 3;
-    const maxLength = 50;
-    const requirements = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñçÇïÏ0-9\s,'ºª-]+$/;
-    
-    if (location.length < minLength) return true;
-    if (location.length > maxLength) return true;
-    if (!requirements.test(location)) return true;
-    else return false;
-  }
+
 
   private isToday(date: Date): boolean {
     const today = new Date();

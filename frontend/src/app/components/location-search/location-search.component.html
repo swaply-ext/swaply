@@ -2,23 +2,22 @@
 
   <input
     type="text"
-    placeholder="Buscar habilidad..."
+    [placeholder]="placeholder"
     [ngModel]="searchTerm"
     (ngModelChange)="onSearchTermChanged($event)"
     (focus)="onInputFocus()"
     (click)="onInputFocus()"
   />
 
-  <span class="material-symbols-outlined search-icon" *ngIf="!isLoading()">search</span>
+  <span class="" *ngIf="!isLoading()"></span>
 
-  <div class="spinner-mini" *ngIf="isLoading()"></div>
 
   <div class="search-dropdown" *ngIf="results().length > 0 && showDropdown()">
     <ul>
       <li *ngFor="let location of results()" (click)="onSelectlocation(location)">
         <!-- <span class="dropdown-icon">{{ location.icon }}</span> -->
         <div class="dropdown-text">
-          <span class="dropdown-name">{{ location.display_name }}</span>
+          <span class="dropdown-name">{{ location.displayName }}</span>
           <!-- <span class="dropdown-cat">{{ location.category }}</span> -->
         </div>
       </li>

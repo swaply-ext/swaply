@@ -4,7 +4,8 @@ import {
   inject,
   signal,
   ElementRef,
-  HostListener
+  HostListener,
+  Input
 } from '@angular/core';
 import { HttpClient, HttpClientModule, HttpContext, HttpParams } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -24,7 +25,7 @@ import { SKIP_LOADING } from '../../interceptors/loading.interceptor';
 
 export interface location {
   id: string;
-  display_name: string;
+  displayName: string;
   lat: string;
   lon: string;
 }
@@ -59,6 +60,9 @@ class LocationSearchService {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LocationSearchComponent {
+
+  @Input() placeholder: string = 'Buscar Ubicación...';
+
   private locationSearchService = inject(LocationSearchService);
   private el = inject(ElementRef);
 
@@ -124,7 +128,7 @@ export class LocationSearchComponent {
   // esto aun no funciona, es para cuando se seleccione una location de los resultados
   onSelectlocation(location: location): void {
     console.log('location seleccionada:', location);
-    this.searchTerm = location.display_name;
+    this.searchTerm = location.displayName;
     this.results.set([]);
     this.showDropdown.set(false);
   }

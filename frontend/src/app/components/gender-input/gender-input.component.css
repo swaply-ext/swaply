@@ -6,18 +6,36 @@
 }
 
 .input-container select {
-  padding-left: 10px;
-  padding-right: 35px;
-  height: 35px;
-  font-size: 14px;
-  width: 100%;
-  background-color: #bfbfbf;
+    background: rgba(255, 255, 255, 0.1);
+  border: 1px solid #00bcd4;
   border-radius: 8px;
+  padding: 10px 12px;
+  color: #fff;
+  font-size: 0.95rem;
   outline: none;
-  border: none;
-  appearance: none; 
+  transition: border-color 0.2s ease, background 0.2s ease;
+  width: 100%;
+  appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
+}
+
+.input-container option {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid #00bcd4;
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #fff;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+  width: 100%;
+}
+
+.input-container option {
+  background-color: rgba(0, 0, 0, 0.8); /* mejor usar background-color */
+  color: #fff;
+  font-size: 0.95rem;
 }
 
 
@@ -26,18 +44,18 @@
   position: absolute;
   right: 10px;
   font-size: 20px;
-  color: #555;
+  color: #fff;
   pointer-events: none;
 }
 
 .input-container.error select {
   border: 2px solid red;
-  background-color: #ffe6e6;
-  color: red; 
+  background-color: rgba(255, 255, 255, 0.1);
+  color: red;
 }
 
 .input-container.error select::placeholder {
-  color: #ff6666; 
+  color: #ff6666;
 }
 
 .error-message {
