@@ -3,100 +3,93 @@
 
   <div class="privacy-security-page">
     <div class="privacy-security-layout">
-      <!-- SIDEBAR -->
       <aside class="privacy-security-sidebar">
         <app-side-menu></app-side-menu>
       </aside>
 
-      <!-- MAIN CONTENT -->
       <main class="privacy-security-content">
         <div class="panel-row">
-          <!-- PASSWORD CHANGE -->
-        <section class="panel panel-security">
-          <h2>Cambiar Contraseña</h2>
+          <section class="panel panel-security">
+            <h2>Cambiar Contraseña</h2>
 
-          <!-- CURRENT PASSWORD -->
-          <div class="form-group">
-            <div class="password-wrapper">
-              <input
-                [type]="showCurrent ? 'text' : 'password'"
-                [(ngModel)]="currentPassword"
-                placeholder="Contraseña actual"
-              />
-              <span
-                class="material-icons toggle-icon"
-                (click)="toggleVisibility('current')"
+            <div class="form-group">
+              <div class="password-wrapper">
+                <input
+                  [type]="showCurrent ? 'text' : 'password'"
+                  [(ngModel)]="currentPassword"
+                  placeholder="Contraseña actual"
+                />
+                <span
+                  class="material-icons toggle-icon"
+                  (click)="toggleVisibility('current')"
+                >
+                  {{ showCurrent ? "visibility_off" : "visibility" }}
+                </span>
+              </div>
+              <div class="password-wrapper">
+                <input
+                  [type]="showNew ? 'text' : 'password'"
+                  [(ngModel)]="newPassword"
+                  (ngModelChange)="onNewPasswordChange($event)"
+                  placeholder="Nueva contraseña"
+                />
+                <span
+                  class="material-icons toggle-icon"
+                  (click)="toggleVisibility('new')"
+                >
+                  {{ showNew ? "visibility_off" : "visibility" }}
+                </span>
+              </div>
+
+              <div class="password-wrapper">
+                <input
+                  [type]="showConfirm ? 'text' : 'password'"
+                  [(ngModel)]="confirmPassword"
+                  placeholder="Confirmar nueva contraseña"
+                />
+                <span
+                  class="material-icons toggle-icon"
+                  (click)="toggleVisibility('confirm')"
+                >
+                  {{ showConfirm ? "visibility_off" : "visibility" }}
+                </span>
+              </div>
+
+              <button
+                class="send-button btn btn-primary"
+                type="button"
+                (click)="submitNewPassword()"
               >
-                {{ showCurrent ? "visibility_off" : "visibility" }}
-              </span>
-            </div>
-            <div class="password-wrapper">
-              <input
-                [type]="showNew ? 'text' : 'password'"
-                [(ngModel)]="newPassword"
-                (ngModelChange)="onNewPasswordChange($event)"
-                placeholder="Nueva contraseña"
-              />
-              <span
-                class="material-icons toggle-icon"
-                (click)="toggleVisibility('new')"
-              >
-                {{ showNew ? "visibility_off" : "visibility" }}
-              </span>
+                Guardar
+              </button>
             </div>
 
-            <div class="password-wrapper">
-              <input
-                [type]="showConfirm ? 'text' : 'password'"
-                [(ngModel)]="confirmPassword"
-                placeholder="Confirmar nueva contraseña"
-              />
-              <span
-                class="material-icons toggle-icon"
-                (click)="toggleVisibility('confirm')"
-              >
-                {{ showConfirm ? "visibility_off" : "visibility" }}
-              </span>
-            </div>
+            <p *ngIf="showError" class="error-message">{{ message }}</p>
 
-            <button
-              class="send-button btn btn-primary"
-              type="button"
-              (click)="submitNewPassword()"
-            >
-              Guardar
-            </button>
-          </div>
+            <p *ngIf="showSuccess" class="success-message">
+              {{ successMessage }}
+            </p>
 
-          <!-- ERROR MESSAGE -->
-        <p *ngIf="showError" class="error-message">{{ message }}</p>
+            <a routerLink="/recovery-password" class="forgot-password-link">
+              <strong>He olvidado la contraseña.</strong>
+            </a>
+          </section>
 
-          <!-- SUCCESS MESSAGE -->
-        <p *ngIf="showSuccess" class="success-message">{{ successMessage }}</p>
+          <section class="panel panel-2fa">
+            <h2>Autenticación de dos factores (2FA)</h2>
 
-          <a routerLink="/recovery-password" class="forgot-password-link">
-            <strong>He olvidado la contraseña.</strong>
-          </a>
-        </section>
+            <p class="panel-description">
+              Añade una capa extra de seguridad a tu cuenta. Al iniciar sesión,
+              se te pedirá un código de verificación además de tu contraseña.
+            </p>
 
-
-        <!-- TWO-FACTOR AUTH -->
-        <section class="panel panel-2fa">
-          <h2>Autenticación de dos factores (2FA)</h2>
-
-          <p class="panel-description">
-            Añade una capa extra de seguridad a tu cuenta. Al iniciar sesión, se
-            te pedirá un código de verificación además de tu contraseña.
-          </p>
-
-          <label class="toggle-switch">
-            <input type="checkbox" />
-            <span class="toggle-slider"></span>
-          </label>
-        </section>
+            <label class="toggle-switch">
+              <input type="checkbox" />
+              <span class="toggle-slider"></span>
+            </label>
+          </section>
         </div>
 
-        <!-- PRIVACY SETTINGS -->
         <section class="panel panel-privacy">
           <h2>Privacidad de Cuenta</h2>
 
@@ -113,13 +106,16 @@
           </div>
 
           <div class="delete-account-row">
-            <a class="delete-account-link"
-              >Eliminar mi cuenta permanentemente</a
+            <button
+              type="button"
+              class="delete-account-link"
+              (click)="onDeleteAccount()"
             >
+              Eliminar mi cuenta permanentemente
+            </button>
           </div>
-        </section>
+          </section>
 
-        <!-- GLOBAL SAVE BUTTON -->
         <div class="footer-actions">
           <button class="btn btn-primary btn-large">Guardar</button>
         </div>
