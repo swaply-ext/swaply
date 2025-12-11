@@ -10,6 +10,7 @@ import java.text.Normalizer;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class SearchService {
@@ -20,11 +21,57 @@ public class SearchService {
         this.userRepository = userRepository;
     }
 
-    private String normalizeString(String input) {
+    // --- MAPA DE EXPANSIÓN (SINÓNIMOS) ---
+    // Esto resuelve el problema de no saber si el ID es 'football' o 'futbol'.
+    // Buscaremos por TODAS las variantes.
+    private static final Map<String, List<String>> SYNONYMS = new HashMap<>();
+
+    static {
+        // Deportes
+        addSynonyms("football", "futbol", "fútbol", "soccer");
+        addSynonyms("basketball", "basquet", "básquet", "baloncesto", "basket");
+        addSynonyms("padel", "pádel", "paddle");
+        addSynonyms("volleyball", "voley", "vóley", "voleibol");
+        addSynonyms("boxing", "boxeo", "box");
+
+        // Música
+        addSynonyms("guitar", "guitarra");
+        addSynonyms("piano", "teclado");
+        addSynonyms("violin", "violín");
+        addSynonyms("drums", "bateria", "batería", "percusion");
+        addSynonyms("saxophone", "saxofon", "saxofón", "saxo");
+
+        // Ocio
+        addSynonyms("drawing", "dibujo", "pintura", "arte");
+        addSynonyms("cooking", "cocina", "gastronomia", "culinaria");
+        addSynonyms("dance", "baile", "danza", "dancing");
+        addSynonyms("crafts", "manualidades", "artesania", "bricolaje");
+        addSynonyms("digital", "ocio digital", "informatica", "gaming", "ordenador");
+    }
+
+    // Método helper para llenar el mapa bidireccionalmente
+    private static void addSynonyms(String... terms) {
+        List<String> list = Arrays.asList(terms);
+        for (String term : terms) {
+            SYNONYMS.put(normalizeKey(term), list);
+        }
+    }
+
+    private static String normalizeKey(String input) {
         if (input == null) return "";
         String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
         return pattern.matcher(normalized).replaceAll("").trim().toLowerCase();
+    }
+
+    // Dada una palabra (ej: "futbol"), devuelve ["futbol", "football", "soccer", "fútbol"]
+    private List<String> expandSearchTerm(String term) {
+        String key = normalizeKey(term);
+        List<String> variations = SYNONYMS.getOrDefault(key, new ArrayList<>());
+        if (variations.isEmpty()) {
+            return Collections.singletonList(key);
+        }
+        return variations;
     }
 
     public List<UserSwapDTO> searchUsersWithMatch(String query, String myUserId) {
@@ -32,84 +79,96 @@ public class SearchService {
             return new ArrayList<>();
         }
 
-        String cleanQuery = normalizeString(query);
-        List<User> candidates;
-
-        if (query.contains(",")) {
-            List<String> skillIds = Arrays.stream(query.split(","))
-                    .map(this::normalizeString)
-                    .collect(Collectors.toList());
-            candidates = userRepository.findUsersByMultipleSkillIds(skillIds);
-        } else {
-            candidates = userRepository.findUsersBySingleSkillId(cleanQuery);
+        // 1. PREPARAR TÉRMINOS DE BÚSQUEDA EXPANDIDOS
+        // Si buscas "futbol,guitarra", generamos una lista gigante con todos los sinónimos de ambos.
+        Set<String> expandedSearchIds = new HashSet<>();
+        String[] rawTerms = query.split(",");
+        
+        for (String term : rawTerms) {
+            List<String> expansions = expandSearchTerm(term);
+            // Normalizamos cada variante para asegurar coincidencia con BD
+            expansions.forEach(e -> expandedSearchIds.add(normalizeKey(e)));
         }
+
+        // 2. BUSQUEDA EN BASE DE DATOS
+        // Buscamos usuarios que tengan CUALQUIERA de los IDs expandidos
+        List<User> candidates = userRepository.findUsersByMultipleSkillIds(new ArrayList<>(expandedSearchIds));
 
         User me = userRepository.findUserById(myUserId).orElse(null);
         
-        Set<String> myOfferingIds = new HashSet<>();
+        // Mis habilidades para el Match
+        Set<String> myOfferingTokens = new HashSet<>();
         if (me != null && me.getSkills() != null) {
             for (UserSkills s : me.getSkills()) {
-                if (s.getId() != null) myOfferingIds.add(normalizeString(s.getId()));
-                if (s.getName() != null) myOfferingIds.add(normalizeString(s.getName()));
+                if (s.getId() != null) myOfferingTokens.add(normalizeKey(s.getId()));
+                if (s.getName() != null) myOfferingTokens.add(normalizeKey(s.getName()));
             }
         }
         
         String myLocation = (me != null && me.getLocation() != null) 
-                ? normalizeString(me.getLocation()) : "";
-
-        List<String> searchTerms = query.contains(",") 
-                ? Arrays.stream(query.split(",")).map(this::normalizeString).collect(Collectors.toList())
-                : List.of(cleanQuery);
+                ? normalizeKey(me.getLocation()) : "";
 
         List<UserSwapDTO> results = new ArrayList<>();
 
+        // 3. PROCESAMIENTO
         for (User candidate : candidates) {
             if (candidate.getId().equals(myUserId)) continue;
             if (candidate.getSkills() == null) continue;
 
+            // A. CHECK MATCH
             boolean isMatch = false;
-            if (candidate.getInterests() != null) {
+            if (candidate.getInterests() != null && !myOfferingTokens.isEmpty()) {
                 isMatch = candidate.getInterests().stream().anyMatch(interest -> {
-                    String iId = normalizeString(interest.getId());
-                    String iName = normalizeString(interest.getName());
+                    String iId = normalizeKey(interest.getId());
+                    String iName = normalizeKey(interest.getName());
                     
-                    for (String mySkill : myOfferingIds) {
-                        if (iId.equals(mySkill) || iName.equals(mySkill)) return true;
-                        if (mySkill.contains(iId) || iId.contains(mySkill)) return true;
-                        if (!iName.isEmpty() && (mySkill.contains(iName) || iName.contains(mySkill))) return true;
+                    for (String myToken : myOfferingTokens) {
+                        // Coincidencia directa o cruzada
+                        if (myToken.contains(iId) || iId.contains(myToken)) return true;
+                        if (!iName.isEmpty() && (myToken.contains(iName) || iName.contains(myToken))) return true;
+                        
+                        // Coincidencia por sinónimos (si yo ofrezco "guitarra" y el busca "guitar")
+                        List<String> myTokenSynonyms = expandSearchTerm(myToken);
+                        if (myTokenSynonyms.contains(iId)) return true;
                     }
                     return false;
                 });
             }
 
+            // B. CHECK UBICACIÓN
             boolean isClose = checkLocationMatch(candidate, myLocation);
             String distanceLabel = isClose ? "Cerca de ti" : "Lejos de ti";
-
             final boolean finalIsMatch = isMatch;
-            
+
+            // C. GENERAR RESULTADOS (SOLO LAS SKILLS BUSCADAS)
             candidate.getSkills().stream()
-                .filter(s -> {
-                    String sId = normalizeString(s.getId());
-                    String sName = normalizeString(s.getName());
-                    return searchTerms.stream().anyMatch(term -> sId.contains(term) || sName.contains(term));
+                .filter(skill -> {
+                    String sId = normalizeKey(skill.getId());
+                    String sName = normalizeKey(skill.getName());
+                    
+                    // ¿Coincide el ID o el Nombre con ALGUNO de los términos expandidos?
+                    // Esto soluciona que te falten resultados.
+                    boolean idMatch = expandedSearchIds.stream().anyMatch(ex -> sId.equals(ex) || sId.contains(ex));
+                    boolean nameMatch = expandedSearchIds.stream().anyMatch(ex -> sName.contains(ex));
+                    
+                    return idMatch || nameMatch;
                 })
                 .forEach(skill -> {
                     results.add(mapToUserSwapDTO(candidate, skill, finalIsMatch, distanceLabel));
                 });
         }
 
-
+        // 4. ORDENAMIENTO
         results.sort((o1, o2) -> {
-            if (o1.isSwapMatch() != o2.isSwapMatch()) {
-                return o1.isSwapMatch() ? -1 : 1;
-            }
+            // 1. Matches primero
+            if (o1.isSwapMatch() != o2.isSwapMatch()) return o1.isSwapMatch() ? -1 : 1;
+            
+            // 2. Ubicación
             boolean loc1 = "Cerca de ti".equals(o1.getDistance());
             boolean loc2 = "Cerca de ti".equals(o2.getDistance());
+            if (loc1 != loc2) return loc1 ? -1 : 1;
             
-            if (loc1 != loc2) {
-                return loc1 ? -1 : 1; 
-            }
-            
+            // 3. Rating
             return Double.compare(o2.getRating(), o1.getRating());
         });
 
@@ -117,11 +176,8 @@ public class SearchService {
     }
 
     private boolean checkLocationMatch(User candidate, String myLocation) {
-        if (myLocation.isEmpty()) return false;
-        if (candidate.getLocation() == null) return false;
-        
-        String candidateLoc = normalizeString(candidate.getLocation());
-        
+        if (myLocation.isEmpty() || candidate.getLocation() == null) return false;
+        String candidateLoc = normalizeKey(candidate.getLocation());
         return candidateLoc.contains(myLocation) || myLocation.contains(candidateLoc);
     }
 
@@ -132,23 +188,24 @@ public class SearchService {
         dto.setName(user.getName());
         dto.setUsername(user.getUsername());
         dto.setProfilePhotoUrl(user.getProfilePhotoUrl());
-        
         dto.setLocation(user.getLocation()); 
         dto.setRating(user.getRating() != null ? user.getRating() : 5.0); 
-        
         dto.setDistance(distanceLabel); 
         dto.setSwapMatch(isMatch);
 
-        String displayName = skill.getName() != null ? skill.getName() : skill.getId();
-        if (displayName.length() > 0) {
-            displayName = displayName.substring(0, 1).toUpperCase() + displayName.substring(1);
-        }
-        
+        String rawName = (skill.getName() != null && !skill.getName().isEmpty()) ? skill.getName() : skill.getId();
+        String displayName = capitalize(rawName);
+
         dto.setSkillName("Clase de " + displayName); 
         dto.setSkillIcon(skill.getIcon() != null ? skill.getIcon() : "🎓");
         dto.setSkillCategory(skill.getCategory());
         dto.setSkillLevel(skill.getLevel());
 
         return dto;
+    }
+
+    private String capitalize(String str) {
+        if (str == null || str.isEmpty()) return str;
+        return str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
     }
 }
