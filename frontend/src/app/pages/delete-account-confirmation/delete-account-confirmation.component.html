@@ -1,0 +1,15 @@
+<div class="delete-account-confirmation-container">
+  <div class="icon-circle warning-icon">
+    <span class="material-icons">warning</span>
+  </div>
+
+  <h2>¿Estás seguro?</h2>
+  <p>Estás a punto de eliminar tu cuenta permanentemente.</p>
+  <p>Esta acción no se puede deshacer y perderás todo tu progreso.</p>
+  
+  <div class="button-wrapper actions">
+    <button class="btn-cancel" (click)="cancel()">Cancelar</button>
+
+    <button class="btn-delete" (click)="confirmDelete()">Sí, eliminar cuenta</button>
+  </div>
+</div>
