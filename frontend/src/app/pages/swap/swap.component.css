@@ -177,23 +177,6 @@
   object-fit: cover;
 }
 
-.btn-create {
-  padding: 0.875rem 2.25rem;
-  border: none;
-  border-radius: 1.5rem;
-  background: var(--principal-color-2);
-  color: #002631;
-  font-weight: 700;
-  font-size: 1.125rem;
-  cursor: pointer;
-  transition: 0.2s ease;
-  margin-top: 2rem;
-}
-
-.btn-create:hover {
-  background: var(--principal-color-2);
-}
-
 .swap-card .info .user-avatar {
   width: 1.875rem;
   height: 1.875rem;
@@ -214,20 +197,51 @@
   gap: 2rem;
   width: 100%;
   max-width: 90%;
-  margin: 2rem 10rem 0 10rem;
+  margin: 2rem auto 0 auto;
   flex-wrap: wrap;
 }
 
 .panel-actions .panel {
   flex: 1;
   min-width: 18.75rem;
-  max-width: 45%;
+  max-width: 100%;
 }
 
 .btn-container {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   width: 100%;
   max-width: 90%;
-  margin: 10rem;
+  margin: 4rem auto;
+}
+
+.btn-create, 
+.btn-cancel {
+  padding: 0.875rem 2.25rem;
+  border: none;
+  border-radius: 1.5rem;
+  font-weight: 700;
+  font-size: 1.125rem;
+  cursor: pointer;
+  transition: 0.2s ease;
+  min-width: 150px;
+}
+
+.btn-create {
+  background: var(--principal-color-2);
+  color: #002631;
+}
+
+.btn-create:hover {
+  opacity: 0.9;
+}
+
+.btn-cancel {
+  background: #ef4444;
+  color: white;
+}
+
+.btn-cancel:hover {
+  background: #dc2626;
 }

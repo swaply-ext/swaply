@@ -1,5 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AppNavbarComponent } from '../../components/app-navbar/app-navbar.component';
 import { AccountService } from '../../services/account.service';
@@ -41,12 +41,12 @@ export class SwapComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private accountService: AccountService,
     private searchService: SearchService
   ) {}
 
   ngOnInit(): void {
-
     const targetUserId = this.route.snapshot.paramMap.get('targetId');
     const skillName = this.route.snapshot.queryParamMap.get('skillName');
 
@@ -64,7 +64,6 @@ export class SwapComponent implements OnInit {
       this.searchService.getUserById(targetUserId).subscribe({
         next: (user) => {
           this.targetUser.set(user);
-
           const selectedSkill = skillName || user.skillName;
 
           this.selectedTargetSkill.set({
@@ -89,6 +88,10 @@ export class SwapComponent implements OnInit {
 
   chooseTeachSkill(skill: any) {
     this.selectedTeachSkill.set(skill);
+  }
+
+  cancelSwap() {
+    this.router.navigate(['/home']);
   }
 
   createSwap() {
@@ -123,9 +126,7 @@ export class SwapComponent implements OnInit {
 
   private assignImageToSkill(category: string, skillName: string): string | undefined {
     if (!skillName) return undefined;
-
     const name = skillName.toLowerCase();
-
     const map: any = {
       'futbol': ['sports','football.jpg'],
       'fútbol': ['sports','football.jpg'],
@@ -159,7 +160,6 @@ export class SwapComponent implements OnInit {
         return `assets/photos_skills/${folder}/${file}`;
       }
     }
-
     return undefined;
   }
 }
