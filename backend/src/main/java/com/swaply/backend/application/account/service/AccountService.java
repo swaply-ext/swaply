@@ -3,6 +3,7 @@ package com.swaply.backend.application.account.service;
 import com.swaply.backend.application.account.dto.EditProfileDTO;
 import com.swaply.backend.application.account.dto.PersonalInfoDTO;
 import com.swaply.backend.application.account.dto.ProfileDataDTO;
+import com.swaply.backend.application.account.dto.PublicProfileDTO;
 import com.swaply.backend.application.account.dto.SkillsDTO;
 import com.swaply.backend.application.auth.exception.UserAlreadyExistsException;
 import com.swaply.backend.shared.UserCRUD.UserService;
@@ -73,5 +74,10 @@ public class AccountService /* implements UserRepository */ {
         UserDTO user = userService.getUserByID(userId);
         ProfileDataDTO account = mapper.porfileFromUserDTO(user);
         return account;
+    }
+
+    public PublicProfileDTO getPublicProfileByUsername(String username) {
+        UserDTO userDTO = userService.getUserByUsername(username);
+        return mapper.mapUserToPublicProfile(userDTO);
     }
 }

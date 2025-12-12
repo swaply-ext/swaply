@@ -489,6 +489,20 @@ img {
   font-size: 18px;
 }
 
+.clickable-user {
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.clickable-user:hover {
+  opacity: 0.8;
+}
+
+.clickable-user:hover .user-name-hover {
+  text-decoration: underline;
+  color: #3CB57C; /* Color verd corporatiu */
+}
+
 /* --- Responsive --- */
 @media (max-width: 1024px) {
   .card-grid {

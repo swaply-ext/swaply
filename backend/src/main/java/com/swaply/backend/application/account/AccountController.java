@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.swaply.backend.application.account.dto.EditProfileDTO;
 import com.swaply.backend.application.account.dto.PersonalInfoDTO;
 import com.swaply.backend.application.account.dto.ProfileDataDTO;
+import com.swaply.backend.application.account.dto.PublicProfileDTO;
 import com.swaply.backend.application.account.dto.SkillsDTO;
 import com.swaply.backend.application.account.service.AccountService;
 import com.swaply.backend.config.security.SecurityUser;
@@ -95,5 +96,11 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                                  .body("Error al subir imagen: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/public/{username}")
+    public ResponseEntity<PublicProfileDTO> getPublicProfile(@PathVariable String username) {
+        PublicProfileDTO profile = service.getPublicProfileByUsername(username);
+        return ResponseEntity.ok(profile);
     }
 }

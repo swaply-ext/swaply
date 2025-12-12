@@ -84,10 +84,10 @@
              {{ card.skillIcon || '🎓' }}
           </div>
           
-          <div class="card-content">
+          <div class="card-content clickable-user">
             <div class="card-user-info">
-              <img [src]="card.userAvatar" class="user-avatar"> 
-              <span>{{ card.userName }}</span>
+              <img [src]="card.userAvatar" [alt]="card.userName" class="user-avatar" [routerLink]="['/public-profile', card.username]">
+              <span [routerLink]="['/public-profile', card.username]">{{ card.userName }}</span>
             </div>
   
           <h3>{{ card.skillTitle }}</h3>

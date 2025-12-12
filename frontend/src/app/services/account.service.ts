@@ -37,4 +37,9 @@ export class AccountService {
       { responseType: 'text' } 
     );
   }
+
+  //obtenir el perfil públic d'ALGÚ ALTRE
+  getPublicProfile(targetUsername: string): Observable<any> { 
+    return this.http.get(`${this.apiUrl}/public/${targetUsername}`);
+  }
 }

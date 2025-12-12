@@ -1,13 +1,15 @@
-// ... imports iguales ...
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.component";
 import { SkillSearchComponent } from '../../components/skill-search/skill-search.component'; 
 import { FilterSkillsComponent } from '../../components/filter-skills/filter-skills.component';
 import { SearchService, UserSwapDTO } from '../../services/search.services';
+import { RouterLink } from '@angular/router';
+import { AccountService } from '../../services/account.service';
 
 export interface CardModel {
   userId?: string;
+  username?: string; //per la ruta /public-profile/:username
   userName: string;
   userAvatar: string;
   skillTitle: string;
@@ -21,12 +23,16 @@ export interface CardModel {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, AppNavbarComponent, SkillSearchComponent, FilterSkillsComponent],
+  imports: [CommonModule,AppNavbarComponent, SkillSearchComponent, FilterSkillsComponent, RouterLink],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent implements OnInit {
+
+  constructor(private accountService: AccountService) { }
+
+  
   private searchService = inject(SearchService);
 
   private allCards: CardModel[] = []; 
@@ -87,6 +93,7 @@ export class HomeComponent implements OnInit {
   private processResults(matches: UserSwapDTO[]) {
     this.allCards = matches.map(m => ({
       userId: m.userId,
+      username: (m as any).username || m.userId,
       userName: m.name,
       userAvatar: m.profilePhotoUrl || 'assets/default-image.jpg',
       skillTitle: m.skillName, 
