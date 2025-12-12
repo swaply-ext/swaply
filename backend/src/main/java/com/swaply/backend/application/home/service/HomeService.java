@@ -6,13 +6,13 @@ import com.swaply.backend.shared.UserCRUD.Model.UserSkills;
 import com.swaply.backend.shared.UserCRUD.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.text.Normalizer;
+import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
 public class HomeService {
-
 
     private final UserRepository userRepository;
 
@@ -20,40 +20,77 @@ public class HomeService {
         this.userRepository = userRepository;
     }
 
-    public List<UserSwapDTO> getRecommendedMatches(String currentUserId) {
-        
-        User currentUser = userRepository.findUserById(currentUserId).orElse(null);
-        
-        if (currentUser == null) return List.of();
+    private String normalizeString(String input) {
+        if (input == null) return "";
+        String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        return pattern.matcher(normalized).replaceAll("").toLowerCase().trim();
+    }
 
-        if (currentUser.getInterests() == null || currentUser.getInterests().isEmpty()) {
+    public List<UserSwapDTO> getRecommendedMatches(String currentUserId) {
+        User me = userRepository.findUserById(currentUserId).orElse(null);
+        if (me == null || me.getInterests() == null || me.getInterests().isEmpty()) {
             return List.of(); 
         }
 
-        List<String> interestIds = currentUser.getInterests().stream()
-                .map(UserSkills::getId)
+        List<String> myInterestIds = me.getInterests().stream()
+                .map(s -> normalizeString(s.getId()))
                 .collect(Collectors.toList());
+        
+        Set<String> myOfferingIds = (me.getSkills() != null)
+                ? me.getSkills().stream().map(s -> normalizeString(s.getId())).collect(Collectors.toSet())
+                : Collections.emptySet();
 
-        // Buscamos usuarios que ofrezcan esos intereses
-        List<User> matchedUsers = userRepository.findUsersByMultipleSkillIds(interestIds);
+        String myLocation = (me.getLocation() != null) ? normalizeString(me.getLocation()) : "";
 
+        List<User> candidates = userRepository.findUsersByMultipleSkillIds(myInterestIds);
         List<UserSwapDTO> recommendations = new ArrayList<>();
 
-        for (User otherUser : matchedUsers) {
+        for (User otherUser : candidates) {
             if (otherUser.getId().equals(currentUserId)) continue;
             if (otherUser.getSkills() == null) continue;
 
+            // MATCH (Normalizado)
+            boolean isReciprocalMatch = false;
+            if (otherUser.getInterests() != null) {
+                isReciprocalMatch = otherUser.getInterests().stream()
+                        .map(i -> normalizeString(i.getId()))
+                        .anyMatch(myOfferingIds::contains);
+            }
+
+            // FILTRO ESTRICTO: SOLO MATCHES
+            if (!isReciprocalMatch) continue;
+
+            // UBICACIÓN (Normalizada)
+            boolean isClose = checkLocationMatch(otherUser, myLocation);
+            String distanceLabel = isClose ? "Cerca de ti" : "Lejos de ti";
+
             for (UserSkills skill : otherUser.getSkills()) {
-                if (interestIds.contains(skill.getId())) {
-                    recommendations.add(mapToCard(otherUser, skill));
+                String skillIdNorm = normalizeString(skill.getId());
+                if (myInterestIds.contains(skillIdNorm)) {
+                    recommendations.add(mapToCard(otherUser, skill, true, distanceLabel));
                 }
             }
         }
 
+        // ORDENACIÓN: Cerca de ti PRIMERO
+        recommendations.sort((dto1, dto2) -> {
+            boolean c1 = "Cerca de ti".equals(dto1.getDistance());
+            boolean c2 = "Cerca de ti".equals(dto2.getDistance());
+            return Boolean.compare(c2, c1); // Descendente (true > false)
+        });
+
         return recommendations;
     }
 
-    private UserSwapDTO mapToCard(User user, UserSkills skill) {
+    private boolean checkLocationMatch(User candidate, String myLocation) {
+        if (myLocation.isEmpty()) return false;
+        if (candidate.getLocation() == null) return false;
+        String candidateLoc = normalizeString(candidate.getLocation());
+        return candidateLoc.contains(myLocation) || myLocation.contains(candidateLoc);
+    }
+
+    private UserSwapDTO mapToCard(User user, UserSkills skill, boolean isMatch, String distanceLabel) {
         UserSwapDTO dto = new UserSwapDTO();
         dto.setUserId(user.getId());
         dto.setName(user.getName());
@@ -65,9 +102,9 @@ public class HomeService {
         dto.setSkillLevel(skill.getLevel());
         dto.setSkillIcon(skill.getIcon() != null ? skill.getIcon() : "🎓");
         
-        dto.setDistance("Recomendado");
+        dto.setDistance(distanceLabel); 
         dto.setRating(5.0);
-        dto.setSwapMatch(true); 
+        dto.setSwapMatch(isMatch); 
         
         return dto;
     }

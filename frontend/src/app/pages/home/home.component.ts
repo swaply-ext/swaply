@@ -1,18 +1,21 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.component";
 import { SkillSearchComponent } from '../../components/skill-search/skill-search.component'; 
 import { FilterSkillsComponent } from '../../components/filter-skills/filter-skills.component';
 import { SearchService, UserSwapDTO } from '../../services/search.services';
+import { RouterLink } from '@angular/router';
+import { AccountService } from '../../services/account.service';
 
 export interface CardModel {
   userId?: string;
-  userName: string;          
-  userAvatar: string;        
-  skillTitle: string;        
-  skillImage?: string;       
-  skillIcon?: string;        
+  username?: string; //per la ruta /public-profile/:username
+  userName: string;
+  userAvatar: string;
+  skillTitle: string;
+  skillImage?: string;
+  skillIcon?: string;
   distance: string;
   rating: number;
   isMatch: boolean;
@@ -21,22 +24,28 @@ export interface CardModel {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, AppNavbarComponent, SkillSearchComponent, FilterSkillsComponent],
+  imports: [CommonModule,AppNavbarComponent, SkillSearchComponent, FilterSkillsComponent, RouterLink],
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css'],
+  styleUrl: './home.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent implements OnInit {
+
+  constructor(private accountService: AccountService) { }
+
+  
   private searchService = inject(SearchService);
   private router = inject(Router);
 
   private allCards: CardModel[] = []; 
   cards = signal<CardModel[]>([]);
-
+  
   isLoadingMatches = signal(false);
-  hasSearched = signal(false); 
+  
+  // Esta bandera controla si mostramos las etiquetas de estado o no
+  hasSearched = signal(false);
+  
   itemsToShow = signal(6);
-
   canLoadMore = computed(() => this.cards().length < this.allCards.length);
 
   ngOnInit() {
@@ -44,11 +53,14 @@ export class HomeComponent implements OnInit {
   }
 
   loadInitialRecommendations() {
-    this.isLoadingMatches.set(true); 
+    this.isLoadingMatches.set(true);
+    // Resetear hasSearched a false para que el HTML sepa que son recomendaciones 
+    this.hasSearched.set(false); 
+    
     this.searchService.getRecommendations().subscribe({
       next: (matches) => this.processResults(matches),
       error: (err) => {
-        console.error("Error cargando recomendaciones:", err);
+        console.error("Error:", err);
         this.isLoadingMatches.set(false);
       }
     });
@@ -56,34 +68,35 @@ export class HomeComponent implements OnInit {
 
   performMatchSearch(skillQuery: string) {
     if (!skillQuery || skillQuery.trim() === '') {
-      this.hasSearched.set(false); 
-      this.loadInitialRecommendations();
-      return;
+        this.loadInitialRecommendations();
+        return;
     }
 
     this.isLoadingMatches.set(true);
+    // Marcamos true para que el HTML active las etiquetas de estado
     this.hasSearched.set(true);
 
     this.searchService.getMatches(skillQuery).subscribe({
       next: (matches) => this.processResults(matches),
       error: (err) => {
-        console.error("Error en búsqueda:", err);
+        console.error("Error:", err);
         this.allCards = [];
         this.updateView();
         this.isLoadingMatches.set(false);
       }
     });
   }
-
+  
   private processResults(matches: UserSwapDTO[]) {
     this.allCards = matches.map(m => ({
       userId: m.userId,
+      username: (m as any).username || m.userId,
       userName: m.name,
       userAvatar: m.profilePhotoUrl || 'assets/default-image.jpg',
-      skillTitle: m.skillName,      
-      skillIcon: m.skillIcon,
-      skillImage: this.assignImageToSkill(m.skillCategory, m.skillName),
-      distance: m.distance || 'Cerca',
+      skillTitle: m.skillName, 
+      skillIcon: m.skillIcon,   
+      skillImage: this.assignImageToSkill(m.skillCategory, m.skillName), 
+      distance: m.distance,
       rating: m.rating || 0,
       isMatch: m.isSwapMatch
     }));
@@ -102,45 +115,36 @@ export class HomeComponent implements OnInit {
     this.updateView(); 
   }
 
+  // ... (assignImageToSkill y lógica de toggles igual que antes) ...
   private assignImageToSkill(category: string, skillName: string): string | undefined {
-    if (!skillName) return undefined;
-
-    const name = skillName.toLowerCase();
-
-    // Mapa de palabras clave a imágenes y carpetas
-    const skillMap: { [key: string]: { folder: string, filename: string } } = {
-      // Deportes
-      'fútbol': { folder: 'sports', filename: 'football.jpg' },
-      'futbol': { folder: 'sports', filename: 'football.jpg' },
-      'pádel': { folder: 'sports', filename: 'padel.jpg' },
-      'padel': { folder: 'sports', filename: 'padel.jpg' },
-      'basquet': { folder: 'sports', filename: 'basketball.jpg' },
-      'baloncesto': { folder: 'sports', filename: 'basketball.jpg' },
-      'basket': { folder: 'sports', filename: 'basketball.jpg' },
-      'vóley': { folder: 'sports', filename: 'voleyball.jpg' },
-      'voley': { folder: 'sports', filename: 'voleyball.jpg' },
-      'boxeo': { folder: 'sports', filename: 'boxing.jpg' },
-
-      // Música
-      'guitarra': { folder: 'music', filename: 'guitar.jpg' },
-      'piano': { folder: 'music', filename: 'piano.jpg' },
-      'violín': { folder: 'music', filename: 'violin.jpg' },
-      'violin': { folder: 'music', filename: 'violin.jpg' },
-      'batería': { folder: 'music', filename: 'drums.jpg' },
-      'bateria': { folder: 'music', filename: 'drums.jpg' },
-      'saxofón': { folder: 'music', filename: 'saxophone.jpg' },
-      'saxofon': { folder: 'music', filename: 'saxophone.jpg' },
-
-      // Ocio / Otros
-      'dibujo': { folder: 'leisure', filename: 'draw.jpg' },
-      'cocina': { folder: 'leisure', filename: 'cook.jpg' },
-      'baile': { folder: 'leisure', filename: 'dance.jpg' },
-      'dance': { folder: 'leisure', filename: 'dance.jpg' },
-      'manualidades': { folder: 'leisure', filename: 'crafts.jpg' },
-      'digital': { folder: 'leisure', filename: 'digital_entertainment.jpg' }
-    };
-
-    // Buscar coincidencia exacta de palabras clave
+      // (Copia aquí el contenido de la función assignImageToSkill que ya tenías)
+      const name = skillName ? skillName.toLowerCase() : '';
+      let folder = 'leisure';
+      if (category) {
+          const cat = category.toLowerCase();
+          if (cat.includes('deporte') || cat.includes('sports')) folder = 'sports';
+          else if (cat.includes('música') || cat.includes('musica')) folder = 'music';
+      }
+      let filename = '';
+      if (name.includes('fútbol') || name.includes('futbol') || name.includes('football')) { filename = 'football.jpg'; folder = 'sports'; }
+      else if (name.includes('pádel') || name.includes('padel')) { filename = 'padel.jpg'; folder = 'sports'; }
+      else if (name.includes('básquet') || name.includes('basquet') || name.includes('baloncesto') || name.includes('basket')) { filename = 'basketball.jpg'; folder = 'sports'; }
+      else if (name.includes('vóley') || name.includes('voley') || name.includes('volley') || name.includes('voleibol')) { filename = 'voleyball.jpg'; folder = 'sports'; }
+      else if (name.includes('boxeo') || name.includes('boxing')) { filename = 'boxing.jpg'; folder = 'sports'; }
+      else if (name.includes('guitarra') || name.includes('guitar')) { filename = 'guitar.jpg'; folder = 'music'; }
+      else if (name.includes('piano')) { filename = 'piano.jpg'; folder = 'music'; }
+      else if (name.includes('violín') || name.includes('violin')) { filename = 'violin.jpg'; folder = 'music'; }
+      else if (name.includes('batería') || name.includes('bateria') || name.includes('drum')) { filename = 'drums.jpg'; folder = 'music'; }
+      else if (name.includes('saxofón') || name.includes('saxofon') || name.includes('sax')) { filename = 'saxophone.jpg'; folder = 'music'; }
+      else if (name.includes('dibujo')) { filename = 'draw.jpg'; folder = 'leisure'; }
+      else if (name.includes('cocina')) { filename = 'cook.jpg'; folder = 'leisure'; }
+      else if (name.includes('baile') || name.includes('dance')) { filename = 'dance.jpg'; folder = 'leisure'; }
+      else if (name.includes('manualidades') || name.includes('craft')) { filename = 'crafts.jpg'; folder = 'leisure'; }
+      else if (name.includes('digital')) { filename = 'digital_entertainment.jpg'; folder = 'leisure'; }
+      return filename ? `assets/photos_skills/${folder}/${filename}` : undefined;
+  }
+  
+  // Buscar coincidencia exacta de palabras clave
     for (const key in skillMap) {
       if (name.includes(key)) {
         const skill = skillMap[key];
@@ -166,9 +170,11 @@ export class HomeComponent implements OnInit {
       queryParams: { skillName: card.skillTitle } 
     });
   }
-
+  
   hasIntercambio = signal(true);
   isConfirmed = signal(false);
+  skillToLearn = signal({ titulo: 'Clase de Guitarra Acústica', img: 'assets/photos_skills/music/guitar.jpg', hora: 'Hoy, 18:00h', via: 'Vía Napoli 5' });
+  skillToTeach = signal({ titulo: 'Taller de Manualidades', img: 'assets/photos_skills/leisure/crafts.jpg', hora: 'Hoy, 18:00h', via: 'Vía Napoli 5' });
 
   skillToLearn = signal({
     titulo: 'Clase de Guitarra Acústica',
