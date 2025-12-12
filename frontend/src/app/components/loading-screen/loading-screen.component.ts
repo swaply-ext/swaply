@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-loading-screen',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './loading-screen.component.html',
-  styleUrl: './loading-screen.component.css'
+  styleUrls: ['./loading-screen.component.css']
 })
-export class LoadingScreenComponent {
-
-}
+export class LoadingScreenComponent {}

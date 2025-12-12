@@ -19,20 +19,19 @@
   word-wrap: normal;
   white-space: nowrap;
   direction: ltr;
-  font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24 !important;
 }
 
-::ng-deep input, 
-::ng-deep button, 
-::ng-deep select, 
-::ng-deep textarea, 
+::ng-deep input,
+::ng-deep button,
+::ng-deep select,
+::ng-deep textarea,
 ::ng-deep ::placeholder {
   font-family: 'Inter', sans-serif !important;
 }
 
 :host {
   display: block;
-  background: linear-gradient(to bottom, #012534 0%, #00839E 100%);
+  background: var(--background-gradient);
   min-height: 100vh;
 }
 
@@ -417,7 +416,7 @@ img {
   font-weight: 600;
   color: #ffffff;
   /* Margen solo abajo, 0 a la izquierda */
-  margin: 0 0 0.5rem 0; 
+  margin: 0 0 0.5rem 0;
   /* Padding 0 absoluto */
   padding: 0;
   white-space: nowrap;
@@ -551,7 +550,7 @@ img {
   :host {
     display: inline-block;
   }
-  
+
   .filter-box {
     display: flex;
     align-items: center;

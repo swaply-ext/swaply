@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.component";
 import { SkillSearchComponent } from '../../components/skill-search/skill-search.component'; 
 import { FilterSkillsComponent } from '../../components/filter-skills/filter-skills.component';
@@ -34,6 +35,7 @@ export class HomeComponent implements OnInit {
 
   
   private searchService = inject(SearchService);
+  private router = inject(Router);
 
   private allCards: CardModel[] = []; 
   cards = signal<CardModel[]>([]);
@@ -56,9 +58,7 @@ export class HomeComponent implements OnInit {
     this.hasSearched.set(false); 
     
     this.searchService.getRecommendations().subscribe({
-      next: (matches) => {
-        this.processResults(matches);
-      },
+      next: (matches) => this.processResults(matches),
       error: (err) => {
         console.error("Error:", err);
         this.isLoadingMatches.set(false);
@@ -72,15 +72,12 @@ export class HomeComponent implements OnInit {
         return;
     }
 
-    console.log("Buscando:", skillQuery);
     this.isLoadingMatches.set(true);
     // Marcamos true para que el HTML active las etiquetas de estado
     this.hasSearched.set(true);
 
     this.searchService.getMatches(skillQuery).subscribe({
-      next: (matches) => {
-        this.processResults(matches);
-      },
+      next: (matches) => this.processResults(matches),
       error: (err) => {
         console.error("Error:", err);
         this.allCards = [];
@@ -147,11 +144,58 @@ export class HomeComponent implements OnInit {
       return filename ? `assets/photos_skills/${folder}/${filename}` : undefined;
   }
   
+  // Buscar coincidencia exacta de palabras clave
+    for (const key in skillMap) {
+      if (name.includes(key)) {
+        const skill = skillMap[key];
+        return `assets/photos_skills/${skill.folder}/${skill.filename}`;
+      }
+    }
+
+    // Si no hay coincidencia, asigna carpeta según categoría
+    let folder = 'leisure';
+    if (category) {
+      const cat = category.toLowerCase();
+      if (cat.includes('deporte') || cat.includes('sports')) folder = 'sports';
+      if (cat.includes('música') || cat.includes('musica')) folder = 'music';
+    }
+
+    return undefined;
+  }
+
+  goToSwap(card: CardModel) {
+    if (!card.userId) return;
+
+    this.router.navigate(['/swap', card.userId], { 
+      queryParams: { skillName: card.skillTitle } 
+    });
+  }
+  
   hasIntercambio = signal(true);
   isConfirmed = signal(false);
   skillToLearn = signal({ titulo: 'Clase de Guitarra Acústica', img: 'assets/photos_skills/music/guitar.jpg', hora: 'Hoy, 18:00h', via: 'Vía Napoli 5' });
   skillToTeach = signal({ titulo: 'Taller de Manualidades', img: 'assets/photos_skills/leisure/crafts.jpg', hora: 'Hoy, 18:00h', via: 'Vía Napoli 5' });
 
-  toggleIntercambio() { this.hasIntercambio.update(v => !v); this.isConfirmed.set(false); }
-  toggleConfirmation() { this.isConfirmed.update(v => !v); }
+  skillToLearn = signal({
+    titulo: 'Clase de Guitarra Acústica',
+    img: 'assets/photos_skills/music/guitar.jpg',
+    hora: 'Hoy, 18:00h',
+    via: 'Vía Napoli 5'
+  });
+
+  skillToTeach = signal({
+    titulo: 'Taller de Manualidades',
+    img: 'assets/photos_skills/leisure/crafts.jpg',
+    hora: 'Hoy, 18:00h',
+    via: 'Vía Napoli 5'
+  });
+
+  toggleIntercambio() {
+    this.hasIntercambio.update(v => !v);
+    this.isConfirmed.set(false);
+  }
+
+  toggleConfirmation() {
+    this.isConfirmed.update(v => !v);
+  }
 }

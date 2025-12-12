@@ -29,4 +29,20 @@ public class SearchController {
         
         return ResponseEntity.ok(results);
     }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<UserSwapDTO> getUserById(
+            @PathVariable String userId,
+            @AuthenticationPrincipal SecurityUser user) {
+
+    // Llamamos al servicio para traer el usuario por ID
+    UserSwapDTO target = searchService.getUserById(userId);
+
+        if (target != null) {
+            return ResponseEntity.ok(target);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

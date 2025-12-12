@@ -72,12 +72,16 @@ public class AccountService /* implements UserRepository */ {
 
     public ProfileDataDTO getAccount(String userId){
         UserDTO user = userService.getUserByID(userId);
-        ProfileDataDTO account = mapper.porfileFromUserDTO(user);
+        ProfileDataDTO account = mapper.profileFromUserDTO(user);
         return account;
     }
 
     public PublicProfileDTO getPublicProfileByUsername(String username) {
         UserDTO userDTO = userService.getUserByUsername(username);
         return mapper.mapUserToPublicProfile(userDTO);
+    }
+  
+    public void deleteUser(String userId) {
+        userService.deleteUserById(userId);
     }
 }

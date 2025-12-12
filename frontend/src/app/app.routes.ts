@@ -29,8 +29,13 @@ import { AuthGuard } from './services/auth-guard.service';
 import { LinkSentConfirmationComponent } from './pages/link-sent-confirmation/link-sent-confirmation.component';
 import { CodeSentConfirmationComponent } from './pages/code-sent-confirmation/code-sent-confirmation.component';
 import { FilterSkillsComponent } from './components/filter-skills/filter-skills.component';
+import { PrivacyAndSecurityComponent } from './pages/privacy-and-security/privacy-and-security.component';
 import { EmailSentComponent } from './pages/email-sent/email-sent.component';
 import { IndexComponent } from './pages/index/index.component';
+import { SwapComponent } from './pages/swap/swap.component';
+import { SwapSkillsComponent } from './components/swap-skills/swap-skills.component';
+import { SwapInterestsComponent } from './components/swap-interests/swap-interests.component';
+import { DeleteAccountConfirmationComponent } from './pages/delete-account-confirmation/delete-account-confirmation.component';
 
 
 // Creamos una ruta para la verificación de correo
@@ -65,7 +70,12 @@ export const appRoutes: Routes = [
   { path: 'myprofile', component: PrivateProfileComponent, canActivate: [AuthGuard] },
   { path: 'search-skills', component: SkillSearchComponent }, //barra de busqueda componente
   { path: 'filter-skills', component: FilterSkillsComponent },
+  { path: 'swap-skills', component: SwapSkillsComponent },
+  { path: 'swap-interests', component: SwapInterestsComponent },
+  { path: 'delete-account-confirmation', component: DeleteAccountConfirmationComponent },
   { path: '404', component: Error404Component },
+  { path: 'privacy-and-security', component: PrivacyAndSecurityComponent, canActivate: [AuthGuard] },
+  { path: 'swap/:targetId', component: SwapComponent, canActivate: [AuthGuard] },
   { path: 'index', component: IndexComponent },
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
   

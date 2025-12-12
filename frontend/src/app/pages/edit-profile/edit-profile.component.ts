@@ -119,10 +119,20 @@ export class EditProfileComponent implements OnInit {
   onPhotoSelected(event: any): void {
     const file = event.target.files[0];
     
+    // Resetear error previo
+    delete this.errorMessages['profilePhoto'];
+
     if (file) {
+      // validación del formato
+      const validExtensions = ['jpeg', 'jpg', 'png', 'webp', 'heic', 'heif'];
+      const fileExtension = file.name.split('.').pop().toLowerCase();
+      if (!fileExtension || !validExtensions.includes(fileExtension)) {
+        this.errorMessages['profilePhoto'] = 'Solo se permiten imágenes JPG, PNG, WEBP, HEIC o HEIF.';
+        return;
+      }
       // Validación de tamaño (2MB)
       if (file.size > 2 * 1024 * 1024) {
-        alert('La imagen es demasiado grande. Máximo 2MB.');
+        this.errorMessages['profilePhoto'] = 'La imagen es demasiado grande. Máximo 2MB.';
         return;
       }
 
