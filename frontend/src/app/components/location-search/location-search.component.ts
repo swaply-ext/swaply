@@ -26,10 +26,10 @@ import { SKIP_LOADING } from '../../interceptors/loading.interceptor';
 
 
 export interface location {
-  id: string;
+  placeId: string;
   displayName: string;
-  lat: string;
-  lon: string;
+  lat: number;
+  lon: number;
 }
 
 @Injectable({
@@ -65,8 +65,7 @@ export class LocationSearchComponent {
 
   @Input() placeholder: string = 'Buscar Ubicación...';
 
-  @Output() locationSelected = new EventEmitter<location | null>();
-
+  @Output() locationSelected = new EventEmitter<location | null>(); // <-- Este es el Output clave
   private locationSearchService = inject(LocationSearchService);
   private el = inject(ElementRef);
 
@@ -130,11 +129,10 @@ export class LocationSearchComponent {
   }
 
   onSelectlocation(location: location): void {
-  console.log('location seleccionada:', location);
-  this.searchTerm = location.displayName;
-  this.results.set([]);
-  this.showDropdown.set(false);
-  
-  this.locationSelected.emit(location); 
-}
+    console.log('location seleccionada:', location);
+    this.searchTerm = location.displayName;
+    this.results.set([]);
+    this.showDropdown.set(false);
+    this.locationSelected.emit(location);
+  }
 }
