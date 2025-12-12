@@ -1,9 +1,11 @@
 package com.swaply.backend.application.swap.service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import org.springframework.stereotype.Service;
 
 import com.swaply.backend.application.swap.SwapMapper;
@@ -80,4 +82,9 @@ public class SwapService {
     }
 
 
+    public List<Swap> getAllSwaps(String id) {
+        UserDTO userSwap = userService.getUserByID(id);
+        List<Swap> listaSwaps = userSwap.getSwaps();
+        return listaSwaps;
+    }
 }

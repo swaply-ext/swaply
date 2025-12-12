@@ -10,6 +10,7 @@ import com.swaply.backend.application.swap.service.SwapService;
 import com.swaply.backend.config.security.SecurityUser;
 import com.swaply.backend.shared.UserCRUD.Model.Swap;
 
+import java.util.List;
 
 
 @RestController
@@ -26,5 +27,11 @@ public class SwapController {
     public ResponseEntity<Swap> request(@AuthenticationPrincipal SecurityUser SecurityUser, @RequestBody SwapDTO dto) {
         service.createSwap(SecurityUser.getUsername(), dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @GetMapping("/showSwaps")
+    public ResponseEntity<List<Swap>> request(@AuthenticationPrincipal SecurityUser SecurityUser){
+        List<Swap> swaps = service.getAllSwaps(SecurityUser.getUsername());
+        return ResponseEntity.status(HttpStatus.OK).body(swaps);
     }
 }
