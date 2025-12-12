@@ -2,15 +2,14 @@
   
   <input 
     type="text" 
-    placeholder="Buscar habilidad..." 
-    [ngModel]="searchTerm"
+    [placeholder]="placeholderText" 
+    [(ngModel)]="searchTerm"
     (ngModelChange)="onSearchTermChanged($event)"
     (focus)="onInputFocus()" 
     (click)="onInputFocus()"
   />
   
   <span class="material-symbols-outlined search-icon" *ngIf="!isLoading()">search</span>
-  
   <div class="spinner-mini" *ngIf="isLoading()"></div>
 
   <div class="search-dropdown" *ngIf="results().length > 0 && showDropdown()">
