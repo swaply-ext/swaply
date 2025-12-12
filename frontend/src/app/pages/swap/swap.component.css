@@ -140,6 +140,7 @@
 .swap-arrow {
   font-size: clamp(2.5rem, 5vw, 3.75rem) !important;
   color: var(--principal-color-2);
+  align-self: center;
 }
 
 .skill-list {
@@ -194,11 +195,12 @@
 .panel-actions {
   display: flex;
   justify-content: center;
-  gap: 2rem;
+  gap: 7.5rem;
   width: 100%;
   max-width: 90%;
   margin: 2rem auto 0 auto;
   flex-wrap: wrap;
+  padding: 0 1.2rem;
 }
 
 .panel-actions .panel {

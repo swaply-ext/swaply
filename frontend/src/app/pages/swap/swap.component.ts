@@ -182,7 +182,7 @@ export class SwapComponent implements OnInit {
     }
 
     const payload: SwapDTO = {
-      requestedUsername: targetUser.userId,
+      requestedUsername: targetUser.username,
       skill: targetItem.name,
       interest: myItem.name
     };
