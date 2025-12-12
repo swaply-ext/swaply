@@ -8,6 +8,7 @@
   justify-content: space-between;
   min-height: 5rem;
   box-sizing: border-box;
+  cursor: pointer;
   transition: transform 0.2s ease, border-color 0.3s ease;
 }
 
@@ -74,4 +75,11 @@
 .skill-card.is-editable .level-block:hover {
   opacity: 0.8;
   transform: scaleY(1.2); 
+}
+
+.skill-card.selected {
+  border-color: #00e1ff;
+  background-color: rgba(0, 225, 255, 0.15);
+  transform: scale(1.02);
+  box-shadow: 0 0 0.625rem rgba(0, 225, 255, 0.3);
 }

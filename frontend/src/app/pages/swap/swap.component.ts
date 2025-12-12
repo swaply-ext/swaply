@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AppNavbarComponent } from '../../components/app-navbar/app-navbar.component';
 import { AccountService } from '../../services/account.service';
-import { SearchService, UserSwapDTO } from '../../services/search.services';
+import { SearchService, UserSwapDTO, SwapDTO } from '../../services/search.services';
 import { SwapSkillsComponent } from "../../components/swap-skills/swap-skills.component";
 import { SwapInterestsComponent } from "../../components/swap-interests/swap-interests.component";
 
@@ -38,6 +38,7 @@ export class SwapComponent implements OnInit {
   } | null>(null);
 
   targetUserInterests = signal<any[]>([]); 
+  mySkillsDisplay = signal<any[]>([]); // signal para manejar mis skills visuales
 
   constructor(
     private route: ActivatedRoute,
@@ -50,12 +51,22 @@ export class SwapComponent implements OnInit {
     const targetUserId = this.route.snapshot.paramMap.get('targetId');
     const skillName = this.route.snapshot.queryParamMap.get('skillName');
 
-    // 1️⃣ Cargar mi usuario
+    // cargar mi usuario
     this.accountService.getProfileData().subscribe({
       next: (me) => {
         this.myUser.set(me);
-        if (me.skills?.length > 0) {
-          this.selectedTeachSkill.set(me.skills[0]);
+        
+        if (me.skills && me.skills.length > 0) {
+          // preparamos mis skills para visualizacion
+          const myVisualSkills = me.skills.map((s: any, index: number) => ({
+            ...s,
+            image: s.image || this.assignImageToSkill(s.category, s.name),
+            selected: index === 0 // seleccionamos la primera por defecto
+          }));
+
+          this.mySkillsDisplay.set(myVisualSkills);
+          // seteamos la carta superior derecha
+          this.selectedTeachSkill.set(myVisualSkills[0]);
         }
       }
     });
@@ -73,17 +84,62 @@ export class SwapComponent implements OnInit {
             location: user.location
           });
 
-          this.targetUserInterests.set([
-            {
-              id: selectedSkill,
-              name: selectedSkill,
-              selected: true,
-              image: this.assignImageToSkill(user.skillCategory, selectedSkill)
-            }
-          ]);
+          // objeto skill principal (la del match)
+          const mainSkillObj = {
+            id: selectedSkill,
+            name: selectedSkill,
+            selected: true,
+            image: this.assignImageToSkill(user.skillCategory, selectedSkill),
+            level: user.skillLevel
+          };
+
+          // procesar resto de skills que vienen del back
+          // filtramos para que no salga repetida la principal
+          const otherSkills = (user.userSkills || [])
+            .filter(s => s.name !== selectedSkill)
+            .map(s => ({
+              id: s.name,
+              name: s.name,
+              selected: false,
+              image: this.assignImageToSkill(s.category, s.name),
+              level: s.level
+            }));
+
+          // unimos las listas
+          this.targetUserInterests.set([mainSkillObj, ...otherSkills]);
         }
       });
     }
+  }
+
+  // funcion para seleccionar skill del otro usuario (izquierda)
+  selectTargetInterest(item: any) {
+    const updatedList = this.targetUserInterests().map(skill => ({
+      ...skill,
+      selected: skill.name === item.name
+    }));
+    this.targetUserInterests.set(updatedList);
+
+    // actualizamos la cabecera
+    const currentUser = this.targetUser();
+    this.selectedTargetSkill.set({
+      skillName: item.name,
+      skillIcon: item.icon,
+      skillImage: item.image,
+      location: currentUser?.location
+    });
+  }
+
+  // funcion para seleccionar mi skill (derecha)
+  selectMySkill(item: any) {
+    const updatedList = this.mySkillsDisplay().map(skill => ({
+      ...skill,
+      selected: skill.name === item.name
+    }));
+    this.mySkillsDisplay.set(updatedList);
+
+    // actualizamos la cabecera
+    this.selectedTeachSkill.set(item);
   }
 
   chooseTeachSkill(skill: any) {
@@ -95,22 +151,31 @@ export class SwapComponent implements OnInit {
   }
 
   createSwap() {
-    const mySkill = this.selectedTeachSkill();
-    const targetSkill = this.selectedTargetSkill();
-    const target = this.targetUser();
-    const me = this.myUser();
+    const targetItem = this.targetUserInterests().find(s => s.selected);
+    const myItem = this.mySkillsDisplay().find(s => s.selected);
+    const targetUser = this.targetUser();
 
-    if (!mySkill || !targetSkill || !target || !me) return;
+    if (!targetItem || !myItem || !targetUser) {
+      alert("Error: Faltan datos para el intercambio");
+      return;
+    }
 
-    const payload = {
-      requesterId: me.username,
-      targetId: target.userId,
-      learnSkill: targetSkill.skillName,
-      teachSkill: mySkill.name
+    const payload: SwapDTO = {
+      requestedUsername: targetUser.userId,
+      skill: targetItem.name,
+      interest: myItem.name
     };
 
-    this.searchService.sendSwapRequest(payload).subscribe(() => {
-      alert("Intercambio creado correctamente");
+    this.searchService.sendSwapRequest(payload).subscribe({
+      next: (res) => {
+        console.log('Exito:', res);
+        alert("Intercambio creado correctamente");
+        this.router.navigate(['/home']);
+      },
+      error: (err) => {
+        console.error('Error:', err);
+        alert("Error al crear el intercambio");
+      }
     });
   }
 

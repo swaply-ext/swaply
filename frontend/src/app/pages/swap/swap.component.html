@@ -3,7 +3,6 @@
 
   <div class="swap-content">
 
-    <!-- LO QUE QUIERES APRENDER -->
     <div class="swap-half" *ngIf="selectedTargetSkill() as targetSkill">
       <h2>Lo que quieres aprender</h2>
 
@@ -30,15 +29,14 @@
 
     <span class="material-symbols-outlined swap-arrow">swap_horiz</span>
 
-    <!-- LO QUE PUEDES OFRECER -->
     <div class="swap-half" *ngIf="myUser() as me">
       <h2>Lo que puedes ofrecer</h2>
 
       <div class="swap-card">
-        <img class="skill-img" [src]="selectedTeachSkill()?.icon || 'assets/default-avatar.png'" alt="Skill a enseñar">
+        <img class="skill-img" [src]="selectedTeachSkill()?.image || 'assets/default-avatar.png'" alt="Skill a enseñar">
 
         <div class="info">
-          <h3>{{ me.name }}</h3>
+          <h3>{{ me.name }}</h3> 
 
           <div class="location">
             <span class="material-symbols-outlined location-icon">location_on</span>
@@ -55,26 +53,29 @@
 
   </div>
 
-  <!-- PANEL DE INTERESES E HABILIDADES -->
   <div class="panel-actions">
 
     <div class="panel interests-panel" *ngIf="targetUserInterests() as interests">
       <app-swap-interests
         [InterestsInput]="interests"
         [editable]="false"
-        [targetUser]="targetUser()">
+        [targetUser]="targetUser()"
+        (skillSelected)="selectTargetInterest($event)">
       </app-swap-interests>
     </div>
 
     <div class="panel skills-panel" *ngIf="myUser() as me">
       <app-swap-skills
-        [SkillsInput]="me.skills || []"
+        [SkillsInput]="mySkillsDisplay()"
         [editable]="false"
-        (skillSelected)="chooseTeachSkill($event)">
+        (skillSelected)="selectMySkill($event)">
       </app-swap-skills>
     </div>
 
+  </div>
+
   <div class="btn-container">
-  <button class="btn-cancel" (click)="cancelSwap()">CANCEL</button>
-  <button class="btn-create" (click)="createSwap()">SWAP</button>
+    <button class="btn-cancel" (click)="cancelSwap()">CANCEL</button>
+    <button class="btn-create" (click)="createSwap()">SWAP</button>
+  </div>
 </div>

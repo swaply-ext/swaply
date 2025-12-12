@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { SkillCardComponent } from '../skill-card/skill-card.component';
@@ -13,6 +13,7 @@ import { SkillCardComponent } from '../skill-card/skill-card.component';
 export class SwapSkillsComponent {
   @Input() SkillsInput: any[] = [];
   @Input() editable = false;
+  @Output() skillSelected = new EventEmitter<any>();
 
   open = true;
 
@@ -23,4 +24,8 @@ export class SwapSkillsComponent {
   }
 
   handleLevelChange(event: any) {}
+
+  onCardClick(item: any) {
+    this.skillSelected.emit(item);
+  }
 }

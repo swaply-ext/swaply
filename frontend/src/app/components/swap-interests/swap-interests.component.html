@@ -10,8 +10,10 @@
     <app-skill-card
       *ngFor="let item of InterestsInput"
       [id]="item.id || item.name"
-      [level]="item.selected ? 1 : 0"
+      [level]="item.level || 0"
+      [selected]="item.selected || false"
       [editable]="editable"
+      (click)="onCardClick(item)"
       (levelChange)="handleLevelChange($event)">
     </app-skill-card>
   </div>

@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SKIP_LOADING } from '../interceptors/loading.interceptor'; 
+
 export interface UserSwapDTO {
   userId: string;
   name: string;
@@ -17,6 +18,20 @@ export interface UserSwapDTO {
   isSwapMatch: boolean;
   rating: number;
   distance: string;
+
+  // lista opcional de skills que viene del back
+  userSkills?: {
+    name: string;
+    category: string;
+    level: number;
+  }[];
+}
+
+// dto para la petición de intercambio
+export interface SwapDTO {
+  requestedUsername: string;
+  skill: string;
+  interest: string;
 }
 
 @Injectable({
@@ -34,7 +49,7 @@ export class SearchService {
     });
   }
 
-  getRecommendations(): Observable<UserSwapDTO[]> {   
+  getRecommendations(): Observable<UserSwapDTO[]> {    
     return this.http.get<UserSwapDTO[]>(`${this.apiUrl}/home/recommendations`, {
       context: new HttpContext().set(SKIP_LOADING, true)
     });
@@ -44,10 +59,8 @@ export class SearchService {
     return this.http.get<UserSwapDTO>(`${this.apiUrl}/search/user/${userId}`);
   }
   
-  // search.services.ts
-  sendSwapRequest(payload: { requesterId: string, targetId: string, learnSkill: string, teachSkill: string }) {
-    return this.http.post(`${this.apiUrl}/swap/request`, payload);
+  sendSwapRequest(payload: SwapDTO): Observable<any> {
+    // cambiamos a patch y usamos el endpoint solicitado
+    return this.http.patch(`${this.apiUrl}/swap/request`, payload);
   }
-
-
 }

@@ -13,6 +13,9 @@ export class SkillCardComponent implements OnChanges {
   @Input() id: string = '';
   @Input() level: number = 0;
   @Input() editable: boolean = false;
+  
+  // input para manejar la seleccion
+  @Input() selected: boolean = false;
 
   @Output() levelChange = new EventEmitter<{id: string, newLevel: number}>();
 
@@ -47,7 +50,7 @@ export class SkillCardComponent implements OnChanges {
       this.skill.level = clickedLevel;
     }
 
-    // Emitimos el evento por si el padre quiere guardar en BD
+    // emitimos el evento por si el padre quiere guardar en bd
     this.levelChange.emit({ id: this.id, newLevel: this.skill.level });
   }
 }

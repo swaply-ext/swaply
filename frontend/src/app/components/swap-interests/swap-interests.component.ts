@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SkillCardComponent } from '../skill-card/skill-card.component';
 
@@ -6,6 +6,8 @@ export interface Interest {
   id?: string;
   name: string;
   selected?: boolean;
+  image?: string;
+  level?: number;
 }
 
 export interface User {
@@ -23,7 +25,8 @@ export interface User {
 export class SwapInterestsComponent {
   @Input() InterestsInput: Interest[] = [];
   @Input() editable = false;
-  @Input() targetUser: User | null = null
+  @Input() targetUser: User | null = null;
+  @Output() skillSelected = new EventEmitter<any>();
 
   open = true;
 
@@ -33,5 +36,9 @@ export class SwapInterestsComponent {
 
   handleLevelChange(event: any) {
     console.log('Nivel cambiado:', event);
+  }
+
+  onCardClick(item: any) {
+    this.skillSelected.emit(item);
   }
 }
