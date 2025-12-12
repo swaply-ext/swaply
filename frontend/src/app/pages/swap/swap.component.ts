@@ -28,8 +28,8 @@ export class SwapComponent implements OnInit {
   myUser = signal<UserProfile | null>(null);
   targetUser = signal<UserSwapDTO | null>(null);
 
-  selectedTeachSkill = signal<any>(null);
-
+  selectedTeachSkill = signal<any>(null); 
+  
   selectedTargetSkill = signal<{
     skillName: string;
     skillIcon?: string;
@@ -38,7 +38,7 @@ export class SwapComponent implements OnInit {
   } | null>(null);
 
   targetUserInterests = signal<any[]>([]); 
-  mySkillsDisplay = signal<any[]>([]); // signal para manejar mis skills visuales
+  mySkillsDisplay = signal<any[]>([]); 
 
   constructor(
     private route: ActivatedRoute,
@@ -51,26 +51,35 @@ export class SwapComponent implements OnInit {
     const targetUserId = this.route.snapshot.paramMap.get('targetId');
     const skillName = this.route.snapshot.queryParamMap.get('skillName');
 
-    // cargar mi usuario
+    // CARGAR MI USUARIO
     this.accountService.getProfileData().subscribe({
       next: (me) => {
         this.myUser.set(me);
         
         if (me.skills && me.skills.length > 0) {
-          // preparamos mis skills para visualizacion
-          const myVisualSkills = me.skills.map((s: any, index: number) => ({
-            ...s,
-            image: s.image || this.assignImageToSkill(s.category, s.name),
-            selected: index === 0 // seleccionamos la primera por defecto
-          }));
+          // Preparamos skills
+          const myVisualSkills = me.skills.map((s: any, index: number) => {
+            // CORRECCION: Si no hay nombre, usa el ID. Si no hay ID, usa 'Skill'.
+            const realName = s.name || s.id || 'Skill sin nombre';
+            const realId = s.id || realName;
+            
+            return {
+              ...s,
+              id: realId,
+              name: realName, 
+              image: s.image || this.assignImageToSkill(s.category, realName),
+              selected: index === 0 
+            };
+          });
 
           this.mySkillsDisplay.set(myVisualSkills);
-          // seteamos la carta superior derecha
+          // La carta de arriba muestra el objeto completo de la primera skill
           this.selectedTeachSkill.set(myVisualSkills[0]);
         }
       }
     });
 
+    // CARGAR USUARIO DESTINO
     if (targetUserId) {
       this.searchService.getUserById(targetUserId).subscribe({
         next: (user) => {
@@ -84,7 +93,6 @@ export class SwapComponent implements OnInit {
             location: user.location
           });
 
-          // objeto skill principal (la del match)
           const mainSkillObj = {
             id: selectedSkill,
             name: selectedSkill,
@@ -93,8 +101,6 @@ export class SwapComponent implements OnInit {
             level: user.skillLevel
           };
 
-          // procesar resto de skills que vienen del back
-          // filtramos para que no salga repetida la principal
           const otherSkills = (user.userSkills || [])
             .filter(s => s.name !== selectedSkill)
             .map(s => ({
@@ -105,77 +111,51 @@ export class SwapComponent implements OnInit {
               level: s.level
             }));
 
-          // unimos las listas
           this.targetUserInterests.set([mainSkillObj, ...otherSkills]);
         }
       });
     }
   }
 
-  // funcion para seleccionar skill del otro usuario (izquierda)
   selectTargetInterest(item: any) {
     const updatedList = this.targetUserInterests().map(skill => ({
       ...skill,
-      selected: skill.name === item.name
+      selected: skill.name === item.name 
     }));
     this.targetUserInterests.set(updatedList);
 
-    // actualizamos la cabecera
+    const newImage = item.image || this.assignImageToSkill(item.category, item.name);
     const currentUser = this.targetUser();
+
     this.selectedTargetSkill.set({
       skillName: item.name,
-      skillIcon: item.icon,
-      skillImage: item.image,
+      skillIcon: item.icon, 
+      skillImage: newImage,
       location: currentUser?.location
     });
   }
 
-  // funcion para seleccionar mi skill (derecha)
   selectMySkill(item: any) {
-    const updatedList = this.mySkillsDisplay().map(skill => ({
-      ...skill,
-      selected: skill.name === item.name
-    }));
+    const itemId = item.id || item.name;
+
+    // Actualizamos la lista
+    const updatedList = this.mySkillsDisplay().map(skill => {
+      const currentId = skill.id || skill.name;
+      return {
+        ...skill,
+        selected: currentId === itemId
+      };
+    });
     this.mySkillsDisplay.set(updatedList);
 
-    // actualizamos la cabecera
-    this.selectedTeachSkill.set(item);
-  }
-
-  chooseTeachSkill(skill: any) {
-    this.selectedTeachSkill.set(skill);
-  }
-
-  cancelSwap() {
-    this.router.navigate(['/home']);
-  }
-
-  createSwap() {
-    const targetItem = this.targetUserInterests().find(s => s.selected);
-    const myItem = this.mySkillsDisplay().find(s => s.selected);
-    const targetUser = this.targetUser();
-
-    if (!targetItem || !myItem || !targetUser) {
-      alert("Error: Faltan datos para el intercambio");
-      return;
-    }
-
-    const payload: SwapDTO = {
-      requestedUsername: targetUser.userId,
-      skill: targetItem.name,
-      interest: myItem.name
-    };
-
-    this.searchService.sendSwapRequest(payload).subscribe({
-      next: (res) => {
-        console.log('Exito:', res);
-        alert("Intercambio creado correctamente");
-        this.router.navigate(['/home']);
-      },
-      error: (err) => {
-        console.error('Error:', err);
-        alert("Error al crear el intercambio");
-      }
+    // Calculamos imagen
+    const newImage = item.image || this.assignImageToSkill(item.category, item.name);
+    
+    // Actualizamos la carta de arriba con los datos de la skill
+    this.selectedTeachSkill.set({
+        ...item,
+        name: item.name, 
+        image: newImage 
     });
   }
 
@@ -187,6 +167,36 @@ export class SwapComponent implements OnInit {
     return this.selectedTargetSkill()?.skillImage
         || this.selectedTargetSkill()?.skillIcon
         || 'assets/default-avatar.png';
+  }
+
+  cancelSwap() { this.router.navigate(['/home']); }
+
+  createSwap() {
+    const targetItem = this.targetUserInterests().find(s => s.selected);
+    const myItem = this.mySkillsDisplay().find(s => s.selected);
+    const targetUser = this.targetUser();
+
+    if (!targetItem || !myItem || !targetUser) {
+      alert("Error: Selecciona una habilidad en cada lado.");
+      return;
+    }
+
+    const payload: SwapDTO = {
+      requestedUsername: targetUser.userId,
+      skill: targetItem.name,
+      interest: myItem.name
+    };
+
+    this.searchService.sendSwapRequest(payload).subscribe({
+      next: (res) => {
+        alert("Intercambio creado correctamente");
+        this.router.navigate(['/home']);
+      },
+      error: (err) => {
+        console.error(err);
+        alert("Error al crear el intercambio");
+      }
+    });
   }
 
   private assignImageToSkill(category: string, skillName: string): string | undefined {
@@ -225,6 +235,13 @@ export class SwapComponent implements OnInit {
         return `assets/photos_skills/${folder}/${file}`;
       }
     }
+    
+    if (category) {
+        if (category.toLowerCase().includes('sport')) return 'assets/photos_skills/sports/football.jpg';
+        if (category.toLowerCase().includes('music')) return 'assets/photos_skills/music/guitar.jpg';
+        if (category.toLowerCase().includes('leisure')) return 'assets/photos_skills/leisure/crafts.jpg';
+    }
+
     return undefined;
   }
 }

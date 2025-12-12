@@ -13,6 +13,7 @@ import { SkillCardComponent } from '../skill-card/skill-card.component';
 export class SwapSkillsComponent {
   @Input() SkillsInput: any[] = [];
   @Input() editable = false;
+  
   @Output() skillSelected = new EventEmitter<any>();
 
   open = true;
@@ -25,6 +26,7 @@ export class SwapSkillsComponent {
 
   handleLevelChange(event: any) {}
 
+  // Este método es vital para que funcione el click
   onCardClick(item: any) {
     this.skillSelected.emit(item);
   }

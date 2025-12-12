@@ -9,11 +9,13 @@
   <div *ngIf="open" class="skills-grid">
     <app-skill-card
       *ngFor="let item of SkillsInput"
-      [id]="item.id"
-      [level]="item.level"
-      [selected]="item.selected"
+      [id]="item.id || item.name" 
+      [level]="item.level || 0"
+      
+      [selected]="item.selected || false" 
+      
       [editable]="editable"
-      (click)="onCardClick(item)"
+      (click)="onCardClick(item)" 
       (levelChange)="handleLevelChange($event)">
     </app-skill-card>
   </div>
