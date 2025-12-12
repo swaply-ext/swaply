@@ -5,6 +5,7 @@
   --principal-color-2: #3cb57c; /* Verd menta */
   --principal-color-3: #023047c7; /* Blau fosc */
 
+  --background-gradient: linear-gradient(to bottom, #012534 0%, #00839E 100%);
 
   --secundary-color-1: #fcfcfc; /* Blanc suau */
   --secundary-color-2: #bfbfbf; /* Gris clar */
