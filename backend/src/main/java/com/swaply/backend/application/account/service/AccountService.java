@@ -74,4 +74,8 @@ public class AccountService /* implements UserRepository */ {
         ProfileDataDTO account = mapper.profileFromUserDTO(user);
         return account;
     }
+
+    public void deleteUser(String userId) {
+        userService.deleteUserById(userId);
+    }
 }

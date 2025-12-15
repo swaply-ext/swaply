@@ -12,7 +12,6 @@ import com.swaply.backend.shared.UserCRUD.Model.Swap;
 
 import java.util.List;
 
-
 @RestController
 @RequestMapping("/api/swap")
 public class SwapController {
@@ -30,8 +29,26 @@ public class SwapController {
     }
 
     @GetMapping("/showSwaps")
-    public ResponseEntity<List<Swap>> request(@AuthenticationPrincipal SecurityUser SecurityUser){
+    public ResponseEntity<List<Swap>> getAllSwaps(@AuthenticationPrincipal SecurityUser SecurityUser) {
+
         List<Swap> swaps = service.getAllSwaps(SecurityUser.getUsername());
         return ResponseEntity.status(HttpStatus.OK).body(swaps);
+    }
+
+    @PutMapping("/{swapId}/status")
+    public ResponseEntity<Swap> updateSwapStatus(
+            @AuthenticationPrincipal SecurityUser SecurityUser,
+            @PathVariable String swapId,
+            @RequestParam String status) {
+        try {
+            Swap updatedSwap = service.updateSwapStatus(
+                    swapId,
+                    status,
+                    SecurityUser.getUsername());
+            return ResponseEntity.ok(updatedSwap);
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 }

@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import org.springframework.stereotype.Service;
 
 import com.swaply.backend.application.swap.SwapMapper;
 import com.swaply.backend.application.swap.dto.SwapDTO;
 import com.swaply.backend.shared.UserCRUD.UserRepository;
 import com.swaply.backend.shared.UserCRUD.UserService;
+import com.swaply.backend.shared.UserCRUD.dto.UserDTO; 
 import com.swaply.backend.shared.UserCRUD.Model.Swap;
 import com.swaply.backend.shared.UserCRUD.Model.User;
 import com.swaply.backend.shared.UserCRUD.exception.UserNotFoundException;
@@ -36,7 +36,7 @@ public class SwapService {
         sentSwap.setStatus(Swap.Status.STANDBY);
         sentSwap.setIsRequester(true);
         sentSwap.setId(id);
-        sentSwap.setRequestedUserId(userService.getUserByUsername(dto.getRequestedUsername()).getId()); //obtiene el id a partir del username
+        sentSwap.setRequestedUserId(userService.getUserByUsername(dto.getRequestedUsername()).getId());
 
         Optional<User> sender = repository.findUserById(sendingUser);
         if (sender.isPresent()) {
@@ -46,11 +46,9 @@ public class SwapService {
             }
             user.getSwaps().add(sentSwap);
             repository.save(user);
-        }
-        else{
+        } else {
             throw new UserNotFoundException(sendingUser);
         }
-
 
         Swap receivedSwap = mapper.toEntity(invertSwap(dto));
         receivedSwap.setStatus(Swap.Status.STANDBY);
@@ -66,8 +64,7 @@ public class SwapService {
             }
             user.getSwaps().add(receivedSwap);
             repository.save(user);
-        }
-        else{
+        } else {
             throw new UserNotFoundException(sendingUser);
         }
 
@@ -81,10 +78,70 @@ public class SwapService {
         return newdto;
     }
 
-
+    // --- MÉTODO DE TU COMPAÑERO (HEAD) ---
     public List<Swap> getAllSwaps(String id) {
         UserDTO userSwap = userService.getUserByID(id);
         List<Swap> listaSwaps = userSwap.getSwaps();
         return listaSwaps;
+    }
+
+    // --- MÉTODO TUYO (ACCION-SOLICITUD-INTERCAMBIO) ---
+    public Swap updateSwapStatus(String swapId, String status, String currentUserId) {
+
+        Iterable<User> allUsers = repository.findAll();
+
+        User sender = null;
+        User receiver = null;
+        Swap sentSwap = null;
+        Swap receivedSwap = null;
+
+        for (User user : allUsers) {
+            if (user.getSwaps() != null) {
+
+                Optional<Swap> foundSwap = user.getSwaps().stream()
+                        .filter(s -> s.getId().equals(swapId))
+                        .findFirst();
+
+                if (foundSwap.isPresent()) {
+                    Swap swap = foundSwap.get();
+                    if (swap.getIsRequester()) {
+                        sender = user;
+                        sentSwap = swap;
+                    } else {
+                        receiver = user;
+                        receivedSwap = swap;
+                    }
+                }
+            }
+        }
+
+        if (sentSwap == null || receivedSwap == null) {
+            throw new RuntimeException("Swap request with id " + swapId + " not found.");
+        }
+
+        if (!receiver.getId().equals(currentUserId)) {
+            throw new RuntimeException("Unauthorized: Only the requested user can update the status.");
+        }
+
+        if (sentSwap.getStatus() != Swap.Status.STANDBY) {
+            throw new RuntimeException("Swap is already " + sentSwap.getStatus());
+        }
+
+        Swap.Status newStatus;
+        if (status.equalsIgnoreCase("ACCEPTED")) {
+            newStatus = Swap.Status.ACCEPTED;
+        } else if (status.equalsIgnoreCase("DENIED")) {
+            newStatus = Swap.Status.DENIED;
+        } else {
+            throw new IllegalArgumentException("Invalid status: " + status);
+        }
+
+        sentSwap.setStatus(newStatus);
+        receivedSwap.setStatus(newStatus);
+
+        repository.save(sender);
+        repository.save(receiver);
+
+        return sentSwap;
     }
 }

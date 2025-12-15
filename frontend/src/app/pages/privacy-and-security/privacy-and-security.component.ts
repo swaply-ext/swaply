@@ -6,17 +6,17 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-
+import { AccountService } from '../../services/account.service';
 
 @Component({
   selector: 'app-privacy-and-security',
-  imports: [ 
+  imports: [
     AppNavbarComponent,
     SideMenuComponent,
     CommonModule,
     RouterLink,
     FormsModule
-    ],
+  ],
   standalone: true,
   templateUrl: './privacy-and-security.component.html',
   styleUrls: ['./privacy-and-security.component.css']
@@ -38,7 +38,11 @@ export class PrivacyAndSecurityComponent {
   showSuccess: boolean = false;
   successMessage: string = 'Contraseña cambiada correctamente';
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private accountService: AccountService
+  ) { }
 
   // Password visibility
   toggleVisibility(field: 'current' | 'new' | 'confirm') {
@@ -46,9 +50,6 @@ export class PrivacyAndSecurityComponent {
     else if (field === 'new') this.showNew = !this.showNew;
     else if (field === 'confirm') this.showConfirm = !this.showConfirm;
   }
-
-
-  // VERIFY CURRENT PASSWORD??????
 
   // Validate password 
   private validatePassword(password: string): { valid: boolean; message: string } {
@@ -69,7 +70,7 @@ export class PrivacyAndSecurityComponent {
     return { valid: true, message: '' };
   }
 
-// Live validation for NEW password
+  // Live validation for NEW password
   onNewPasswordChange(value: string) {
     this.newPassword = value;
 
@@ -83,7 +84,6 @@ export class PrivacyAndSecurityComponent {
       this.message = '';
     }
   }
-
 
   // Submit form
   submitNewPassword() {
@@ -105,7 +105,6 @@ export class PrivacyAndSecurityComponent {
       this.message = 'Contraseña inválida:\n' + passwordValidation.message;
       return;
     }
-    
 
     // Confirm passwords match
     if (this.newPassword !== this.confirmPassword) {
@@ -120,10 +119,12 @@ export class PrivacyAndSecurityComponent {
       newPassword: this.newPassword
     };
 
-    // Call backend API 
+    console.log('Cambiando contraseña...', payload);
+
+    // Call backend API (Movido dentro del método correctamente)
     this.http.post('http://localhost:8081/api/auth/passwordChange', payload, { observe: 'response' })
       .subscribe({
-        next: response => {
+        next: (response: any) => {
           if (response.status === 200) {
             this.showError = false;
             this.showSuccess = true;
@@ -133,7 +134,7 @@ export class PrivacyAndSecurityComponent {
             this.message = 'Error cambiando la contraseña';
           }
         },
-        error: err => {
+        error: (err) => {
           console.error('Error al cambiar contraseña:', err);
           this.showError = true;
           if (err.status === 400 && err.error?.message) {
@@ -141,9 +142,14 @@ export class PrivacyAndSecurityComponent {
           } else {
             this.message = 'Error de servidor. Inténtalo de nuevo más tarde';
           }
-          
         }
-        
-      });     
+      });
   }
+
+  // Método para eliminar cuenta usando accountService
+  onDeleteAccount(): void {
+    this.router.navigate(['/delete-account-confirmation']);
+  };
 }
+
+
