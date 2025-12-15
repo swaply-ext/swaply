@@ -4,7 +4,9 @@ import {
   inject, 
   signal,
   ElementRef,
-  HostListener 
+  HostListener,
+  Output,
+  EventEmitter 
 } from '@angular/core';
 import { HttpClient, HttpClientModule, HttpContext, HttpParams } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -52,25 +54,27 @@ class FilterSkillsService {
 export class FilterSkillsComponent {
   private service = inject(FilterSkillsService);
   private el = inject(ElementRef)
-  isOpen = signal(false);
 
+  @Output() filterChange = new EventEmitter<string>();
+
+  isOpen = signal(false);
   results = signal<Skill[]>([]);
   isLoading = signal(false);
 
   private searchSubject = new Subject<string>();
 
-  // Lista de categorías y subcategorías
   categories = [
     {
       name: 'Deportes',
       id: 'sports',
       open: true,
       subcategories: [
-        { name: 'FÚTBOL ⚽', id: 'football', selected: false },
-        { name: 'PÁDEL 🎾', id: 'padel', selected: false },
-        { name: 'BÁSQUET 🏀', id: 'basketball', selected: false },
-        { name: 'VÓLEY 🏐', id: 'volleyball', selected: false },
-        { name: 'BOXEO 🥊', id: 'boxing', selected: false }
+        // EL ID DEBE SER EL DE LA BASE DE DATOS (Inglés)
+        { name: 'FÚTBOL ⚽', id: 'football', selected: false },    
+        { name: 'PÁDEL 🎾', id: 'padel', selected: false },       
+        { name: 'BÁSQUET 🏀', id: 'basketball', selected: false }, 
+        { name: 'VÓLEY 🏐', id: 'volleyball', selected: false },   
+        { name: 'BOXEO 🥊', id: 'boxing', selected: false }       
       ]
     },
     {
@@ -78,10 +82,10 @@ export class FilterSkillsComponent {
       id: 'music',
       open: true,
       subcategories: [
-        { name: 'GUITARRA 🎸', id: 'guitar', selected: false },
+        { name: 'GUITARRA 🎸', id: 'guitar', selected: false },    
         { name: 'PIANO 🎹', id: 'piano', selected: false },
         { name: 'VIOLÍN 🎻', id: 'violin', selected: false },
-        { name: 'BATERÍA 🥁', id: 'drums', selected: false },
+        { name: 'BATERÍA 🥁', id: 'drums', selected: false },      
         { name: 'SAXOFÓN 🎷', id: 'saxophone', selected: false }
       ]
     },
@@ -91,8 +95,8 @@ export class FilterSkillsComponent {
       open: true,
       subcategories: [
         { name: 'DIBUJO 🎨', id: 'drawing', selected: false },
-        { name: 'COCINA 👨‍🍳', id: 'cooking', selected: false },
-        { name: 'BAILE 💃', id: 'dancing', selected: false },
+        { name: 'COCINA 👨‍🍳', id: 'cooking', selected: false }, 
+        { name: 'BAILE 💃', id: 'dance', selected: false },
         { name: 'MANUALIDADES 🛠️', id: 'crafts', selected: false },
         { name: 'OCIO DIGITAL 🖥️', id: 'digital', selected: false }
       ]
@@ -133,9 +137,9 @@ export class FilterSkillsComponent {
 
   toggleSub(sub: any) {
 
-  const selected = this.getSelectedIds();
-  console.log('Skills seleccionadas:', selected); // <-- Debug
-  this.searchSubject.next(selected);
+    sub.selected = !sub.selected;
+    const selected = this.getSelectedIds();
+    this.filterChange.emit(selected);
   }
 
   // Obtiene IDs seleccionados como cadena separada por comas

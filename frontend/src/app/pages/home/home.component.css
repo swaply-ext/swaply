@@ -21,17 +21,17 @@
   direction: ltr;
 }
 
-::ng-deep input, 
-::ng-deep button, 
-::ng-deep select, 
-::ng-deep textarea, 
+::ng-deep input,
+::ng-deep button,
+::ng-deep select,
+::ng-deep textarea,
 ::ng-deep ::placeholder {
   font-family: 'Inter', sans-serif !important;
 }
 
 :host {
   display: block;
-  background: linear-gradient(to bottom, #012534 0%, #00839E 100%);
+  background: var(--background-gradient);
   min-height: 100vh;
 }
 
@@ -416,7 +416,7 @@ img {
   font-weight: 600;
   color: #ffffff;
   /* Margen solo abajo, 0 a la izquierda */
-  margin: 0 0 0.5rem 0; 
+  margin: 0 0 0.5rem 0;
   /* Padding 0 absoluto */
   padding: 0;
   white-space: nowrap;
@@ -463,6 +463,43 @@ img {
 .see-more-button .btn-primary:active {
   transform: scale(0.98);
   opacity: 0.9;
+}
+
+.match-status {
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0;
+}
+
+.match-status.is-match {
+  color: #3CB57C; /* Tu color verde corporativo */
+}
+
+
+.match-status.no-match {
+  color: #94a3b8;
+}
+
+.match-status .material-symbols-outlined {
+  font-size: 18px;
+}
+
+.clickable-user {
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.clickable-user:hover {
+  opacity: 0.8;
+}
+
+.clickable-user:hover .user-name-hover {
+  text-decoration: underline;
+  color: #3CB57C; /* Color verd corporatiu */
 }
 
 /* --- Responsive --- */
@@ -513,7 +550,7 @@ img {
   :host {
     display: inline-block;
   }
-  
+
   .filter-box {
     display: flex;
     align-items: center;

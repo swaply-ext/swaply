@@ -1,0 +1,78 @@
+<div class="swap-container">
+  <app-app-navbar></app-app-navbar>
+
+  <div class="swap-content">
+
+    <div class="swap-half" *ngIf="myUser() as me">
+      <h2>Lo que puedes ofrecer</h2>
+
+      <div class="swap-card" *ngIf="selectedTeachSkill() as mySkill">
+        
+        <img class="skill-img" 
+             [src]="mySkill.image || 'assets/default-avatar.png'" 
+             [alt]="mySkill.name">
+
+        <div class="info">
+          <h3>{{ mySkill.name }}</h3> 
+
+          <div class="location">
+            <span class="material-symbols-outlined location-icon">location_on</span>
+            <span class="location-text">{{ me.location }}</span>
+          </div>
+
+          <div class="username">
+            <img class="small-avatar" [src]="me.profilePhotoUrl || 'assets/default-avatar.png'" alt="Avatar">
+            {{ me.username }} 
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <span class="material-symbols-outlined swap-arrow">swap_horiz</span>
+
+    <div class="swap-half" *ngIf="selectedTargetSkill() as targetSkill">
+      <h2>Lo que quieres aprender</h2>
+      <div class="swap-card">
+        <img class="skill-img"
+             [src]="getTargetSkillImage()"
+             [alt]="getTargetSkillName()">
+        <div class="info">
+          <h3>{{ getTargetSkillName() }}</h3>
+          <div class="location">
+            <span class="material-symbols-outlined location-icon">location_on</span>
+            <span class="location-text">{{ targetSkill.location || targetUser()?.location }}</span>
+          </div>
+          <div class="username">
+            <img class="small-avatar" [src]="targetUser()?.profilePhotoUrl || 'assets/default-avatar.png'" alt="Avatar">
+            {{ targetUser()?.username }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="panel-actions">
+    <div class="panel skills-panel" *ngIf="myUser() as me">
+      <app-swap-skills
+        [SkillsInput]="mySkillsDisplay()"
+        [editable]="false"
+        (skillSelected)="selectMySkill($event)">
+      </app-swap-skills>
+    </div>
+    
+    <div class="panel interests-panel" *ngIf="targetUserInterests() as interests">
+      <app-swap-interests
+        [InterestsInput]="interests"
+        [editable]="false"
+        [targetUser]="targetUser()"
+        (skillSelected)="selectTargetInterest($event)">
+      </app-swap-interests>
+    </div>
+  </div>
+
+  <div class="btn-container">
+    <button class="btn-cancel" (click)="cancelSwap()">CANCEL</button>
+    <button class="btn-create" (click)="createSwap()">SWAP</button>
+  </div>
+</div>
