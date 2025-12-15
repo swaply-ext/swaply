@@ -9,7 +9,7 @@ interface RegisterUserDTO {
   password: string;
 }
 
-interface Location {
+interface UserLocation {
   placeId: string;
   lat: number;
   lon: number;
@@ -21,7 +21,7 @@ interface AllUserData {
   surname: string;
   birthDate: Date;
   gender: string;
-  location: Location;
+  location: UserLocation;
   phone: number;
 }
 
@@ -29,6 +29,7 @@ interface AllUserData {
   providedIn: 'root'
 })
 export class RegisterDataService {
+  private apiUrl = 'http://localhost:8081/api';
   private registerData: any = {};
 
   constructor(private http: HttpClient) { }
@@ -47,26 +48,23 @@ export class RegisterDataService {
 
   // 🔹 Llama al backend para registrar inicialmente (verifica email y username)
   initialRegister(data: RegisterUserDTO): Observable<any> {
-    return this.http.post('http://localhost:8081/api/auth/register', data, {
+    return this.http.post(`${this.apiUrl}/auth/register`, data, {
       responseType: 'text',
       observe: 'response'
     }).pipe(
       map((response: HttpResponse<string>) => {
         if (response.status === 201) {
           return response.body;
-        } else {
-          throw new Error('Error al registrar el usuario');
         }
+        throw new Error('Error al registrar el usuario');
       }),
-      catchError(err => {
+      catchError((err: HttpErrorResponse) => {
         if (err.status === 409) { // Conflict
-          if (err.error.includes('email')) {
-            return throwError(() => new Error('Email ya registrado'));
-          } else if (err.error.includes('username')) {
-            return throwError(() => new Error('Username ya registrado'));
-          } else {
-            return throwError(() => new Error('Correo o username ya registrado'));
-          }
+          const errorMsg =  err.error.includes('email') ? 'Email ya registrado' :
+                            err.error.includes('username') ? 'Username ya registrado' :
+                            'Correo o username ya registrado';
+
+          return throwError(() => new Error(errorMsg));
         }
         return throwError(() => new Error('Error al registrar el usuario'));
       })
@@ -74,31 +72,26 @@ export class RegisterDataService {
   }
 
   personalInformation(data: AllUserData): Observable<any> {
-    return this.http.post('http://localhost:8081/api/account/personalInfo', data, {
+    return this.http.post(`${this.apiUrl}/account/personalInfo`, data, {
       responseType: 'text',
       observe: 'response'
     }).pipe(
       map((response: HttpResponse<string>) => {
         if (response.status === 202) {
           return response.body;
-        } else {
-          throw new Error('Error al actualizar información:');
         }
+        throw new Error('Error al actualizar información:');
       }),
       catchError((err: HttpErrorResponse) => {
         console.error('Error del servidor al actualizar información personal:', err);
-        console.log(err)
 
-        let errorMessage = 'Error al actualizar información. Inténtalo más tarde.';
+        const errorMessages: { [key: number]: string } = {
+          400: 'Datos inválidos. Por favor, revisa el formulario.',
+          403: 'Acceso denegado. La sesión puede haber expirado.',
+          500: 'Error 500'
+        };
 
-        if (err.status === 400) {
-          errorMessage = 'Datos inválidos. Por favor, revisa el formulario.';
-        } else if (err.status === 403) {
-          errorMessage = 'Acceso denegado. La sesión puede haber expirado.';
-        } else if (err.status === 500){
-          errorMessage = 'Error 500';
-        }
-
+        const errorMessage = errorMessages[err.status] || 'Error al actualizar información. Inténtalo más tarde.';
         return throwError(() => new Error(errorMessage));
       })
     );
