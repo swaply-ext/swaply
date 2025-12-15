@@ -66,6 +66,12 @@ public class AccountController {
         return ResponseEntity.ok(profileData);
     }
 
+    @DeleteMapping("/deleteProfile")
+    public ResponseEntity<Boolean> deleteProfile(@AuthenticationPrincipal SecurityUser SecurityUser) {
+        service.deleteUser(SecurityUser.getUsername());
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
+    }
+
     @PatchMapping("/changeData")
     public ResponseEntity<Boolean> updateProfileData(@AuthenticationPrincipal SecurityUser SecurityUser,
             @RequestBody ProfileDataDTO dto) {

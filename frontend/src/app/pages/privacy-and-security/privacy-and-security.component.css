@@ -274,6 +274,15 @@ body {
   display: none;
 }
 
+.delete-account-link {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: inherit; 
+  text-decoration: underline; 
+}
+
 .toggle-slider {
   position: absolute;
   cursor: pointer;
