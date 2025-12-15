@@ -6,19 +6,18 @@
         <div class="interchange-half">
           <h3>Tu próxima habilidad para aprender</h3>
           <div class="interchange-skill-card">
-            <img [src]="skillToLearn().img" alt="{{ skillToLearn().titulo }}">
-            <div>
-              <h4>{{ skillToLearn().titulo }}</h4>
-              <p>{{ skillToLearn().hora }}</p>
+            <img [src]="imageToLearn()" alt="{{ nextSwap()?.interest }}">
+            <div >
+              <h4>Classe de {{ nextSwap()?.interest }}</h4>
               <p class="skill-location">
                 <span class="material-symbols-outlined location">location_on</span>
-                {{ skillToLearn().via }}
+                {{ profileToLearn()?.location }}
               </p>
               <p class="skill-location">
                 <span class="material-symbols-outlined">
-                  <img src="assets/people_demo/juan_perez.png" alt="Foto de perfil" class="user-avatar">
+                  <img [src]="profileToLearn()?.profilePhotoUrl" alt="Foto de perfil" class="user-avatar">
                 </span>
-                {{ skillToLearn().user }}
+                {{ '@'+ profileToLearn()?.username }}
               </p>
             </div>
           </div>
@@ -29,19 +28,18 @@
         <div class="interchange-half">
           <h3>Tu próxima habilidad para enseñar</h3>
           <div class="interchange-skill-card">
-            <img [src]="skillToTeach().img" alt="{{ skillToTeach().titulo }}">
+            <img [src]="imageToTeach()" alt="{{ nextSwap()?.skill }}">
             <div>
-              <h4>{{ skillToTeach().titulo }}</h4>
-              <p>{{ skillToTeach().hora }}</p>
+              <h4>Classe de {{ nextSwap()?.skill }}</h4>
               <p class="skill-location">
                 <span class="material-symbols-outlined location">location_on</span>
-                {{ skillToTeach().via }}
+                {{ profileToTeach()?.location }}
               </p>
               <p class="skill-location">
                 <span class="material-symbols-outlined">
-                  <img src="assets/people_demo/juan_perez.png" alt="Foto de perfil" class="user-avatar">
+                  <img [src]="profileToTeach()?.profilePhotoUrl" alt="Foto de perfil" class="user-avatar">
                 </span>
-                {{ skillToTeach().user }}
+                {{ '@'+ profileToTeach()?.username }}
               </p>
             </div>
           </div>
