@@ -4,11 +4,13 @@ import { RouterLink } from '@angular/router';
 import { DropdownMenuComponent, DropdownMenuData } from '../dropdown-menu/dropdown-menu.component';
 import { AccountService } from '../../services/account.service';
 import { AuthService } from '../../services/auth.service';
+import { UserSearchComponent } from "../user-search/user-search.component";
+
 
 @Component({
   selector: 'app-app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterLink, DropdownMenuComponent],
+  imports: [CommonModule, RouterLink, DropdownMenuComponent, UserSearchComponent],
   templateUrl: './app-navbar.component.html',
   styleUrls: ['./app-navbar.component.css']
 })

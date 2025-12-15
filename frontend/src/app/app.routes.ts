@@ -33,6 +33,7 @@ import { PrivacyAndSecurityComponent } from './pages/privacy-and-security/privac
 import { EmailSentComponent } from './pages/email-sent/email-sent.component';
 import { IndexComponent } from './pages/index/index.component';
 import { DeleteAccountConfirmationComponent } from './pages/delete-account-confirmation/delete-account-confirmation.component';
+import { UserSearchComponent } from './components/user-search/user-search.component';
 
 
 // Creamos una ruta para la verificación de correo
@@ -59,7 +60,7 @@ export const appRoutes: Routes = [
   { path: 'interests-panel', component: InterestsPanelComponent }, // ruta para el panel de intereses
   { path: 'profile-info', component: ProfileInfoComponent }, // ruta para la información personal (temporal)
   { path: 'profile-edit', component: EditProfileComponent , canActivate: [AuthGuard] }, // ruta para el perfil de usuario
-  { path: 'public-profile', component: PublicProfileComponent }, // ruta para el perfil público
+  { path: 'public-profile/:username', loadComponent: () => import('./pages/public-profile/public-profile.component').then(m => m.PublicProfileComponent)}, //enlace a el perfil publico pero indicando el username del cual
   { path: 'recovery-email', component: RecoveryEmailComponent }, // ruta para la recuperación de correo
   { path: 'pass-verification', component: PassVerificationComponent },
   { path: 'side-menu', component: SideMenuComponent }, // ruta para el componente del menú lateral
@@ -70,6 +71,7 @@ export const appRoutes: Routes = [
   { path: 'delete-account-confirmation', component: DeleteAccountConfirmationComponent },
   { path: '404', component: Error404Component },
   { path: 'privacy-and-security', component: PrivacyAndSecurityComponent, canActivate: [AuthGuard] },
+  { path: 'search-users', component: UserSearchComponent },
   { path: 'index', component: IndexComponent },
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
   
