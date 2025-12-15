@@ -34,7 +34,7 @@ public class SwapService {
         sentSwap.setStatus(Swap.Status.STANDBY);
         sentSwap.setIsRequester(true);
         sentSwap.setId(id);
-        sentSwap.setRequestedUserId(userService.getUserByUsername(dto.getRequestedUsername()).getId()); //obtiene el id a partir del username
+        sentSwap.setRequestedUserId(userService.getUserByUsername(dto.getRequestedUsername()).getId()); 
 
         Optional<User> sender = repository.findUserById(sendingUser);
         if (sender.isPresent()) {
@@ -48,7 +48,6 @@ public class SwapService {
         else{
             throw new UserNotFoundException(sendingUser);
         }
-
 
         Swap receivedSwap = mapper.toEntity(invertSwap(dto));
         receivedSwap.setStatus(Swap.Status.STANDBY);
@@ -79,5 +78,62 @@ public class SwapService {
         return newdto;
     }
 
+    public Swap updateSwapStatus(String swapId, String status, String currentUserId) {
+        
+        Iterable<User> allUsers = repository.findAll();
 
+        User sender = null;
+        User receiver = null;
+        Swap sentSwap = null;
+        Swap receivedSwap = null;
+
+        for (User user : allUsers) {
+            if (user.getSwaps() != null) {
+                
+                Optional<Swap> foundSwap = user.getSwaps().stream()
+                    .filter(s -> s.getId().equals(swapId))
+                    .findFirst();
+
+                if (foundSwap.isPresent()) {
+                    Swap swap = foundSwap.get();
+                    if (swap.getIsRequester()) {
+                        sender = user;
+                        sentSwap = swap;
+                    } else {
+                        receiver = user;
+                        receivedSwap = swap;
+                    }
+                }
+            }
+        }
+        
+        if (sentSwap == null || receivedSwap == null) {
+             throw new RuntimeException("Swap request with id " + swapId + " not found."); 
+        }
+
+        if (!receiver.getId().equals(currentUserId)) {
+            throw new RuntimeException("Unauthorized: Only the requested user can update the status.");
+        }
+        
+        if (sentSwap.getStatus() != Swap.Status.STANDBY) {
+             throw new RuntimeException("Swap is already " + sentSwap.getStatus());
+        }
+
+        Swap.Status newStatus;
+        if (status.equalsIgnoreCase("ACCEPTED")) {
+            newStatus = Swap.Status.ACCEPTED;
+        } else if (status.equalsIgnoreCase("DENIED")) {
+            newStatus = Swap.Status.DENIED;
+        } else {
+            throw new IllegalArgumentException("Invalid status: " + status);
+        }
+
+        sentSwap.setStatus(newStatus);
+        receivedSwap.setStatus(newStatus);
+
+        repository.save(sender);
+        repository.save(receiver);
+
+        return sentSwap;
+    }
 }
