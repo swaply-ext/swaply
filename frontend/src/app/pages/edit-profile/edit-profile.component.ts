@@ -262,9 +262,7 @@ export class EditProfileComponent implements OnInit {
     // Validar location
     if (!this.location) {
       this.errorMessages['location'] = 'La ubicación es obligatoria.';
-    } else if (this.validateLocationFormat(this.location)) {
-      this.errorMessages['location'] = 'La ubicación debe tener entre 3 y 30 caracteres. Solo letras, espacios, comas y guiones.';
-    } else {
+    }  else {
       delete this.errorMessages['location'];
     }
     // Validar birthDate
@@ -309,16 +307,7 @@ export class EditProfileComponent implements OnInit {
     if (!requeriments.test(username)) return true;
     else return false;
   }
-  private validateLocationFormat(location: string): boolean {
-    const minLength = 3;
-    const maxLength = 3000;
-    const requeriments = /^[A-Za-z ,-]+$/
-
-    if (location.length < minLength) return true;
-    if (location.length > maxLength) return true;
-    if (!requeriments.test(location)) return true;
-    else return false;
-  }
+  
   private isToday(date: Date): boolean {
     const today = new Date();
     return (

@@ -20,8 +20,7 @@ export const appConfig = {
   providers: [
     importProvidersFrom(FormsModule),
     provideRouter(appRoutes),
-    provideHttpClient(withInterceptors([authInterceptor])),
-    provideHttpClient(withInterceptors([loadingInterceptor])),
+    provideHttpClient(withInterceptors([authInterceptor, loadingInterceptor])),
   ]
 };
 
