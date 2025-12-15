@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
@@ -9,13 +9,29 @@ interface RegisterUserDTO {
   password: string;
 }
 
+interface Location {
+  placeId: string;
+  lat: number;
+  lon: number;
+  displayName: string;
+}
+
+interface AllUserData {
+  name: string;
+  surname: string;
+  birthDate: Date;
+  gender: string;
+  location: Location;
+  phone: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class RegisterDataService {
   private registerData: any = {};
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   setRegisterData(data: any) {
     this.registerData = { ...this.registerData, ...data };
@@ -53,6 +69,37 @@ export class RegisterDataService {
           }
         }
         return throwError(() => new Error('Error al registrar el usuario'));
+      })
+    );
+  }
+
+  personalInformation(data: AllUserData): Observable<any> {
+    return this.http.post('http://localhost:8081/api/account/personalInfo', data, {
+      responseType: 'text',
+      observe: 'response'
+    }).pipe(
+      map((response: HttpResponse<string>) => {
+        if (response.status === 201) {
+          return response.body;
+        } else {
+          throw new Error('Error al actualizar información:');
+        }
+      }),
+      catchError((err: HttpErrorResponse) => {
+        console.error('Error del servidor al actualizar información personal:', err);
+        console.log(err)
+
+        let errorMessage = 'Error al actualizar información. Inténtalo más tarde.';
+
+        if (err.status === 400) {
+          errorMessage = 'Datos inválidos. Por favor, revisa el formulario.';
+        } else if (err.status === 403) {
+          errorMessage = 'Acceso denegado. La sesión puede haber expirado.';
+        } else if (err.status === 500){
+          errorMessage = 'Error 500';
+        }
+
+        return throwError(() => new Error(errorMessage));
       })
     );
   }
