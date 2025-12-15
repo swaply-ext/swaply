@@ -79,7 +79,7 @@ export class RegisterDataService {
       observe: 'response'
     }).pipe(
       map((response: HttpResponse<string>) => {
-        if (response.status === 201) {
+        if (response.status === 202) {
           return response.body;
         } else {
           throw new Error('Error al actualizar información:');
