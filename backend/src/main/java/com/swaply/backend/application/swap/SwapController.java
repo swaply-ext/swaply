@@ -28,10 +28,15 @@ public class SwapController {
         service.createSwap(SecurityUser.getUsername(), dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
-
+    //muestra los swaps del usuario actual
     @GetMapping("/showSwaps")
-    public ResponseEntity<List<Swap>> request(@AuthenticationPrincipal SecurityUser SecurityUser){
+    public ResponseEntity<List<Swap>> showSwaps(@AuthenticationPrincipal SecurityUser SecurityUser){
         List<Swap> swaps = service.getAllSwaps(SecurityUser.getUsername());
         return ResponseEntity.status(HttpStatus.OK).body(swaps);
+    }
+    @GetMapping("/showNextSwap")
+    public ResponseEntity<Swap> nextSwap(@AuthenticationPrincipal SecurityUser SecurityUser){
+        Swap swap = service.getNextSwap(SecurityUser.getUsername());
+        return ResponseEntity.status(HttpStatus.OK).body(swap);
     }
 }

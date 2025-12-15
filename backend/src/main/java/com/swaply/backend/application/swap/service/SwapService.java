@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import org.springframework.stereotype.Service;
@@ -87,4 +88,19 @@ public class SwapService {
         List<Swap> listaSwaps = userSwap.getSwaps();
         return listaSwaps;
     }
+
+    public Swap getNextSwap(String id) {
+        UserDTO userSwap = userService.getUserByID(id);
+        Swap nextSwap = userSwap.getSwaps().stream()
+                                .filter(l -> l.getStatus() == Swap.Status.STANDBY)
+                                .filter(l -> !l.getIsRequester())
+                                .findFirst()
+                                .orElse(null); // o lanzar excepción;
+        return nextSwap;
+
+
+    }
+
+
+
 }
