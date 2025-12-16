@@ -2,21 +2,22 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { timeInterval } from 'rxjs';
 import { Router } from '@angular/router';
+import { SkillCardComponent } from '../../components/skill-card/skill-card.component';
 
 interface SkillDTO {
   id: string;
   name: string;
   category: string;
   icon: string;
+  level: number;
 }
 
 interface SkillItem {
   id: string;
   name: string;
   icon: string;
-  selected: boolean;
+  level: number;
 }
 
 interface Category {
@@ -26,13 +27,18 @@ interface Category {
 }
 
 interface Account {
-  skills: { id: string, level: number }[]
+  skills: UserSkill[]
+}
+
+interface UserSkill {
+  id: string;
+  level: number;
 }
 
 @Component({
   selector: 'app-skills',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SkillCardComponent],
   templateUrl: './skills.component.html',
   styleUrls: ['./skills.component.css']
 })
@@ -40,6 +46,7 @@ interface Account {
 export class SkillsComponent {
 
   categories: Category[] = [];
+  editable: boolean = true;
 
   // Inyectar HttpClient para hacer peticiones HTTP
   constructor(private http: HttpClient, private router: Router) { }
@@ -67,19 +74,19 @@ export class SkillsComponent {
       .subscribe({
         next: (account) => {
           if (account.skills && account.skills.length > 0) {
-            this.markSkills(account.skills);
+            this.setLevel(account.skills);
           }
         },
         error: (err) => console.error('Error obteniendo account:', err)
       });
   }
 
-  private markSkills(mySkills: { id: string; level: number }[]) {
+  private setLevel(mySkills: UserSkill[]){
     this.categories.forEach(category => {
       category.skills.forEach(skill => {
         const match = mySkills.find(us => us.id === skill.id);
         if (match) {
-          skill.selected = true;
+          skill.level = match.level;
         }
       })
     });
@@ -107,7 +114,7 @@ export class SkillsComponent {
         name: skill.name,
         icon: skill.icon,
         id: skill.id,
-        selected: false
+        level: skill.level
       });
     });
     this.categories = grouped;
@@ -121,17 +128,16 @@ export class SkillsComponent {
   toggleSkill(categoryName: string, skillId: string) {
     const category = this.categories.find(c => c.name === categoryName);
     const sub = category?.skills.find(s => s.id === skillId);
-    if (sub) sub.selected = !sub.selected;
   }
 
   // Función para enviar las skills seleccionadas al backend
   submitSkills() {
     const selectedSkills = this.categories.flatMap(category =>
       category.skills
-        .filter(skill => skill.selected)
+        .filter(skill => skill.level>0)
         .map(sub => ({
           id: sub.id,
-          level: 1
+          level: sub.level
         }))
     );
 
@@ -143,7 +149,12 @@ export class SkillsComponent {
         },
         error: err => console.error('Error enviando skills:', err)
       });
-    }
+  }
+
+  handleLevelChange(event: { id: string, newLevel: number }) {
+    console.log(`ID ${event.id} ahora es nivel ${event.newLevel}`);
+    // Solo testeo
+  }
 }
 
 

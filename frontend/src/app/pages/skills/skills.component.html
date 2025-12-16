@@ -19,14 +19,13 @@
     </div>
 
     <div class="chips-container" [class.open]="category.isOpen">
-      <div
-        class="chip"
-        *ngFor="let sub of category.skills"
-        [class.selected]="sub.selected"
-        (click)="toggleSkill(category.name, sub.id); $event.stopPropagation()"
-      >
-        {{ sub.name }} {{ sub.icon }}
-      </div>
+      <app-skill-card
+      *ngFor="let item of category.skills"
+      [id]="item.id"
+      [level]="item.level"
+      [editable]="editable"
+      (levelChange)="handleLevelChange($event)">
+    </app-skill-card>
     </div>
   </div>
 
