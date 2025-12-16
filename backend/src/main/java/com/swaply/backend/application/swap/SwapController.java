@@ -28,8 +28,8 @@ public class SwapController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     //muestra los swaps del usuario actual
-    @GetMapping("/showSwaps")
-    public ResponseEntity<List<Swap>> showSwaps(@AuthenticationPrincipal SecurityUser SecurityUser){
+    @GetMapping("/getAllSwaps")
+    public ResponseEntity<List<Swap>> getAllSwaps(@AuthenticationPrincipal SecurityUser SecurityUser){
         List<Swap> swaps = service.getAllSwaps(SecurityUser.getUsername());
         return ResponseEntity.status(HttpStatus.OK).body(swaps);
     }

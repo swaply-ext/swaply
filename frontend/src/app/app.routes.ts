@@ -71,7 +71,6 @@ export const appRoutes: Routes = [
   { path: '404', component: Error404Component },
   { path: 'privacy-and-security', component: PrivacyAndSecurityComponent, canActivate: [AuthGuard] },
   { path: 'index', component: IndexComponent },
-  { path: 'test-swap', component: TestSwapComponent },
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
   
 ];

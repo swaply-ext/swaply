@@ -2,6 +2,7 @@ import { Component, signal, ChangeDetectionStrategy, computed } from '@angular/c
 import { CommonModule } from '@angular/common';
 import { AccountService } from '../../services/account.service';
 import { SwapService } from '../../services/swap.service';
+import { UsersService } from '../../services/users.service';
 
 interface profileToTeach {
   title: string;
@@ -35,12 +36,14 @@ interface nextSwap {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NextSwapComponent {
-  constructor(private swapService: SwapService, private accountService: AccountService) { }
-  
+  constructor(private swapService: SwapService,
+    private accountService: AccountService,
+    private usersService: UsersService) { }
+
   nextSwap = signal<nextSwap | null>(null);
   profileToTeach = signal<profileToTeach | null>(null);
   profileToLearn = signal<profileToLearn | null>(null);
- 
+
   hasIntercambio = signal(true);
   isConfirmed = signal(false);
 
@@ -60,7 +63,6 @@ export class NextSwapComponent {
   ngOnInit(): void {
     this.getNextSwap();
     this.getUserTeach();
-    this.getUserLearn();
   }
   //recibir proximo intercambio
   getNextSwap(): void {
@@ -68,6 +70,9 @@ export class NextSwapComponent {
       next: (swap) => {
         console.log('Datos recibidos del backend', swap);
         this.nextSwap.set(swap);
+        if (swap?.requestedUserId) {
+          this.getUserLearn(swap.requestedUserId);
+        }
       },
       error: (err) => {
         console.error('Error al obtener swap:', err);
@@ -90,15 +95,16 @@ export class NextSwapComponent {
   }
 
   //recibir usuario a enseñar
-  getUserLearn(): void {
-    this.accountService.getProfileData().subscribe({
+  getUserLearn(userId: string): void {
+    this.usersService.getUserById(userId).subscribe({
       next: (user) => {
-        console.log('Datos recibidos del backend', user);
+        console.log('Usuario a aprender recibido:', user);
+        // Aquí asumimos que el backend devuelve un objeto que encaja con la interfaz profileToLearn
+        // Si no, deberías mapearlo manualmente aquí.
         this.profileToLearn.set(user);
       },
       error: (err) => {
-        console.error('Error al obtener swap:', err);
-        this.nextSwap.set(null);
+        console.error('Error al obtener datos del usuario partner:', err);
       }
     });
   }
