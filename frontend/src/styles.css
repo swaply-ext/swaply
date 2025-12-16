@@ -8,6 +8,8 @@
   --principal-color-3: #023047c7; /* Blau fosc */
 
   /* --- COLORES SECUNDARIOS / NEUTROS --- */
+  --background-gradient: linear-gradient(to bottom, #012534 0%, #00839E 100%);
+
   --secundary-color-1: #fcfcfc; /* Blanc suau */
   --secundary-color-2: #bfbfbf; /* Gris clar */
   --secundary-color-3: #292929; /* Gris fosc */
