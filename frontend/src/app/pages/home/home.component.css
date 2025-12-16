@@ -31,7 +31,7 @@
 
 :host {
   display: block;
-  background: linear-gradient(to bottom, #012534 0%, #00839E 100%);
+  background: var(--background-gradient);
   min-height: 100vh;
 }
 
@@ -255,6 +255,7 @@ img {
   font-weight: 600;
   color: #ffffff;
   margin: 0 0 0.5rem 0;
+  /* Padding 0 absoluto */
   padding: 0;
   white-space: nowrap;
   overflow: hidden;
