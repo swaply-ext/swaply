@@ -39,19 +39,18 @@ public class SwapController {
         return ResponseEntity.status(HttpStatus.OK).body(swap);
     }
 
-    @PutMapping("/{swapId}/status")
-    public ResponseEntity<Swap> updateSwapStatus(
+    @PatchMapping("/{swapId}/status")
+    public ResponseEntity<Boolean> updateSwapStatus(
             @AuthenticationPrincipal SecurityUser SecurityUser,
             @PathVariable String swapId,
             @RequestParam String status) {
         try {
-            Swap updatedSwap = service.updateSwapStatus(
-                    swapId,
-                    status,
-                    SecurityUser.getUsername());
-            return ResponseEntity.ok(updatedSwap);
-
+            service.updateSwapStatus(swapId,status,SecurityUser.getUsername());
+//            Swap actualSwap = service.getSwap(SecurityUser.getUsername(),swapId);
+//            System.out.println(actualSwap + status);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
         } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }

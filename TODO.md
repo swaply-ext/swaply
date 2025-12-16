@@ -1,0 +1,1 @@
+- [x] Complete the updateSwapStatus method in SwapService.java to properly update swap statuses for both users and save to the database.

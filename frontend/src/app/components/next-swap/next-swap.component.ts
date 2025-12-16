@@ -46,6 +46,7 @@ export class NextSwapComponent {
 
   hasIntercambio = signal(true);
   isConfirmed = signal(false);
+  isLoading = signal(false);
 
   imageToLearn = computed(() => {
     const swap = this.nextSwap();
@@ -109,6 +110,61 @@ export class NextSwapComponent {
     });
   }
 
+  confirmIntercambio() {
+    // 1. Obtenemos el valor actual del swap
+    const currentSwap = this.nextSwap();
+
+    // 2. Verificamos que exista para evitar errores
+    if (!currentSwap || !currentSwap.id) {
+      console.error('No hay información del swap para confirmar');
+      return;
+    }
+
+    this.isLoading.set(true);
+    
+    // 3. Usamos currentSwap.id
+    this.swapService.updateSwapStatus(currentSwap.id, 'ACCEPTED').subscribe({
+      next: (response) => {
+        this.isConfirmed.set(true); 
+        this.isLoading.set(false);
+        console.log('Intercambio aceptado:', response);
+        
+        // Opcional: Actualizar el estado local del objeto nextSwap también
+        this.nextSwap.set({ ...currentSwap, status: 'ACCEPTED' });
+      },
+      error: (err) => {
+        console.error('Error al confirmar:', err);
+        this.isLoading.set(false);
+      }
+    });
+  }
+
+  // Función para RECHAZAR
+  denyIntercambio() {
+    const currentSwap = this.nextSwap();
+
+    if (!currentSwap || !currentSwap.id) {
+      return;
+    }
+
+    if(!confirm('¿Estás seguro de que quieres rechazar este intercambio?')) return;
+
+    this.isLoading.set(true);
+
+    // Usamos currentSwap.id
+    this.swapService.updateSwapStatus(currentSwap.id, 'DENIED').subscribe({
+      next: (response) => {
+        this.hasIntercambio.set(false); 
+        this.isLoading.set(false);
+        console.log('Intercambio rechazado');
+      },
+      error: (err) => {
+        console.error('Error al rechazar:', err);
+        this.isLoading.set(false);
+      }
+    });
+  }
+
   private assignImageToSkill(category: string, skillName: string): string | undefined {
     if (!skillName) return undefined;
 
@@ -166,17 +222,6 @@ export class NextSwapComponent {
     return undefined;
   }
 
-  // --- FUNCIONES DE LOS BOTONES ---
-  toggleIntercambio() {
-    this.hasIntercambio.update(value => !value);
-    this.isConfirmed.set(false);
-  }
-
-  toggleConfirmation() {
-    this.isConfirmed.update(value => !value);
-  }
-  toggleDeny() {
-    this.isConfirmed.set(false);
-  }
+  
 
 }

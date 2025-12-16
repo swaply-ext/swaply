@@ -50,15 +50,15 @@
         <ng-container *ngIf="isConfirmed(); else showButton">
           <span class="status-text">
             <span class="material-symbols-outlined">check_circle</span>
-            intercambio confirmada
+            Intercambio confirmado
           </span>
         </ng-container>
         <ng-template #showButton>
-          <button class="btn-deny" (click)="toggleDeny()">
+          <button class="btn-deny" (click)="denyIntercambio()">
             <span class="material-symbols-outlined">cancel</span>
             Rechazar intercambio
           </button>
-          <button class="btn-confirm" (click)="toggleConfirmation()">
+          <button class="btn-confirm" (click)="confirmIntercambio()">
             <span class="material-symbols-outlined">check_circle</span>
             Confirmar intercambio
           </button>

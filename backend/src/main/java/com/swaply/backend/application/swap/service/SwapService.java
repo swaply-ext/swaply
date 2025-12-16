@@ -98,48 +98,43 @@ public class SwapService {
 
     }
 
-    // --- MÉTODO TUYO (ACCION-SOLICITUD-INTERCAMBIO) ---
-    public Swap updateSwapStatus(String swapId, String status, String currentUserId) {
-
-        Iterable<User> allUsers = repository.findAll();
-
-        User sender = null;
-        User receiver = null;
-        Swap sentSwap = null;
-        Swap receivedSwap = null;
-
-        for (User user : allUsers) {
-            if (user.getSwaps() != null) {
-
-                Optional<Swap> foundSwap = user.getSwaps().stream()
-                        .filter(s -> s.getId().equals(swapId))
-                        .findFirst();
-
-                if (foundSwap.isPresent()) {
-                    Swap swap = foundSwap.get();
-                    if (swap.getIsRequester()) {
-                        sender = user;
-                        sentSwap = swap;
-                    } else {
-                        receiver = user;
-                        receivedSwap = swap;
-                    }
-                }
-            }
+    public Swap getSwap(String userId, String swapId){
+        UserDTO userSwap = userService.getUserByID(userId);
+        Swap swap = userSwap.getSwaps().stream()
+                .filter(l -> l.getId().equals(swapId)) // 1. Usar .equals() y paréntesis
+                .findFirst()
+                .orElse(null);;
+        return swap;
+    }
+    public void updateSwapStatus(String swapId, String status, String currentUserId){
+        // Get sender User entity
+        Optional<UserDTO> senderOpt = repository.findUserById(currentUserId);
+        if (!senderOpt.isPresent()) {
+            throw new UserNotFoundException(currentUserId);
         }
+        User sender = senderOpt.get();
 
-        if (sentSwap == null || receivedSwap == null) {
-            throw new RuntimeException("Swap request with id " + swapId + " not found.");
+        // Find sender's swap
+        Swap senderSwap = sender.getSwaps().stream()
+                .filter(s -> s.getId().equals(swapId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Swap not found for sender"));
+
+        // Get receiver User entity
+        String receiverId = senderSwap.getRequestedUserId();
+        Optional<User> receiverOpt = repository.findUserById(receiverId);
+        if (!receiverOpt.isPresent()) {
+            throw new UserNotFoundException(receiverId);
         }
+        User receiver = receiverOpt.get();
 
-        if (!receiver.getId().equals(currentUserId)) {
-            throw new RuntimeException("Unauthorized: Only the requested user can update the status.");
-        }
+        // Find receiver's swap
+        Swap receiverSwap = receiver.getSwaps().stream()
+                .filter(s -> s.getId().equals(swapId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Swap not found for receiver"));
 
-        if (sentSwap.getStatus() != Swap.Status.STANDBY) {
-            throw new RuntimeException("Swap is already " + sentSwap.getStatus());
-        }
-
+        // Set new status
         Swap.Status newStatus;
         if (status.equalsIgnoreCase("ACCEPTED")) {
             newStatus = Swap.Status.ACCEPTED;
@@ -148,13 +143,11 @@ public class SwapService {
         } else {
             throw new IllegalArgumentException("Invalid status: " + status);
         }
+        senderSwap.setStatus(newStatus);
+        receiverSwap.setStatus(newStatus);
 
-        sentSwap.setStatus(newStatus);
-        receivedSwap.setStatus(newStatus);
-
+        // Save to database
         repository.save(sender);
         repository.save(receiver);
-
-        return sentSwap;
     }
 }
