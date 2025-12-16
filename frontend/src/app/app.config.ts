@@ -15,12 +15,13 @@ import { FormsModule } from '@angular/forms';
 
 import { authInterceptor } from './interceptors/auth.interceptor';
 import { loadingInterceptor } from './interceptors/loading.interceptor';
+import { apiUrlInterceptor } from './interceptors/api-url.interceptor'
 
 export const appConfig = {
   providers: [
     importProvidersFrom(FormsModule),
     provideRouter(appRoutes),
-    provideHttpClient(withInterceptors([authInterceptor, loadingInterceptor])),
+    provideHttpClient(withInterceptors([authInterceptor, loadingInterceptor, apiUrlInterceptor])),
   ]
 };
 

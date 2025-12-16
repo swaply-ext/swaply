@@ -9,7 +9,7 @@ interface RegisterUserDTO {
   password: string;
 }
 
-interface UserLocation {
+interface Location {
   placeId: string;
   lat: number;
   lon: number;
@@ -21,7 +21,7 @@ interface AllUserData {
   surname: string;
   birthDate: Date;
   gender: string;
-  location: UserLocation;
+  location: Location;
   phone: number;
 }
 
