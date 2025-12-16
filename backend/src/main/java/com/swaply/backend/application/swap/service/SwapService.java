@@ -108,7 +108,7 @@ public class SwapService {
     }
     public void updateSwapStatus(String swapId, String status, String currentUserId){
         // Get sender User entity
-        Optional<UserDTO> senderOpt = repository.findUserById(currentUserId);
+        Optional<User> senderOpt = repository.findUserById(currentUserId);
         if (!senderOpt.isPresent()) {
             throw new UserNotFoundException(currentUserId);
         }

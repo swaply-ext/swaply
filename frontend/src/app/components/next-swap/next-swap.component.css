@@ -37,11 +37,11 @@ button {
 
 /* --- Estilos de la Caja de Intercambio --- */
 .interchange-box {
-    background-color: #143F4C;
+    background-color: var(--bg-interchange);
     padding: 1.5rem;
     border-radius: 0.5rem;
-    box-shadow: 0 0.625rem 0.938rem -0.188rem rgba(0, 0, 0, 0.1);
-    border: 0.125rem solid #3CB57C;
+    box-shadow: var(--shadow-large);
+    border: 0.125rem solid var(--principal-color-2);
 }
 
 .interchange-empty {
@@ -52,7 +52,7 @@ button {
 
 .interchange-empty p {
     font-size: 1.125rem;
-    color: #d1d5db;
+    color: var(--text-muted);
     margin-bottom: 1.5rem;
 }
 
@@ -69,7 +69,7 @@ button {
 
 .interchange-populated .arrow-icon {
     font-size: 3.125rem;
-    color: #3CB57C;
+    color: var(--principal-color-2);
     flex-shrink: 0;
     margin: 1rem 2rem;
     user-select: none;
@@ -87,7 +87,7 @@ button {
     margin-bottom: 0.75rem;
     text-align: left;
     padding-left: 0;
-    color: #e5e7eb;
+    color: var(--text-gray-100);
     /* Heredado del contexto anterior */
 }
 
@@ -95,7 +95,7 @@ button {
     display: flex;
     align-items: center;
     gap: 1rem;
-    background-color: #1F4E5D;
+    background-color: var(--bg-interchange-card);
     padding: 1rem;
     border-radius: 0.5rem;
 }
@@ -113,13 +113,13 @@ button {
 
 .interchange-skill-card h4 {
     font-weight: 700;
-    color: #ffffff;
+    color: var(--text-white);
     margin: 0;
 }
 
 .interchange-skill-card p {
     font-size: 0.9rem;
-    color: #d1d5db;
+    color: var(--text-muted);
     margin: 0.25rem 0;
 }
 
@@ -160,7 +160,7 @@ button {
     gap: 1rem;
     margin-top: 1rem;
     padding-top: 1rem;
-    border-top: 0.063rem solid rgba(255, 255, 255, 0.1);
+    border-top: 0.063rem solid var(--divider-color);
     min-height: 3.125rem;
 }
 
@@ -177,10 +177,10 @@ button {
     gap: 0.5rem;
     font-size: 0.9rem;
     font-weight: 600;
-    background-color: #4b5563;
+    background-color: var(--bg-disabled);
     cursor: not-allowed;
-    color: #9ca3af;
-    border: 0.063rem solid #4b5563;
+    color: var(--text-disabled);
+    border: 0.063rem solid var(--bg-disabled);
     padding: 0.6rem 1.25rem;
     border-radius: 624.938rem;
 }
@@ -192,10 +192,10 @@ button {
     gap: 0.5rem;
     font-size: 0.9rem;
     font-weight: 600;
-    color: #3CB57C;
+    color: var(--principal-color-2);
     padding: 0.6rem 1.25rem;
-    background-color: #0F2D37;
-    border: 0.063rem solid #3CB57C;
+    background-color: var(--bg-status);
+    border: 0.063rem solid var(--principal-color-2);
     border-radius: 624.938rem;
 }
 
@@ -208,8 +208,8 @@ button {
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    background-color: #3CB57C;
-    color: #ffffff;
+    background-color: var(--principal-color-2);
+    color: var(--text-white);
     padding: 0.6rem 1.25rem;
     border-radius: 624.938rem;
     font-weight: 600;
@@ -221,7 +221,7 @@ button {
 }
 
 .btn-confirm:hover:not(:disabled) {
-    background-color: #319b69;
+    background-color: var(--principal-color-2-hover);
 }
 
 .btn-deny {
@@ -243,7 +243,7 @@ button {
 }
 
 .btn-deny:hover:not(:disabled) {
-    background-color: var(--error-color-2)
+    background-color: var(--error-color-2);
 }
 
 /* --- Responsive Específico del Componente --- */
@@ -261,4 +261,9 @@ button {
         max-width: 100%;
         width: 100%;
     }
+}
+.denied{
+    background-color: var(--error-color-3);
+    border: 0.063rem solid var(--error-color-3);
+    color: var(--secundary-color-1);
 }

@@ -46,6 +46,7 @@ export class NextSwapComponent {
 
   hasIntercambio = signal(true);
   isConfirmed = signal(false);
+  isDenied = signal(false);
   isLoading = signal(false);
 
   imageToLearn = computed(() => {
@@ -70,9 +71,15 @@ export class NextSwapComponent {
     this.swapService.getNextSwap().subscribe({
       next: (swap) => {
         console.log('Datos recibidos del backend', swap);
+        this.isConfirmed.set(false);
+        this.isDenied.set(false);
         this.nextSwap.set(swap);
         if (swap?.requestedUserId) {
           this.getUserLearn(swap.requestedUserId);
+        }
+        //comprobar que no hay:
+        if (swap == null){
+          this.hasIntercambio = signal(false);
         }
       },
       error: (err) => {
@@ -111,10 +118,8 @@ export class NextSwapComponent {
   }
 
   confirmIntercambio() {
-    // 1. Obtenemos el valor actual del swap
     const currentSwap = this.nextSwap();
 
-    // 2. Verificamos que exista para evitar errores
     if (!currentSwap || !currentSwap.id) {
       console.error('No hay información del swap para confirmar');
       return;
@@ -122,15 +127,13 @@ export class NextSwapComponent {
 
     this.isLoading.set(true);
     
-    // 3. Usamos currentSwap.id
     this.swapService.updateSwapStatus(currentSwap.id, 'ACCEPTED').subscribe({
-      next: (response) => {
+      next: async (response) => {
         this.isConfirmed.set(true); 
         this.isLoading.set(false);
         console.log('Intercambio aceptado:', response);
-        
-        // Opcional: Actualizar el estado local del objeto nextSwap también
-        this.nextSwap.set({ ...currentSwap, status: 'ACCEPTED' });
+        await this.sleep(5000);
+        this.ngOnInit();
       },
       error: (err) => {
         console.error('Error al confirmar:', err);
@@ -139,7 +142,6 @@ export class NextSwapComponent {
     });
   }
 
-  // Función para RECHAZAR
   denyIntercambio() {
     const currentSwap = this.nextSwap();
 
@@ -147,16 +149,15 @@ export class NextSwapComponent {
       return;
     }
 
-    if(!confirm('¿Estás seguro de que quieres rechazar este intercambio?')) return;
-
     this.isLoading.set(true);
 
-    // Usamos currentSwap.id
     this.swapService.updateSwapStatus(currentSwap.id, 'DENIED').subscribe({
-      next: (response) => {
-        this.hasIntercambio.set(false); 
+      next: async (response) => {
         this.isLoading.set(false);
+        this.isDenied.set(true);
         console.log('Intercambio rechazado');
+        await this.sleep(5000);
+        this.ngOnInit();
       },
       error: (err) => {
         console.error('Error al rechazar:', err);
@@ -222,6 +223,7 @@ export class NextSwapComponent {
     return undefined;
   }
 
-  
-
+  private sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 }

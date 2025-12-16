@@ -7,7 +7,7 @@
           <h3>Tu próxima habilidad para aprender</h3>
           <div class="interchange-skill-card">
             <img [src]="imageToLearn()" alt="{{ nextSwap()?.interest }}">
-            <div >
+            <div>
               <h4>Clase de {{ nextSwap()?.interest }}</h4>
               <p class="skill-location">
                 <span class="material-symbols-outlined location">location_on</span>
@@ -47,35 +47,38 @@
       </div>
 
       <div class="confirmation-area">
-        <ng-container *ngIf="isConfirmed(); else showButton">
-          <span class="status-text">
+        
+        <ng-container *ngIf="isConfirmed()">
+          <span class="status-text confirmed">
             <span class="material-symbols-outlined">check_circle</span>
             Intercambio confirmado
           </span>
         </ng-container>
-        <ng-template #showButton>
-          <button class="btn-deny" (click)="denyIntercambio()">
+        <ng-container *ngIf="isDenied()">
+          <span class="status-text denied">
+            <span class="material-symbols-outlined">cancel</span>
+            Intercambio rechazado
+          </span>
+        </ng-container>
+
+        <ng-container *ngIf="!isConfirmed() && !isDenied()">
+          <button class="btn-deny" (click)="denyIntercambio()" [disabled]="isLoading()">
             <span class="material-symbols-outlined">cancel</span>
             Rechazar intercambio
           </button>
-          <button class="btn-confirm" (click)="confirmIntercambio()">
+          <button class="btn-confirm" (click)="confirmIntercambio()" [disabled]="isLoading()">
             <span class="material-symbols-outlined">check_circle</span>
             Confirmar intercambio
           </button>
-        </ng-template>
+        </ng-container>
       </div>
+
     </div>
   </ng-container>
 
   <ng-template #noIntercambio>
     <div class="interchange-box interchange-empty">
       <p>No tienes ningún intercambio programado.</p>
-      <div class="confirmation-area disabled">
-        <span class="status-text">
-          <span class="material-symbols-outlined">check_circle</span>
-          Intercambio confirmado
-        </span>
       </div>
-    </div>
   </ng-template>
 </section>

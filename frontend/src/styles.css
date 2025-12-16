@@ -1,35 +1,58 @@
 /* You can add global styles to this file, and also import other style files */
 /* Tipografia i colors globals */
 :root {
+  /* --- COLORES PRINCIPALES --- */
   --principal-color-1: #023047; /* Blau fosc */
   --principal-color-2: #3cb57c; /* Verd menta */
+  --principal-color-2-hover: #319b69; /* Verd menta oscurecido (HOVER) - NUEVO */
   --principal-color-3: #023047c7; /* Blau fosc */
 
-
+  /* --- COLORES SECUNDARIOS / NEUTROS --- */
   --secundary-color-1: #fcfcfc; /* Blanc suau */
   --secundary-color-2: #bfbfbf; /* Gris clar */
   --secundary-color-3: #292929; /* Gris fosc */
+  
+  /* --- TEXTOS --- */
+  --text-white: #ffffff; /* Blanco puro - NUEVO */
+  --text-gray-100: #e5e7eb; /* Gris muy claro (para h3) - NUEVO */
+  --text-muted: #d1d5db; /* Gris medio (para párrafos secundarios) - NUEVO */
+  --text-disabled: #9ca3af; /* Gris deshabilitado - NUEVO */
+
+  /* --- ERRORES --- */
   --error-color-1: #E53935; /* Vermell clar */
   --error-color-2: #B71C1C; /* Vermell neutre */
   --error-color-3: #751414; /* Vermell fosc */
 
-
+  /* --- FUENTES --- */
   --font-primary: "Quicksand", sans-serif;
   --font-secondary: "Inter", sans-serif;
 
+  /* --- FONDOS DE COMPONENTES --- */
+  --bg-panel: #022c38;
+  --bg-card: #00414b;
+  --bg-location: #00333c;
+  
+  /* Fondos específicos Intercambio - NUEVOS */
+  --bg-interchange: #143F4C; 
+  --bg-interchange-card: #1F4E5D;
+  --bg-status: #0F2D37;
+  --bg-disabled: #4b5563;
 
-    --bg-panel: #022c38;
-    --bg-card: #00414b;
-    --bg-location: #00333c;
-    --border-color: #00a1b7;
-    --button-hover: #e0e0e0;
-    --level-one-skill: #2ab57e;
-    --level-two-skill: #ffa62f;
-    --level-three-skill: #a05af3;
+  /* --- BORDES Y SEPARADORES --- */
+  --border-color: #00a1b7;
+  --pic-border-color: #00BAD2;
+  --divider-color: rgba(255, 255, 255, 0.1); /* Separador sutil - NUEVO */
 
-  --pic-border-color: #00BAD2; /* Color del borde de la foto de perfil*/
-  --star-color: #f1c40f ; /* Color d'estrella */
-  --shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Color de sombra */
+  /* --- OTROS --- */
+  --button-hover: #e0e0e0;
+  --level-one-skill: #2ab57e;
+  --level-two-skill: #ffa62f;
+  --level-three-skill: #a05af3;
+  --star-color: #f1c40f;
+  
+  /* --- SOMBRAS --- */
+  --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-large: 0 0.625rem 0.938rem -0.188rem rgba(0, 0, 0, 0.1); /* Sombra más grande - NUEVO */
 }
 
 body {
@@ -39,30 +62,11 @@ body {
   margin: 0;
 }
 
-h1 {
-  color: var(--principal-color-2);
-  font-family: var(--font-primary);
-  font-weight: 700; /* Quicksand bold */
-  text-align: center;
-  margin-top: 3%;
-  margin: 3%;
-}
-
-h2 {
+h1, h2, h3 {
   color: var(--principal-color-2);
   font-family: var(--font-primary);
   font-weight: 700;
   text-align: center;
-  margin-top: 3%;
-  margin: 3%;
-}
-
-h3 {
-  color: var(--principal-color-2);
-  font-family: var(--font-primary);
-  font-weight: 700;
-  text-align: center;
-  margin-top: 3%;
   margin: 3%;
 }
 
@@ -71,27 +75,24 @@ h3 {
   color: white;
   margin-top: 1%;
 }
+
 /* Contenidor per al text principal */
 .info-box {
   text-align: center;
-  max-width: 500px; /* com el del teu company */
+  max-width: 500px;
   width: 90%;
-  margin: 50px auto; /* centrat i amb espai amunt i avall */
+  margin: 50px auto;
   padding: 20px;
-
-  border: 1px solid #315465;
+  border: 1px solid #315465; /* Podrías querer cambiar esto por una variable también */
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-
-  background-color: #315465; /* mateix color de fons */
-  color: #fcfcfc; /* text blanc */
-
+  background-color: #315465;
+  color: var(--secundary-color-1);
   display: flex;
   flex-direction: column;
   align-items: center;
   box-sizing: border-box;
-
-  font-family: var(--font-secondary); /* seguim fent servir la teva font */
+  font-family: var(--font-secondary);
 }
 
 /* Botó personalitzat */
@@ -118,12 +119,10 @@ h3 {
   background-color: var(--secundary-color-1);
   color: var(--principal-color-1);
   font-family: var(--font-secondary);
-
   position: fixed;
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
