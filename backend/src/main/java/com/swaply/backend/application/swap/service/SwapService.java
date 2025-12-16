@@ -12,7 +12,7 @@ import com.swaply.backend.application.swap.SwapMapper;
 import com.swaply.backend.application.swap.dto.SwapDTO;
 import com.swaply.backend.shared.UserCRUD.UserRepository;
 import com.swaply.backend.shared.UserCRUD.UserService;
-import com.swaply.backend.shared.UserCRUD.dto.UserDTO; 
+import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.shared.UserCRUD.Model.Swap;
 import com.swaply.backend.shared.UserCRUD.Model.User;
 import com.swaply.backend.shared.UserCRUD.exception.UserNotFoundException;
@@ -68,7 +68,6 @@ public class SwapService {
         } else {
             throw new UserNotFoundException(sendingUser);
         }
-
         return sentSwap;
     }
 
@@ -79,7 +78,6 @@ public class SwapService {
         return newdto;
     }
 
-    // --- MÉTODO DE TU COMPAÑERO (HEAD) ---
     public List<Swap> getAllSwaps(String id) {
         UserDTO userSwap = userService.getUserByID(id);
         List<Swap> listaSwaps = userSwap.getSwaps();
@@ -89,25 +87,24 @@ public class SwapService {
     public Swap getNextSwap(String id) {
         UserDTO userSwap = userService.getUserByID(id);
         Swap nextSwap = userSwap.getSwaps().stream()
-                                .filter(l -> l.getStatus() == Swap.Status.STANDBY)
-                                .filter(l -> !l.getIsRequester())
-                                .findFirst()
-                                .orElse(null); // o lanzar excepción;
+                .filter(l -> l.getStatus() == Swap.Status.STANDBY)
+                .filter(l -> !l.getIsRequester())
+                .findFirst()
+                .orElse(null); // o lanzar excepción;
         return nextSwap;
-
-
     }
 
-    public Swap getSwap(String userId, String swapId){
+    public Swap getSwap(String userId, String swapId) {
         UserDTO userSwap = userService.getUserByID(userId);
         Swap swap = userSwap.getSwaps().stream()
-                .filter(l -> l.getId().equals(swapId)) // 1. Usar .equals() y paréntesis
+                .filter(l -> l.getId().equals(swapId))
                 .findFirst()
-                .orElse(null);;
+                .orElse(null);
+        ;
         return swap;
     }
-    public void updateSwapStatus(String swapId, String status, String currentUserId){
-        // Get sender User entity
+
+    public void updateSwapStatus(String swapId, String status, String currentUserId) {
         Optional<User> senderOpt = repository.findUserById(currentUserId);
         if (!senderOpt.isPresent()) {
             throw new UserNotFoundException(currentUserId);

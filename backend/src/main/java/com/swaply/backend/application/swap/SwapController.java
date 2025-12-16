@@ -27,14 +27,16 @@ public class SwapController {
         service.createSwap(SecurityUser.getUsername(), dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
-    //muestra los swaps del usuario actual
+
+    // muestra los swaps del usuario actual
     @GetMapping("/getAllSwaps")
-    public ResponseEntity<List<Swap>> getAllSwaps(@AuthenticationPrincipal SecurityUser SecurityUser){
+    public ResponseEntity<List<Swap>> getAllSwaps(@AuthenticationPrincipal SecurityUser SecurityUser) {
         List<Swap> swaps = service.getAllSwaps(SecurityUser.getUsername());
         return ResponseEntity.status(HttpStatus.OK).body(swaps);
     }
+
     @GetMapping("/showNextSwap")
-    public ResponseEntity<Swap> nextSwap(@AuthenticationPrincipal SecurityUser SecurityUser){
+    public ResponseEntity<Swap> nextSwap(@AuthenticationPrincipal SecurityUser SecurityUser) {
         Swap swap = service.getNextSwap(SecurityUser.getUsername());
         return ResponseEntity.status(HttpStatus.OK).body(swap);
     }
@@ -45,9 +47,7 @@ public class SwapController {
             @PathVariable String swapId,
             @RequestParam String status) {
         try {
-            service.updateSwapStatus(swapId,status,SecurityUser.getUsername());
-//            Swap actualSwap = service.getSwap(SecurityUser.getUsername(),swapId);
-//            System.out.println(actualSwap + status);
+            service.updateSwapStatus(swapId, status, SecurityUser.getUsername());
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());

@@ -70,7 +70,6 @@ export class NextSwapComponent {
   getNextSwap(): void {
     this.swapService.getNextSwap().subscribe({
       next: (swap) => {
-        console.log('Datos recibidos del backend', swap);
         this.isConfirmed.set(false);
         this.isDenied.set(false);
         this.nextSwap.set(swap);
@@ -78,7 +77,7 @@ export class NextSwapComponent {
           this.getUserLearn(swap.requestedUserId);
         }
         //comprobar que no hay:
-        if (swap == null){
+        if (swap == null) {
           this.hasIntercambio = signal(false);
         }
       },
@@ -92,7 +91,6 @@ export class NextSwapComponent {
   getUserTeach(): void {
     this.accountService.getProfileData().subscribe({
       next: (user) => {
-        console.log('Datos recibidos del backend', user);
         this.profileToTeach.set(user);
       },
       error: (err) => {
@@ -106,9 +104,6 @@ export class NextSwapComponent {
   getUserLearn(userId: string): void {
     this.usersService.getUserById(userId).subscribe({
       next: (user) => {
-        console.log('Usuario a aprender recibido:', user);
-        // Aquí asumimos que el backend devuelve un objeto que encaja con la interfaz profileToLearn
-        // Si no, deberías mapearlo manualmente aquí.
         this.profileToLearn.set(user);
       },
       error: (err) => {
@@ -124,14 +119,12 @@ export class NextSwapComponent {
       console.error('No hay información del swap para confirmar');
       return;
     }
-
     this.isLoading.set(true);
-    
+
     this.swapService.updateSwapStatus(currentSwap.id, 'ACCEPTED').subscribe({
       next: async (response) => {
-        this.isConfirmed.set(true); 
+        this.isConfirmed.set(true);
         this.isLoading.set(false);
-        console.log('Intercambio aceptado:', response);
         await this.sleep(5000);
         this.ngOnInit();
       },
@@ -152,10 +145,9 @@ export class NextSwapComponent {
     this.isLoading.set(true);
 
     this.swapService.updateSwapStatus(currentSwap.id, 'DENIED').subscribe({
-      next: async (response) => {
+      next: async () => {
         this.isLoading.set(false);
         this.isDenied.set(true);
-        console.log('Intercambio rechazado');
         await this.sleep(5000);
         this.ngOnInit();
       },
@@ -224,6 +216,6 @@ export class NextSwapComponent {
   }
 
   private sleep(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 }
