@@ -48,7 +48,7 @@ export class RegisterDataService {
 
   // 🔹 Llama al backend para registrar inicialmente (verifica email y username)
   initialRegister(data: RegisterUserDTO): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/register`, data, {
+    return this.http.post(`/auth/register`, data, {
       responseType: 'text',
       observe: 'response'
     }).pipe(
@@ -72,7 +72,7 @@ export class RegisterDataService {
   }
 
   personalInformation(data: AllUserData): Observable<any> {
-    return this.http.post(`${this.apiUrl}/account/personalInfo`, data, {
+    return this.http.post(`/account/personalInfo`, data, {
       responseType: 'text',
       observe: 'response'
     }).pipe(

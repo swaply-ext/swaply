@@ -14,7 +14,7 @@ export class AuthService {
 
   login(credentials: any) {
     console.log(this.isLoggedIn())
-    return this.http.post('http://localhost:8081/api/auth/login', credentials, {
+    return this.http.post('/auth/login', credentials, {
 
       // SALTAR PANTALLA DE CARGA
       // context: new HttpContext().set(SKIP_LOADING, true),

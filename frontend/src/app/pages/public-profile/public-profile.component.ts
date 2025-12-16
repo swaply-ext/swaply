@@ -13,10 +13,17 @@ interface Skill {
   level: number;
 }
 
+interface Location {
+  placeId: string;
+  lat: number;
+  lon: number;
+  displayName: string;
+}
+
 interface ProfileData {
   fullName: string;
   username: string;
-  location: string;
+  location: Location;
   description: string;
   profilePhotoUrl: string;
   rating: number;

@@ -1,4 +1,4 @@
-package com.swaply.backend.shared.location;
+package com.swaply.backend.shared.location.dto;
 
 
 import java.util.Map;
@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class LocationResponse {
+public class LocationResponseDTO {
     @JsonProperty("place_id")
     private String placeId;
     
