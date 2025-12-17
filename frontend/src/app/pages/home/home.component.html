@@ -78,35 +78,43 @@
       <div class="card-grid" *ngIf="!isLoadingMatches()">
         <div class="skill-card" *ngFor="let card of cards()" (click)="goToSwap(card)">
           
-          <!-- Imagen -->
           <img *ngIf="card.skillImage" [src]="card.skillImage" [alt]="card.skillTitle" class="card-image" (error)="card.skillImage = undefined"> 
           <div *ngIf="!card.skillImage" class="card-image-placeholder" style="height: 160px; background: #143F4C; display: flex; justify-content: center; align-items: center; font-size: 4rem; border-radius: 0.5rem 0.5rem 0 0; user-select: none;">
              {{ card.skillIcon || '🎓' }}
           </div>
-          
+
           <div class="card-content clickable-user">
+            
             <div class="card-user-info">
-              <img [src]="card.userAvatar" [alt]="card.userName" class="user-avatar" [routerLink]="['/public-profile', card.username]">
-              <span [routerLink]="['/public-profile', card.username]">{{ card.userName }}</span>
+              <img [src]="card.userAvatar" 
+                   [alt]="card.userName" 
+                   class="user-avatar" 
+                   [routerLink]="['/public-profile', card.username]"
+                   (click)="$event.stopPropagation()"
+                   style="cursor: pointer;">
+
+              <span [routerLink]="['/public-profile', card.username]"
+                    (click)="$event.stopPropagation()"
+                    style="cursor: pointer;">
+                    {{ card.userName }}
+              </span>
             </div>
   
-          <h3>{{ card.skillTitle }}</h3>
+            <h3>{{ card.skillTitle }}</h3>
 
-          <ng-container *ngIf="hasSearched()">
-  
-            <div *ngIf="card.isMatch" class="match-status is-match">
+            <ng-container *ngIf="hasSearched()">
+              <div *ngIf="card.isMatch" class="match-status is-match">
                 <span class="material-symbols-outlined">bolt</span> 
                 ¡MATCH! Le interesa lo tuyo
-            </div>
+              </div>
 
-            <div *ngIf="!card.isMatch" class="match-status no-match">
+              <div *ngIf="!card.isMatch" class="match-status no-match">
                 <span class="material-symbols-outlined">person</span> 
                 Solo enseña
-            </div>
+              </div>
+            </ng-container>
 
-          </ng-container>
-
-          <div class="card-footer">
+            <div class="card-footer">
               <span class="location" [class.nearby]="card.distance === 'Cerca de ti'">
                   <span class="material-symbols-outlined card-icon">location_on</span> {{ card.distance }}
                 </span>
