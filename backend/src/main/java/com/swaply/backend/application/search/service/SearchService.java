@@ -10,7 +10,6 @@ import java.text.Normalizer;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class SearchService {
@@ -21,27 +20,23 @@ public class SearchService {
         this.userRepository = userRepository;
     }
 
-    // --- MAPA DE EXPANSIÓN (SINÓNIMOS) ---
-    // Esto resuelve el problema de no saber si el ID es 'football' o 'futbol'.
-    // Buscaremos por TODAS las variantes.
+
     private static final Map<String, List<String>> SYNONYMS = new HashMap<>();
 
     static {
-        // Deportes
+
         addSynonyms("football", "futbol", "fútbol", "soccer");
         addSynonyms("basketball", "basquet", "básquet", "baloncesto", "basket");
         addSynonyms("padel", "pádel", "paddle");
         addSynonyms("volleyball", "voley", "vóley", "voleibol");
         addSynonyms("boxing", "boxeo", "box");
 
-        // Música
         addSynonyms("guitar", "guitarra");
         addSynonyms("piano", "teclado");
         addSynonyms("violin", "violín");
         addSynonyms("drums", "bateria", "batería", "percusion");
         addSynonyms("saxophone", "saxofon", "saxofón", "saxo");
 
-        // Ocio
         addSynonyms("drawing", "dibujo", "pintura", "arte");
         addSynonyms("cooking", "cocina", "gastronomia", "culinaria");
         addSynonyms("dance", "baile", "danza", "dancing");
@@ -49,7 +44,6 @@ public class SearchService {
         addSynonyms("digital", "ocio digital", "informatica", "gaming", "ordenador");
     }
 
-    // Método helper para llenar el mapa bidireccionalmente
     private static void addSynonyms(String... terms) {
         List<String> list = Arrays.asList(terms);
         for (String term : terms) {
@@ -64,7 +58,6 @@ public class SearchService {
         return pattern.matcher(normalized).replaceAll("").trim().toLowerCase();
     }
 
-    // Dada una palabra (ej: "futbol"), devuelve ["futbol", "football", "soccer", "fútbol"]
     private List<String> expandSearchTerm(String term) {
         String key = normalizeKey(term);
         List<String> variations = SYNONYMS.getOrDefault(key, new ArrayList<>());
@@ -79,24 +72,18 @@ public class SearchService {
             return new ArrayList<>();
         }
 
-        // 1. PREPARAR TÉRMINOS DE BÚSQUEDA EXPANDIDOS
-        // Si buscas "futbol,guitarra", generamos una lista gigante con todos los sinónimos de ambos.
         Set<String> expandedSearchIds = new HashSet<>();
         String[] rawTerms = query.split(",");
         
         for (String term : rawTerms) {
             List<String> expansions = expandSearchTerm(term);
-            // Normalizamos cada variante para asegurar coincidencia con BD
             expansions.forEach(e -> expandedSearchIds.add(normalizeKey(e)));
         }
 
-        // 2. BUSQUEDA EN BASE DE DATOS
-        // Buscamos usuarios que tengan CUALQUIERA de los IDs expandidos
         List<User> candidates = userRepository.findUsersByMultipleSkillIds(new ArrayList<>(expandedSearchIds));
 
         User me = userRepository.findUserById(myUserId).orElse(null);
         
-        // Mis habilidades para el Match
         Set<String> myOfferingTokens = new HashSet<>();
         if (me != null && me.getSkills() != null) {
             for (UserSkills s : me.getSkills()) {
@@ -110,12 +97,10 @@ public class SearchService {
 
         List<UserSwapDTO> results = new ArrayList<>();
 
-        // 3. PROCESAMIENTO
         for (User candidate : candidates) {
             if (candidate.getId().equals(myUserId)) continue;
             if (candidate.getSkills() == null) continue;
 
-            // A. CHECK MATCH
             boolean isMatch = false;
             if (candidate.getInterests() != null && !myOfferingTokens.isEmpty()) {
                 isMatch = candidate.getInterests().stream().anyMatch(interest -> {
@@ -123,11 +108,11 @@ public class SearchService {
                     String iName = normalizeKey(interest.getName());
                     
                     for (String myToken : myOfferingTokens) {
-                        // Coincidencia directa o cruzada
+                        
                         if (myToken.contains(iId) || iId.contains(myToken)) return true;
                         if (!iName.isEmpty() && (myToken.contains(iName) || iName.contains(myToken))) return true;
                         
-                        // Coincidencia por sinónimos (si yo ofrezco "guitarra" y el busca "guitar")
+                        
                         List<String> myTokenSynonyms = expandSearchTerm(myToken);
                         if (myTokenSynonyms.contains(iId)) return true;
                     }
@@ -135,19 +120,18 @@ public class SearchService {
                 });
             }
 
-            // B. CHECK UBICACIÓN
+            
             boolean isClose = checkLocationMatch(candidate, myLocation);
             String distanceLabel = isClose ? "Cerca de ti" : "Lejos de ti";
             final boolean finalIsMatch = isMatch;
 
-            // C. GENERAR RESULTADOS (SOLO LAS SKILLS BUSCADAS)
+            
             candidate.getSkills().stream()
                 .filter(skill -> {
                     String sId = normalizeKey(skill.getId());
                     String sName = normalizeKey(skill.getName());
                     
-                    // ¿Coincide el ID o el Nombre con ALGUNO de los términos expandidos?
-                    // Esto soluciona que te falten resultados.
+                    
                     boolean idMatch = expandedSearchIds.stream().anyMatch(ex -> sId.equals(ex) || sId.contains(ex));
                     boolean nameMatch = expandedSearchIds.stream().anyMatch(ex -> sName.contains(ex));
                     
@@ -158,17 +142,17 @@ public class SearchService {
                 });
         }
 
-        // 4. ORDENAMIENTO
+        
         results.sort((o1, o2) -> {
-            // 1. Matches primero
+            
             if (o1.isSwapMatch() != o2.isSwapMatch()) return o1.isSwapMatch() ? -1 : 1;
             
-            // 2. Ubicación
+            
             boolean loc1 = "Cerca de ti".equals(o1.getDistance());
             boolean loc2 = "Cerca de ti".equals(o2.getDistance());
             if (loc1 != loc2) return loc1 ? -1 : 1;
             
-            // 3. Rating
+            
             return Double.compare(o2.getRating(), o1.getRating());
         });
 
@@ -226,18 +210,17 @@ public class SearchService {
         dto.setProfilePhotoUrl(user.getProfilePhotoUrl());
         dto.setLocation(user.getLocation());
 
-        // Si tiene skills, usamos la primera para la info principal
-        // Y rellenamos la lista completa 'userSkills'
+        
         if (user.getSkills() != null && !user.getSkills().isEmpty()) {
 
-            // 1. Info Principal (Header del componente)
+            
             UserSkills s = user.getSkills().get(0);
             dto.setSkillName(s.getName() != null ? s.getName() : s.getId());
             dto.setSkillIcon(s.getIcon() != null ? s.getIcon() : "🎓");
             dto.setSkillLevel(s.getLevel());
             dto.setSkillCategory(s.getCategory());
 
-            // 2. LISTA COMPLETA DE SKILLS (Para el panel de intereses)
+            
             List<UserSwapDTO.SkillItem> allSkills = user.getSkills().stream()
                     .map(skill -> new UserSwapDTO.SkillItem(
                             skill.getName() != null ? skill.getName() : skill.getId(),
