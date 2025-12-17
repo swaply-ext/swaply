@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.Id;
 
-@Container(containerName = "chat_messages") // Nombre de la colección en Cosmos
+@Container(containerName = "swaply-container") // Nombre de la colección en Cosmos
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,7 +20,7 @@ public class ChatMessage {
     private String id;
 
     @PartitionKey
-    private String type = "room"; // Clave de partición para búsquedas rápidas
+    private String type = "message"; // Clave de partición para búsquedas rápidas
 
     private String content;
     private String senderId;
