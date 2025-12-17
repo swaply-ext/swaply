@@ -50,7 +50,7 @@ public class HomeService {
             if (otherUser.getId().equals(currentUserId)) continue;
             if (otherUser.getSkills() == null) continue;
 
-            // MATCH (Normalizado)
+            
             boolean isReciprocalMatch = false;
             if (otherUser.getInterests() != null) {
                 isReciprocalMatch = otherUser.getInterests().stream()
@@ -58,10 +58,10 @@ public class HomeService {
                         .anyMatch(myOfferingIds::contains);
             }
 
-            // FILTRO ESTRICTO: SOLO MATCHES
+            
             if (!isReciprocalMatch) continue;
 
-            // UBICACIÓN (Normalizada)
+            
             boolean isClose = checkLocationMatch(otherUser, myLocation);
             String distanceLabel = isClose ? "Cerca de ti" : "Lejos de ti";
 
@@ -73,11 +73,11 @@ public class HomeService {
             }
         }
 
-        // ORDENACIÓN: Cerca de ti PRIMERO
+       
         recommendations.sort((dto1, dto2) -> {
             boolean c1 = "Cerca de ti".equals(dto1.getDistance());
             boolean c2 = "Cerca de ti".equals(dto2.getDistance());
-            return Boolean.compare(c2, c1); // Descendente (true > false)
+            return Boolean.compare(c2, c1); 
         });
 
         return recommendations;

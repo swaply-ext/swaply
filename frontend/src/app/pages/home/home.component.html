@@ -4,7 +4,6 @@
   
   <main class="main-content">
 
-    <!-- SECCIÓN 1: PRÓXIMO INTERCAMBIO -->
     <section class="interchange-section">
        <h2 class="section-title">Próximo Intercambio</h2>
        
@@ -62,7 +61,6 @@
     </section>
 
     <section class="nearby-section">
-      <!-- ... (Header buscador igual) ... -->
       <div class="nearby-header">
         <h2 class="section-title">Intercambios Cerca de Ti</h2>
         <div class="nearby-actions">
@@ -124,7 +122,6 @@
         </div>
       </div>
       
-      <!-- ... (Resto de mensajes igual) ... -->
       <div class="see-more-button" *ngIf="!isLoadingMatches() && cards().length === 0 && hasSearched()">
          <p style="color: #9ca3af; font-size: 1.1rem;">No se encontraron usuarios con esa habilidad.</p>
       </div>

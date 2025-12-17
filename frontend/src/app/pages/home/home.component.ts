@@ -115,9 +115,8 @@ export class HomeComponent implements OnInit {
     this.updateView(); 
   }
 
-  // ... (assignImageToSkill y lógica de toggles igual que antes) ...
+
   private assignImageToSkill(category: string, skillName: string): string | undefined {
-      // (Copia aquí el contenido de la función assignImageToSkill que ya tenías)
       const name = skillName ? skillName.toLowerCase() : '';
       let folder = 'leisure';
       if (category) {

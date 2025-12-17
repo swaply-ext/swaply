@@ -69,7 +69,6 @@ export class FilterSkillsComponent {
       id: 'sports',
       open: true,
       subcategories: [
-        // EL ID DEBE SER EL DE LA BASE DE DATOS (Inglés)
         { name: 'FÚTBOL ⚽', id: 'football', selected: false },    
         { name: 'PÁDEL 🎾', id: 'padel', selected: false },       
         { name: 'BÁSQUET 🏀', id: 'basketball', selected: false }, 
@@ -142,7 +141,7 @@ export class FilterSkillsComponent {
     this.filterChange.emit(selected);
   }
 
-  // Obtiene IDs seleccionados como cadena separada por comas
+
   private getSelectedIds(): string {
     const ids: string[] = [];
     this.categories.forEach(cat => {
@@ -155,6 +154,5 @@ export class FilterSkillsComponent {
 
   onSelectSkill(skill: Skill) {
     console.log('Skill seleccionada:', skill);
-    // aquí podrías redirigir a perfil o mostrar detalles
   }
 }
