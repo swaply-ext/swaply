@@ -205,12 +205,11 @@ export class SwapComponent implements OnInit {
 
     this.searchService.sendSwapRequest(payload).subscribe({
       next: (res) => {
-        alert("Intercambio creado correctamente");
         this.router.navigate(['/home']);
       },
       error: (err) => {
         console.error(err);
-        alert("Error al crear el intercambio");
+        console.log("Error al crear el intercambio");
       }
     });
   }
