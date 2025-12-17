@@ -1,6 +1,6 @@
 <div class="skills-container">
   <h1>Selecciona tus habilidades</h1>
-
+  <p>Para indicar el nivel de una habilidad haz clic en una de sus casillas. Para desmarcarla, haz clic en una casilla ya seleccionada</p>
   <div class="category-block" *ngFor="let category of categories">
     <div class="category-header" (click)="toggleCategory(category.name)">
       <span class="category-title">{{ category.name }}</span>
