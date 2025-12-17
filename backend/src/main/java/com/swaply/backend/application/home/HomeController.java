@@ -23,7 +23,6 @@ public class HomeController {
 
     @GetMapping("/recommendations")
     public ResponseEntity<List<UserSwapDTO>> getRecommendations(@AuthenticationPrincipal SecurityUser user) {
-        // user.getUsername() devuelve el ID del usuario
         List<UserSwapDTO> matches = homeService.getRecommendedMatches(user.getUsername());
         return ResponseEntity.ok(matches);
     }

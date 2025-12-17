@@ -24,7 +24,6 @@ public class SearchController {
             @RequestParam String skill,
             @AuthenticationPrincipal SecurityUser user) {
         
-        // Pasamos el ID del usuario logueado al servicio para calcular el match recíproco
         List<UserSwapDTO> results = searchService.searchUsersWithMatch(skill, user.getUsername());
         
         return ResponseEntity.ok(results);
@@ -35,7 +34,7 @@ public class SearchController {
             @PathVariable String userId,
             @AuthenticationPrincipal SecurityUser user) {
 
-    // Llamamos al servicio para traer el usuario por ID
+
     UserSwapDTO target = searchService.getUserById(userId);
 
         if (target != null) {
