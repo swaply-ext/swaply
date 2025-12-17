@@ -35,7 +35,7 @@ public interface AccountMapper {
     @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE)
     UserDTO fromEditProfileDataDTO(EditProfileDTO dto);
     
-    ProfileDataDTO porfileFromUserDTO(UserDTO dto);
+    ProfileDataDTO profileFromUserDTO(UserDTO dto);
 
     @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE)
     @Mapping(target = "fullName", expression = "java(dto.getName() + \" \" + dto.getSurname())")

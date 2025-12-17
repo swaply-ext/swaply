@@ -183,44 +183,33 @@ public class SearchService {
 
     private UserSwapDTO mapToUserSwapDTO(User user, UserSkills skill, boolean isMatch, String distanceLabel) {
         UserSwapDTO dto = new UserSwapDTO();
-
+        
         dto.setUserId(user.getId());
         dto.setName(user.getName());
         dto.setUsername(user.getUsername());
         dto.setProfilePhotoUrl(user.getProfilePhotoUrl());
-        dto.setLocation(user.getLocation());
-        dto.setRating(user.getRating() != null ? user.getRating() : 5.0);
-        dto.setDistance(distanceLabel);
+        dto.setLocation(user.getLocation()); 
+        dto.setRating(user.getRating() != null ? user.getRating() : 5.0); 
+        dto.setDistance(distanceLabel); 
         dto.setSwapMatch(isMatch);
 
-        if (user.getSkills() != null) {
-            List<String> searchTerms = query.contains(",")
-                    ? Arrays.asList(query.split(","))
-                    : List.of(query);
+        String rawName = (skill.getName() != null && !skill.getName().isEmpty()) ? skill.getName() : skill.getId();
+        String displayName = capitalize(rawName);
 
-            String rawName = (skill.getName() != null && !skill.getName().isEmpty()) ? skill.getName() : skill.getId();
-            String displayName = capitalize(rawName);
+        dto.setSkillName("Clase de " + displayName); 
+        dto.setSkillIcon(skill.getIcon() != null ? skill.getIcon() : "🎓");
+        dto.setSkillCategory(skill.getCategory());
+        dto.setSkillLevel(skill.getLevel());
 
-                        dto.setSkillName("Clase de " + displayName); 
-                        dto.setSkillIcon(s.getIcon() != null ? s.getIcon() : "🎓");
-                        dto.setSkillCategory(s.getCategory());
-                        dto.setSkillLevel(s.getLevel());
-                    });
-            
-            // También rellenamos la lista completa aquí por si se necesita en el futuro en la búsqueda
-             List<UserSwapDTO.SkillItem> allSkills = user.getSkills().stream()
-                .map(skill -> new UserSwapDTO.SkillItem(
-                        skill.getName() != null ? skill.getName() : skill.getId(),
-                        skill.getCategory(),
-                        skill.getLevel()
-                ))
-                .collect(Collectors.toList());
-             dto.setUserSkills(allSkills);
-        }
         return dto;
     }
 
-    // --- MÉTODO ACTUALIZADO PARA RELLENAR LA LISTA DE SKILLS ---
+    private String capitalize(String str) {
+        if (str == null || str.isEmpty()) return str;
+        return str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
+    }
+
+
     public UserSwapDTO getUserById(String userId) {
         Optional<User> userOpt = userRepository.findUserById(userId);
 
@@ -240,7 +229,7 @@ public class SearchService {
         // Si tiene skills, usamos la primera para la info principal
         // Y rellenamos la lista completa 'userSkills'
         if (user.getSkills() != null && !user.getSkills().isEmpty()) {
-            
+
             // 1. Info Principal (Header del componente)
             UserSkills s = user.getSkills().get(0);
             dto.setSkillName(s.getName() != null ? s.getName() : s.getId());
@@ -256,7 +245,7 @@ public class SearchService {
                             skill.getLevel()
                     ))
                     .collect(Collectors.toList());
-            
+
             dto.setUserSkills(allSkills);
         }
 
@@ -265,10 +254,5 @@ public class SearchService {
         dto.setSwapMatch(false);
 
         return dto;
-    }
-
-    private String capitalize(String str) {
-        if (str == null || str.isEmpty()) return str;
-        return str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
     }
 }

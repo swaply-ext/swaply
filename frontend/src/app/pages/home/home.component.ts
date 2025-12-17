@@ -144,24 +144,7 @@ export class HomeComponent implements OnInit {
       return filename ? `assets/photos_skills/${folder}/${filename}` : undefined;
   }
   
-  // Buscar coincidencia exacta de palabras clave
-    for (const key in skillMap) {
-      if (name.includes(key)) {
-        const skill = skillMap[key];
-        return `assets/photos_skills/${skill.folder}/${skill.filename}`;
-      }
-    }
-
-    // Si no hay coincidencia, asigna carpeta según categoría
-    let folder = 'leisure';
-    if (category) {
-      const cat = category.toLowerCase();
-      if (cat.includes('deporte') || cat.includes('sports')) folder = 'sports';
-      if (cat.includes('música') || cat.includes('musica')) folder = 'music';
-    }
-
-    return undefined;
-  }
+  
 
   goToSwap(card: CardModel) {
     if (!card.userId) return;
@@ -176,19 +159,6 @@ export class HomeComponent implements OnInit {
   skillToLearn = signal({ titulo: 'Clase de Guitarra Acústica', img: 'assets/photos_skills/music/guitar.jpg', hora: 'Hoy, 18:00h', via: 'Vía Napoli 5' });
   skillToTeach = signal({ titulo: 'Taller de Manualidades', img: 'assets/photos_skills/leisure/crafts.jpg', hora: 'Hoy, 18:00h', via: 'Vía Napoli 5' });
 
-  skillToLearn = signal({
-    titulo: 'Clase de Guitarra Acústica',
-    img: 'assets/photos_skills/music/guitar.jpg',
-    hora: 'Hoy, 18:00h',
-    via: 'Vía Napoli 5'
-  });
-
-  skillToTeach = signal({
-    titulo: 'Taller de Manualidades',
-    img: 'assets/photos_skills/leisure/crafts.jpg',
-    hora: 'Hoy, 18:00h',
-    via: 'Vía Napoli 5'
-  });
 
   toggleIntercambio() {
     this.hasIntercambio.update(v => !v);
