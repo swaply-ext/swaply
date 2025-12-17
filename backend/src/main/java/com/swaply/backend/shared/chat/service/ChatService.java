@@ -34,7 +34,7 @@ public class ChatService {
     @Autowired // IMPORTANTE: Faltaba este Autowired
     private ChatRoomRepository chatRoomRepository;
 
-    public List<ChatMessage> getChatHistoryByRoomId(String roomId, String userId) {
+    public List<ChatMessage> getChatHistoryByRoomId(String roomId, String userId, int pageNumber) {
 
         // 1. Buscamos la sala.
         // El Repo debe devolver Optional<ChatRoom> para usar orElseThrow
@@ -47,7 +47,7 @@ public class ChatService {
         }
 
         // 3. Paginación
-        Pageable pageRequest = PageRequest.of(0, 20, Sort.by("timestamp").descending());
+        Pageable pageRequest = PageRequest.of(pageNumber, 20, Sort.by("timestamp").descending());
 
         // 4. Ejecutar consulta
         // Asegúrate de pasar 'roomId', no 'userId' aquí
