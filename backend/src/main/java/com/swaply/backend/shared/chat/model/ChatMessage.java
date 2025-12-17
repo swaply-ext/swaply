@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.Id;
 
@@ -23,7 +24,7 @@ public class ChatMessage {
 
     private String content;
     private String senderId;
-    private String timestamp;
+    private LocalDateTime timestamp;
 
     // Constructor útil para crear mensajes nuevos
 

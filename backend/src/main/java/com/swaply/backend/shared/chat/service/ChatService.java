@@ -1,5 +1,6 @@
 package com.swaply.backend.shared.chat.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional; // Necesario para el Repository
 import java.util.UUID;
@@ -32,14 +33,13 @@ public class ChatService {
     private ChatMapper chatMapper;
     @Autowired // IMPORTANTE: Faltaba este Autowired
     private ChatRoomRepository chatRoomRepository;
-    
 
     public List<ChatMessage> getChatHistoryByRoomId(String roomId, String userId) {
-        
-        // 1. Buscamos la sala. 
+
+        // 1. Buscamos la sala.
         // El Repo debe devolver Optional<ChatRoom> para usar orElseThrow
         ChatRoom room = chatRoomRepository.findById(roomId)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "La sala no existe"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "La sala no existe"));
 
         // 2. Validación de seguridad
         if (!room.getParticipants().contains(userId)) {
@@ -60,14 +60,50 @@ public class ChatService {
         return chatRoomRepository.findRoomsByUserId(userId);
     }
 
-    public ChatMessageDTO sendChatMessage(String userId, ChatMessageDTO dto){
-            ChatMessage newChatMessage = chatMapper.chatMessageDtoToEntity(dto);
-    
-            newChatMessage.setId(UUID.randomUUID().toString());
-    
-            User savedUser = chatRepository.save(newChatMessage);
-    
-            return chatMapper.entityToDTO(savedUser);
+    public ChatMessageDTO sendChatMessage(String userId, ChatMessageDTO dto) {
+
+        // El Repo debe devolver Optional<ChatRoom> para usar orElseThrow
+        ChatRoom room = chatRoomRepository.findById(dto.getRoomId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "La sala no existe"));
+
+        // 2. Validación de seguridad
+        if (!room.getParticipants().contains(userId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "No tienes permiso para enviar mensajes a este chat");
+        }
+        ChatMessage newChatMessage = chatMapper.chatMessageDtoToEntity(dto);
+
+        newChatMessage.setId(UUID.randomUUID().toString());
+
+        ChatMessage savedMessage = chatRepository.save(newChatMessage);
+
+        room.setLastMessagePreview(savedMessage.getContent());
+        room.setLastMessageTime(savedMessage.getTimestamp());
+        room.setLastMessageSenderId(savedMessage.getSenderId());
+
+        chatRoomRepository.save(room);
+
+        return chatMapper.chatMessageEntityToDTO(savedMessage);
     }
 
+    private String generateRoomId(String u1, String u2) {
+        return (u1.compareTo(u2) < 0) ? u1 + "_" + u2 : u2 + "_" + u1;
+    }
+
+    public ChatRoom createChatRoom(String user1, String user2) {
+        String generatedId = generateRoomId(user1, user2);
+        Optional<ChatRoom> existing = chatRoomRepository.findById(generatedId);
+    if (existing.isPresent()) return existing.get();
+
+    ChatRoom newRoom = ChatRoom.builder()
+            .id(generatedId)
+            .type("chatRoom")
+            .participants(List.of(user1, user2))
+            .createdAt(LocalDateTime.now())
+            .isActive(true)
+            .build();
+
+    return chatRoomRepository.save(newRoom);
+
+    }
 }
