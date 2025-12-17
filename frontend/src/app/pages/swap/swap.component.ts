@@ -49,7 +49,7 @@ export class SwapComponent implements OnInit {
 
   ngOnInit(): void {
     const targetUserId = this.route.snapshot.paramMap.get('targetId');
-    const skillName = this.route.snapshot.queryParamMap.get('skillName');
+    const paramSkillName = this.route.snapshot.queryParamMap.get('skillName');
 
     // CARGAR MI USUARIO
     this.accountService.getProfileData().subscribe({
@@ -57,15 +57,11 @@ export class SwapComponent implements OnInit {
         this.myUser.set(me);
         
         if (me.skills && me.skills.length > 0) {
-          // Preparamos skills
           const myVisualSkills = me.skills.map((s: any, index: number) => {
-            // CORRECCION: Si no hay nombre, usa el ID. Si no hay ID, usa 'Skill'.
             const realName = s.name || s.id || 'Skill sin nombre';
-            const realId = s.id || realName;
-            
             return {
               ...s,
-              id: realId,
+              id: s.id || realName,
               name: realName, 
               image: s.image || this.assignImageToSkill(s.category, realName),
               selected: index === 0 
@@ -73,45 +69,71 @@ export class SwapComponent implements OnInit {
           });
 
           this.mySkillsDisplay.set(myVisualSkills);
-          // La carta de arriba muestra el objeto completo de la primera skill
           this.selectedTeachSkill.set(myVisualSkills[0]);
         }
       }
     });
 
-    // CARGAR USUARIO DESTINO
+    // CARGAR USUARIO DESTINO 
     if (targetUserId) {
       this.searchService.getUserById(targetUserId).subscribe({
         next: (user) => {
           this.targetUser.set(user);
-          const selectedSkill = skillName || user.skillName;
 
-          this.selectedTargetSkill.set({
-            skillName: selectedSkill,
-            skillIcon: user.skillIcon,
-            skillImage: this.assignImageToSkill(user.skillCategory, selectedSkill),
-            location: user.location
-          });
-
-          const mainSkillObj = {
-            id: selectedSkill,
-            name: selectedSkill,
-            selected: true,
-            image: this.assignImageToSkill(user.skillCategory, selectedSkill),
-            level: user.skillLevel
+          // Construir lista con skill principal + secundarias
+          const mainSkill = {
+            id: user.skillName,
+            name: user.skillName,
+            category: user.skillCategory,
+            level: user.skillLevel,
+            icon: user.skillIcon,
+            image: this.assignImageToSkill(user.skillCategory, user.skillName),
+            selected: false
           };
 
-          const otherSkills = (user.userSkills || [])
-            .filter(s => s.name !== selectedSkill)
+          const secondarySkills = (user.userSkills || [])
+            .filter(s => s.name !== mainSkill.name) // Evitar duplicados
             .map(s => ({
               id: s.name,
               name: s.name,
-              selected: false,
+              category: s.category,
+              level: s.level,
               image: this.assignImageToSkill(s.category, s.name),
-              level: s.level
+              selected: false
             }));
 
-          this.targetUserInterests.set([mainSkillObj, ...otherSkills]);
+          let allInterests = [mainSkill, ...secondarySkills];
+
+          // Si hay parametro URL, buscamos esa skill y la ponemos PRIMERA
+          if (paramSkillName) {
+            const targetNameInfo = paramSkillName.toLowerCase();
+            const foundIndex = allInterests.findIndex(s => 
+               s.name.toLowerCase().includes(targetNameInfo) || targetNameInfo.includes(s.name.toLowerCase())
+            );
+
+            // Si la encontramos y no está ya la primera, la movemos al principio
+            if (foundIndex > 0) {
+              const [itemToMove] = allInterests.splice(foundIndex, 1);
+              allInterests.unshift(itemToMove);
+            }
+          }
+
+          // Marcamos la primera (índice 0) como seleccionada
+          allInterests = allInterests.map((item, index) => ({
+             ...item,
+             selected: index === 0
+          }));
+
+          this.targetUserInterests.set(allInterests);
+
+          // Actualizamos la carta grande superior con la primera (la seleccionada)
+          const selectedItem = allInterests[0];
+          this.selectedTargetSkill.set({
+            skillName: selectedItem.name,
+            skillIcon: (selectedItem as any).icon,
+            skillImage: selectedItem.image,
+            location: user.location
+          });
         }
       });
     }
@@ -124,13 +146,11 @@ export class SwapComponent implements OnInit {
     }));
     this.targetUserInterests.set(updatedList);
 
-    const newImage = item.image || this.assignImageToSkill(item.category, item.name);
     const currentUser = this.targetUser();
-
     this.selectedTargetSkill.set({
       skillName: item.name,
       skillIcon: item.icon, 
-      skillImage: newImage,
+      skillImage: item.image || this.assignImageToSkill(item.category, item.name),
       location: currentUser?.location
     });
   }
@@ -138,7 +158,6 @@ export class SwapComponent implements OnInit {
   selectMySkill(item: any) {
     const itemId = item.id || item.name;
 
-    // Actualizamos la lista
     const updatedList = this.mySkillsDisplay().map(skill => {
       const currentId = skill.id || skill.name;
       return {
@@ -148,19 +167,16 @@ export class SwapComponent implements OnInit {
     });
     this.mySkillsDisplay.set(updatedList);
 
-    // Calculamos imagen
-    const newImage = item.image || this.assignImageToSkill(item.category, item.name);
-    
-    // Actualizamos la carta de arriba con los datos de la skill
     this.selectedTeachSkill.set({
         ...item,
         name: item.name, 
-        image: newImage 
+        image: item.image || this.assignImageToSkill(item.category, item.name)
     });
   }
 
   getTargetSkillName() {
-    return this.selectedTargetSkill()?.skillName || '';
+    const info = this.selectedTargetSkill();
+    return info?.skillName ? `Clase de ${info.skillName}` : '';
   }
 
   getTargetSkillImage() {
