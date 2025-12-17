@@ -1,35 +1,30 @@
-package com.swaply.backend.shared.chat;
+package com.swaply.backend.shared.chat.model;
 
 import com.azure.spring.data.cosmos.core.mapping.Container;
-import com.azure.spring.data.cosmos.core.mapping.GeneratedValue;
 import com.azure.spring.data.cosmos.core.mapping.PartitionKey;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
 import org.springframework.data.annotation.Id;
-import java.time.LocalDateTime;
 
-@Container(containerName = "swaply-container")
+@Container(containerName = "chat_messages") // Nombre de la colección en Cosmos
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChatMessage {
 
     @Id
-    @GeneratedValue
     private String id;
 
     @PartitionKey
-    private String type = "chat";
+    private String type = "room"; // Clave de partición para búsquedas rápidas
 
-    // --- AGREGA ESTO ---
-    private String roomId; 
-    // -------------------
-
-    private String senderId;
     private String content;
-    private LocalDateTime timestamp;
+    private String senderId;
+    private String timestamp;
+
+    // Constructor útil para crear mensajes nuevos
+
 }
