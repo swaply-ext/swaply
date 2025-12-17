@@ -38,7 +38,7 @@ public class ChatService {
 
         // 1. Buscamos la sala.
         // El Repo debe devolver Optional<ChatRoom> para usar orElseThrow
-        ChatRoom room = chatRoomRepository.findById(roomId)
+        ChatRoom room = chatRoomRepository.findRoomById(roomId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "La sala no existe"));
 
         // 2. Validación de seguridad
@@ -51,7 +51,7 @@ public class ChatService {
 
         // 4. Ejecutar consulta
         // Asegúrate de pasar 'roomId', no 'userId' aquí
-        Page<ChatMessage> page = chatRepository.findChatById(roomId, pageRequest);
+        Page<ChatMessage> page = chatRepository.findByRoomId(roomId, pageRequest);
 
         return page.getContent();
     }
@@ -63,7 +63,7 @@ public class ChatService {
     public ChatMessageDTO sendChatMessage(String userId, ChatMessageDTO dto) {
 
         // El Repo debe devolver Optional<ChatRoom> para usar orElseThrow
-        ChatRoom room = chatRoomRepository.findById(dto.getRoomId())
+        ChatRoom room = chatRoomRepository.findRoomById(dto.getRoomId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "La sala no existe"));
 
         // 2. Validación de seguridad
@@ -92,7 +92,7 @@ public class ChatService {
 
     public ChatRoom createChatRoom(String user1, String user2) {
         String generatedId = generateRoomId(user1, user2);
-        Optional<ChatRoom> existing = chatRoomRepository.findById(generatedId);
+        Optional<ChatRoom> existing = chatRoomRepository.findRoomById(generatedId);
     if (existing.isPresent()) return existing.get();
 
     ChatRoom newRoom = ChatRoom.builder()

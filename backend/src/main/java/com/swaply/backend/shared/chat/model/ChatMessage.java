@@ -22,6 +22,7 @@ public class ChatMessage {
     @PartitionKey
     private String type = "message"; // Clave de partición para búsquedas rápidas
 
+    private String roomId;
     private String content;
     private String senderId;
     private LocalDateTime timestamp;
