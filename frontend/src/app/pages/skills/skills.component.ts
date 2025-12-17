@@ -81,7 +81,18 @@ export class SkillsComponent {
       });
   }
 
-  private setLevel(mySkills: UserSkill[]){
+  private setLevel(mySkills: UserSkill[]) {
+    this.categories = this.categories.map(category => ({
+      ...category,
+      skills: category.skills.map(skill => {
+        const match = mySkills.find(us => us.id === skill.id);
+        return {
+          ...skill,
+          level: match ? match.level : 0 // Si no está en mi cuenta, nivel 0
+        };
+      })
+    }));
+
     this.categories.forEach(category => {
       category.skills.forEach(skill => {
         const match = mySkills.find(us => us.id === skill.id);
@@ -104,7 +115,7 @@ export class SkillsComponent {
         category = {
           name: skill.category.toUpperCase(),
 
-          isOpen: true, // Por defecto abierta
+          isOpen: false, // Por defecto cerrada
           skills: []
         };
         grouped.push(category);
@@ -134,7 +145,7 @@ export class SkillsComponent {
   submitSkills() {
     const selectedSkills = this.categories.flatMap(category =>
       category.skills
-        .filter(skill => skill.level>0)
+        .filter(skill => skill.level > 0)
         .map(sub => ({
           id: sub.id,
           level: sub.level
@@ -152,8 +163,14 @@ export class SkillsComponent {
   }
 
   handleLevelChange(event: { id: string, newLevel: number }) {
-    console.log(`ID ${event.id} ahora es nivel ${event.newLevel}`);
-    // Solo testeo
+    // Buscamos la skill dentro de todas las categorías y actualizamos su nivel
+    for (let category of this.categories) {
+      const skill = category.skills.find(s => s.id === event.id);
+      if (skill) {
+        skill.level = event.newLevel;
+        break; // Salimos del bucle una vez encontrada
+      }
+    }
   }
 }
 
