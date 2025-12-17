@@ -15,5 +15,5 @@ public interface ChatMessageRepository extends CosmosRepository<ChatMessage, Lon
 
     // Este método devuelve una "Page" (Página) en lugar de una "List" directa.
     // "FindByRoomId" asume que tu entidad ChatMessage tiene un campo "roomId".
-    Page<ChatMessage> findChatByIdPagealbe(String id, Pageable pageable);
+    Page<ChatMessage> findChatById(String id, Pageable pageable);
 }

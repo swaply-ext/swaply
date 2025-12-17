@@ -51,7 +51,7 @@ public class ChatService {
 
         // 4. Ejecutar consulta
         // Asegúrate de pasar 'roomId', no 'userId' aquí
-        Page<ChatMessage> page = chatRepository.findChatByIdPagealbe(roomId, pageRequest);
+        Page<ChatMessage> page = chatRepository.findChatById(roomId, pageRequest);
 
         return page.getContent();
     }
