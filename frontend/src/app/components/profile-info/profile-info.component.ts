@@ -2,15 +2,7 @@ import { Component, OnChanges, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-
-interface ProfileData {
-  fullName: string;
-  username: string;
-  location: string;
-  description: string;
-  profilePhotoUrl: string;
-  rating: number;
-}
+import { ProfileData } from '../../models/private-profile-data.model';
 
 @Component({
   selector: 'app-profile-info',
@@ -20,8 +12,8 @@ interface ProfileData {
   styleUrls: ['./profile-info.component.css']
 })
 export class ProfileInfoComponent implements OnChanges {
-  @Input() profileData: ProfileData = {} as ProfileData;
-  
+  @Input() profileData!: ProfileData;
+
   // SOLUCIÓN: Añadimos el input para que Angular no de error
   @Input() isReadOnly: boolean = false;
 
@@ -31,7 +23,7 @@ export class ProfileInfoComponent implements OnChanges {
 
   constructor(private authService: AuthService, private router: Router ) { }
   starsArray = [1, 2, 3, 4, 5];
-  
+
   get isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
   }

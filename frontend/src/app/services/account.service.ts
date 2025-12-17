@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { ProfileDataDTO } from '../models/profile-data-dto.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
   // Ajusta la URL base si es necesario
-  private apiUrl = 'http://localhost:8081/api/account'; 
+  private apiUrl = 'http://localhost:8081/api/account';
 
   constructor(private http: HttpClient) {}
 
-  getProfileData(): Observable<any> {
+  getProfileData(): Observable<ProfileDataDTO> {
     return this.http.get<any>(`${this.apiUrl}/profileData`);
   }
 
@@ -29,13 +30,13 @@ export class AccountService {
 
   uploadProfilePhoto(file: File): Observable<string> {
     const formData = new FormData();
-    formData.append('file', file); 
+    formData.append('file', file);
 
     // { responseType: 'text' } es necesario porque el backend devuelve un String (la URL)
     return this.http.post(
-      `${this.apiUrl}/upload-photo`, 
-      formData, 
-      { responseType: 'text' } 
+      `${this.apiUrl}/upload-photo`,
+      formData,
+      { responseType: 'text' }
     );
   }
 

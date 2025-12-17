@@ -5,20 +5,10 @@ import { ProfileInfoComponent } from "../../components/profile-info/profile-info
 import { SkillsPanelComponent } from '../../components/skills-panel/skills-panel.component';
 import { InterestsPanelComponent } from '../../components/interests-panel/interests-panel.component';
 import { AccountService } from '../../services/account.service';
+import { ProfileDataDTO } from '../../models/profile-data-dto.model';
+import { ProfileData } from '../../models/private-profile-data.model';
+import { UserSkills } from '../../models/user-skills.model';
 
-interface Skill {
-  id: string;
-  level: number;
-}
-
-interface ProfileData {
-  fullName: string;
-  username: string;
-  location: string;
-  description: string;
-  profilePhotoUrl: string;
-  rating: number;
-}
 @Component({
   selector: 'app-private-profile',
   standalone: true,
@@ -34,9 +24,10 @@ interface ProfileData {
 })
 export class PrivateProfileComponent implements OnInit {
 
-  public interests: Array<Skill> = [];
-  public skills: Array<Skill> = [];
-  public profileData: ProfileData = {} as ProfileData;
+  public interests: Array<UserSkills> = [];
+  public skills: Array<UserSkills> = [];
+  public profileViewData!: ProfileData;
+  // public profileData: ProfileData = {} as ProfileData;
 
   constructor(private accountService: AccountService) { }
 
@@ -46,9 +37,9 @@ export class PrivateProfileComponent implements OnInit {
 
   getProfileDataFromBackend(): void {
     this.accountService.getProfileData().subscribe({
-      next: (user) => {
+      next: (dto: ProfileDataDTO) => {
         // console.log('Datos recibidos del backend:', data);
-        this.splitAndSendUser(user);
+        this.splitAndSendUser(dto);
       },
       error: (err) => {
         console.error('Error al obtener datos del perfil:', err);
@@ -56,7 +47,7 @@ export class PrivateProfileComponent implements OnInit {
     });
   }
 
-  splitAndSendUser(user: any): void {
+  splitAndSendUser(user: ProfileDataDTO): void {
     this.interests = user.interests;
     this.skills = user.skills;
     this.mapProfileData(user);
@@ -64,15 +55,14 @@ export class PrivateProfileComponent implements OnInit {
     console.log(this.interests);
   }
 
-  mapProfileData(user: any): void {
+  mapProfileData(user: ProfileDataDTO): void {
 
-    this.profileData = {
+    this.profileViewData = {
       fullName: `${user.name} ${user.surname}`,
       username: user.username,
       location: user.location,
       description: user.description,
       profilePhotoUrl: user.profilePhotoUrl,
-      rating : 3.8,
     };
   }
 

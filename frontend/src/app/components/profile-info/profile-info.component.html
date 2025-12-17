@@ -15,14 +15,14 @@
     <div class="rating">
       <i class="material-icons" *ngFor="let starNum of starsArray">
         {{
-          profileData.rating >= starNum
+          3.8 >= starNum
             ? "star"
-            : profileData.rating >= starNum - 0.5
+            : 3.8 >= starNum - 0.5
             ? "star_half"
             : "star_border"
         }}
       </i>
-      <span>{{ profileData.rating }}</span>
+      <span>3.8</span>
     </div>
   </div>
 
