@@ -28,20 +28,20 @@ public class HomeService {
     }
 
     public List<UserSwapDTO> getRecommendedMatches(String currentUserId) {
-        User me = userRepository.findUserById(currentUserId).orElse(null);
-        if (me == null || me.getInterests() == null || me.getInterests().isEmpty()) {
+        User myUser = userRepository.findUserById(currentUserId).orElse(null);
+        if (myUser == null || myUser.getInterests() == null || myUser.getInterests().isEmpty()) {
             return List.of(); 
         }
 
-        List<String> myInterestIds = me.getInterests().stream()
+        List<String> myInterestIds = myUser.getInterests().stream()
                 .map(s -> normalizeString(s.getId()))
                 .collect(Collectors.toList());
-        
-        Set<String> myOfferingIds = (me.getSkills() != null)
-                ? me.getSkills().stream().map(s -> normalizeString(s.getId())).collect(Collectors.toSet())
+
+        Set<String> myOfferingIds = (myUser.getSkills() != null)
+                ? myUser.getSkills().stream().map(s -> normalizeString(s.getId())).collect(Collectors.toSet())
                 : Collections.emptySet();
 
-        String myLocation = (me.getLocation() != null) ? normalizeString(me.getLocation()) : "";
+        String myLocation = (myUser.getLocation() != null) ? normalizeString(myUser.getLocation()) : "";
 
         List<User> candidates = userRepository.findUsersByMultipleSkillIds(myInterestIds);
         List<UserSwapDTO> recommendations = new ArrayList<>();
