@@ -6,7 +6,6 @@
 
     <section class="interchange-section">
       <h2 class="section-title">Próximo Intercambio</h2>
-
       <app-next-swap></app-next-swap>
     </section>
 
@@ -14,38 +13,74 @@
       <div class="nearby-header">
         <h2 class="section-title">Intercambios Cerca de Ti</h2>
         <div class="nearby-actions">
-          <app-skill-search></app-skill-search>
-          <app-filter-skills></app-filter-skills>
+          <app-skill-search style="width: auto; display: block;"
+            (skillSelected)="performMatchSearch($event)"></app-skill-search>
+          <app-filter-skills (filterChange)="performMatchSearch($event)"></app-filter-skills>
         </div>
       </div>
 
-      <div class="card-grid">
-        <div class="skill-card" *ngFor="let intercambio of intercambiosCerca()">
-          <img [src]="intercambio.img" [alt]="intercambio.titulo" class="card-image">
-          <div class="card-content">
+      <div *ngIf="isLoadingMatches()" class = loading-matches-indicator>
+        <div class="spinner-mini"></div> Cargando
+        resultados...
+      </div>
+
+      <div class="card-grid" *ngIf="!isLoadingMatches()">
+        <div class="skill-card" *ngFor="let card of cards()" (click)="goToSwap(card)">
+
+          <img *ngIf="card.skillImage" [src]="card.skillImage" [alt]="card.skillTitle" class="card-image"
+            (error)="card.skillImage = undefined">
+          <div *ngIf="!card.skillImage" class="card-image-placeholder">
+            {{ card.skillIcon || '🎓' }}
+          </div>
+
+          <div class="card-content clickable-user">
+
             <div class="card-user-info">
-              <img [src]="intercambio.userImg" [alt]="intercambio.user" class="user-avatar">
-              <span>{{ intercambio.user }}</span>
+              <img [src]="card.userAvatar" [alt]="card.userName" class="user-avatar"
+                [routerLink]="['/public-profile', card.username]" (click)="$event.stopPropagation()"
+                style="cursor: pointer;">
+
+              <span [routerLink]="['/public-profile', card.username]" (click)="$event.stopPropagation()"
+                style="cursor: pointer;">
+                {{ card.userName }}
+              </span>
             </div>
-            <h3>{{ intercambio.titulo }}</h3>
+
+            <h3>{{ card.skillTitle }}</h3>
+
+            <ng-container *ngIf="hasSearched()">
+              <div *ngIf="card.isMatch" class="match-status is-match">
+                <span class="material-symbols-outlined">bolt</span>
+                ¡MATCH!
+              </div>
+
+              <div *ngIf="!card.isMatch" class="match-status no-match">
+                <span class="material-symbols-outlined">person</span>
+                No tiene interés en tus habilidades
+              </div>
+            </ng-container>
+
             <div class="card-footer">
-              <span class="location">
-                <span class="material-symbols-outlined card-icon">location_on</span>
-                {{ intercambio.distancia }}
+              <span class="location" [class.nearby]="card.distance === 'Cerca de ti'">
+                <span class="material-symbols-outlined card-icon">location_on</span> {{ card.distance }}
               </span>
-              <span class="rating">
-                <span class="material-symbols-outlined card-icon">star</span>
-                {{ intercambio.rating }}
-              </span>
+              <span class="rating"><span class="material-symbols-outlined card-icon">star</span> {{ card.rating
+                }}</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="see-more-button">
-        <button class="btn btn-primary">Ver Más</button>
+      <div class="see-more-button" *ngIf="!isLoadingMatches() && cards().length === 0 && hasSearched()">
+        <p class="msg-no-results">No se encontraron usuarios con esa habilidad.</p>
       </div>
 
+      <div class="see-more-button" *ngIf="!isLoadingMatches() && !hasSearched() && cards().length === 0">
+        <p class="msg-instruction">Añade intereses a tu perfil para ver recomendaciones.</p>
+      </div>
+      <div class="see-more-button" *ngIf="canLoadMore() && !isLoadingMatches()">
+        <button class="btn btn-primary" (click)="loadMore()">Ver Más</button>
+      </div>
     </section>
   </main>
 </div>

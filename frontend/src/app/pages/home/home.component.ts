@@ -1,10 +1,26 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.component";
 import { SkillSearchComponent } from '../../components/skill-search/skill-search.component';
 import { FilterSkillsComponent } from '../../components/filter-skills/filter-skills.component';
+import { SearchService, UserSwapDTO } from '../../services/search.services';
+import { RouterLink } from '@angular/router';
 import { AccountService } from '../../services/account.service';
 import { NextSwapComponent } from '../../components/next-swap/next-swap.component';
+
+export interface CardModel {
+  userId?: string;
+  username?: string; //per la ruta /public-profile/:username
+  userName: string;
+  userAvatar: string;
+  skillTitle: string;
+  skillImage?: string;
+  skillIcon?: string;
+  distance: string;
+  rating: number;
+  isMatch: boolean;
+}
 
 @Component({
   selector: 'app-home',
@@ -14,67 +30,149 @@ import { NextSwapComponent } from '../../components/next-swap/next-swap.componen
     AppNavbarComponent, 
     SkillSearchComponent, 
     FilterSkillsComponent,
-    NextSwapComponent
+    NextSwapComponent,
+    RouterLink
   ],
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css'],
+  styleUrl: './home.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
 
   constructor(private accountService: AccountService) { }
 
+  
+  private searchService = inject(SearchService);
+  private router = inject(Router);
 
-  // --- DATOS DE EJEMPLO PARA "INTERCAMBIOS CERCA DE TI" ---
-  intercambiosCerca = signal([
-    {
-      user: 'Juan Pérez',
-      userImg: 'assets/people_demo/juan_perez.png',
-      img: 'assets/photos_skills/sports/basketball.jpg',
-      titulo: 'Clase de Baloncesto',
-      distancia: 'A 1.2 km',
-      rating: 4.8,
-    },
-    {
-      user: 'Maria García',
-      userImg: 'assets/people_demo/marina_garcia.jpg',
-      img: 'assets/photos_skills/leisure/cook.jpg',
-      titulo: 'Clase de Cocina Italiana',
-      distancia: 'A 0.8 km',
-      rating: 4.9,
-    },
-    {
-      user: 'Carlos R.',
-      userImg: 'assets/people_demo/carlos_rodriguez.jpg',
-      img: 'assets/photos_skills/music/drums.jpg',
-      titulo: 'Clase de Batería',
-      distancia: 'A 2.5 km',
-      rating: 4.7,
-    },
-    {
-      user: 'Ana López',
-      userImg: 'assets/people_demo/ana_lopez.jpg',
-      img: 'assets/photos_skills/sports/padel.jpg',
-      titulo: 'Clase de Pádel',
-      distancia: 'A 1.1 km',
-      rating: 4.8,
-    },
-    {
-      user: 'Luis Martín',
-      userImg: 'assets/people_demo/luis_martin.jpg',
-      img: 'assets/photos_skills/music/piano.jpg',
-      titulo: 'Clase de Piano',
-      distancia: 'A 3.0 km',
-      rating: 4.6,
-    },
-    {
-      user: 'Elena F.',
-      userImg: 'assets/people_demo/elena_figuera.jpg',
-      img: 'assets/photos_skills/leisure/draw.jpg',
-      titulo: 'Taller de Dibujo',
-      distancia: 'A 1.8 km',
-      rating: 4.9,
-    },
-  ]);
+  private allCards: CardModel[] = []; 
+  cards = signal<CardModel[]>([]);
+  
+  isLoadingMatches = signal(false);
+  
+  // Esta bandera controla si mostramos las etiquetas de estado o no
+  hasSearched = signal(false);
+  
+  itemsToShow = signal(6);
+  canLoadMore = computed(() => this.cards().length < this.allCards.length);
 
+  ngOnInit() {
+    this.loadInitialRecommendations();
+  }
+
+  loadInitialRecommendations() {
+    this.isLoadingMatches.set(true);
+    // Resetear hasSearched a false para que el HTML sepa que son recomendaciones 
+    this.hasSearched.set(false); 
+    
+    this.searchService.getRecommendations().subscribe({
+      next: (matches) => this.processResults(matches),
+      error: (err) => {
+        console.error("Error:", err);
+        this.isLoadingMatches.set(false);
+      }
+    });
+  }
+
+  performMatchSearch(skillQuery: string) {
+    if (!skillQuery || skillQuery.trim() === '') {
+        this.loadInitialRecommendations();
+        return;
+    }
+
+    this.isLoadingMatches.set(true);
+    // Marcamos true para que el HTML active las etiquetas de estado
+    this.hasSearched.set(true);
+
+    this.searchService.getMatches(skillQuery).subscribe({
+      next: (matches) => this.processResults(matches),
+      error: (err) => {
+        console.error("Error:", err);
+        this.allCards = [];
+        this.updateView();
+        this.isLoadingMatches.set(false);
+      }
+    });
+  }
+  
+  private processResults(matches: UserSwapDTO[]) {
+    this.allCards = matches.map(m => ({
+      userId: m.userId,
+      username: (m as any).username || m.userId,
+      userName: m.name,
+      userAvatar: m.profilePhotoUrl || 'assets/default-image.jpg',
+      skillTitle: m.skillName, 
+      skillIcon: m.skillIcon,   
+      skillImage: this.assignImageToSkill(m.skillCategory, m.skillName), 
+      distance: m.distance,
+      rating: m.rating || 0,
+      isMatch: m.isSwapMatch
+    }));
+
+    this.itemsToShow.set(6);
+    this.updateView();
+    this.isLoadingMatches.set(false);
+  }
+
+  private updateView() {
+    this.cards.set(this.allCards.slice(0, this.itemsToShow()));
+  }
+
+  loadMore() {
+    this.itemsToShow.update(val => val + 6); 
+    this.updateView(); 
+  }
+
+
+  private assignImageToSkill(category: string, skillName: string): string | undefined {
+      const name = skillName ? skillName.toLowerCase() : '';
+      let folder = 'leisure';
+      if (category) {
+          const cat = category.toLowerCase();
+          if (cat.includes('deporte') || cat.includes('sports')) folder = 'sports';
+          else if (cat.includes('música') || cat.includes('musica')) folder = 'music';
+      }
+      let filename = '';
+      if (name.includes('fútbol') || name.includes('futbol') || name.includes('football')) { filename = 'football.jpg'; folder = 'sports'; }
+      else if (name.includes('pádel') || name.includes('padel')) { filename = 'padel.jpg'; folder = 'sports'; }
+      else if (name.includes('básquet') || name.includes('basquet') || name.includes('baloncesto') || name.includes('basket')) { filename = 'basketball.jpg'; folder = 'sports'; }
+      else if (name.includes('vóley') || name.includes('voley') || name.includes('volley') || name.includes('voleibol')) { filename = 'voleyball.jpg'; folder = 'sports'; }
+      else if (name.includes('boxeo') || name.includes('boxing')) { filename = 'boxing.jpg'; folder = 'sports'; }
+      else if (name.includes('guitarra') || name.includes('guitar')) { filename = 'guitar.jpg'; folder = 'music'; }
+      else if (name.includes('piano')) { filename = 'piano.jpg'; folder = 'music'; }
+      else if (name.includes('violín') || name.includes('violin')) { filename = 'violin.jpg'; folder = 'music'; }
+      else if (name.includes('batería') || name.includes('bateria') || name.includes('drum')) { filename = 'drums.jpg'; folder = 'music'; }
+      else if (name.includes('saxofón') || name.includes('saxofon') || name.includes('sax')) { filename = 'saxophone.jpg'; folder = 'music'; }
+      else if (name.includes('dibujo')) { filename = 'draw.jpg'; folder = 'leisure'; }
+      else if (name.includes('cocina')) { filename = 'cook.jpg'; folder = 'leisure'; }
+      else if (name.includes('baile') || name.includes('dance')) { filename = 'dance.jpg'; folder = 'leisure'; }
+      else if (name.includes('manualidades') || name.includes('craft')) { filename = 'crafts.jpg'; folder = 'leisure'; }
+      else if (name.includes('digital')) { filename = 'digital_entertainment.jpg'; folder = 'leisure'; }
+      return filename ? `assets/photos_skills/${folder}/${filename}` : undefined;
+  }
+  
+  
+
+  goToSwap(card: CardModel) {
+    if (!card.userId) return;
+
+    this.router.navigate(['/swap', card.userId], { 
+      queryParams: { skillName: card.skillTitle } 
+    });
+  }
+  
+  hasIntercambio = signal(true);
+  isConfirmed = signal(false);
+  skillToLearn = signal({ titulo: 'Clase de Guitarra Acústica', img: 'assets/photos_skills/music/guitar.jpg', hora: 'Hoy, 18:00h', via: 'Vía Napoli 5' });
+  skillToTeach = signal({ titulo: 'Taller de Manualidades', img: 'assets/photos_skills/leisure/crafts.jpg', hora: 'Hoy, 18:00h', via: 'Vía Napoli 5' });
+
+
+  toggleIntercambio() {
+    this.hasIntercambio.update(v => !v);
+    this.isConfirmed.set(false);
+  }
+
+  toggleConfirmation() {
+    this.isConfirmed.update(v => !v);
+  }
 }
