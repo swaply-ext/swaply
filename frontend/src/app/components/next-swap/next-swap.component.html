@@ -13,7 +13,10 @@
                 <span class="material-symbols-outlined location">location_on</span>
                 {{ profileToLearn()?.location }}
               </p>
-              <p class="skill-location">
+              <p class="skill-location user-link" 
+                 [routerLink]="['/public-profile', profileToLearn()?.username]"
+                 style="cursor: pointer;">
+                
                 <span class="material-symbols-outlined">
                   <img [src]="profileToLearn()?.profilePhotoUrl" alt="Foto de perfil" class="user-avatar">
                 </span>
@@ -35,7 +38,10 @@
                 <span class="material-symbols-outlined location">location_on</span>
                 {{ profileToTeach()?.location }}
               </p>
-              <p class="skill-location">
+              <p class="skill-location user-link"
+                 [routerLink]="['/public-profile', profileToTeach()?.username]"
+                 style="cursor: pointer;">
+                 
                 <span class="material-symbols-outlined">
                   <img [src]="profileToTeach()?.profilePhotoUrl" alt="Foto de perfil" class="user-avatar">
                 </span>
