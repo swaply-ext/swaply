@@ -10,6 +10,7 @@ import java.text.Normalizer;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class HomeService {
@@ -20,19 +21,14 @@ public class HomeService {
         this.userRepository = userRepository;
     }
 
-    private String normalizeString(String input) {
-        if (input == null) return "";
-        String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
-        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-        return pattern.matcher(normalized).replaceAll("").toLowerCase().trim();
-    }
-
     public List<UserSwapDTO> getRecommendedMatches(String currentUserId) {
         User myUser = userRepository.findUserById(currentUserId).orElse(null);
+
         if (myUser == null || myUser.getInterests() == null || myUser.getInterests().isEmpty()) {
-            return List.of(); 
+            return List.of();
         }
 
+        
         List<String> myInterestIds = myUser.getInterests().stream()
                 .map(s -> normalizeString(s.getId()))
                 .collect(Collectors.toList());
@@ -43,44 +39,40 @@ public class HomeService {
 
         String myLocation = (myUser.getLocation() != null) ? normalizeString(myUser.getLocation()) : "";
 
+        
         List<User> candidates = userRepository.findUsersByMultipleSkillIds(myInterestIds);
-        List<UserSwapDTO> recommendations = new ArrayList<>();
 
-        for (User otherUser : candidates) {
-            if (otherUser.getId().equals(currentUserId)) continue;
-            if (otherUser.getSkills() == null) continue;
+        return candidates.stream()
+                .filter(user -> !user.getId().equals(currentUserId)) 
+                .filter(user -> user.getSkills() != null)            
+                .filter(user -> isReciprocalMatch(user, myOfferingIds)) 
+                .flatMap(user -> extractMatchingSkills(user, myInterestIds, myLocation)) 
+                .sorted((d1, d2) -> { 
+                    
+                    boolean c1 = "Cerca de ti".equals(d1.getDistance());
+                    boolean c2 = "Cerca de ti".equals(d2.getDistance());
+                    return Boolean.compare(c2, c1);
+                })
+                .collect(Collectors.toList());
+    }
 
-            
-            boolean isReciprocalMatch = false;
-            if (otherUser.getInterests() != null) {
-                isReciprocalMatch = otherUser.getInterests().stream()
-                        .map(i -> normalizeString(i.getId()))
-                        .anyMatch(myOfferingIds::contains);
-            }
+    
 
-            
-            if (!isReciprocalMatch) continue;
+    private boolean isReciprocalMatch(User otherUser, Set<String> myOfferingIds) {
+        if (otherUser.getInterests() == null) return false;
+        return otherUser.getInterests().stream()
+                .map(i -> normalizeString(i.getId()))
+                .anyMatch(myOfferingIds::contains);
+    }
 
-            
-            boolean isClose = checkLocationMatch(otherUser, myLocation);
-            String distanceLabel = isClose ? "Cerca de ti" : "Lejos de ti";
+    private Stream<UserSwapDTO> extractMatchingSkills(User otherUser, List<String> myInterestIds, String myLocation) {
+        boolean isClose = checkLocationMatch(otherUser, myLocation);
+        String distanceLabel = isClose ? "Cerca de ti" : "Lejos de ti";
 
-            for (UserSkills skill : otherUser.getSkills()) {
-                String skillIdNorm = normalizeString(skill.getId());
-                if (myInterestIds.contains(skillIdNorm)) {
-                    recommendations.add(mapToCard(otherUser, skill, true, distanceLabel));
-                }
-            }
-        }
-
-       
-        recommendations.sort((dto1, dto2) -> {
-            boolean c1 = "Cerca de ti".equals(dto1.getDistance());
-            boolean c2 = "Cerca de ti".equals(dto2.getDistance());
-            return Boolean.compare(c2, c1); 
-        });
-
-        return recommendations;
+        
+        return otherUser.getSkills().stream()
+                .filter(skill -> myInterestIds.contains(normalizeString(skill.getId())))
+                .map(skill -> mapToCard(otherUser, skill, true, distanceLabel));
     }
 
     private boolean checkLocationMatch(User candidate, String myLocation) {
@@ -90,22 +82,29 @@ public class HomeService {
         return candidateLoc.contains(myLocation) || myLocation.contains(candidateLoc);
     }
 
+    private String normalizeString(String input) {
+        if (input == null) return "";
+        String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        return pattern.matcher(normalized).replaceAll("").toLowerCase().trim();
+    }
+
     private UserSwapDTO mapToCard(User user, UserSkills skill, boolean isMatch, String distanceLabel) {
         UserSwapDTO dto = new UserSwapDTO();
         dto.setUserId(user.getId());
         dto.setName(user.getName());
         dto.setUsername(user.getUsername());
         dto.setProfilePhotoUrl(user.getProfilePhotoUrl());
-        
-        dto.setSkillName("Clase de " + (skill.getName() != null ? skill.getName() : skill.getId()));     
+
+        dto.setSkillName("Clase de " + (skill.getName() != null ? skill.getName() : skill.getId()));
         dto.setSkillCategory(skill.getCategory());
         dto.setSkillLevel(skill.getLevel());
         dto.setSkillIcon(skill.getIcon() != null ? skill.getIcon() : "🎓");
-        
-        dto.setDistance(distanceLabel); 
+
+        dto.setDistance(distanceLabel);
         dto.setRating(5.0);
-        dto.setSwapMatch(isMatch); 
-        
+        dto.setSwapMatch(isMatch);
+
         return dto;
     }
 }

@@ -501,6 +501,42 @@ img {
   text-decoration: underline;
   color: #3CB57C; /* Color verd corporatiu */
 }
+.card-image-placeholder {
+  height: 10rem;
+  background: #143F4C;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 4rem;
+  border-radius: 0.5rem 0.5rem 0 0;
+  user-select: none;
+}
+
+
+.see-more-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 0; 
+}
+
+
+.see-more-button p {
+  margin: 0;
+  font-weight: 500; 
+}
+
+
+.msg-no-results {
+  color: #9ca3af;
+  font-size: 1.1rem;
+}
+
+
+.msg-instruction {
+  color: #6b7280;
+  font-size: 1rem; 
+}
 
 /* --- Responsive --- */
 @media (max-width: 1024px) {
