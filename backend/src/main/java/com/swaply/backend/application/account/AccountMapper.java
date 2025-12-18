@@ -1,6 +1,7 @@
 package com.swaply.backend.application.account;
 
 import com.swaply.backend.application.account.dto.ProfileDataDTO;
+import com.swaply.backend.application.account.dto.PublicProfileDTO;
 import com.swaply.backend.application.account.dto.SkillsDTO;
 import com.swaply.backend.application.account.dto.EditProfileDTO;
 import com.swaply.backend.application.account.dto.PersonalInfoDTO;
@@ -35,4 +36,8 @@ public interface AccountMapper {
     UserDTO fromEditProfileDataDTO(EditProfileDTO dto);
     
     ProfileDataDTO profileFromUserDTO(UserDTO dto);
+
+    @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE)
+    @Mapping(target = "fullName", expression = "java(dto.getName() + \" \" + dto.getSurname())")
+    PublicProfileDTO mapUserToPublicProfile(UserDTO dto);
 }
