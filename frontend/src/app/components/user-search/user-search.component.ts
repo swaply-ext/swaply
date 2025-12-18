@@ -15,7 +15,6 @@ import { debounceTime, distinctUntilChanged, switchMap, tap, filter, catchError 
 import { SKIP_LOADING } from '../../interceptors/loading.interceptor';
 import { Router } from '@angular/router';
 
-// Minimal interface for frontend, no full backend DTO needed
 export interface UserSearchItem {
   id: string;
   username: string;
