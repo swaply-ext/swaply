@@ -18,8 +18,10 @@
                   <span class="material-symbols-outlined badge-icon">location_on</span>
                   <span class="badge-text">{{ profileToLearn()?.location }}</span>
                 </div>
-                
-                <div class="info-badge">
+                <div class="info-badge user-link-container" 
+                     [routerLink]="['/public-profile', profileToLearn()?.username]"
+                     style="cursor: pointer;">
+                  
                   <div class="avatar-wrapper">
                     <img [src]="profileToLearn()?.profilePhotoUrl" alt="Avatar" class="user-avatar">
                   </div>
@@ -47,9 +49,11 @@
                 <div class="info-badge">
                   <span class="material-symbols-outlined badge-icon">location_on</span>
                   <span class="badge-text">{{ profileToTeach()?.location }}</span>
-                </div>
-                
-                <div class="info-badge">
+                </div>   
+                <div class="info-badge user-link-container"
+                     [routerLink]="['/public-profile', profileToTeach()?.username]"
+                     style="cursor: pointer;">
+                  
                   <div class="avatar-wrapper">
                     <img [src]="profileToTeach()?.profilePhotoUrl" alt="Avatar" class="user-avatar">
                   </div>
