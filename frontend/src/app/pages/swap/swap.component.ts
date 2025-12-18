@@ -218,30 +218,21 @@ export class SwapComponent implements OnInit {
     if (!skillName) return undefined;
     const name = skillName.toLowerCase();
     const map: any = {
-      'futbol': ['sports','football.jpg'],
       'fútbol': ['sports','football.jpg'],
-      'padel': ['sports','padel.jpg'],
       'pádel': ['sports','padel.jpg'],
-      'basket': ['sports','basketball.jpg'],
       'basquet': ['sports','basketball.jpg'],
-      'baloncesto': ['sports','basketball.jpg'],
-      'voley': ['sports','voleyball.jpg'],
       'vóley': ['sports','voleyball.jpg'],
       'boxeo': ['sports','boxing.jpg'],
       'guitarra': ['music','guitar.jpg'],
       'piano': ['music','piano.jpg'],
-      'violin': ['music','violin.jpg'],
       'violín': ['music','violin.jpg'],
-      'bateria': ['music','drums.jpg'],
       'batería': ['music','drums.jpg'],
-      'saxofon': ['music','saxophone.jpg'],
       'saxofón': ['music','saxophone.jpg'],
       'dibujo': ['leisure','draw.jpg'],
       'cocina': ['leisure','cook.jpg'],
       'manualidades': ['leisure','crafts.jpg'],
       'digital': ['leisure','digital_entertainment.jpg'],
       'baile': ['leisure','dance.jpg'],
-      'dance': ['leisure','dance.jpg']
     };
 
     for (const key of Object.keys(map)) {
