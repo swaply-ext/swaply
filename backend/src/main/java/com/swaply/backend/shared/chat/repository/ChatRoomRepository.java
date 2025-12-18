@@ -16,14 +16,16 @@ public interface ChatRoomRepository extends CosmosRepository<ChatRoom, String> {
     String type = "chatRoom";
     PartitionKey ROOM_PARTITION_KEY = new PartitionKey(type);
 
+    @Query("SELECT VALUE (COUNT(1) > 0) FROM c JOIN p IN c.participants WHERE c.id = @roomId AND p = @username")
+    boolean isUserInRoom(@Param("roomId") String roomId, @Param("username") String username);
+
     @Query("SELECT * FROM c WHERE c.type = 'chatRoom' AND ARRAY_CONTAINS(c.participants, @userId)")
     List<ChatRoom> findRoomsByUserId(@Param("userId") String userId);
-
 
     default boolean existsRoomById(String id) {
         return findById(id, ROOM_PARTITION_KEY).isPresent();
     }
-      
+
     default void deleteRoomById(String id) {
         deleteById(id, ROOM_PARTITION_KEY);
     }

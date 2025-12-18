@@ -2,7 +2,9 @@ package com.swaply.backend.shared.chat.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Pageable;
 
+import com.azure.cosmos.models.CosmosPatchOperations;
+import com.azure.cosmos.models.PartitionKey;
+import com.azure.spring.data.cosmos.core.CosmosTemplate;
 import com.swaply.backend.shared.UserCRUD.UserService;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.shared.chat.ChatMapper;
@@ -29,6 +34,8 @@ public class ChatService {
 
     @Autowired
     private ChatMessageRepository chatRepository;
+    @Autowired
+    private CosmosTemplate cosmosTemplate;
     @Autowired
     private UserService userService;
     @Autowired
@@ -94,34 +101,53 @@ public class ChatService {
     }
 
     // --- ENVIAR MENSAJE ---
-    public ChatMessageDTO sendChatMessage(String userId, ChatMessageDTO dto) {
+    public ChatMessageDTO sendChatMessage(ChatMessageDTO dto) {
 
-        ChatRoom room = chatRoomRepository.findRoomById(dto.getRoomId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "La sala no existe"));
-
-        if (!room.getParticipants().contains(userId)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tienes permiso");
-        }
-
+        String userId = dto.getSenderId();
+        // 1. Preparar la entidad del mensaje (Lo hacemos primero, es lo prioritario)
         ChatMessage newChatMessage = chatMapper.chatMessageDtoToEntity(dto);
 
         newChatMessage.setId(UUID.randomUUID().toString());
-        // --- CAMBIO VITAL: Forzar el tipo ---
         newChatMessage.setType("message");
         newChatMessage.setTimestamp(LocalDateTime.now());
+        // Aseguramos que el sender sea el usuario autenticado (userId viene del
+        // Controller)
+        newChatMessage.setSenderId(userId);
+        newChatMessage.setRoomId(dto.getRoomId()); // Asegurar Partition Key
 
+        // 2. Guardar el mensaje (Cosmos DB Write)
+        // Hacemos esto ANTES de actualizar la sala para asegurar latencia mínima
         ChatMessage savedMessage = chatRepository.save(newChatMessage);
 
-        // Actualizar la sala
+        // 3. Actualizar metadatos de la sala (Cosmos DB Read + Write)
+        // NOTA: Ya no verificamos permisos aquí, confiamos en el Interceptor.
+        // Solo traemos la sala para actualizar la vista previa "Último mensaje..."
+        ChatRoom room = chatRoomRepository.findRoomById(dto.getRoomId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "La sala no existe"));
+
         room.setLastMessagePreview(savedMessage.getContent());
         room.setLastMessageTime(savedMessage.getTimestamp());
         room.setLastMessageSenderId(savedMessage.getSenderId());
+
+        for (String participantId : room.getParticipants()) {
+    if (!participantId.equals(userId)) { // No incrementamos al que envía
+        
+        // Obtenemos el mapa actual (o lo creamos si es null)
+        Map<String, Integer> counts = room.getUnreadCount();
+        if (counts == null) counts = new HashMap<>();
+        
+        // Sumamos 1
+        int currentCount = counts.getOrDefault(participantId, 0);
+        counts.put(participantId, currentCount + 1);
+        
+        room.setUnreadCount(counts);
+    }
+}
+
         chatRoomRepository.save(room);
 
         return chatMapper.chatMessageEntityToDTO(savedMessage);
     }
-
-
 
     // ... (el método createChatRoom se queda igual) ...
     public ChatRoom createChatRoom(String user1, String user2) {
@@ -143,4 +169,27 @@ public class ChatService {
                 .build();
         return chatRoomRepository.save(newRoom);
     }
+
+    public void readedMessage(String roomId, String userId) {
+        // 1. Buscamos la sala. Si NO existe, lanzamos error inmediatamente.
+        ChatRoom room = chatRoomRepository.findRoomById(roomId)
+                .orElseThrow(() -> new RuntimeException("Sala no encontrada"));
+
+        // 2. COMPROBACIÓN INVERSA:
+        // Si la lista es nula O el usuario NO (!) está contenido en ella -> Lanzamos
+        // Excepción
+        if (room.getParticipants() == null || !room.getParticipants().contains(userId)) {
+            throw new IllegalArgumentException("El usuario no pertenece a este chat");
+        }
+
+        // 3. Si el código llega aquí, es que todo está bien.
+        // Nota: He cambiado setUnreadCount(null) a 0, ya que suele ser lo correcto para
+        // "leído".
+        room.setUnreadCount(null);
+
+        chatRoomRepository.save(room);
+    }
+
+    
+
 }

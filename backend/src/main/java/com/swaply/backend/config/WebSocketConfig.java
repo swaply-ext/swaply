@@ -1,4 +1,4 @@
-package com.swaply.backend.configuration;
+package com.swaply.backend.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
