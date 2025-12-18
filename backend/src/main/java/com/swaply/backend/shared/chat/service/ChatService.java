@@ -71,7 +71,6 @@ public class ChatService {
                     .orElse(null);
 
             if (otherUserId != null) {
-                // --- AQUÍ ESTÁ EL CAMBIO ---
 
                 // 1. Buscamos al usuario completo en la base de datos usando su ID
                 UserDTO otherUserDto = userService.getUserByID(otherUserId);
@@ -122,9 +121,15 @@ public class ChatService {
         return chatMapper.chatMessageEntityToDTO(savedMessage);
     }
 
+
+
     // ... (el método createChatRoom se queda igual) ...
     public ChatRoom createChatRoom(String user1, String user2) {
-        String generatedId = (user1.compareTo(user2) < 0) ? user1 + "_" + user2 : user2 + "_" + user1;
+        UserDTO user = userService.getUserByUsername(user2);
+        String UserId2 = user.getId();
+        if (user == null)
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El usuario no existe");
+        String generatedId = (user1.compareTo(UserId2) < 0) ? user1 + "_" + UserId2 : UserId2 + "_" + user1;
         Optional<ChatRoom> existing = chatRoomRepository.findRoomById(generatedId);
         if (existing.isPresent())
             return existing.get();
@@ -132,7 +137,7 @@ public class ChatService {
         ChatRoom newRoom = ChatRoom.builder()
                 .id(generatedId)
                 .type("chatRoom")
-                .participants(List.of(user1, user2))
+                .participants(List.of(user1, UserId2))
                 .createdAt(LocalDateTime.now())
                 .isActive(true)
                 .build();
