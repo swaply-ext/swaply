@@ -476,9 +476,14 @@ img {
 }
 
 .match-status.is-match {
-  color: #3CB57C; /* Tu color verde corporativo */
+  color: var(--principal-color-2);
 }
 
+.loading-matches-indicator {
+text-align: center;
+color: white;
+padding: 2rem;
+}
 
 .match-status.no-match {
   color: #94a3b8;
@@ -499,7 +504,7 @@ img {
 
 .clickable-user:hover .user-name-hover {
   text-decoration: underline;
-  color: #3CB57C; /* Color verd corporatiu */
+  color: var(--principal-color-2);
 }
 .card-image-placeholder {
   height: 10rem;
@@ -536,6 +541,12 @@ img {
 .msg-instruction {
   color: #6b7280;
   font-size: 1rem; 
+}
+
+.spinner-mini {
+position:relative;
+display:inline-block;
+margin-right: 10px;
 }
 
 /* --- Responsive --- */
