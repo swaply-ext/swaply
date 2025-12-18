@@ -47,7 +47,6 @@ export class NextSwapComponent {
   hasIntercambio = signal(true);
   isConfirmed = signal(false);
   isDenied = signal(false);
-  isLoading = signal(false);
 
   imageToLearn = computed(() => {
     const swap = this.nextSwap();
@@ -119,18 +118,15 @@ export class NextSwapComponent {
       console.error('No hay información del swap para confirmar');
       return;
     }
-    this.isLoading.set(true);
 
     this.swapService.updateSwapStatus(currentSwap.id, 'ACCEPTED').subscribe({
       next: async (response) => {
         this.isConfirmed.set(true);
-        this.isLoading.set(false);
         await this.sleep(5000);
         this.ngOnInit();
       },
       error: (err) => {
         console.error('Error al confirmar:', err);
-        this.isLoading.set(false);
       }
     });
   }
@@ -142,18 +138,15 @@ export class NextSwapComponent {
       return;
     }
 
-    this.isLoading.set(true);
 
     this.swapService.updateSwapStatus(currentSwap.id, 'DENIED').subscribe({
       next: async () => {
-        this.isLoading.set(false);
         this.isDenied.set(true);
         await this.sleep(5000);
         this.ngOnInit();
       },
       error: (err) => {
         console.error('Error al rechazar:', err);
-        this.isLoading.set(false);
       }
     });
   }

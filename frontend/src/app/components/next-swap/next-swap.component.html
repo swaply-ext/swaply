@@ -62,11 +62,11 @@
         </ng-container>
 
         <ng-container *ngIf="!isConfirmed() && !isDenied()">
-          <button class="btn-deny" (click)="denyIntercambio()" [disabled]="isLoading()">
+          <button class="btn-deny" (click)="denyIntercambio()">
             <span class="material-symbols-outlined">cancel</span>
             Rechazar intercambio
           </button>
-          <button class="btn-confirm" (click)="confirmIntercambio()" [disabled]="isLoading()">
+          <button class="btn-confirm" (click)="confirmIntercambio()">
             <span class="material-symbols-outlined">check_circle</span>
             Confirmar intercambio
           </button>
