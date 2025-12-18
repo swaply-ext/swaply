@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { AccountService } from '../../services/account.service';
 import { SwapService } from '../../services/swap.service';
 import { UsersService } from '../../services/users.service';
+import { RouterLink } from '@angular/router';
 
 interface profileToTeach {
   title: string;
@@ -30,7 +31,7 @@ interface nextSwap {
 @Component({
   selector: 'app-next-swap',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './next-swap.component.html',
   styleUrl: './next-swap.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
