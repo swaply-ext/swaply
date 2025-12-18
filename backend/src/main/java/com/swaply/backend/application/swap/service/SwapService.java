@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -94,42 +93,22 @@ public class SwapService {
         return nextSwap;
     }
 
-    public Swap getSwap(String userId, String swapId) {
-        UserDTO userSwap = userService.getUserByID(userId);
+    public Swap getSwapFromDTO(UserDTO userSwap, String swapId) {
         Swap swap = userSwap.getSwaps().stream()
-                .filter(l -> l.getId().equals(swapId))
+                .filter(s -> s.getId().equals(swapId))
                 .findFirst()
-                .orElse(null);
-        ;
+                .orElseThrow(() -> new RuntimeException("Swap not found for sender"));
         return swap;
     }
 
     public void updateSwapStatus(String swapId, String status, String currentUserId) {
-        Optional<User> senderOpt = repository.findUserById(currentUserId);
-        if (!senderOpt.isPresent()) {
-            throw new UserNotFoundException(currentUserId);
-        }
-        User sender = senderOpt.get();
+        //get sender
+        UserDTO sender = userService.getUserByID(currentUserId);
+        Swap senderSwap = getSwapFromDTO(sender, swapId);
 
-        // Find sender's swap
-        Swap senderSwap = sender.getSwaps().stream()
-                .filter(s -> s.getId().equals(swapId))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Swap not found for sender"));
-
-        // Get receiver User entity
-        String receiverId = senderSwap.getRequestedUserId();
-        Optional<User> receiverOpt = repository.findUserById(receiverId);
-        if (!receiverOpt.isPresent()) {
-            throw new UserNotFoundException(receiverId);
-        }
-        User receiver = receiverOpt.get();
-
-        // Find receiver's swap
-        Swap receiverSwap = receiver.getSwaps().stream()
-                .filter(s -> s.getId().equals(swapId))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Swap not found for receiver"));
+        //get receiver
+        UserDTO receiver = userService.getUserByID(senderSwap.getRequestedUserId());
+        Swap receiverSwap = getSwapFromDTO(receiver, swapId);
 
         // Set new status
         Swap.Status newStatus;
@@ -142,9 +121,8 @@ public class SwapService {
         }
         senderSwap.setStatus(newStatus);
         receiverSwap.setStatus(newStatus);
-
         // Save to database
-        repository.save(sender);
-        repository.save(receiver);
+        userService.updateUser(currentUserId,sender);
+        userService.updateUser(receiver.getId(),receiver);
     }
 }
