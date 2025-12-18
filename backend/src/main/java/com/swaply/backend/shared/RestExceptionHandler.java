@@ -1,5 +1,6 @@
 package com.swaply.backend.shared;
 
+import com.swaply.backend.application.auth.exception.SwapNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -17,6 +18,11 @@ public class RestExceptionHandler {
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<String> handleNotFound(UserNotFoundException e) {
 
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
+    @ExceptionHandler(SwapNotFoundException.class)
+    public ResponseEntity<String> handleSwapNotFound(SwapNotFoundException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
 
