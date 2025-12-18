@@ -1,6 +1,7 @@
 package com.swaply.backend.shared.chat.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -37,7 +38,7 @@ public class ChatService {
 
     // --- LEER HISTORIAL ---
     public List<ChatMessage> getChatHistoryByRoomId(String roomId, String userId, int pageNumber) {
-        
+
         ChatRoom room = chatRoomRepository.findRoomById(roomId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "La sala no existe"));
 
@@ -55,13 +56,42 @@ public class ChatService {
     }
 
     public SendChatRoomsDTO getChatRoomsByUserId(String userId) {
-        chatRoomRepository.findRoomsByUserId(userId);
-        UserDTO user = userService.getUserByID(userId);
-        SendChatRoomsDTO rooms = SendChatRoomsDTO.builder()
-                .username(user.getUsername())
-                .chatRooms(chatRoomRepository.findRoomsByUserId(userId))
+        // 1. Obtenemos todas las salas de una sola vez
+        List<ChatRoom> rooms = chatRoomRepository.findRoomsByUserId(userId);
+
+        // 2. Creamos una lista para guardar los nombres (Usernames)
+        List<String> otherUsernames = new ArrayList<>();
+
+        // 3. Recorremos las salas
+        for (ChatRoom room : rooms) {
+            // Buscamos el ID del otro participante
+            String otherUserId = room.getParticipants().stream()
+                    .filter(id -> !id.equals(userId))
+                    .findFirst()
+                    .orElse(null);
+
+            if (otherUserId != null) {
+                // --- AQUÍ ESTÁ EL CAMBIO ---
+
+                // 1. Buscamos al usuario completo en la base de datos usando su ID
+                UserDTO otherUserDto = userService.getUserByID(otherUserId);
+
+                // 2. Verificamos que exista (buena práctica para evitar NullPointerException)
+                if (otherUserDto != null) {
+                    // 3. Añadimos su USERNAME a la lista, no su ID
+                    otherUsernames.add(otherUserDto.getUsername());
+                } else {
+                    // Opcional: Qué hacer si el usuario fue borrado o no existe
+                    otherUsernames.add("Usuario Desconocido");
+                }
+            }
+        }
+
+        // 4. Construimos el objeto final
+        return SendChatRoomsDTO.builder()
+                .username(otherUsernames) // Ahora pasamos la lista de nombres reales
+                .chatRooms(rooms)
                 .build();
-        return rooms;
     }
 
     // --- ENVIAR MENSAJE ---
@@ -73,12 +103,12 @@ public class ChatService {
         if (!room.getParticipants().contains(userId)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tienes permiso");
         }
-        
+
         ChatMessage newChatMessage = chatMapper.chatMessageDtoToEntity(dto);
 
         newChatMessage.setId(UUID.randomUUID().toString());
         // --- CAMBIO VITAL: Forzar el tipo ---
-        newChatMessage.setType("message"); 
+        newChatMessage.setType("message");
         newChatMessage.setTimestamp(LocalDateTime.now());
 
         ChatMessage savedMessage = chatRepository.save(newChatMessage);
@@ -94,9 +124,10 @@ public class ChatService {
 
     // ... (el método createChatRoom se queda igual) ...
     public ChatRoom createChatRoom(String user1, String user2) {
-         String generatedId = (user1.compareTo(user2) < 0) ? user1 + "_" + user2 : user2 + "_" + user1;
+        String generatedId = (user1.compareTo(user2) < 0) ? user1 + "_" + user2 : user2 + "_" + user1;
         Optional<ChatRoom> existing = chatRoomRepository.findRoomById(generatedId);
-        if (existing.isPresent()) return existing.get();
+        if (existing.isPresent())
+            return existing.get();
 
         ChatRoom newRoom = ChatRoom.builder()
                 .id(generatedId)

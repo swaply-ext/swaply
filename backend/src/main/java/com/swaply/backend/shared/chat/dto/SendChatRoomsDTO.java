@@ -14,7 +14,7 @@ import com.swaply.backend.shared.chat.model.ChatRoom;
 @Builder
 public class SendChatRoomsDTO {
     
-    private String username;
+    private List<String> username;
     
     private List<ChatRoom> chatRooms;
 }
