@@ -64,6 +64,9 @@ export class NextSwapComponent {
   ngOnInit(): void {
     this.getNextSwap();
     this.getUserTeach();
+    if (this.nextSwap() == null) {
+      this.hasIntercambio.set(false);
+    }
   }
   //recibir proximo intercambio
   getNextSwap(): void {
@@ -73,16 +76,17 @@ export class NextSwapComponent {
         this.isDenied.set(false);
         this.nextSwap.set(swap);
         if (swap?.requestedUserId) {
+          this.hasIntercambio.set(true);
           this.getUserLearn(swap.requestedUserId);
         }
         //comprobar que no hay:
         if (swap == null) {
-          this.hasIntercambio = signal(false);
+          this.hasIntercambio.set(false);
         }
       },
       error: (err) => {
-        console.error('Error al obtener swap:', err);
         this.nextSwap.set(null);
+        this.hasIntercambio.set(false);
       }
     });
   }
@@ -93,7 +97,6 @@ export class NextSwapComponent {
         this.profileToTeach.set(user);
       },
       error: (err) => {
-        console.error('Error al obtener swap:', err);
         this.nextSwap.set(null);
       }
     });
@@ -106,7 +109,6 @@ export class NextSwapComponent {
         this.profileToLearn.set(user);
       },
       error: (err) => {
-        console.error('Error al obtener datos del usuario partner:', err);
       }
     });
   }
@@ -115,7 +117,6 @@ export class NextSwapComponent {
     const currentSwap = this.nextSwap();
 
     if (!currentSwap || !currentSwap.id) {
-      console.error('No hay información del swap para confirmar');
       return;
     }
 
@@ -126,7 +127,6 @@ export class NextSwapComponent {
         this.ngOnInit();
       },
       error: (err) => {
-        console.error('Error al confirmar:', err);
       }
     });
   }
@@ -146,7 +146,6 @@ export class NextSwapComponent {
         this.ngOnInit();
       },
       error: (err) => {
-        console.error('Error al rechazar:', err);
       }
     });
   }
