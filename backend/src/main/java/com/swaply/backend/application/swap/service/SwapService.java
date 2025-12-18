@@ -1,15 +1,18 @@
 package com.swaply.backend.application.swap.service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.swaply.backend.application.auth.exception.SwapNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.swaply.backend.application.swap.SwapMapper;
 import com.swaply.backend.application.swap.dto.SwapDTO;
 import com.swaply.backend.shared.UserCRUD.UserRepository;
 import com.swaply.backend.shared.UserCRUD.UserService;
+import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.shared.UserCRUD.Model.Swap;
 import com.swaply.backend.shared.UserCRUD.Model.User;
 import com.swaply.backend.shared.UserCRUD.exception.UserNotFoundException;
@@ -38,21 +41,16 @@ public class SwapService {
         sentSwap.setStatus(Swap.Status.STANDBY);
         sentSwap.setIsRequester(true);
         sentSwap.setId(id);
-        sentSwap.setRequestedUserId(userService.getUserByUsername(dto.getRequestedUsername()).getId()); //obtiene el id a partir del username
+        sentSwap.setRequestedUserId(userService.getUserByUsername(dto.getRequestedUsername()).getId());
 
-        Optional<User> sender = repository.findUserById(sendingUser);
-        if (sender.isPresent()) {
-            User user = sender.get();
-            if (user.getSwaps() == null) {
-                user.setSwaps(new ArrayList<>());
-            }
-            user.getSwaps().add(sentSwap);
-            repository.save(user);
-        }
-        else{
-            throw new UserNotFoundException(sendingUser);
-        }
+        User sender = repository.findUserById(sendingUser)
+                .orElseThrow(() -> new UserNotFoundException(sendingUser));
 
+        if (sender.getSwaps() == null) {
+            sender.setSwaps(new ArrayList<>());
+        }
+        sender.getSwaps().add(sentSwap);
+        repository.save(sender);
 
         Swap receivedSwap = mapper.toEntity(invertSwap(dto));
         receivedSwap.setStatus(Swap.Status.STANDBY);
@@ -60,18 +58,14 @@ public class SwapService {
         receivedSwap.setId(id);
         receivedSwap.setRequestedUserId(sendingUser);
 
-        Optional<User> receiver = repository.findUserById(sentSwap.getRequestedUserId());
-        if (receiver.isPresent()) {
-            User user = receiver.get();
-            if (user.getSwaps() == null) {
-                user.setSwaps(new ArrayList<>());
-            }
-            user.getSwaps().add(receivedSwap);
-            repository.save(user);
+        User receiver = repository.findUserById(sentSwap.getRequestedUserId())
+                .orElseThrow(() -> new UserNotFoundException(sentSwap.getRequestedUserId()));
+
+        if (receiver.getSwaps() == null) {
+            receiver.setSwaps(new ArrayList<>());
         }
-        else{
-            throw new UserNotFoundException(sendingUser);
-        }
+        receiver.getSwaps().add(receivedSwap);
+        repository.save(receiver);
 
         //Enviar email de notificación
                 try {
@@ -100,5 +94,54 @@ public class SwapService {
         return newdto;
     }
 
+    public List<Swap> getAllSwaps(String id) {
+        UserDTO userSwap = userService.getUserByID(id);
+        List<Swap> listaSwaps = userSwap.getSwaps();
+        return listaSwaps;
+    }
 
+    public Swap getNextSwap(String id) {
+        UserDTO userSwap = userService.getUserByID(id);
+        Swap nextSwap = userSwap.getSwaps().stream()
+                .filter(l -> l.getStatus() == Swap.Status.STANDBY)
+                .filter(l -> !l.getIsRequester())
+                .findFirst()
+                .orElseThrow(() -> new SwapNotFoundException("Swap not found"));
+        return nextSwap;
+    }
+
+    public Swap getSwapFromDTO(UserDTO userSwap, String swapId) {
+        Swap swap = userSwap.getSwaps().stream()
+                .filter(s -> s.getId().equals(swapId))
+                .findFirst()
+                .orElseThrow(() -> new SwapNotFoundException("Swap not found"));
+        return swap;
+    }
+
+    public void updateSwapStatus(String swapId, String status, String currentUserId) {
+        //get sender
+        UserDTO sender = userService.getUserByID(currentUserId);
+        Swap senderSwap = getSwapFromDTO(sender, swapId);
+
+        //get receiver
+        UserDTO receiver = userService.getUserByID(senderSwap.getRequestedUserId());
+        Swap receiverSwap = getSwapFromDTO(receiver, swapId);
+
+        // Set new status
+        Swap.Status newStatus;
+        if (!status.equalsIgnoreCase("ACCEPTED") && !status.equalsIgnoreCase("DENIED")) {
+            throw new IllegalArgumentException("Invalid status: " + status);
+        }
+        if (status.equalsIgnoreCase("ACCEPTED")) {
+            newStatus = Swap.Status.ACCEPTED;
+        } else {
+            newStatus = Swap.Status.DENIED;
+        }
+
+        senderSwap.setStatus(newStatus);
+        receiverSwap.setStatus(newStatus);
+        // Save to database
+        userService.updateUser(currentUserId,sender);
+        userService.updateUser(receiver.getId(),receiver);
+    }
 }

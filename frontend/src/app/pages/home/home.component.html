@@ -6,61 +6,7 @@
 
     <section class="interchange-section">
       <h2 class="section-title">Próximo Intercambio</h2>
-
-      <ng-container *ngIf="hasIntercambio(); else noIntercambio">
-        <div class="interchange-box interchange-populated-wrapper">
-          <div class="interchange-populated">
-            <div class="interchange-half">
-              <h3>Tu próxima habilidad para aprender</h3>
-              <div class="interchange-skill-card">
-                <img [src]="skillToLearn().img" alt="{{ skillToLearn().titulo }}">
-                <div>
-                  <h4>{{ skillToLearn().titulo }}</h4>
-                  <p>{{ skillToLearn().hora }}</p>
-                  <p class="skill-location">{{ skillToLearn().via }}</p>
-                </div>
-              </div>
-            </div>
-            <span class="material-symbols-outlined arrow-icon">swap_horiz</span>
-            <div class="interchange-half">
-              <h3>Tu próxima habilidad para enseñar</h3>
-              <div class="interchange-skill-card">
-                <img [src]="skillToTeach().img" alt="{{ skillToTeach().titulo }}">
-                <div>
-                  <h4>{{ skillToTeach().titulo }}</h4>
-                  <p>{{ skillToTeach().hora }}</p>
-                  <p class="skill-location">{{ skillToTeach().via }}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="confirmation-area">
-            <ng-container *ngIf="isConfirmed(); else showButton">
-              <span class="status-text"><span class="material-symbols-outlined">check_circle</span> Asistencia
-                confirmada</span>
-            </ng-container>
-            <ng-template #showButton>
-              <button class="btn-confirm" (click)="toggleConfirmation()"><span
-                  class="material-symbols-outlined">check_circle</span> Confirmar asistencia</button>
-            </ng-template>
-          </div>
-        </div>
-      </ng-container>
-
-      <ng-template #noIntercambio>
-        <div class="interchange-box interchange-empty">
-          <p>No tienes ningún intercambio programado.</p>
-          <div class="confirmation-area disabled"><span class="status-text"><span
-                class="material-symbols-outlined">check_circle</span> Asistencia confirmada</span></div>
-        </div>
-      </ng-template>
-
-      <div class="action-buttons">
-        <button class="btn btn-primary">Buscar Intercambio</button>
-        <button class="btn btn-secondary">Crear Intercambio</button>
-      </div>
-
-      <button (click)="toggleIntercambio()" class="demo-toggle">(Demo: Cambiar estado)</button>
+      <app-next-swap></app-next-swap>
     </section>
 
     <section class="nearby-section">

@@ -26,6 +26,9 @@ export class AccountService {
   updateEditProfileData(data: any): Observable<boolean> {
     return this.http.patch<boolean>(`${this.apiUrl}/editProfileData`, data);
   }
+  changesStatusSwap(data: any): Observable<boolean> {
+    return this.http.patch<boolean>(`${this.apiUrl}/changesStatusSwap`, data);
+  }
 
   uploadProfilePhoto(file: File): Observable<string> {
     const formData = new FormData();

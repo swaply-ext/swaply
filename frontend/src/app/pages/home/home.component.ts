@@ -2,11 +2,12 @@ import { ChangeDetectionStrategy, Component, inject, OnInit, signal, computed } 
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.component";
-import { SkillSearchComponent } from '../../components/skill-search/skill-search.component'; 
+import { SkillSearchComponent } from '../../components/skill-search/skill-search.component';
 import { FilterSkillsComponent } from '../../components/filter-skills/filter-skills.component';
 import { SearchService, UserSwapDTO } from '../../services/search.services';
 import { RouterLink } from '@angular/router';
 import { AccountService } from '../../services/account.service';
+import { NextSwapComponent } from '../../components/next-swap/next-swap.component';
 
 export interface CardModel {
   userId?: string;
@@ -24,7 +25,14 @@ export interface CardModel {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule,AppNavbarComponent, SkillSearchComponent, FilterSkillsComponent, RouterLink],
+  imports: [
+    CommonModule, 
+    AppNavbarComponent, 
+    SkillSearchComponent, 
+    FilterSkillsComponent,
+    NextSwapComponent,
+    RouterLink
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush

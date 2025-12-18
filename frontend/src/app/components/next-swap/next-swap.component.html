@@ -1,0 +1,84 @@
+<section class="interchange-section">
+  <ng-container *ngIf="hasIntercambio(); else noIntercambio">
+    <div class="interchange-box interchange-populated-wrapper">
+      <div class="interchange-populated">
+
+        <div class="interchange-half">
+          <h3>Tu próxima habilidad para aprender</h3>
+          <div class="interchange-skill-card">
+            <img [src]="imageToLearn()" alt="{{ nextSwap()?.interest }}">
+            <div>
+              <h4>Clase de {{ nextSwap()?.interest }}</h4>
+              <p class="skill-location">
+                <span class="material-symbols-outlined location">location_on</span>
+                {{ profileToLearn()?.location }}
+              </p>
+              <p class="skill-location">
+                <span class="material-symbols-outlined">
+                  <img [src]="profileToLearn()?.profilePhotoUrl" alt="Foto de perfil" class="user-avatar">
+                </span>
+                {{ '@'+ profileToLearn()?.username }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <span class="material-symbols-outlined arrow-icon">swap_horiz</span>
+
+        <div class="interchange-half">
+          <h3>Tu próxima habilidad para enseñar</h3>
+          <div class="interchange-skill-card">
+            <img [src]="imageToTeach()" alt="{{ nextSwap()?.skill }}">
+            <div>
+              <h4>Clase de {{ nextSwap()?.skill }}</h4>
+              <p class="skill-location">
+                <span class="material-symbols-outlined location">location_on</span>
+                {{ profileToTeach()?.location }}
+              </p>
+              <p class="skill-location">
+                <span class="material-symbols-outlined">
+                  <img [src]="profileToTeach()?.profilePhotoUrl" alt="Foto de perfil" class="user-avatar">
+                </span>
+                {{ '@'+ profileToTeach()?.username }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="confirmation-area">
+        
+        <ng-container *ngIf="isConfirmed()">
+          <span class="status-text confirmed">
+            <span class="material-symbols-outlined">check_circle</span>
+            Intercambio confirmado
+          </span>
+        </ng-container>
+        <ng-container *ngIf="isDenied()">
+          <span class="status-text denied">
+            <span class="material-symbols-outlined">cancel</span>
+            Intercambio rechazado
+          </span>
+        </ng-container>
+
+        <ng-container *ngIf="!isConfirmed() && !isDenied()">
+          <button class="btn-deny" (click)="denyIntercambio()">
+            <span class="material-symbols-outlined">cancel</span>
+            Rechazar intercambio
+          </button>
+          <button class="btn-confirm" (click)="confirmIntercambio()">
+            <span class="material-symbols-outlined">check_circle</span>
+            Confirmar intercambio
+          </button>
+        </ng-container>
+      </div>
+
+    </div>
+  </ng-container>
+
+  <ng-template #noIntercambio>
+    <div class="interchange-box interchange-empty">
+      <p>No tienes ningún intercambio programado.</p>
+      </div>
+  </ng-template>
+</section>
