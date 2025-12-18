@@ -13,6 +13,8 @@ import com.swaply.backend.shared.UserCRUD.UserService;
 import com.swaply.backend.shared.UserCRUD.Model.Swap;
 import com.swaply.backend.shared.UserCRUD.Model.User;
 import com.swaply.backend.shared.UserCRUD.exception.UserNotFoundException;
+import com.swaply.backend.shared.mail.MailService;
+import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 
 @Service
 public class SwapService {
@@ -20,11 +22,13 @@ public class SwapService {
     private final UserRepository repository;
     private final SwapMapper mapper;
     private final UserService userService;
+    private final MailService mailService;
 
-    public SwapService(SwapMapper mapper, UserRepository repository, UserService userService) {
+    public SwapService(SwapMapper mapper, UserRepository repository, UserService userService, MailService mailService) {
         this.mapper = mapper;
         this.repository = repository;
         this.userService = userService;
+        this.mailService = mailService;
     }
 
     public Swap createSwap(String sendingUser, SwapDTO dto) {
@@ -69,6 +73,23 @@ public class SwapService {
             throw new UserNotFoundException(sendingUser);
         }
 
+        //Enviar email de notificación
+                try {
+            UserDTO senderDto = userService.getUserByID(sendingUser);
+            UserDTO receiverDto = userService.getUserByUsername(dto.getRequestedUsername());
+
+            mailService.sendSwapRequestEmail(
+                receiverDto.getEmail(),       
+                receiverDto.getName(),        
+                senderDto.getName(),          
+                dto.getSkill(),             
+                dto.getInterest()        
+            );
+            System.out.println("Notificación enviada a: " + receiverDto.getEmail());
+
+        } catch (Exception e) {
+            System.err.println("No se pudo enviar el correo de notificación: " + e.getMessage());
+        }
         return sentSwap;
     }
 
