@@ -36,6 +36,7 @@ import { SwapComponent } from './pages/swap/swap.component';
 import { SwapSkillsComponent } from './components/swap-skills/swap-skills.component';
 import { SwapInterestsComponent } from './components/swap-interests/swap-interests.component';
 import { DeleteAccountConfirmationComponent } from './pages/delete-account-confirmation/delete-account-confirmation.component';
+import { UserSearchComponent } from './components/user-search/user-search.component';
 
 
 // Creamos una ruta para la verificación de correo
@@ -75,6 +76,7 @@ export const appRoutes: Routes = [
   { path: 'delete-account-confirmation', component: DeleteAccountConfirmationComponent },
   { path: '404', component: Error404Component },
   { path: 'privacy-and-security', component: PrivacyAndSecurityComponent, canActivate: [AuthGuard] },
+  { path: 'user-search', component: UserSearchComponent },
   { path: 'swap/:targetId', component: SwapComponent, canActivate: [AuthGuard] },
   { path: 'index', component: IndexComponent },
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
