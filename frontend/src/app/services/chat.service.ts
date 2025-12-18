@@ -10,7 +10,7 @@ export interface ChatMessage {
   roomId: string;
   senderId: string;
   content: string;
-  timestamp?: string; 
+  timestamp?: string;
 }
 
 export interface ChatRoom {
@@ -20,7 +20,13 @@ export interface ChatRoom {
   lastMessageTime?: string;
   lastMessageSenderId?: string;
   isActive: boolean;
-  chatName?: string; // Para mostrar nombre en el HTML
+  chatName?: string; 
+}
+
+// NUEVA INTERFAZ QUE COINCIDE CON TU DTO DE JAVA
+export interface SendChatRoomsDTO {
+  username: string[];      // Lista de nombres
+  chatRooms: ChatRoom[];   // Lista de salas
 }
 
 @Injectable({
@@ -29,7 +35,6 @@ export interface ChatRoom {
 export class ChatService {
   
   private stompClient: Client | null = null;
-  // URLs directas
   private readonly API_URL = 'http://localhost:8081/api/chat'; 
   private readonly SOCKET_URL = 'http://localhost:8081/ws-chat';
 
@@ -37,12 +42,11 @@ export class ChatService {
 
   constructor(private http: HttpClient) {}
 
-  
-
   // --- REST ---
 
-  getMyRooms(): Observable<ChatRoom[]> {
-    return this.http.get<ChatRoom[]>(`${this.API_URL}/rooms`);
+  // CAMBIO: Ahora devuelve SendChatRoomsDTO en lugar de ChatRoom[]
+  getMyRooms(): Observable<SendChatRoomsDTO> {
+    return this.http.get<SendChatRoomsDTO>(`${this.API_URL}/rooms`);
   }
 
   getChatHistory(roomId: string): Observable<ChatMessage[]> {
@@ -53,8 +57,7 @@ export class ChatService {
     return this.http.post<ChatRoom>(`${this.API_URL}/rooms/create/${targetUserId}`, {});
   }
 
-  // --- WEBSOCKETS ---
-
+  // --- WEBSOCKETS (Se mantiene igual) ---
   connect(jwtToken: string) {
     const socket = new SockJS(this.SOCKET_URL);
     
@@ -98,8 +101,6 @@ export class ChatService {
       });
     }
   }
-
-  
 
   onNewMessage(): Observable<ChatMessage> {
     return this.messageSubject.asObservable();

@@ -1,41 +1,41 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { CommonModule } from '@angular/common'; 
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ChatService, ChatMessage, ChatRoom } from '../../services/chat.service'; 
-import { AuthService } from '../../services/auth.service'; 
+import { ChatService, ChatMessage, ChatRoom } from '../../services/chat.service';
+import { AuthService } from '../../services/auth.service';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css'],
-  standalone: true, 
+  standalone: true,
   imports: [
-    CommonModule, 
-    FormsModule   
+    CommonModule,
+    FormsModule
   ]
 })
 export class ChatComponent implements OnInit, OnDestroy {
-  
+
   @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
 
   rooms: ChatRoom[] = [];
   selectedRoom: ChatRoom | null = null;
   messages: ChatMessage[] = [];
-  
+
   // Variables para los inputs
   newMessageText: string = '';
-  targetUserInput: string = ''; // <--- NUEVA variable para el buscador de usuarios
-  
-  currentUserId: string = ''; 
+  targetUserInput: string = ''; 
 
-  private topicSubscription: any; 
+  currentUserId: string = '';
+
+  private topicSubscription: any;
   private msgSubscription: Subscription = new Subscription();
 
   constructor(
     private chatService: ChatService,
-    private authService: AuthService 
-  ) {}
+    private authService: AuthService
+  ) { }
 
   ngOnInit(): void {
     // 1. Obtener ID usuario y Token
@@ -59,49 +59,30 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * NUEVA FUNCIÓN: Crea un chat con el usuario que escribas en el input.
-   * Si el chat ya existe, simplemente lo abre.
-   */
   createChat() {
     const targetId = this.targetUserInput.trim();
     if (!targetId) return;
-
-    // Evitar hablar con uno mismo
     if (targetId === this.currentUserId) {
       alert("No puedes crear un chat contigo mismo.");
       return;
     }
-
-    console.log('Creando/Abriendo chat con:', targetId);
-
     this.chatService.createRoom(targetId).subscribe({
       next: (room) => {
-        console.log('Sala obtenida:', room);
-        
-        // 1. Limpiamos el input
         this.targetUserInput = '';
-
-        // 2. Comprobamos si la sala ya estaba en nuestra lista local
         const existingIndex = this.rooms.findIndex(r => r.id === room.id);
-        
-        // Asignamos el nombre visual (el ID del otro usuario) para que se vea bien
+
         room.chatName = targetId;
 
         if (existingIndex === -1) {
-          // Si es nueva, la añadimos al principio de la lista
           this.rooms.unshift(room);
         } else {
-          // Si ya existía, actualizamos los datos
           this.rooms[existingIndex] = room;
         }
-
-        // 3. Abrimos la sala automáticamente para empezar a hablar
         this.selectRoom(room);
       },
       error: (err) => {
         console.error('Error al crear sala:', err);
-        alert('Error al conectar. Verifica que el ID del usuario exista.');
+        alert('Error. Verifica el ID.');
       }
     });
   }
@@ -109,16 +90,18 @@ export class ChatComponent implements OnInit, OnDestroy {
   loadRooms() {
     this.chatService.getMyRooms().subscribe({
       next: (data) => {
-        this.rooms = data;
-        this.rooms.forEach(room => {
-          // Calculamos el nombre del chat (el participante que NO soy yo)
-          const otherUser = room.participants.find(p => p !== this.currentUserId) || 'Desconocido';
-          room.chatName = otherUser;
+        this.rooms = data.chatRooms;
+        this.rooms.forEach((room, index) => {
+          const nameFromBackend = data.username[index];
+          room.chatName = nameFromBackend || 'Usuario Desconocido';
         });
+
       },
       error: (err) => console.error('Error cargando salas', err)
     });
   }
+
+  
 
   selectRoom(room: ChatRoom) {
     if (this.selectedRoom?.id === room.id) return;
@@ -149,8 +132,8 @@ export class ChatComponent implements OnInit, OnDestroy {
     if (!this.newMessageText.trim() || !this.selectedRoom) return;
 
     this.chatService.sendMessage(
-      this.selectedRoom.id, 
-      this.newMessageText, 
+      this.selectedRoom.id,
+      this.newMessageText,
       this.currentUserId
     );
     this.newMessageText = '';
@@ -161,7 +144,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     if (this.selectedRoom && msg.roomId === this.selectedRoom.id) {
       this.messages.push(msg);
       this.scrollToBottom();
-    } 
+    }
     // Siempre actualizamos la vista previa en la lista lateral
     this.updateRoomListPreview(msg);
   }
@@ -172,7 +155,7 @@ export class ChatComponent implements OnInit, OnDestroy {
       const room = this.rooms[roomIndex];
       room.lastMessagePreview = msg.content;
       room.lastMessageTime = msg.timestamp;
-      
+
       // Mover la sala al inicio de la lista (efecto WhatsApp)
       this.rooms.splice(roomIndex, 1);
       this.rooms.unshift(room);
