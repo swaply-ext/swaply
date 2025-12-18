@@ -15,15 +15,12 @@ public interface ChatMapper {
     ChatMessage chatMessageDtoToEntity(ChatMessageDTO chatMessageDTO);
     
 
-    @Mappings({
-            @Mapping(target = "id", ignore = true),
-    })
-
     ChatMessageDTO chatMessageEntityToDTO(ChatMessage chatMessage);
     @Mappings({
             @Mapping(target = "id", ignore = true),
     })
 
-    ChatRoom chatRoomDtoToEntity(ChatRoom chatRoom);
-    ChatRoomDTO ChatRoomEntityToDTO(ChatRoom chatRoom);
+    ChatRoom chatRoomDtoToEntity(ChatRoomDTO chatRoomDTO);
+
+    ChatRoomDTO chatRoomEntityToDTO(ChatRoom chatRoom);
 }

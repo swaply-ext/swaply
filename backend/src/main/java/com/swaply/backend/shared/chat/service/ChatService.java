@@ -74,6 +74,8 @@ public class ChatService {
         ChatMessage newChatMessage = chatMapper.chatMessageDtoToEntity(dto);
 
         newChatMessage.setId(UUID.randomUUID().toString());
+        newChatMessage.setSenderId(userId);
+        newChatMessage.setTimestamp(LocalDateTime.now());
 
         ChatMessage savedMessage = chatRepository.save(newChatMessage);
 
