@@ -1,6 +1,7 @@
 package com.swaply.backend.shared.chat.controller;
 
 import com.swaply.backend.shared.chat.dto.ChatMessageDTO;
+import com.swaply.backend.shared.chat.dto.SendChatRoomsDTO;
 import com.swaply.backend.shared.chat.model.ChatMessage;
 import com.swaply.backend.shared.chat.model.ChatRoom;
 import com.swaply.backend.shared.chat.service.ChatService;
@@ -21,7 +22,7 @@ public class ChatController {
 
     // Obtener todas las salas del usuario logueado
     @GetMapping("/rooms")
-    public ResponseEntity<List<ChatRoom>> getMyRooms(@AuthenticationPrincipal SecurityUser user) {
+    public ResponseEntity<SendChatRoomsDTO> getMyRooms(@AuthenticationPrincipal SecurityUser user) {
         return ResponseEntity.ok(chatService.getChatRoomsByUserId(user.getUsername()));
     }
 

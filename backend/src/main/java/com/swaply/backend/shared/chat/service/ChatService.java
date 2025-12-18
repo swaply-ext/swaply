@@ -13,8 +13,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Pageable;
 
+import com.swaply.backend.shared.UserCRUD.UserService;
+import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.shared.chat.ChatMapper;
 import com.swaply.backend.shared.chat.dto.ChatMessageDTO;
+import com.swaply.backend.shared.chat.dto.SendChatRoomsDTO;
 import com.swaply.backend.shared.chat.model.ChatMessage;
 import com.swaply.backend.shared.chat.model.ChatRoom;
 import com.swaply.backend.shared.chat.repository.ChatMessageRepository;
@@ -25,6 +28,8 @@ public class ChatService {
 
     @Autowired
     private ChatMessageRepository chatRepository;
+    @Autowired
+    private UserService userService;
     @Autowired
     private ChatMapper chatMapper;
     @Autowired
@@ -49,8 +54,14 @@ public class ChatService {
         return page.getContent();
     }
 
-    public List<ChatRoom> getChatRoomsByUserId(String userId) {
-        return chatRoomRepository.findRoomsByUserId(userId);
+    public SendChatRoomsDTO getChatRoomsByUserId(String userId) {
+        chatRoomRepository.findRoomsByUserId(userId);
+        UserDTO user = userService.getUserByID(userId);
+        SendChatRoomsDTO rooms = SendChatRoomsDTO.builder()
+                .username(user.getUsername())
+                .chatRooms(chatRoomRepository.findRoomsByUserId(userId))
+                .build();
+        return rooms;
     }
 
     // --- ENVIAR MENSAJE ---
