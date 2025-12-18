@@ -4,13 +4,17 @@ import {
   inject,
   signal,
   ElementRef,   
-  HostListener
+  HostListener,
+  Output,       
+  EventEmitter,
+  OnInit,
+  OnDestroy  
 } from '@angular/core';
 import { HttpClient, HttpClientModule, HttpContext, HttpParams } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Injectable } from '@angular/core';
-import { Observable, Subject, of } from 'rxjs';
+import { Observable, Subject, Subscription, interval, of } from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -63,11 +67,25 @@ export class SkillSearchComponent {
   private skillSearchService = inject(SkillSearchService);
   private el = inject(ElementRef);
 
+  @Output() skillSelected = new EventEmitter<string>();
+
   searchTerm = '';
   // el signal sirve para almacenar variables que cambian con el tiempo
   results = signal<Skill[]>([]);
   isLoading = signal(false);
   showDropdown = signal(false);
+
+
+  placeholderText = 'Buscar habilidad...';
+  private placeholders = [
+    'Buscar "Guitarra"...', 
+    'Buscar "Fútbol"...', 
+    'Buscar "Violín"...', 
+    'Buscar "Cocina"...',
+    'Buscar "Ocio Digital"...'
+  ];
+  private placeholderSub?: Subscription;
+  private currentIndex = 0;
 
   //esto srive para no tener que hacer una peticion cada vez que se escribe una letra
   private searchTermSubject = new Subject<string>();
@@ -103,6 +121,22 @@ export class SkillSearchComponent {
     });
   }
 
+  ngOnInit() {
+    // Iniciamos el efecto de texto dinámico
+    this.placeholderSub = interval(3000).subscribe(() => {
+      this.cyclePlaceholder();
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.placeholderSub) this.placeholderSub.unsubscribe();
+  }
+
+  cyclePlaceholder() {
+    this.currentIndex = (this.currentIndex + 1) % this.placeholders.length;
+    this.placeholderText = this.placeholders[this.currentIndex];
+  }
+
   @HostListener('document:click', ['$event'])
   onClickOutside(event: Event) {
     // Si el clic no es dentro de este componente, cierra el dropdown
@@ -119,7 +153,17 @@ export class SkillSearchComponent {
   }
 
   onSearchTermChanged(term: string): void {
-    this.searchTermSubject.next(term);
+    this.searchTerm = term;
+    
+    if (!term.trim()) {
+      // Si el usuario borra todo, ocultamos dropdown y avisamos al padre para resetear
+      this.results.set([]);
+      this.showDropdown.set(false);
+      this.skillSelected.emit(''); // Emitimos cadena vacía
+    } else {
+      // Si hay texto, seguimos con la búsqueda normal del autocomplete
+      this.searchTermSubject.next(term);
+    }
   }
 
   // esto aun no funciona, es para cuando se seleccione una skill de los resultados
@@ -128,5 +172,7 @@ export class SkillSearchComponent {
     this.searchTerm = skill.name; 
     this.results.set([]); 
     this.showDropdown.set(false);
+    //se emite el id de la skill seleccionada
+    this.skillSelected.emit(skill.id); 
   }
 }
