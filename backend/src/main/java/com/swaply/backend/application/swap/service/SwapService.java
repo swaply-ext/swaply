@@ -38,17 +38,14 @@ public class SwapService {
         sentSwap.setId(id);
         sentSwap.setRequestedUserId(userService.getUserByUsername(dto.getRequestedUsername()).getId());
 
-        Optional<User> sender = repository.findUserById(sendingUser);
-        if (sender.isPresent()) {
-            User user = sender.get();
-            if (user.getSwaps() == null) {
-                user.setSwaps(new ArrayList<>());
-            }
-            user.getSwaps().add(sentSwap);
-            repository.save(user);
-        } else {
-            throw new UserNotFoundException(sendingUser);
+        User sender = repository.findUserById(sendingUser)
+                .orElseThrow(() -> new UserNotFoundException(sendingUser));
+
+        if (sender.getSwaps() == null) {
+            sender.setSwaps(new ArrayList<>());
         }
+        sender.getSwaps().add(sentSwap);
+        repository.save(sender);
 
         Swap receivedSwap = mapper.toEntity(invertSwap(dto));
         receivedSwap.setStatus(Swap.Status.STANDBY);
@@ -56,17 +53,15 @@ public class SwapService {
         receivedSwap.setId(id);
         receivedSwap.setRequestedUserId(sendingUser);
 
-        Optional<User> receiver = repository.findUserById(sentSwap.getRequestedUserId());
-        if (receiver.isPresent()) {
-            User user = receiver.get();
-            if (user.getSwaps() == null) {
-                user.setSwaps(new ArrayList<>());
-            }
-            user.getSwaps().add(receivedSwap);
-            repository.save(user);
-        } else {
-            throw new UserNotFoundException(sendingUser);
+        User receiver = repository.findUserById(sentSwap.getRequestedUserId())
+                .orElseThrow(() -> new UserNotFoundException(sentSwap.getRequestedUserId()));
+
+        if (receiver.getSwaps() == null) {
+            receiver.setSwaps(new ArrayList<>());
         }
+        receiver.getSwaps().add(receivedSwap);
+        repository.save(receiver);
+
         return sentSwap;
     }
 
@@ -112,13 +107,15 @@ public class SwapService {
 
         // Set new status
         Swap.Status newStatus;
-        if (status.equalsIgnoreCase("ACCEPTED")) {
-            newStatus = Swap.Status.ACCEPTED;
-        } else if (status.equalsIgnoreCase("DENIED")) {
-            newStatus = Swap.Status.DENIED;
-        } else {
+        if (!status.equalsIgnoreCase("ACCEPTED") && !status.equalsIgnoreCase("DENIED")) {
             throw new IllegalArgumentException("Invalid status: " + status);
         }
+        if (status.equalsIgnoreCase("ACCEPTED")) {
+            newStatus = Swap.Status.ACCEPTED;
+        } else {
+            newStatus = Swap.Status.DENIED;
+        }
+
         senderSwap.setStatus(newStatus);
         receiverSwap.setStatus(newStatus);
         // Save to database
