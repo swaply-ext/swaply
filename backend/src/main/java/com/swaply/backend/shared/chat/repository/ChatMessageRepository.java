@@ -1,18 +1,16 @@
 package com.swaply.backend.shared.chat.repository;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-
-import com.azure.cosmos.models.PartitionKey;
 import com.azure.spring.data.cosmos.repository.CosmosRepository;
 import com.swaply.backend.shared.chat.model.ChatMessage;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 
 @Repository
 public interface ChatMessageRepository extends CosmosRepository<ChatMessage, String> {
-    String type = "message";
-    PartitionKey CHAT_PARTITION_KEY = new PartitionKey(type);
 
-    // Este método devuelve una "Page" (Página) en lugar de una "List" directa.
-    Page<ChatMessage> findByRoomId(String roomId, Pageable pageable);
+
+    Page<ChatMessage> findByRoomIdAndType(String roomId, String type, Pageable pageable);
+    
 }

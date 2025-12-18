@@ -1,0 +1,97 @@
+<div class="chat-container">
+
+  <div class="chat-sidebar">
+    
+    <div class="sidebar-header">
+      <h3>Chats</h3>
+      
+      <div class="new-chat-input">
+        <input 
+          type="text" 
+          [(ngModel)]="targetUserInput" 
+          placeholder="ID del usuario..." 
+          (keyup.enter)="createChat()"
+        />
+        <button (click)="createChat()" [disabled]="!targetUserInput.trim()">
+          +
+        </button>
+      </div>
+    </div>
+    
+    <div class="rooms-list">
+      <div 
+        *ngFor="let room of rooms" 
+        class="room-item" 
+        [class.active]="selectedRoom?.id === room.id"
+        (click)="selectRoom(room)">
+        
+        <div class="room-avatar">
+          {{ room.chatName ? (room.chatName.charAt(0) | uppercase) : '?' }}
+        </div>
+        
+        <div class="room-info">
+          <div class="room-name">{{ room.chatName || 'Chat' }}</div>
+          <div class="room-preview">
+            {{ room.lastMessagePreview || 'Sin mensajes...' }}
+          </div>
+        </div>
+        
+        <div class="room-meta">
+          <span *ngIf="room.lastMessageTime">
+            {{ room.lastMessageTime | date:'HH:mm' }}
+          </span>
+        </div>
+      </div>
+      
+      <div *ngIf="rooms.length === 0" class="no-rooms">
+        <p>No tienes chats activos.</p>
+        <small>Escribe un ID arriba para empezar.</small>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-main">
+    
+    <div class="chat-header" *ngIf="selectedRoom">
+      <div class="chat-header-info">
+        <h3>{{ selectedRoom.chatName }}</h3>
+      </div>
+    </div>
+
+    <div class="messages-area" #scrollContainer *ngIf="selectedRoom; else noChatSelected">
+      
+      <div 
+        *ngFor="let msg of messages" 
+        class="message-bubble"
+        [ngClass]="{'mine': msg.senderId === currentUserId, 'theirs': msg.senderId !== currentUserId}">
+        
+        <div class="message-content">
+          {{ msg.content }}
+        </div>
+        <div class="message-time">
+          {{ msg.timestamp | date:'HH:mm' }}
+        </div>
+      </div>
+
+    </div>
+
+    <ng-template #noChatSelected>
+      <div class="no-chat-placeholder">
+        <p>Selecciona un chat o crea uno nuevo para comenzar a hablar.</p>
+      </div>
+    </ng-template>
+
+    <div class="chat-input-area" *ngIf="selectedRoom">
+      <input 
+        type="text" 
+        [(ngModel)]="newMessageText" 
+        (keyup.enter)="sendMessage()"
+        placeholder="Escribe un mensaje..." 
+      />
+      <button (click)="sendMessage()" [disabled]="!newMessageText.trim()">
+        Enviar
+      </button>
+    </div>
+
+  </div>
+</div>

@@ -29,9 +29,12 @@ public class ChatController {
     @GetMapping("/history/{roomId}")
     public ResponseEntity<List<ChatMessage>> getHistory(
             @AuthenticationPrincipal SecurityUser user,
-            @PathVariable ChatMessageDTO dto) {
-        return ResponseEntity.ok(chatService.getChatHistoryByRoomId(dto.getRoomId(), user.getUsername(), dto.getPageNumber()));
+            @PathVariable String roomId,
+            @RequestParam(defaultValue = "0") int page) {
+        
+        return ResponseEntity.ok(chatService.getChatHistoryByRoomId(roomId, user.getUsername(), page));
     }
+    
 
     // Crear una sala (ej: cuando un usuario pulsa "Contactar" en un producto)
     @PostMapping("/rooms/create/{targetUserId}")
