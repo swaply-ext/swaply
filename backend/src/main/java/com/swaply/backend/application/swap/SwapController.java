@@ -46,12 +46,7 @@ public class SwapController {
             @AuthenticationPrincipal SecurityUser SecurityUser,
             @PathVariable String swapId,
             @RequestParam String status) {
-        try {
-            service.updateSwapStatus(swapId, status, SecurityUser.getUsername());
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
-        } catch (RuntimeException e) {
-            System.out.println(e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+        service.updateSwapStatus(swapId, status, SecurityUser.getUsername());
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
     }
 }
