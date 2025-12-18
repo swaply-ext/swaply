@@ -7,7 +7,7 @@
     <h1>Intereses</h1>
 
 
-    <button class="edit-btn" (click)="goToInterests()">
+    <button *ngIf="!isPublic" class="edit-btn" (click)="goToInterests()">
       <span class="material-icons">edit</span>
     </button>
   </header>
@@ -17,7 +17,7 @@
       *ngFor="let item of InterestsInput"
       [id]="item.id"
       [level]="item.level"
-      [editable]="editable"
+      [editable]="!isPublic && editable"
       (levelChange)="handleLevelChange($event)">
     </app-skill-card>
   </div>
