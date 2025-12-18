@@ -8,6 +8,7 @@ import { AccountService } from '../../services/account.service';
 import { ProfileDataDTO } from '../../models/profile-data-dto.model';
 import { ProfileData } from '../../models/private-profile-data.model';
 import { UserSkills } from '../../models/user-skills.model';
+import { ActivatedRoute } from '@angular/router'; //Con este import se peude acceder al resolver
 
 @Component({
   selector: 'app-private-profile',
@@ -29,22 +30,12 @@ export class PrivateProfileComponent implements OnInit {
   public profileViewData!: ProfileData;
   // public profileData: ProfileData = {} as ProfileData;
 
-  constructor(private accountService: AccountService) { }
+  constructor(private accountService: AccountService, private resolver: ActivatedRoute) { } //declaramos el resolver
 
   ngOnInit(): void {
-    this.getProfileDataFromBackend();
-  }
-
-  getProfileDataFromBackend(): void {
-    this.accountService.getProfileData().subscribe({
-      next: (dto: ProfileDataDTO) => {
-        // console.log('Datos recibidos del backend:', data);
-        this.splitAndSendUser(dto);
-      },
-      error: (err) => {
-        console.error('Error al obtener datos del perfil:', err);
-      }
-    });
+    // Accedemos directamente al snapshot del resolver para obtener los datos
+    const user = this.resolver.snapshot.data['profileData'];
+    this.splitAndSendUser(user);
   }
 
   splitAndSendUser(user: ProfileDataDTO): void {
@@ -56,7 +47,6 @@ export class PrivateProfileComponent implements OnInit {
   }
 
   mapProfileData(user: ProfileDataDTO): void {
-
     this.profileViewData = {
       fullName: `${user.name} ${user.surname}`,
       username: user.username,
@@ -65,6 +55,4 @@ export class PrivateProfileComponent implements OnInit {
       profilePhotoUrl: user.profilePhotoUrl,
     };
   }
-
-
 }
