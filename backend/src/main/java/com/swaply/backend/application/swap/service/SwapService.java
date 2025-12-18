@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.swaply.backend.application.auth.exception.SwapNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.swaply.backend.application.swap.SwapMapper;
@@ -84,7 +85,7 @@ public class SwapService {
                 .filter(l -> l.getStatus() == Swap.Status.STANDBY)
                 .filter(l -> !l.getIsRequester())
                 .findFirst()
-                .orElse(null); // o lanzar excepción;
+                .orElseThrow(() -> new SwapNotFoundException("Swap not found"));
         return nextSwap;
     }
 
@@ -92,7 +93,7 @@ public class SwapService {
         Swap swap = userSwap.getSwaps().stream()
                 .filter(s -> s.getId().equals(swapId))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Swap not found for sender"));
+                .orElseThrow(() -> new SwapNotFoundException("Swap not found"));
         return swap;
     }
 
