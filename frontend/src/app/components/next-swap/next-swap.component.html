@@ -1,84 +1,102 @@
 <section class="interchange-section">
   <ng-container *ngIf="hasIntercambio(); else noIntercambio">
-    <div class="interchange-box interchange-populated-wrapper">
-      <div class="interchange-populated">
+    
+    <div class="interchange-box">
+      <div class="interchange-content">
 
-        <div class="interchange-half">
-          <h3>Tu próxima habilidad para aprender</h3>
-          <div class="interchange-skill-card">
-            <img [src]="imageToLearn()" alt="{{ nextSwap()?.interest }}">
-            <div>
+        <div class="interchange-card-wrapper">
+          <h3 class="section-title">Tu próxima habilidad para aprender</h3>
+          
+          <div class="skill-card">
+            <img [src]="imageToLearn()" alt="{{ nextSwap()?.interest }}" class="activity-img">
+            
+            <div class="card-details">
               <h4>Clase de {{ nextSwap()?.interest }}</h4>
-              <p class="skill-location">
-                <span class="material-symbols-outlined location">location_on</span>
-                {{ profileToLearn()?.location }}
-              </p>
-              <p class="skill-location">
-                <span class="material-symbols-outlined">
-                  <img [src]="profileToLearn()?.profilePhotoUrl" alt="Foto de perfil" class="user-avatar">
-                </span>
-                {{ '@'+ profileToLearn()?.username }}
-              </p>
+              
+              <div class="badges-group">
+                <div class="info-badge">
+                  <span class="material-symbols-outlined badge-icon">location_on</span>
+                  <span class="badge-text">{{ profileToLearn()?.location }}</span>
+                </div>
+                
+                <div class="info-badge">
+                  <div class="avatar-wrapper">
+                    <img [src]="profileToLearn()?.profilePhotoUrl" alt="Avatar" class="user-avatar">
+                  </div>
+                  <span class="badge-text">{{ '@'+ profileToLearn()?.username }}</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        <span class="material-symbols-outlined arrow-icon">swap_horiz</span>
+        <div class="arrow-container">
+          <span class="material-symbols-outlined swap-icon">swap_horiz</span>
+        </div>
 
-        <div class="interchange-half">
-          <h3>Tu próxima habilidad para enseñar</h3>
-          <div class="interchange-skill-card">
-            <img [src]="imageToTeach()" alt="{{ nextSwap()?.skill }}">
-            <div>
+        <div class="interchange-card-wrapper">
+          <h3 class="section-title">Tu próxima habilidad para enseñar</h3>
+          
+          <div class="skill-card">
+            <img [src]="imageToTeach()" alt="{{ nextSwap()?.skill }}" class="activity-img">
+            
+            <div class="card-details">
               <h4>Clase de {{ nextSwap()?.skill }}</h4>
-              <p class="skill-location">
-                <span class="material-symbols-outlined location">location_on</span>
-                {{ profileToTeach()?.location }}
-              </p>
-              <p class="skill-location">
-                <span class="material-symbols-outlined">
-                  <img [src]="profileToTeach()?.profilePhotoUrl" alt="Foto de perfil" class="user-avatar">
-                </span>
-                {{ '@'+ profileToTeach()?.username }}
-              </p>
+              
+              <div class="badges-group">
+                <div class="info-badge">
+                  <span class="material-symbols-outlined badge-icon">location_on</span>
+                  <span class="badge-text">{{ profileToTeach()?.location }}</span>
+                </div>
+                
+                <div class="info-badge">
+                  <div class="avatar-wrapper">
+                    <img [src]="profileToTeach()?.profilePhotoUrl" alt="Avatar" class="user-avatar">
+                  </div>
+                  <span class="badge-text">{{ '@'+ profileToTeach()?.username }}</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+
       </div>
 
-      <div class="confirmation-area">
+      <div class="actions-area">
         
         <ng-container *ngIf="isConfirmed()">
-          <span class="status-text confirmed">
+          <span class="status-badge confirmed">
             <span class="material-symbols-outlined">check_circle</span>
             Intercambio confirmado
           </span>
         </ng-container>
+
         <ng-container *ngIf="isDenied()">
-          <span class="status-text denied">
+          <span class="status-badge denied">
             <span class="material-symbols-outlined">cancel</span>
             Intercambio rechazado
           </span>
         </ng-container>
 
         <ng-container *ngIf="!isConfirmed() && !isDenied()">
-          <button class="btn-deny" (click)="denyIntercambio()">
+          <button class="btn-action btn-reject" (click)="denyIntercambio()">
             <span class="material-symbols-outlined">cancel</span>
             Rechazar intercambio
           </button>
-          <button class="btn-confirm" (click)="confirmIntercambio()">
+          
+          <button class="btn-action btn-accept" (click)="confirmIntercambio()">
             <span class="material-symbols-outlined">check_circle</span>
-            Confirmar intercambio
+            Aceptar intercambio
           </button>
         </ng-container>
-      </div>
 
+      </div>
     </div>
   </ng-container>
 
   <ng-template #noIntercambio>
-    <div class="interchange-box interchange-empty">
+    <div class="interchange-box empty-state">
       <p>No tienes ningún intercambio programado.</p>
-      </div>
+    </div>
   </ng-template>
 </section>

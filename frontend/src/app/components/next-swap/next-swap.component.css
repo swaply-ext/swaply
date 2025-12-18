@@ -1,269 +1,244 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
-
-/* Necesario para que los iconos funcionen dentro de este componente */
-::ng-deep .material-symbols-outlined {
-    font-family: 'Material Symbols Outlined' !important;
-    font-weight: normal;
-    font-style: normal;
-    font-size: 1.5rem;
-    display: inline-block;
-    line-height: 1;
-    text-transform: none;
-    letter-spacing: normal;
-    word-wrap: normal;
-    white-space: nowrap;
-    direction: ltr;
-    font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24 !important;
-}
-
-/* Estilos base de contenedor local */
+/* --- CONFIGURACIÓN BASE --- */
 :host {
     display: block;
     width: 100%;
 }
 
-img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-}
-
 button {
     cursor: pointer;
     border: none;
-    transition: background-color 0.3s, opacity 0.3s;
+    font-family: var(--font-secondary);
 }
 
-/* --- Estilos de la Caja de Intercambio --- */
+/* --- CONTENEDOR PRINCIPAL --- */
 .interchange-box {
     background-color: var(--bg-interchange);
-    padding: 1.5rem;
-    border-radius: 0.5rem;
+    padding: 2rem;
+    border-radius: 1rem;
     box-shadow: var(--shadow-large);
-    border: 0.125rem solid var(--principal-color-2);
+    
+    /* Borde verde menta grueso */
+    border: 2px solid var(--principal-color-2); 
 }
 
-.interchange-empty {
+.empty-state {
     text-align: center;
-    padding-top: 3rem;
-    padding-bottom: 2rem;
-}
-
-.interchange-empty p {
-    font-size: 1.125rem;
     color: var(--text-muted);
-    margin-bottom: 1.5rem;
+    padding: 3rem;
+    border: 1px solid var(--divider-color); 
 }
 
-.interchange-populated {
+/* --- LAYOUT DEL CONTENIDO --- */
+.interchange-content {
     display: flex;
     align-items: center;
-    justify-content: space-around;
-    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1.5rem;
+    /* Reduje un poco el margen inferior ya que quitamos la línea */
+    margin-bottom: 1.5rem; 
 }
 
-.interchange-populated-wrapper {
-    padding-bottom: 1rem;
+.interchange-card-wrapper {
+    flex: 1;
+    min-width: 0;
 }
 
-.interchange-populated .arrow-icon {
-    font-size: 3.125rem;
+.section-title {
+    font-size: 1.1rem;
+    color: var(--text-white);
+    margin-bottom: 1rem;
+    font-weight: 500;
+    text-align: left;
+}
+
+/* --- FLECHA CENTRAL --- */
+.arrow-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1rem;
+}
+
+.swap-icon {
+    font-size: 3.5rem;
     color: var(--principal-color-2);
-    flex-shrink: 0;
-    margin: 1rem 2rem;
     user-select: none;
 }
 
-.interchange-half {
-    text-align: left;
-    flex-grow: 1;
-    max-width: 45%;
-}
-
-.interchange-half h3 {
-    font-size: 1.125rem;
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-    text-align: left;
-    padding-left: 0;
-    color: var(--text-gray-100);
-    /* Heredado del contexto anterior */
-}
-
-.interchange-skill-card {
+/* --- TARJETA DE HABILIDAD --- */
+.skill-card {
     display: flex;
-    align-items: center;
-    gap: 1rem;
-    background-color: var(--bg-interchange-card);
-    padding: 1rem;
-    border-radius: 0.5rem;
+    flex-direction: row;
+    gap: 1.5rem; 
+    align-items: flex-start;
 }
 
-.interchange-skill-card img {
-    width: 10rem;
-    height: 7rem;
+.activity-img {
+    /* Imágenes grandes */
+    width: 13rem;      
+    height: 9.5rem;    
     object-fit: cover;
-    border-radius: 0.375rem;
+    border-radius: 0.6rem;
+    box-shadow: var(--shadow);
+    flex-shrink: 0;
 }
 
-.interchange-skill-card div {
-    text-align: left;
+.card-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 0.8rem;
+    width: 100%;
+    padding-top: 0.5rem;
 }
 
-.interchange-skill-card h4 {
+.card-details h4 {
+    margin: 0;
+    font-size: 1.1rem;
     font-weight: 700;
     color: var(--text-white);
-    margin: 0;
+    line-height: 1.2;
 }
 
-.interchange-skill-card p {
-    font-size: 0.9rem;
-    color: var(--text-muted);
-    margin: 0.25rem 0;
+/* --- BADGES / PÍLDORAS --- */
+.badges-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
 }
 
-.interchange-skill-card .skill-location {
-    color: var(--principal-color-2);
+.info-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background-color: rgba(0, 0, 0, 0.25); 
+    padding: 0.4rem 0.9rem;
+    border-radius: 2rem; 
+    width: fit-content;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.badge-icon {
+    font-size: 1.1rem;
+    color: var(--text-disabled);
+}
+
+.badge-text {
+    font-size: 0.85rem;
+    color: var(--text-gray-100);
     font-weight: 500;
 }
 
-.skill-location {
-    border: 0.063rem solid var(--bg-location);
-    background-color: var(--bg-location);
-    width: fit-content;
-    height: 3rem;
-    border-radius: 624.938rem;
-    box-shadow: var(--shadow);
-    padding: 0.25rem 0.75rem;
+.avatar-wrapper {
     display: flex;
     align-items: center;
 }
 
-.skill-location img {
-    width: 2rem;
-    height: 2rem;
+.user-avatar {
+    width: 1.4rem;
+    height: 1.4rem;
     border-radius: 50%;
     object-fit: cover;
-    margin-right: 0.5rem;
 }
 
-.location {
-    margin-right: 0.5rem;
-}
-
-/* --- Área de Confirmación y Botones --- */
-.confirmation-area {
+/* --- ÁREA DE ACCIONES (Botones) --- */
+.actions-area {
     display: flex;
     justify-content: flex-end;
     align-items: center;
     gap: 1rem;
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 0.063rem solid var(--divider-color);
-    min-height: 3.125rem;
+    padding-top: 0.5rem; /* Ajuste ligero */
+    
+    /* CAMBIO AQUI: Eliminada la línea divisoria */
+    border-top: none; 
 }
 
-.interchange-empty .confirmation-area {
-    border-top: none;
-    margin-top: 0;
-    padding-top: 0;
-}
-
-.confirmation-area.disabled .status-text {
-    display: flex;
+/* Estilos comunes botones y estados */
+.status-badge, .btn-action {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    font-size: 0.9rem;
+    
+    /* CAMBIO AQUI: Botones más pequeños pero legibles */
+    padding: 0.5rem 1.2rem; 
+    font-size: 0.85rem; 
+    
+    border-radius: 2rem;
     font-weight: 600;
-    background-color: var(--bg-disabled);
-    cursor: not-allowed;
-    color: var(--text-disabled);
-    border: 0.063rem solid var(--bg-disabled);
-    padding: 0.6rem 1.25rem;
-    border-radius: 624.938rem;
+    transition: all 0.2s ease;
 }
 
-.status-text {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--principal-color-2);
-    padding: 0.6rem 1.25rem;
+/* Iconos dentro de los botones un poco más pequeños para encajar */
+.btn-action .material-symbols-outlined,
+.status-badge .material-symbols-outlined {
+    font-size: 1.1rem;
+}
+
+/* ESTADOS */
+.status-badge.confirmed {
     background-color: var(--bg-status);
-    border: 0.063rem solid var(--principal-color-2);
-    border-radius: 624.938rem;
+    color: var(--principal-color-2);
+    border: 1px solid var(--principal-color-2);
 }
 
-.status-text .material-symbols-outlined {
-    font-size: 1.25rem;
+.status-badge.denied {
+    background-color: rgba(229, 57, 53, 0.1); 
+    color: var(--error-color-1);
+    border: 1px solid var(--error-color-1);
 }
 
-.btn-confirm {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    background-color: var(--principal-color-2);
-    color: var(--text-white);
-    padding: 0.6rem 1.25rem;
-    border-radius: 624.938rem;
-    font-weight: 600;
-    font-size: 0.9rem;
-}
-
-.btn-confirm .material-symbols-outlined {
-    font-size: 1.25rem;
-}
-
-.btn-confirm:hover:not(:disabled) {
-    background-color: var(--principal-color-2-hover);
-}
-
-.btn-deny {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    background-color: transparent;
-    color: var(--secundary-color-1);
-    padding: 0.6rem 1.25rem;
-    border: 0.125rem solid var(--error-color-2);
-    border-radius: 624.938rem;
-    font-weight: 600;
-    font-size: 0.9rem;
-}
-
-.btn-deny .material-symbols-outlined {
-    font-size: 1.25rem;
-}
-
-.btn-deny:hover:not(:disabled) {
+/* BOTONES */
+.btn-reject {
     background-color: var(--error-color-2);
+    color: white;
+    box-shadow: 0 4px 6px rgba(229, 57, 53, 0.2);
 }
 
-/* --- Responsive Específico del Componente --- */
-@media (max-width: 64rem) {
-    .interchange-populated {
+.btn-reject:hover {
+    background-color: var(--error-color-1);
+    transform: translateY(-1px);
+}
+
+.btn-accept {
+    background-color: var(--principal-color-2);
+    color: white;
+    box-shadow: 0 4px 6px rgba(60, 181, 124, 0.2);
+}
+
+.btn-accept:hover {
+    background-color: var(--principal-color-2-hover);
+    transform: translateY(-1px);
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 900px) {
+    .interchange-content {
         flex-direction: column;
-        gap: 1.5rem;
+        align-items: stretch;
     }
 
-    .interchange-populated .arrow-icon {
+    .arrow-container {
         transform: rotate(90deg);
+        padding: 1rem;
+    }
+    
+    .skill-card {
+        flex-wrap: wrap; 
     }
 
-    .interchange-half {
-        max-width: 100%;
+    .activity-img {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 16/9;
+    }
+    
+    .actions-area {
+        flex-direction: column-reverse;
+        gap: 0.8rem;
+    }
+    
+    .btn-action {
         width: 100%;
     }
-}
-.denied{
-    background-color: var(--error-color-3);
-    border: 0.063rem solid var(--error-color-3);
-    color: var(--secundary-color-1);
 }
