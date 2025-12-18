@@ -130,19 +130,20 @@ public class ChatService {
         room.setLastMessageSenderId(savedMessage.getSenderId());
 
         for (String participantId : room.getParticipants()) {
-    if (!participantId.equals(userId)) { // No incrementamos al que envía
-        
-        // Obtenemos el mapa actual (o lo creamos si es null)
-        Map<String, Integer> counts = room.getUnreadCount();
-        if (counts == null) counts = new HashMap<>();
-        
-        // Sumamos 1
-        int currentCount = counts.getOrDefault(participantId, 0);
-        counts.put(participantId, currentCount + 1);
-        
-        room.setUnreadCount(counts);
-    }
-}
+            if (!participantId.equals(userId)) { // No incrementamos al que envía
+
+                // Obtenemos el mapa actual (o lo creamos si es null)
+                Map<String, Integer> counts = room.getUnreadCount();
+                if (counts == null)
+                    counts = new HashMap<>();
+
+                // Sumamos 1
+                int currentCount = counts.getOrDefault(participantId, 0);
+                counts.put(participantId, currentCount + 1);
+
+                room.setUnreadCount(counts);
+            }
+        }
 
         chatRoomRepository.save(room);
 
@@ -175,21 +176,25 @@ public class ChatService {
         ChatRoom room = chatRoomRepository.findRoomById(roomId)
                 .orElseThrow(() -> new RuntimeException("Sala no encontrada"));
 
-        // 2. COMPROBACIÓN INVERSA:
-        // Si la lista es nula O el usuario NO (!) está contenido en ella -> Lanzamos
-        // Excepción
         if (room.getParticipants() == null || !room.getParticipants().contains(userId)) {
             throw new IllegalArgumentException("El usuario no pertenece a este chat");
         }
+        Map<String, Integer> counts = room.getUnreadCount();
 
-        // 3. Si el código llega aquí, es que todo está bien.
-        // Nota: He cambiado setUnreadCount(null) a 0, ya que suele ser lo correcto para
-        // "leído".
-        room.setUnreadCount(null);
+        // Si el mapa no existe, lo creamos para evitar NullPointerException
+        if (counts == null) {
+            counts = new HashMap<>();
+        }
 
+        // 3. Reseteamos a 0 SOLO el contador de este usuario
+        // Usamos 'put' para sobrescribir el valor anterior
+        counts.put(userId, 0);
+
+        // 4. Actualizamos el mapa en la entidad
+        room.setUnreadCount(counts);
+
+        // 5. Guardamos
         chatRoomRepository.save(room);
     }
-
-    
 
 }
