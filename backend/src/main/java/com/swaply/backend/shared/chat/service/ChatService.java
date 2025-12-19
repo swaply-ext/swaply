@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -19,11 +20,15 @@ import org.springframework.data.domain.Pageable;
 import com.azure.cosmos.models.CosmosPatchOperations;
 import com.azure.cosmos.models.PartitionKey;
 import com.azure.spring.data.cosmos.core.CosmosTemplate;
+import com.swaply.backend.application.auth.exception.InvalidCredentialsException;
 import com.swaply.backend.shared.UserCRUD.UserService;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
+import com.swaply.backend.shared.UserCRUD.exception.UserNotFoundException;
 import com.swaply.backend.shared.chat.ChatMapper;
 import com.swaply.backend.shared.chat.dto.ChatMessageDTO;
 import com.swaply.backend.shared.chat.dto.SendChatRoomsDTO;
+import com.swaply.backend.shared.chat.exception.RoomNotFoundException;
+import com.swaply.backend.shared.chat.exception.UserNotInThisRoomException;
 import com.swaply.backend.shared.chat.model.ChatMessage;
 import com.swaply.backend.shared.chat.model.ChatRoom;
 import com.swaply.backend.shared.chat.repository.ChatMessageRepository;
@@ -47,10 +52,11 @@ public class ChatService {
     public List<ChatMessage> getChatHistoryByRoomId(String roomId, String userId, int pageNumber) {
 
         ChatRoom room = chatRoomRepository.findRoomById(roomId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "La sala no existe"));
+                .orElseThrow(() -> new RoomNotFoundException("La sala no existe")); //CREAR EXCEPCION
+                
 
         if (!room.getParticipants().contains(userId)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "No tienes permiso");
+            throw new UserNotInThisRoomException("Este usuario no pertenece a esta sala"); //CREAR EXCEPCION MIRAR
         }
 
         // Paginación correcta
@@ -123,7 +129,7 @@ public class ChatService {
         // NOTA: Ya no verificamos permisos aquí, confiamos en el Interceptor.
         // Solo traemos la sala para actualizar la vista previa "Último mensaje..."
         ChatRoom room = chatRoomRepository.findRoomById(dto.getRoomId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "La sala no existe"));
+                .orElseThrow(() -> new RoomNotFoundException("Esta sala no existe"));
 
         room.setLastMessagePreview(savedMessage.getContent());
         room.setLastMessageTime(savedMessage.getTimestamp());
@@ -155,7 +161,7 @@ public class ChatService {
         UserDTO user = userService.getUserByUsername(user2);
         String UserId2 = user.getId();
         if (user == null)
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "El usuario no existe");
+            throw new UserNotFoundException("El usuario no existe");
         String generatedId = (user1.compareTo(UserId2) < 0) ? user1 + "_" + UserId2 : UserId2 + "_" + user1;
         Optional<ChatRoom> existing = chatRoomRepository.findRoomById(generatedId);
         if (existing.isPresent())
@@ -174,10 +180,12 @@ public class ChatService {
     public void readedMessage(String roomId, String userId) {
         // 1. Buscamos la sala. Si NO existe, lanzamos error inmediatamente.
         ChatRoom room = chatRoomRepository.findRoomById(roomId)
-                .orElseThrow(() -> new RuntimeException("Sala no encontrada"));
+                .orElseThrow(() -> new RoomNotFoundException("La sala no existe"));
+
+        // 2. Verificamos que el usuario pertenezca a la sala
 
         if (room.getParticipants() == null || !room.getParticipants().contains(userId)) {
-            throw new IllegalArgumentException("El usuario no pertenece a este chat");
+            throw new UserNotInThisRoomException("Este usuario no pertenece a esta sala");
         }
         Map<String, Integer> counts = room.getUnreadCount();
 
