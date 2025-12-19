@@ -1,14 +1,20 @@
 package com.swaply.backend.shared.chat.controller;
 
+import com.swaply.backend.shared.UserCRUD.Model.User;
+import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
+import com.swaply.backend.shared.UserCRUD.exception.UserNotFoundException;
 import com.swaply.backend.shared.chat.dto.ChatMessageDTO;
+import com.swaply.backend.shared.chat.dto.ChatRoomDTO;
 import com.swaply.backend.shared.chat.dto.SendChatRoomsDTO;
 import com.swaply.backend.shared.chat.model.ChatMessage;
 import com.swaply.backend.shared.chat.model.ChatRoom;
 import com.swaply.backend.shared.chat.service.ChatService;
+import com.azure.core.annotation.Post;
 import com.swaply.backend.config.security.SecurityUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,10 +38,9 @@ public class ChatController {
             @AuthenticationPrincipal SecurityUser user,
             @PathVariable String roomId,
             @RequestParam(defaultValue = "0") int page) {
-        
+
         return ResponseEntity.ok(chatService.getChatHistoryByRoomId(roomId, user.getUsername(), page));
     }
-    
 
     // Crear una sala (ej: cuando un usuario pulsa "Contactar" en un producto)
     @PostMapping("/rooms/create/{targetUserId}")
@@ -44,4 +49,14 @@ public class ChatController {
             @PathVariable String targetUserId) {
         return ResponseEntity.ok(chatService.createChatRoom(user.getUsername(), targetUserId));
     }
+
+    @PostMapping("/messageReaded/{roomId}")
+    public ResponseEntity<Boolean> readedMessage(
+            @AuthenticationPrincipal SecurityUser user,
+            @PathVariable String roomId) {
+        chatService.readedMessage(roomId, user.getUsername());
+        return ResponseEntity.ok(true);
+    }
+
+
 }

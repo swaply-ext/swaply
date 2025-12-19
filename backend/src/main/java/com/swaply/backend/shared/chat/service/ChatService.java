@@ -197,4 +197,26 @@ public class ChatService {
         chatRoomRepository.save(room);
     }
 
+    public boolean isUserInRoom(String roomId, String username) {
+        // 1. Buscamos la sala por ID
+        // En Cosmos DB, findById es muy eficiente (Point Read)
+        Optional<ChatRoom> chatRoomOpt = chatRoomRepository.findById(roomId);
+
+        if (chatRoomOpt.isEmpty()) {
+            return false; // La sala no existe
+        }
+
+        ChatRoom room = chatRoomOpt.get();
+
+        // 2. Verificamos si el usuario está en la lista de participantes
+        // Asumo que tu modelo ChatRoom tiene un campo List<String> participantIds
+        if (room.getParticipants() != null) {
+            return room.getParticipants().contains(username);
+        }
+
+        return false;
+    }
+
+    
+
 }
