@@ -14,7 +14,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Pageable;
 
-import com.azure.spring.data.cosmos.core.CosmosTemplate;
 import com.swaply.backend.shared.UserCRUD.UserService;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.shared.UserCRUD.exception.UserNotFoundException;
@@ -33,8 +32,6 @@ public class ChatService {
 
     @Autowired
     private ChatMessageRepository chatRepository;
-    @Autowired
-    private CosmosTemplate cosmosTemplate;
     @Autowired
     private UserService userService;
     @Autowired
