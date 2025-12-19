@@ -21,7 +21,7 @@ public class ChatWebSocketController {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-    @MessageMapping("/chat.send/{roomId}")
+    @MessageMapping("/chat.send/{roomId}")  //NAMEING
     public void processMessage(
             Principal principal,
             @DestinationVariable String roomId,
