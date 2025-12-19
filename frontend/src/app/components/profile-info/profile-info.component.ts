@@ -1,6 +1,6 @@
 import { Component, OnChanges, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router'; // <--- Afegeix Router
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 interface ProfileData {
@@ -12,7 +12,6 @@ interface ProfileData {
   rating: number;
 }
 
-
 @Component({
   selector: 'app-profile-info',
   standalone: true,
@@ -20,22 +19,30 @@ interface ProfileData {
   templateUrl: './profile-info.component.html',
   styleUrls: ['./profile-info.component.css']
 })
-export class ProfileInfoComponent {
+export class ProfileInfoComponent implements OnChanges {
   @Input() profileData: ProfileData = {} as ProfileData;
-
-
+  
+  // SOLUCIÓN: Añadimos el input para que Angular no de error
+  @Input() isReadOnly: boolean = false;
+  @Input() isPublic: boolean = false;
 
   ngOnChanges(): void {
     console.log('ProfileData changed:', this.profileData);
   }
 
-  constructor(private authService: AuthService, private router: Router ) { } // <--- Injecció de Router
+  constructor(private authService: AuthService, private router: Router ) { }
   starsArray = [1, 2, 3, 4, 5];
+  
   get isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
   }
 
   goToEdit(){
-    this.router.navigate(['/profile-edit']);
+    // Evitamos navegar si es solo lectura
+    if (!this.isReadOnly) {
+      this.router.navigate(['/profile-edit']);
+    }
   }
+
+  
 }

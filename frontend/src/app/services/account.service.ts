@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-// este es el servicio para que en la vista de perfil de usuario segun el t token, llame a la API de profileData
+
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
-  private apiUrl = 'http://localhost:8081/api/account'; //he cambiado la ruta base de la api para así poder pillar en este mismo service diferentes datos
+  // Ajusta la URL base si es necesario
+  private apiUrl = 'http://localhost:8081/api/account'; 
 
   constructor(private http: HttpClient) {}
 
@@ -25,16 +26,29 @@ export class AccountService {
   updateEditProfileData(data: any): Observable<boolean> {
     return this.http.patch<boolean>(`${this.apiUrl}/editProfileData`, data);
   }
+  changesStatusSwap(data: any): Observable<boolean> {
+    return this.http.patch<boolean>(`${this.apiUrl}/changesStatusSwap`, data);
+  }
 
-   uploadProfilePhoto(file: File): Observable<string> {
+  uploadProfilePhoto(file: File): Observable<string> {
     const formData = new FormData();
     formData.append('file', file); 
 
-    // 'responseType: text' es vital porque el backend devuelve un String plano (la URL)
+    // { responseType: 'text' } es necesario porque el backend devuelve un String (la URL)
     return this.http.post(
       `${this.apiUrl}/upload-photo`, 
       formData, 
       { responseType: 'text' } 
     );
+  }
+
+  //obtenir el perfil públic d'ALGÚ ALTRE
+  getPublicProfile(targetUsername: string): Observable<any> { 
+    return this.http.get(`${this.apiUrl}/public/${targetUsername}`);
+  }
+  
+  deleteAccount(): Observable<any> {
+    // Asegúrate de que esta ruta coincida con tu backend (/delete o raíz)
+    return this.http.delete(`${this.apiUrl}/deleteProfile`);
   }
 }

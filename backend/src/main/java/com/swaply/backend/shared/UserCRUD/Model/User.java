@@ -36,6 +36,7 @@ public class User {
     private String gender;
     private String phone;
     private String postalCode;
+    private Double rating;
     private List<UserSkills> skills;
     private List<UserSkills> interests;
     @JsonFormat(pattern="dd/MM/yyyy")
@@ -45,4 +46,5 @@ public class User {
     private String profilePhotoUrl;
     private boolean isPremium;
     private boolean isModerator;
+    private List<Swap> swaps;
 }

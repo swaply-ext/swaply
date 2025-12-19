@@ -14,7 +14,7 @@
               #fileInput 
               style="display: none" 
               (change)="onPhotoSelected($event)" 
-              accept="image/*"
+              accept=".jpg,.jpeg,.png,.webp,.heic,.heif"
             >
             
             <div class="avatar-container">
@@ -32,6 +32,9 @@
               </button>
 
             </div>
+            <small *ngIf="errorMessages['profilePhoto']" class="error-message">
+                {{ errorMessages['profilePhoto'] }}
+              </small>
           </div>
           
           <div class="profile-section names">

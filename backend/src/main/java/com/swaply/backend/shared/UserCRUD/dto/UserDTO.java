@@ -4,11 +4,13 @@ import java.sql.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.swaply.backend.shared.UserCRUD.Model.Swap;
 import com.swaply.backend.shared.UserCRUD.Model.UserSkills;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 
 @Data
 @NoArgsConstructor
@@ -36,4 +38,5 @@ public class UserDTO {
     private String profilePhotoUrl;
     private boolean isPremium;
     private boolean isModerator;
+    private List<Swap> swaps;
 }
