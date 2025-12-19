@@ -29,5 +29,5 @@ public class ChatRoomDTO {
     private Map<String, Integer> unreadCount;
 
     // Estado de la sala
-    private boolean isActive;
+    private boolean isActive; //MIRAR PARA QUE SIRVE
 }

@@ -5,9 +5,11 @@ import com.swaply.backend.shared.chat.service.ChatService;
 import com.swaply.backend.config.security.SecurityUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import java.security.Principal;
@@ -43,5 +45,11 @@ public class ChatWebSocketController {
 
         // 4. Notificar a la sala
         messagingTemplate.convertAndSend("/topic/room/" + roomId, savedMessage);
+    }
+
+    @MessageExceptionHandler
+    @SendToUser("/queue/errors")
+    public String handleException(Throwable exception) {
+        return "Error en el chat: " + exception.getMessage();
     }
 }

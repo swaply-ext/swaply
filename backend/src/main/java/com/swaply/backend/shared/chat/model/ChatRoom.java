@@ -52,5 +52,5 @@ public class ChatRoom {
     private LocalDateTime updatedAt;
     
     // Indica si la sala está activa (por si alguien bloquea o sale del chat)
-    private boolean isActive = true;
+    private boolean isActive = true; //MIRARRR
 }
