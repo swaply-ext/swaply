@@ -95,3 +95,14 @@ p {
   box-shadow: 0 0 15px var(--principal-color-2);
   color: var(--principal-color-1);
 }
+
+.skill-card-not-selected {
+  opacity: 0.5;
+  filter: grayscale(0.6);
+  transition: all 0.3s ease;
+}
+
+.skill-card-not-selected:hover {
+  opacity: 1;
+  filter: grayscale(0);
+}
