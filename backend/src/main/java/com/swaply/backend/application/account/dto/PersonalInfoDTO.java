@@ -17,5 +17,4 @@ public class PersonalInfoDTO {
     private String gender;
     private String phone;
     private Location location;
-    private String postalCode;
 }
