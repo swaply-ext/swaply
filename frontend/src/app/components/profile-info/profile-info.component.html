@@ -1,5 +1,5 @@
 <div class="profile-card">
-    <button class="material-icons edit-icon" (click)="goToEdit()">edit</button>
+    <button *ngIf="!isPublic"class="material-icons edit-icon" (click)="goToEdit()">edit</button>
   <img [src]="profileData.profilePhotoUrl || 'assets/default-image.jpg'" alt="User avatar" class="avatar" />
 
   <div class="info">

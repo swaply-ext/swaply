@@ -31,6 +31,7 @@ export class ProfileInfoComponent implements OnChanges {
 
   // SOLUCIÓN: Añadimos el input para que Angular no de error
   @Input() isReadOnly: boolean = false;
+  @Input() isPublic: boolean = false;
 
   ngOnChanges(): void {
     console.log('ProfileData changed:', this.profileData);

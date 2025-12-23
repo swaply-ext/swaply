@@ -15,8 +15,7 @@
   </div>
 
   <div class="nav-search">
-    <input type="text" placeholder="Busca un usuario, habilidad..." />
-    <span class="material-symbols-outlined search-icon">search</span>
+    <app-user-search></app-user-search>
   </div>
 
   <div class="nav-right">
@@ -25,18 +24,22 @@
 
     <div class="profile-wrapper">
       
-    <span *ngIf="isLoggedIn" (click)="toggleDropdown(); $event.stopPropagation()">
-      <img [src]="dropdownMenuData.profilePhotoUrl || 'assets/default-image.jpg'" 
-          alt="Foto de perfil" class="profile-pic">
-    </span>
-    <span *ngIf="!isLoggedIn" class="material-symbols-outlined nav-icon profile-icon" 
-          (click)="toggleDropdown(); $event.stopPropagation()">
-      person
-    </span>
+      <span *ngIf="isLoggedIn" (click)="toggleDropdown(); $event.stopPropagation()">
+        <img [src]="(dropdownMenuData && dropdownMenuData.profilePhotoUrl) ? dropdownMenuData.profilePhotoUrl : 'assets/default-image.jpg'" 
+             alt="Foto de perfil" class="profile-pic">
+      </span>
 
+      <span *ngIf="!isLoggedIn" class="material-symbols-outlined nav-icon profile-icon" 
+            (click)="toggleDropdown(); $event.stopPropagation()">
+        person
+      </span>
 
       <div class="dropdown-overlay" *ngIf="showDropdown" [class.show]="showDropdown">
-        <app-dropdown-menu [dropdownMenuData]="dropdownMenuData" (closeMenu)="showDropdown = false"></app-dropdown-menu>
+        <app-dropdown-menu 
+            *ngIf="dropdownMenuData"
+            [dropdownMenuData]="dropdownMenuData" 
+            (closeMenu)="showDropdown = false">
+        </app-dropdown-menu>
       </div>
     </div>
   </div>
