@@ -78,8 +78,6 @@ export class SwapComponent implements OnInit {
     if (targetUsername) {
       this.searchService.getUserByUsername(targetUsername).subscribe({
         next: (user) => {
-        console.log('DATOS RECIBIDOS:', user); // <--- AGREGA ESTO
-    console.log('SKILLS SECUNDARIAS:', user.userSkills); // <--- Y ESTO
           this.targetUser.set(user);
 
           // Construir lista con skill principal + secundarias
