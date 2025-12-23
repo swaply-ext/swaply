@@ -40,6 +40,11 @@ public class UserController {
         return ResponseEntity.ok(service.getUserByID(id));
     }
 
+    @GetMapping("/{id}/username")
+    public ResponseEntity<String> getUsernameById(@PathVariable String id) {
+        return ResponseEntity.ok(service.getUsernameById(id));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUserById(@PathVariable String id) {
         service.deleteUserById(id);
