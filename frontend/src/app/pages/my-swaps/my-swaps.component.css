@@ -1,0 +1,26 @@
+:host {
+      display: block;
+      min-height: 100vh;
+      background-color: var(--bg-app); /* O el color de fondo general de tu app */
+    }
+
+    .page-container {
+      display: flex;
+      justify-content: center;
+      padding: 2rem 1rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .content-wrapper {
+      width: 100%;
+      max-width: 1000px; /* Ancho máximo para que no se estire demasiado en pantallas grandes */
+      margin: 0 auto;
+    }
+
+    /* Ajustes responsive */
+    @media (max-width: 768px) {
+      .page-container {
+        padding: 1rem 0.5rem;
+      }
+    }
