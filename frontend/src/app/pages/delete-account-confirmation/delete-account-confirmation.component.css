@@ -3,13 +3,11 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  font-family: 'Quicksand', sans-serif; /* O var(--font-primary) si prefieres */
+  font-family: 'Quicksand', sans-serif;
   margin: 0;
-  /* Fondo degradado original */
   background: linear-gradient(to bottom, #012534 0%, #00839E 100%);
 }
 
-/* --- Contenedor Principal --- */
 .delete-account-confirmation-container {
   background: #356B8A;
   padding: 3rem 2rem;
@@ -24,11 +22,9 @@
   margin-top: 3.75rem;
 }
 
-/* --- Círculo del Icono --- */
 .icon-circle {
   width: 8.75rem;
   height: 8.75rem;
-  /* Rojo oscuro (estilo error 404) */
   background-color: #A11D1D; 
   border-radius: 50%;
   display: flex;
@@ -39,19 +35,14 @@
   border: 0.3125rem solid #356B8A;
 }
 
-/* --- Icono (Centrado corregido) --- */
 .icon-circle .material-icons {
   color: #fff;
   font-size: 7rem;
-  
-  /* Truco para centrado vertical perfecto */
   line-height: 1; 
   display: block;
-  /* Sube el icono un poco porque el triángulo pesa más visualmente abajo */
-  transform: translateY(-8%); 
+  transform: translateY(-11%); 
 }
 
-/* --- Títulos y Textos --- */
 .delete-account-confirmation-container h2 {
   color: #fff;
   margin: 0 0 1rem 0;
@@ -65,17 +56,15 @@
   line-height: 1.5;
 }
 
-/* --- Wrapper de Botones --- */
 .button-wrapper {
   display: flex;
-  flex-direction: column; /* Botones en columna */
+  flex-direction: column;
   align-items: center;
   gap: 1rem;
   margin-top: 2rem;
   width: 100%;
 }
 
-/* Estilos base para resetear botones */
 button {
   cursor: pointer;
   transition: all 0.3s ease;
@@ -84,50 +73,40 @@ button {
   font-weight: bold;
 }
 
-/* --- 1. Botón Cancelar (Principal/Seguro - VERDE) --- */
 .btn-cancel {
-  /* Usamos las variables globales que me has pasado */
   background-color: var(--principal-color-2); 
-  color: #fff; /* Blanco para buen contraste sobre el verde */
-  
+  color: #fff; 
   font-size: 1.1rem;
   padding: 1rem 2rem;
   width: 100%;
   border-radius: 0.5rem;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  order: 1; /* Aparece primero (arriba) */
+  box-shadow: 0 0.25rem 0.375rem rgba(0,0,0,0.1);
+  order: 1; 
 }
 
 .btn-cancel:hover {
-  /* Variable de hover global */
   background-color: var(--principal-color-2-hover); 
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+  transform: translateY(-0.125rem);
+  box-shadow: 0 0.375rem 0.75rem rgba(0,0,0,0.2);
 }
 
-/* --- 2. Botón Eliminar (Secundario/Peligroso) --- */
-/* Pequeño y discreto abajo */
 .btn-delete {
   background-color: transparent;
   box-shadow: none;
   padding: 0.5rem;
   font-size: 0.9rem;
-  
-  /* Rojo claro pastel para leerse bien sobre azul */
   color: #ff8a80; 
-  
   text-decoration: underline;
   opacity: 0.9;
-  order: 2; /* Aparece segundo (abajo) */
+  order: 2; 
   width: auto;
 }
 
 .btn-delete:hover {
   color: #ff5252;
-  border-radius: 4px;
+  border-radius: 0.25rem;
 }
 
-/* --- Responsive --- */
 @media (max-width: 30rem) {
   .delete-account-confirmation-container {
     padding: 1.5rem;
