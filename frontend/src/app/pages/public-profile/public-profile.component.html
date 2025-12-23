@@ -6,6 +6,11 @@
   <app-profile-info [profileData]="profileData"[isPublic]="true">
   </app-profile-info>
 
+  <button class="btn-swap-profile" (click)="goToSwap()">
+    <span class="material-icons">swap_horiz</span>
+    SWAP
+  </button>
+
   <div class="profile-panels-container">
     <app-skills-panel class="profile-skills" [SkillInput]="skills" [isPublic]="true"></app-skills-panel>
 
