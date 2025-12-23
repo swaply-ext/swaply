@@ -194,8 +194,8 @@ public class SearchService {
     }
 
 
-    public UserSwapDTO getUserById(String userId) {
-        Optional<User> userOpt = userRepository.findUserById(userId);
+    public UserSwapDTO getUserByUsername(String username) {
+        Optional<User> userOpt = userRepository.findUserByUsername(username);
 
         if (userOpt.isEmpty()) {
             return null;
