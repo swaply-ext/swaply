@@ -25,7 +25,6 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/locations/**").permitAll()
                         .requestMatchers("/api/example/premium/**").hasRole("PREMIUM")
                         .anyRequest().authenticated()
                 )
