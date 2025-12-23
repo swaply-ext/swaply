@@ -32,6 +32,7 @@ import { FilterSkillsComponent } from './components/filter-skills/filter-skills.
 import { PrivacyAndSecurityComponent } from './pages/privacy-and-security/privacy-and-security.component';
 import { EmailSentComponent } from './pages/email-sent/email-sent.component';
 import { IndexComponent } from './pages/index/index.component';
+import { MySwapsPageComponent } from './pages/my-swaps/my-swaps.component';
 import { SwapComponent } from './pages/swap/swap.component';
 import { SwapSkillsComponent } from './components/swap-skills/swap-skills.component';
 import { SwapInterestsComponent } from './components/swap-interests/swap-interests.component';
@@ -75,6 +76,7 @@ export const appRoutes: Routes = [
   { path: 'swap-interests', component: SwapInterestsComponent },
   { path: 'delete-account-confirmation', component: DeleteAccountConfirmationComponent },
   { path: '404', component: Error404Component },
+  { path: 'my-swaps', component: MySwapsPageComponent,},
   { path: 'privacy-and-security', component: PrivacyAndSecurityComponent, canActivate: [AuthGuard] },
   { path: 'user-search', component: UserSearchComponent },
   { path: 'swap/:targetId', component: SwapComponent, canActivate: [AuthGuard] },
