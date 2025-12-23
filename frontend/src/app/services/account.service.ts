@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {HttpClient,HttpContext,HttpParams} from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { SKIP_LOADING } from '../interceptors/loading.interceptor';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
-  // Ajusta la URL base si es necesario
-  private apiUrl = 'http://localhost:8081/api/account'; 
+  private apiUrl = 'http://localhost:8081/api/account';
 
   constructor(private http: HttpClient) {}
 
@@ -26,6 +26,7 @@ export class AccountService {
   updateEditProfileData(data: any): Observable<boolean> {
     return this.http.patch<boolean>(`${this.apiUrl}/editProfileData`, data);
   }
+
   changesStatusSwap(data: any): Observable<boolean> {
     return this.http.patch<boolean>(`${this.apiUrl}/changesStatusSwap`, data);
   }
@@ -34,7 +35,6 @@ export class AccountService {
     const formData = new FormData();
     formData.append('file', file); 
 
-    // { responseType: 'text' } es necesario porque el backend devuelve un String (la URL)
     return this.http.post(
       `${this.apiUrl}/upload-photo`, 
       formData, 
@@ -51,4 +51,21 @@ export class AccountService {
     // Asegúrate de que esta ruta coincida con tu backend (/delete o raíz)
     return this.http.delete(`${this.apiUrl}/deleteProfile`);
   }
+
+  searchSkills(query: string): Observable<any[]> {
+    if (!query || !query.trim()) {
+      return of([]);
+    }
+
+    const params = new HttpParams().set('query', query);
+
+    return this.http.get<any[]>(
+      `${this.apiUrl}/skills`,
+      {
+        params,
+        context: new HttpContext().set(SKIP_LOADING, true)
+      }
+    );
+  }
+  
 }
