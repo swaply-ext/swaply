@@ -5,7 +5,6 @@ import { NameInputComponent } from "../../components/name-input/name-input.compo
 import { SurnameInputComponent } from "../../components/surname-input/surname-input.component";
 import { BirthDateComponent } from "../../components/birth-date/birth-date.component";
 import { PhoneInputComponent } from "../../components/phone-input/phone-input.component";
-import { HttpClient } from '@angular/common/http';
 import { RegisterDataService } from '../../services/register-data.service';
 import { GenderInputComponent } from '../../components/gender-input/gender-input.component';
 import { LocationSearchComponent } from '../../components/location-search/location-search.component';
@@ -44,7 +43,6 @@ export class PersonalInformationComponent {
   gender = '';
   location: Location | null = null;
   phone = 0;
-  // postalCode = 0;
 
   showError = false;
   hasErrorAll = false;
@@ -52,7 +50,6 @@ export class PersonalInformationComponent {
 
   constructor(
     private router: Router,
-    private http: HttpClient,
     private registerDataService: RegisterDataService
   ) { }
 
@@ -65,7 +62,6 @@ export class PersonalInformationComponent {
     this.gender = data.gender || '';
     this.location = data.location as Location | null; // Lo casteamos para seguridad si viene del servicio.
     this.phone = data.phone || 0;
-    // this.postalCode = data.postalCode || 0;
   }
 
   registerData() {
@@ -84,7 +80,6 @@ export class PersonalInformationComponent {
     if (!this.birthDate || this.isFutureDate(this.birthDate) || this.isToday(this.birthDate)) return this.setError('Debes introducir una fecha de nacimiento válida');
     if (!this.gender) return this.setError('Debes seleccionar un género');
     if (!this.phone || this.validatePhone(this.phone)) return this.setError('Debes introducir un número de teléfono válido');
-    // if (!this.postalCode || this.validatePostal(this.postalCode)) return this.setError('Debes introducir un código postal válido');
 
 
     const personalData = {
@@ -94,7 +89,6 @@ export class PersonalInformationComponent {
       gender: this.gender,
       phone: this.phone,
       location: this.location,
-      // postalCode: this.postalCode
     };
 
     this.registerDataService.setRegisterData(personalData);
@@ -171,27 +165,7 @@ export class PersonalInformationComponent {
   }
 
   onLocationSelected(newLocation: Location | null): void {
-    // 1. Asignar el objeto completo a la variable 'location'
     this.location = newLocation;
     console.log('Ubicación seleccionada capturada:', this.location);
-
-    // Opcional: Si el componente de búsqueda devuelve solo un string de placeholder al borrar
-    // y la variable 'location' se usa en el HTML del padre (no es tu caso aquí),
-    // podrías querer manejar la visualización. En este caso, solo guardamos el objeto.
   }
-
-  // private validatePostal(postalCode: number): boolean {
-  //   const length = 5;
-  //   const requirements = /^[0-9]+$/;
-  //   const numString = postalCode.toString();
-  //   const min = 1001;
-  //   const max = 52999;
-
-
-  //   if (numString.length != length) return true;
-  //   if (!requirements.test(numString)) return true;
-  //   if (postalCode > max) return true;
-  //   if (postalCode < min) return true;
-  //   else return false;
-  // }
 }
