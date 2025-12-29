@@ -22,7 +22,6 @@ import {
   filter,
   catchError
 } from 'rxjs/operators';
-import { SKIP_LOADING } from '../../interceptors/loading.interceptor';
 import { LocationService } from '../../services/location.service';
 
 
@@ -36,17 +35,6 @@ export interface location {
 @Injectable({
   providedIn: 'root'
 })
-class LocationSearchService {
-
-  private locationService = inject(LocationService);
-
-  searchlocations(query: string): Observable<location[]> {
-    if (!query.trim()) {
-      return of([]);
-    }
-    return this.locationService.autocompleteLocation(query);
-  }
-}
 
 @Component({
   selector: 'app-location-search',
@@ -65,7 +53,6 @@ export class LocationSearchComponent {
   @Input() placeholder: string = 'Buscar Ubicación...';
 
   @Output() locationSelected = new EventEmitter<location | null>(); // <-- Este es el Output clave
-  private locationSearchService = inject(LocationSearchService);
   private el = inject(ElementRef);
 
   searchTerm = '';
@@ -77,7 +64,7 @@ export class LocationSearchComponent {
   //esto srive para no tener que hacer una peticion cada vez que se escribe una letra
   private searchTermSubject = new Subject<string>();
 
-  constructor() {
+  constructor(private locationService: LocationService) {
     this.searchTermSubject.pipe(
       // delay entre teclas para evitar muchas peticiones
       debounceTime(300),
@@ -92,7 +79,7 @@ export class LocationSearchComponent {
         if (term.length === 0) {
           return of([]);
         }
-        return this.locationSearchService.searchlocations(term).pipe(
+        return this.locationService.autocompleteLocation(term).pipe(
           catchError(() => of([]))
         );
       }),
