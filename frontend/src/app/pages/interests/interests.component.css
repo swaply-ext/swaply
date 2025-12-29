@@ -1,108 +1,108 @@
+/* Contenedor Principal (Panel) */
 .interests-container {
-  width: 480px;
-  margin: 40px auto;
-  padding: 30px;
-  background: #315465;
-  border-radius: 20px;
+  flex: 1;
+  padding: 1.5rem 2rem;
+  border: 0.1rem solid var(--border-color);
+  border-radius: 1.2rem;
+  background-color: var(--bg-panel);
+  color: var(--principal-color-2);
+  margin: 2rem auto;
+  margin-top: 5rem;
+  max-width: 45%;
+  align-content: center;
 }
 
-h1 {
+/* Título Central */
+.interests-container h1 {
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  font-weight: bold;
   text-align: center;
-  color: #3ed598;
-  margin-bottom: 25px;
-  font-family: "Montserrat", sans-serif;
-  font-size: 26px;
+  text-transform: capitalize;
 }
 
+p {
+  color: var(--secundary-color-2);
+  text-align: center;
+}
+
+/* Bloque de Categoría */
 .category-block {
-  background: #43697e;
-  padding: 20px;
-  border-radius: 12px;
-  margin-bottom: 20px;
+  margin-bottom: 1.5rem;
 }
 
 .category-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
   cursor: pointer;
+  margin-bottom: 1rem;
 }
 
 .category-title {
-  color: #3ed598;
-  font-weight: 600;
-  font-size: 18px;
-  font-family: "Montserrat", sans-serif;
+  font-size: 1.2rem;
+  font-weight: bold;
+  letter-spacing: 1px;
 }
 
-/* Arrow styling */
+/* Flecha de rotación */
 .arrow {
-  transition: transform 0.25s ease;
-  color: #3ed598;
-  font-size: 20px;
+  transition: transform 0.3s ease;
 }
+
 .arrow.open {
-  transform: rotate(-90deg);
+  transform: rotate(-90deg); /* Ajustado según tu SVG de flecha */
 }
 
-/* Smooth slide container */
+/* Grid de Skills (Chips) */
 .chips-container {
-  margin-top: 5px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-
-  overflow: hidden;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+  gap: 1.5rem;
   max-height: 0;
-  padding-top: 0;
-
-  transition:
-    max-height 0.35s ease,
-    padding-top 0.35s ease;
+  overflow: hidden;
+  transition: max-height 0.4s ease-out, padding 0.3s ease;
 }
 
 .chips-container.open {
-  max-height: 500px;
-  padding-top: 15px;
+  max-height: 2000px; /* Suficiente para expandir */
+  padding: 1rem 0;
 }
 
-.chip {
-  padding: 8px 14px;
-  border-radius: 12px;
-  background: rgba(191, 191, 191, 0.3);
-  color: white;
-  font-family: "Inter", sans-serif;
-  font-size: 15px;
-  cursor: pointer;
-  transition: 0.2s ease;
-  user-select: none;
-}
-
-.chip.selected {
-  background: #3ed598;
-  color: #083344;
-}
-
-.chip:hover {
-  background: #3ed598aa;
-}
-
+/* Acciones y Botón Guardar */
 .actions {
-  text-align: center;
-  margin-top: 25px;
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
 }
+
 .save-btn {
-  width: 120px;
+  background-color: transparent;
   color: var(--principal-color-2);
-  background-color: #315465;
   border: 2px solid var(--principal-color-2);
-  padding: 10px 18px;
-  border-radius: 8px;
+  padding: 0.6rem 2.5rem;
+  border-radius: 2rem;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
 }
 
 .save-btn:hover {
   background-color: var(--principal-color-2);
-  color: var(--secundary-color-1);
+  box-shadow: 0 0 15px var(--principal-color-2);
+  color: var(--principal-color-1);
+}
+
+.skill-card-not-selected {
+  opacity: 0.5;
+  filter: grayscale(0.6);
+  transition: all 0.3s ease;
+}
+
+.skill-card-not-selected:hover {
+  opacity: 1;
+  filter: grayscale(0);
 }

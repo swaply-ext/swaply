@@ -48,7 +48,7 @@ export class SwapComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const targetUserId = this.route.snapshot.paramMap.get('targetId');
+    const targetUsername = this.route.snapshot.paramMap.get('username');
     const paramSkillName = this.route.snapshot.queryParamMap.get('skillName');
 
     // CARGAR MI USUARIO
@@ -75,8 +75,8 @@ export class SwapComponent implements OnInit {
     });
 
     // CARGAR USUARIO DESTINO 
-    if (targetUserId) {
-      this.searchService.getUserById(targetUserId).subscribe({
+    if (targetUsername) {
+      this.searchService.getUserByUsername(targetUsername).subscribe({
         next: (user) => {
           this.targetUser.set(user);
 
