@@ -1,6 +1,9 @@
 <div class="skills-container">
   <h1>Selecciona tus habilidades</h1>
-
+  <p>
+    Para indicar el nivel de una habilidad haz clic en una de sus casillas. Para
+    desmarcarla, haz clic en una casilla ya seleccionada
+  </p>
   <div class="category-block" *ngFor="let category of categories">
     <div class="category-header" (click)="toggleCategory(category.name)">
       <span class="category-title">{{ category.name }}</span>
@@ -19,14 +22,15 @@
     </div>
 
     <div class="chips-container" [class.open]="category.isOpen">
-      <div
-        class="chip"
-        *ngFor="let sub of category.skills"
-        [class.selected]="sub.selected"
-        (click)="toggleSkill(category.name, sub.id); $event.stopPropagation()"
+      <app-skill-card
+        *ngFor="let item of category.skills"
+        [id]="item.id"
+        [level]="item.level"
+        [class.skill-card-not-selected]="item.level === 0"
+        [editable]="editable"
+        (levelChange)="handleLevelChange($event)"
       >
-        {{ sub.name }} {{ sub.icon }}
-      </div>
+      </app-skill-card>
     </div>
   </div>
 

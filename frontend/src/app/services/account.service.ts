@@ -26,6 +26,9 @@ export class AccountService {
   updateEditProfileData(data: any): Observable<boolean> {
     return this.http.patch<boolean>(`${this.apiUrl}/editProfileData`, data);
   }
+  changesStatusSwap(data: any): Observable<boolean> {
+    return this.http.patch<boolean>(`${this.apiUrl}/changesStatusSwap`, data);
+  }
 
   uploadProfilePhoto(file: File): Observable<string> {
     const formData = new FormData();
@@ -39,6 +42,11 @@ export class AccountService {
     );
   }
 
+  //obtenir el perfil públic d'ALGÚ ALTRE
+  getPublicProfile(targetUsername: string): Observable<any> { 
+    return this.http.get(`${this.apiUrl}/public/${targetUsername}`);
+  }
+  
   deleteAccount(): Observable<any> {
     // Asegúrate de que esta ruta coincida con tu backend (/delete o raíz)
     return this.http.delete(`${this.apiUrl}/deleteProfile`);

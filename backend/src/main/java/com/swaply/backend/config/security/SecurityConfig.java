@@ -29,7 +29,7 @@ public class SecurityConfig {
                         .requestMatchers("/ws-chat/**").permitAll()
                         .anyRequest().authenticated()
                 )
-
+                
                 .sessionManagement(sess -> sess
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )

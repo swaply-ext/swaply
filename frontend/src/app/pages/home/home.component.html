@@ -6,114 +6,81 @@
 
     <section class="interchange-section">
       <h2 class="section-title">Próximo Intercambio</h2>
-
-      <ng-container *ngIf="hasIntercambio(); else noIntercambio">
-        <div class="interchange-box interchange-populated-wrapper">
-          <div class="interchange-populated">
-
-            <div class="interchange-half">
-              <h3>Tu próxima habilidad para aprender</h3>
-              <div class="interchange-skill-card">
-                <img [src]="skillToLearn().img" alt="{{ skillToLearn().titulo }}">
-                <div>
-                  <h4>{{ skillToLearn().titulo }}</h4>
-                  <p>{{ skillToLearn().hora }}</p>
-                  <p class="skill-location">{{ skillToLearn().via }}</p>
-                </div>
-              </div>
-            </div>
-
-            <span class="material-symbols-outlined arrow-icon">swap_horiz</span>
-
-            <div class="interchange-half">
-              <h3>Tu próxima habilidad para enseñar</h3>
-              <div class="interchange-skill-card">
-                <img [src]="skillToTeach().img" alt="{{ skillToTeach().titulo }}">
-                <div>
-                  <h4>{{ skillToTeach().titulo }}</h4>
-                  <p>{{ skillToTeach().hora }}</p>
-                  <p class="skill-location">{{ skillToTeach().via }}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="confirmation-area">
-            <ng-container *ngIf="isConfirmed(); else showButton">
-              <span class="status-text">
-                <span class="material-symbols-outlined">check_circle</span>
-                Asistencia confirmada
-              </span>
-            </ng-container>
-            <ng-template #showButton>
-              <button class="btn-confirm" (click)="toggleConfirmation()">
-                <span class="material-symbols-outlined">check_circle</span>
-                Confirmar asistencia
-              </button>
-            </ng-template>
-          </div>
-        </div>
-      </ng-container>
-
-      <ng-template #noIntercambio>
-        <div class="interchange-box interchange-empty">
-          <p>No tienes ningún intercambio programado.</p>
-          <div class="confirmation-area disabled">
-            <span class="status-text">
-              <span class="material-symbols-outlined">check_circle</span>
-              Asistencia confirmada
-            </span>
-          </div>
-        </div>
-      </ng-template>
-
-
-      <div class="action-buttons">
-        <button class="btn btn-primary">Buscar Intercambio</button>
-        <button class="btn btn-secondary">Crear Intercambio</button>
-      </div>
-
-      <button (click)="toggleIntercambio()" class="demo-toggle">
-        (Demo: Cambiar estado)
-      </button>
+      <app-next-swap></app-next-swap>
     </section>
 
     <section class="nearby-section">
       <div class="nearby-header">
         <h2 class="section-title">Intercambios Cerca de Ti</h2>
         <div class="nearby-actions">
-          <app-skill-search></app-skill-search>
-          <app-filter-skills></app-filter-skills>
+          <app-skill-search style="width: auto; display: block;"
+            (skillSelected)="performMatchSearch($event)"></app-skill-search>
+          <app-filter-skills (filterChange)="performMatchSearch($event)"></app-filter-skills>
         </div>
       </div>
 
-      <div class="card-grid">
-        <div class="skill-card" *ngFor="let intercambio of intercambiosCerca()">
-          <img [src]="intercambio.img" [alt]="intercambio.titulo" class="card-image">
-          <div class="card-content">
+      <div *ngIf="isLoadingMatches()" class = loading-matches-indicator>
+        <div class="spinner-mini"></div> Cargando
+        resultados...
+      </div>
+
+      <div class="card-grid" *ngIf="!isLoadingMatches()">
+        <div class="skill-card" *ngFor="let card of cards()" (click)="goToSwap(card)">
+
+          <img *ngIf="card.skillImage" [src]="card.skillImage" [alt]="card.skillTitle" class="card-image"
+            (error)="card.skillImage = undefined">
+          <div *ngIf="!card.skillImage" class="card-image-placeholder">
+            {{ card.skillIcon || '🎓' }}
+          </div>
+
+          <div class="card-content clickable-user">
+
             <div class="card-user-info">
-              <img [src]="intercambio.userImg" [alt]="intercambio.user" class="user-avatar">
-              <span>{{ intercambio.user }}</span>
+              <img [src]="card.userAvatar" [alt]="card.userName" class="user-avatar"
+                [routerLink]="['/public-profile', card.username]" (click)="$event.stopPropagation()"
+                style="cursor: pointer;">
+
+              <span [routerLink]="['/public-profile', card.username]" (click)="$event.stopPropagation()"
+                style="cursor: pointer;">
+                {{ card.userName }}
+              </span>
             </div>
-            <h3>{{ intercambio.titulo }}</h3>
+
+            <h3>{{ card.skillTitle }}</h3>
+
+            <ng-container *ngIf="hasSearched()">
+              <div *ngIf="card.isMatch" class="match-status is-match">
+                <span class="material-symbols-outlined">bolt</span>
+                ¡MATCH!
+              </div>
+
+              <div *ngIf="!card.isMatch" class="match-status no-match">
+                <span class="material-symbols-outlined">person</span>
+                No tiene interés en tus habilidades
+              </div>
+            </ng-container>
+
             <div class="card-footer">
-              <span class="location">
-                <span class="material-symbols-outlined card-icon">location_on</span>
-                {{ intercambio.distancia }}
+              <span class="location" [class.nearby]="card.distance === 'Cerca de ti'">
+                <span class="material-symbols-outlined card-icon">location_on</span> {{ card.distance }}
               </span>
-              <span class="rating">
-                <span class="material-symbols-outlined card-icon">star</span>
-                {{ intercambio.rating }}
-              </span>
+              <span class="rating"><span class="material-symbols-outlined card-icon">star</span> {{ card.rating
+                }}</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="see-more-button">
-        <button class="btn btn-primary">Ver Más</button>
+      <div class="see-more-button" *ngIf="!isLoadingMatches() && cards().length === 0 && hasSearched()">
+        <p class="msg-no-results">No se encontraron usuarios con esa habilidad.</p>
       </div>
 
+      <div class="see-more-button" *ngIf="!isLoadingMatches() && !hasSearched() && cards().length === 0">
+        <p class="msg-instruction">Añade intereses a tu perfil para ver recomendaciones.</p>
+      </div>
+      <div class="see-more-button" *ngIf="canLoadMore() && !isLoadingMatches()">
+        <button class="btn btn-primary" (click)="loadMore()">Ver Más</button>
+      </div>
     </section>
   </main>
 </div>
