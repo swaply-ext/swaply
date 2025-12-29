@@ -3,6 +3,13 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
+interface Location {
+  placeId: string;
+  lat: number;
+  lon: number;
+  displayName: string;
+}
+
 interface PanelSkill {
   id: string;
   level: number;
@@ -11,7 +18,7 @@ interface PanelSkill {
 interface ProfileData {
   fullName: string;
   username: string;
-  location: string;
+  location: Location;
   description: string;
   profilePhotoUrl: string;
   rating: number;
@@ -26,7 +33,7 @@ interface ProfileData {
 })
 export class ProfileInfoComponent implements OnChanges {
   @Input() profileData: ProfileData = {} as ProfileData;
-  
+
   // SOLUCIÓN: Añadimos el input para que Angular no de error
   @Input() isReadOnly: boolean = false;
   @Input() isPublic: boolean = false;
@@ -38,7 +45,7 @@ export class ProfileInfoComponent implements OnChanges {
 
   constructor(private authService: AuthService, private router: Router ) { }
   starsArray = [1, 2, 3, 4, 5];
-  
+
   get isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
   }

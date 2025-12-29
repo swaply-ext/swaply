@@ -10,7 +10,7 @@ export class AuthService {
   private http = inject(HttpClient);
   
   // URL base para no repetir código
-  private baseUrl = 'http://localhost:8081/api/auth';
+  private baseUrl = '/auth';
 
   isLoggedIn = signal<boolean>(!!localStorage.getItem('authToken'));
 

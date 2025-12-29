@@ -12,7 +12,6 @@ import com.swaply.backend.application.auth.service.PasswordService;
 import com.swaply.backend.shared.UserCRUD.Model.User;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.shared.UserCRUD.exception.UserNotFoundException;
-import java.text.Normalizer;
 import java.util.regex.Pattern;
 
 @Service

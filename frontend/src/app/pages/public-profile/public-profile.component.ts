@@ -22,13 +22,20 @@ interface BackendSkill {
   level?: number;
 }
 
+interface Location {
+  placeId: string;
+  lat: number;
+  lon: number;
+  displayName: string;
+}
+
 interface ProfileData {
-fullName: string;
-username: string;
-location: string;
-description: string;
-profilePhotoUrl: string;
-rating: number;
+  fullName: string;
+  username: string;
+  location: Location;
+  description: string;
+  profilePhotoUrl: string;
+  rating: number;
 }
 
 @Component({

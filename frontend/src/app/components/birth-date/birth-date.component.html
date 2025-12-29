@@ -1,7 +1,7 @@
 <div class="input-container" [ngClass]="{ 'error': hasError }">
-  <input type="date" 
-    [(ngModel)]="birthDate" 
-    (ngModelChange)="birthDateChange.emit($event)" 
+  <input type="date"
+    [(ngModel)]="birthDate"
+    (ngModelChange)="birthDateChange.emit($event)"
     placeholder="Fecha de nacimiento">
   <span class="material-icons">cake</span>
 </div>

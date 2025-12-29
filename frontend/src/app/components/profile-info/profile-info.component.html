@@ -10,7 +10,7 @@
       <span class="material-icons share-icon">share</span>
     </div>
 
-    <p class="location">{{ profileData.location }}</p>
+    <p *ngIf="profileData.location != null" class="location">{{ profileData.location.displayName }}</p>
 
     <div class="rating">
       <i class="material-icons" *ngFor="let starNum of starsArray">
@@ -34,5 +34,4 @@
   <div class="description">
     {{ profileData.description }}
   </div>
-
 </div>

@@ -39,28 +39,27 @@ export interface SwapDTO {
 })
 export class SearchService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8081/api'; 
 
   getMatches(skill: string): Observable<UserSwapDTO[]> {
     const params = new HttpParams().set('skill', skill);
-    return this.http.get<UserSwapDTO[]>(`${this.apiUrl}/search/match`, { 
+    return this.http.get<UserSwapDTO[]>(`/search/match`, { 
       params,
       context: new HttpContext().set(SKIP_LOADING, true) 
     });
   }
 
   getRecommendations(): Observable<UserSwapDTO[]> {    
-    return this.http.get<UserSwapDTO[]>(`${this.apiUrl}/home/recommendations`, {
+    return this.http.get<UserSwapDTO[]>(`/home/recommendations`, {
       context: new HttpContext().set(SKIP_LOADING, true)
     });
   }
-
+  
   getUserByUsername(username: string): Observable<UserSwapDTO> {
-    return this.http.get<UserSwapDTO>(`${this.apiUrl}/search/user/${username}`);
+    return this.http.get<UserSwapDTO>(`/search/user/${username}`);
   }
   
   sendSwapRequest(payload: SwapDTO): Observable<any> {
     // cambiamos a patch y usamos el endpoint solicitado
-    return this.http.patch(`${this.apiUrl}/swap/request`, payload);
+    return this.http.patch(`/swap/request`, payload);
   }
 }

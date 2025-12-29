@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class AccountService {
   // Ajusta la URL base si es necesario
-  private apiUrl = 'http://localhost:8081/api/account'; 
+  private apiUrl = '/account'; 
 
   constructor(private http: HttpClient) {}
 

@@ -1,10 +1,10 @@
-<div class="input-container" [ngClass]="{ 'error': hasError }">
+<div class="input-container" [ngClass]="{ error: hasError }">
   <select [ngModel]="gender" (ngModelChange)="genderChange.emit($event)">
-  <option value="" disabled>Selecciona tu género</option>
-  <option value="masculino">Masculino</option>
-  <option value="femenino">Femenino</option>
-  <option value="otro">Otro</option>
-  <option value="no_especificar">Prefiero no decirlo</option>
-</select>
+    <option value="" disabled>Selecciona tu género</option>
+    <option value="masculino">Masculino</option>
+    <option value="femenino">Femenino</option>
+    <option value="otro">Otro</option>
+    <option value="no_especificar">Prefiero no decirlo</option>
+  </select>
   <span class="material-icons">person</span>
 </div>

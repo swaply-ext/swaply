@@ -1,0 +1,27 @@
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { SKIP_LOADING } from '../interceptors/loading.interceptor';
+
+export interface location {
+  placeId: string;
+  displayName: string;
+  lat: number;
+  lon: number;
+}
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class LocationService {
+
+  private apiUrl = '/locations';
+
+  constructor(private http: HttpClient) { }
+
+  autocompleteLocation(query: string): Observable<any> {
+    const params = new HttpParams().set('query', query);
+    return this.http.get<location[]>(`${this.apiUrl}/autocomplete`, { params, context: new HttpContext().set(SKIP_LOADING, true) });
+  }
+}
