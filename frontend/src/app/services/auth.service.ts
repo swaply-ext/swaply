@@ -44,4 +44,11 @@ export class AuthService {
     this.isLoggedIn.set(false);
   }
 
+  verifyRegistrationCode(email: string, code: string): Observable<HttpResponse<string>> {
+    const verifyData = { email, code };
+    return this.http.post('http://localhost:8081/api/auth/registerCodeVerify', verifyData, {
+      responseType: 'text',
+      observe: 'response'
+    });
+  }
 }
