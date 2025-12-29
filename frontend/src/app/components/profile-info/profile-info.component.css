@@ -14,7 +14,7 @@ body {
   align-items: flex-start;
   gap: 2rem;
   position: relative;
-  border: 1px solid var(--border-color);
+  border: 0.063rem solid var(--border-color);
   background-color: var(--bg-panel);
 }
 
@@ -41,7 +41,7 @@ body {
   height: 8.75rem;
   border-radius: 50%;
   object-fit: cover;
-  border: 1px solid var(--border-color);
+  border: 0.063rem solid var(--border-color);
   flex-shrink: 0;
 }
 
@@ -83,7 +83,7 @@ body {
 
 .location {
   font-size: 0.95rem;
-  color: #ffffff;
+  color: var(--secundary-color-1);
   margin: 0;
 }
 
