@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class SwapService {
-  private apiUrl = 'http://localhost:8081/api/swap'; //he cambiado la ruta base de la api para así poder pillar en este mismo service diferentes datos
+  private apiUrl = '/swap'; //he cambiado la ruta base de la api para así poder pillar en este mismo service diferentes datos
 
   constructor(private http: HttpClient) {}
   
