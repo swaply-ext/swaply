@@ -3,6 +3,10 @@ import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { SKIP_LOADING } from '../interceptors/loading.interceptor';
 
+export interface Account {
+  interests: { id: string, level: number }[]
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -66,6 +70,14 @@ export class AccountService {
         context: new HttpContext().set(SKIP_LOADING, true)
       }
     );
+  }
+
+  getAccount(): Observable<any> {
+    return this.http.get<Account>(this.apiUrl);
+  }
+
+  updateInterests(interests: { id: string, level: number }[]): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/interests`, { interests });
   }
 
 }

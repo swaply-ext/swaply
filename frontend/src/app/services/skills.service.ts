@@ -38,4 +38,8 @@ export class SkillsService {
       })
     );
   }
+
+  getAllSkills(): Observable<SkillsModel[]> {
+    return this.http.get<SkillsModel[]>(this.apiUrl);
+  }
 }
