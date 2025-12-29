@@ -28,7 +28,7 @@
   bottom: auto;
   right: auto;
   background-color: var(--principal-color-2);
-  color: #fff;
+  color: var(--secundary-color-1;
   font-family: var(--font-primary);
   font-weight: 600;
   font-size: 0.9rem;
