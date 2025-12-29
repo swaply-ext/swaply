@@ -1,20 +1,21 @@
-import { Injectable, signal, inject } from '@angular/core';
-import { HttpClient, HttpContext, HttpResponse } from '@angular/common/http';
+import { Injectable, signal } from '@angular/core';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
-import { SKIP_LOADING } from '../interceptors/loading.interceptor';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private http = inject(HttpClient);
+  private apiUrl = 'http://localhost:8081/api/auth';
+
+  constructor(private http: HttpClient) { }
 
   isLoggedIn = signal<boolean>(!!localStorage.getItem('authToken'));
 
   login(credentials: any) {
     console.log(this.isLoggedIn())
-    return this.http.post('http://localhost:8081/api/auth/login', credentials, {
+    return this.http.post(`${this.apiUrl}/login`, credentials, {
 
       // SALTAR PANTALLA DE CARGA
       // context: new HttpContext().set(SKIP_LOADING, true),
@@ -46,8 +47,15 @@ export class AuthService {
 
   verifyRegistrationCode(email: string, code: string): Observable<HttpResponse<string>> {
     const verifyData = { email, code };
-    return this.http.post('http://localhost:8081/api/auth/registerCodeVerify', verifyData, {
+    return this.http.post(`${this.apiUrl}/registerCodeVerify`, verifyData, {
       responseType: 'text',
+      observe: 'response'
+    });
+  }
+
+  passwordReset(token: string, password: string): Observable<HttpResponse<any>> {
+    const payload = { token, password };
+    return this.http.post(`${this.apiUrl}/passwordReset`, payload, {
       observe: 'response'
     });
   }
