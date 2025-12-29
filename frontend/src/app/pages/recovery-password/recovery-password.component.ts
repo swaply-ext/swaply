@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { HttpResponse } from '@angular/common/http';
+import { AuthService } from '../../services/auth.service';
 import { RecoveryDataService } from '../../services/recovery-data.service.service';
 
 @Component({
@@ -21,7 +22,7 @@ export class RecoveryPasswordComponent {
   constructor(
     private router: Router,
     private location: Location,
-    private http: HttpClient,
+    private authService: AuthService,
     private recoveryService: RecoveryDataService
   ) { }
 
@@ -42,8 +43,8 @@ export class RecoveryPasswordComponent {
     }
 
     // Enviar JSON { email: ... }
-    this.http.post('http://localhost:8081/api/auth/recoveryMail', this.email, { observe: 'response' }
-    ).subscribe({
+    this.authService.sendRecoveryMail(this.email)
+    .subscribe({
       next: response => {
         if (response.status == 200) {
           this.router.navigate(['/email-sent']);
