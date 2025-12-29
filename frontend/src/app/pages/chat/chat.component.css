@@ -1,0 +1,220 @@
+.chat-container {
+  display: flex;
+  height: 85vh; /* Ajusta según tu layout */
+  background-color: #f5f7fb;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* --- SIDEBAR --- */
+.chat-sidebar {
+  width: 320px;
+  background-color: white;
+  border-right: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-header {
+  padding: 20px;
+  border-bottom: 1px solid #f0f0f0;
+  font-weight: bold;
+}
+
+.rooms-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.room-item {
+  display: flex;
+  padding: 15px;
+  cursor: pointer;
+  border-bottom: 1px solid #f9f9f9;
+  transition: background 0.2s;
+}
+
+.room-item:hover {
+  background-color: #f4f6f8;
+}
+
+.room-item.active {
+  background-color: #e3f2fd; /* Azul clarito selección */
+}
+
+.room-avatar {
+  width: 45px;
+  height: 45px;
+  background-color: #1976d2;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-right: 15px;
+}
+
+.room-info {
+  flex: 1;
+  overflow: hidden;
+}
+
+.room-name {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.room-preview {
+  font-size: 0.85rem;
+  color: #777;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.room-meta {
+  font-size: 0.75rem;
+  color: #999;
+}
+
+/* --- CHAT MAIN --- */
+.chat-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+}
+
+.chat-header {
+  padding: 15px 20px;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: white;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  z-index: 10;
+}
+
+.messages-area {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  background-color: #eef2f5;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.no-chat-placeholder {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #aaa;
+}
+
+/* --- MESSAGE BUBBLES --- */
+.message-bubble {
+  max-width: 70%;
+  padding: 10px 15px;
+  border-radius: 15px;
+  position: relative;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+/* Mis mensajes (derecha) */
+.message-bubble.mine {
+  align-self: flex-end;
+  background-color: #1976d2; /* Color primario */
+  color: white;
+  border-bottom-right-radius: 2px;
+}
+
+/* Mensajes del otro (izquierda) */
+.message-bubble.theirs {
+  align-self: flex-start;
+  background-color: white;
+  color: #333;
+  border: 1px solid #e0e0e0;
+  border-bottom-left-radius: 2px;
+}
+
+.message-time {
+  font-size: 0.7rem;
+  margin-top: 5px;
+  text-align: right;
+  opacity: 0.8;
+}
+
+/* --- INPUT AREA --- */
+.chat-input-area {
+  padding: 15px;
+  background-color: white;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  gap: 10px;
+}
+
+.chat-input-area input {
+  flex: 1;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  outline: none;
+}
+
+.chat-input-area input:focus {
+  border-color: #1976d2;
+}
+
+.chat-input-area button {
+  padding: 0 20px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.chat-input-area button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Añade esto para el buscador de nuevos chats */
+.new-chat-input {
+  display: flex;
+  gap: 8px;
+  padding-top: 10px;
+}
+
+.new-chat-input input {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.new-chat-input button {
+  padding: 0 12px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.new-chat-input button:disabled {
+  background-color: #ccc;
+  cursor: default;
+}
+
+.no-rooms {
+  padding: 20px;
+  text-align: center;
+  color: #888;
+}
