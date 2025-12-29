@@ -10,43 +10,34 @@
 .nearby-search {
   position: relative;
   width: 100%;
-  border-color: #00bcd4;
+  border-color: var(--border-color);
 
 }
 
 .nearby-search input {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid #00bcd4;
-  border-radius: 8px;
-  padding: 10px 12px;
-  color: #fff;
+  background: var(--bg-input);
+  border: 0.063rem solid var(--border-color);
+  border-radius: 0.5rem;
+  padding: 0.625rem 0.75rem;
+  color: var(--secundary-color-1);
   font-size: 0.95rem;
   outline: none;
   transition: border-color 0.2s ease, background 0.2s ease;
   width: 100%;
 }
 
-.nearby-search input:focus {
-  border-color: #00eaff;
-  box-shadow: 0 0 10px 0px rgba(60, 181, 124, 0.3);
-}
 
-
-
-
-/* CORREGIDO: position absolute para que flote sobre las tarjetas */
 .search-dropdown {
   position: absolute;
   top: 100%;
   left: 0;
   width: 100%;
-  min-width: 280px;
-  background-color: #143F4C;
-  border: 1px solid #3CB57C;
-  border-radius: 12px;
-
+  min-width: 17.5rem;
+  background-color: var(--bg-panel);
+  border: 0.063rem solid var(--border-color);
+  border-radius: 0.75rem;
   margin-top: 0.5rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-large);
   z-index: 50;
   overflow: hidden;
 }
@@ -63,7 +54,7 @@
   gap: 0.75rem;
   padding: 0.75rem 1rem;
   cursor: pointer;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 0.063rem solid var(--bg-input);
   transition: background 0.2s;
 }
 
@@ -72,7 +63,7 @@
 }
 
 .search-dropdown li:hover {
-  background-color: #1F4E5D;
+  background-color: var(--bg-card);
 }
 
 
@@ -83,18 +74,18 @@
 
 .dropdown-name {
   font-weight: 600;
-  color: white;
+  color: var(--secundary-color-1);
   font-size: 0.9rem;
 }
 
 .dropdown-cat {
   font-size: 0.75rem;
-  color: #9ca3af;
+  color: var(--secundary-color-2);
 }
 
 .search-dropdown.empty {
   padding: 1rem;
   text-align: center;
-  color: #9ca3af;
+  color: var(--secundary-color-2);
   font-size: 0.9rem;
 }
