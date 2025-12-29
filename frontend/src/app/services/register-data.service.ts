@@ -29,7 +29,6 @@ interface AllUserData {
   providedIn: 'root'
 })
 export class RegisterDataService {
-  private apiUrl = 'http://localhost:8081/api';
   private registerData: any = {};
 
   constructor(private http: HttpClient) { }
@@ -46,7 +45,7 @@ export class RegisterDataService {
     this.registerData = {};
   }
 
-  // 🔹 Llama al backend para registrar inicialmente (verifica email y username)
+  //  Llama al backend para registrar inicialmente (verifica email y username)
   initialRegister(data: RegisterUserDTO): Observable<any> {
     return this.http.post(`/auth/register`, data, {
       responseType: 'text',
