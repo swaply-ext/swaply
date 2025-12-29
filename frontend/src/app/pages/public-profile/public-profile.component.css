@@ -107,17 +107,6 @@
     align-items: center;
     gap: 1rem;
   }
-  
-  .btn-swap-profile {
-    position: static;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    width: auto;
-    left: auto;
-    top: auto;
-    right: auto;
-    align-self: center;
-  }
 }
 
 .history-panel {
