@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.component";
 import { ProfileInfoComponent } from "../../components/profile-info/profile-info.component";
 import { SkillsPanelComponent } from '../../components/skills-panel/skills-panel.component';
@@ -54,20 +54,18 @@ public isHistoryOpen: boolean = true;
 
   constructor(
     private accountService: AccountService,
-    private route: ActivatedRoute 
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
 ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       const usernameFromUrl = params.get('username');
-      
       if (usernameFromUrl) {
         this.getPublicProfileFromBackend(usernameFromUrl);
       }
     });
 }
-
-
 
   getPublicProfileFromBackend(username: string): void {
     this.accountService.getPublicProfile(username).subscribe({

@@ -26,7 +26,13 @@
     </div>
   </div>
 
+  <button *ngIf="isPublic" class="btn-swap-internal" (click)="goToSwap()">
+    <span class="material-icons">swap_horiz</span>
+    SWAP
+  </button>
+
   <div class="description">
     {{ profileData.description }}
   </div>
+
 </div>
