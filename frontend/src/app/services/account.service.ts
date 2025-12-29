@@ -87,4 +87,8 @@ export class AccountService {
     return this.http.post(`${this.apiUrl}/verifyCode`, code);
   }
 
+  updateSkills(skills: any): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/skills`, { skills });
+  }
+
 }

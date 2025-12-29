@@ -1,17 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SkillCardComponent } from '../../components/skill-card/skill-card.component';
+import { AccountService } from '../../services/account.service';
+import { SkillsService, SkillsModel } from '../../services/skills.service';
 
-interface SkillDTO {
-  id: string;
-  name: string;
-  category: string;
-  icon: string;
-  level: number;
-}
+
 
 interface SkillItem {
   id: string;
@@ -49,28 +44,28 @@ export class SkillsComponent {
   editable: boolean = true;
 
   // Inyectar HttpClient para hacer peticiones HTTP
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(
+    private skillsService: SkillsService,
+    private accountService: AccountService,
+    private router: Router) { }
 
   ngOnInit(): void {
-    this.getAllSkills('http://localhost:8081/api/skills');
-
+    this.getAllSkills();
   }
 
-  getAllSkills(URI: string) {
-    this.http.get<SkillDTO[]>(URI)
+  getAllSkills() {
+    this.skillsService.getAllSkills()
       .subscribe({
         next: (response) => {
           this.organizeSkillsByCategory(response);
-          this.getMySkills('http://localhost:8081/api/account');
+          this.getMySkills();
         },
         error: (err) => console.error('Error obteniendo skills:', err)
       });
   }
 
-
-
-  getMySkills(URI: string) {
-    this.http.get<Account>(URI)
+  getMySkills() {
+    this.accountService.getAccount()
       .subscribe({
         next: (account) => {
           if (account.skills && account.skills.length > 0) {
@@ -105,7 +100,7 @@ export class SkillsComponent {
 
 
 
-  private organizeSkillsByCategory(skills: SkillDTO[]) {
+  private organizeSkillsByCategory(skills: SkillsModel[]) {
     const grouped: Category[] = [];
 
     skills.forEach(skill => {
@@ -125,7 +120,7 @@ export class SkillsComponent {
         name: skill.name,
         icon: skill.icon,
         id: skill.id,
-        level: skill.level
+        level: 0 //inicializar nivel a 0 para evitar undefined y problemas
       });
     });
     this.categories = grouped;
@@ -152,7 +147,7 @@ export class SkillsComponent {
         }))
     );
 
-    this.http.patch('http://localhost:8081/api/account/skills', { skills: selectedSkills })
+    this.accountService.updateSkills(selectedSkills)
       .subscribe({
         next: response => {
           console.log('Resputesta del backend:', response);
