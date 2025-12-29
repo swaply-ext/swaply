@@ -24,6 +24,7 @@
   --error-color-1: #E53935; /* Vermell clar */
   --error-color-2: #B71C1C; /* Vermell neutre */
   --error-color-3: #751414; /* Vermell fosc */
+  --error-bg: #ffe6e6;
 
   /* --- FUENTES --- */
   --font-primary: "Quicksand", sans-serif;
@@ -33,6 +34,7 @@
   --bg-panel: #022c38;
   --bg-card: #00414b;
   --bg-location: #00333c;
+  --bg-input: rgba(255, 255, 255, 0.1);
   
   /* Fondos específicos Intercambio - NUEVOS */
   --bg-interchange: #143F4C; 
