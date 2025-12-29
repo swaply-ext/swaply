@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.component";
 import { SideMenuComponent } from '../../components/side-menu/side-menu.component';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AccountService } from '../../services/account.service';
+import { AuthService } from '../../services/auth.service'; // Importamos AuthService
 
 @Component({
   selector: 'app-privacy-and-security',
@@ -21,7 +21,6 @@ import { AccountService } from '../../services/account.service';
   templateUrl: './privacy-and-security.component.html',
   styleUrls: ['./privacy-and-security.component.css']
 })
-
 export class PrivacyAndSecurityComponent {
 
   currentPassword: string = '';
@@ -39,9 +38,9 @@ export class PrivacyAndSecurityComponent {
   successMessage: string = 'Contraseña cambiada correctamente';
 
   constructor(
-    private http: HttpClient,
     private router: Router,
-    private accountService: AccountService
+    private accountService: AccountService,
+    private authService: AuthService // Inyectamos AuthService
   ) { }
 
   // Password visibility
@@ -51,7 +50,7 @@ export class PrivacyAndSecurityComponent {
     else if (field === 'confirm') this.showConfirm = !this.showConfirm;
   }
 
-  // Validate password 
+  // Validate password logic
   private validatePassword(password: string): { valid: boolean; message: string } {
     const minLength = 8;
     const uppercase = /[A-Z]/;
@@ -91,14 +90,14 @@ export class PrivacyAndSecurityComponent {
     this.showSuccess = false;
     this.successMessage = 'Contraseña cambiada correctamente';
 
-    // Check all fields are filled
+    // 1. Check all fields are filled
     if (!this.currentPassword || !this.newPassword || !this.confirmPassword) {
       this.showError = true;
       this.message = 'Debes rellenar todos los campos';
       return;
     }
 
-    // Validate new password
+    // 2. Validate new password strength
     const passwordValidation = this.validatePassword(this.newPassword);
     if (!passwordValidation.valid) {
       this.showError = true;
@@ -106,44 +105,53 @@ export class PrivacyAndSecurityComponent {
       return;
     }
 
-    // Confirm passwords match
+    // 3. Confirm passwords match
     if (this.newPassword !== this.confirmPassword) {
       this.showError = true;
       this.message = 'Las contraseñas deben coincidir';
       return;
     }
 
-    // Prepare payload
+    // 4. Prepare payload
     const payload = {
       password: this.currentPassword,
       newPassword: this.newPassword
     };
 
-    console.log('Cambiando contraseña...', payload);
+    console.log('Enviando petición de cambio de contraseña...');
 
-    // Call backend API (Movido dentro del método correctamente)
-    this.http.post('http://localhost:8081/api/auth/passwordChange', payload, { observe: 'response' })
-      .subscribe({
-        next: (response: any) => {
-          if (response.status === 200) {
-            this.showError = false;
-            this.showSuccess = true;
-            this.router.navigate(['/privacy-and-security']); // redirect 
-          } else {
-            this.showError = true;
-            this.message = 'Error cambiando la contraseña';
-          }
-        },
-        error: (err) => {
-          console.error('Error al cambiar contraseña:', err);
+    // 5. Call AuthService
+    this.authService.changePassword(payload).subscribe({
+      next: (response: any) => {
+        if (response.status === 200) {
+          this.showError = false;
+          this.showSuccess = true;
+          
+          // Opcional: Limpiar campos
+          this.currentPassword = '';
+          this.newPassword = '';
+          this.confirmPassword = '';
+          
+          // Opcional: redirigir después de unos segundos
+          // setTimeout(() => this.router.navigate(['/profile']), 2000);
+        } else {
           this.showError = true;
-          if (err.status === 400 && err.error?.message) {
-            this.message = err.error.message; // backend message
-          } else {
-            this.message = 'Error de servidor. Inténtalo de nuevo más tarde';
-          }
+          this.message = 'Error cambiando la contraseña';
         }
-      });
+      },
+      error: (err) => {
+        console.error('Error al cambiar contraseña:', err);
+        this.showError = true;
+        
+        if (err.status === 400 && err.error?.message) {
+          this.message = err.error.message; // Mensaje específico del backend
+        } else if (err.status === 401 || err.status === 403) {
+          this.message = 'Tu sesión ha expirado o no es válida. Por favor, inicia sesión de nuevo.';
+        } else {
+          this.message = 'Error de servidor. Inténtalo de nuevo más tarde';
+        }
+      }
+    });
   }
 
   // Método para eliminar cuenta usando accountService
@@ -151,5 +159,3 @@ export class PrivacyAndSecurityComponent {
     this.router.navigate(['/delete-account-confirmation']);
   };
 }
-
-
