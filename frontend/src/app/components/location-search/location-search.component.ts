@@ -23,6 +23,7 @@ import {
   catchError
 } from 'rxjs/operators';
 import { SKIP_LOADING } from '../../interceptors/loading.interceptor';
+import { LocationService } from '../../services/location.service';
 
 
 export interface location {
@@ -36,16 +37,14 @@ export interface location {
   providedIn: 'root'
 })
 class LocationSearchService {
-  private http = inject(HttpClient);
 
-  private apiUrl = 'http://localhost:8081/api/locations/autocomplete';
+  private locationService = inject(LocationService);
 
   searchlocations(query: string): Observable<location[]> {
     if (!query.trim()) {
       return of([]);
     }
-    const params = new HttpParams().set('query', query);
-    return this.http.get<location[]>(this.apiUrl, { params, context: new HttpContext().set(SKIP_LOADING, true) });
+    return this.locationService.autocompleteLocation(query);
   }
 }
 
