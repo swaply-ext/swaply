@@ -80,4 +80,11 @@ export class AccountService {
     return this.http.patch(`${this.apiUrl}/interests`, { interests });
   }
 
+  personalInfo(allUserData:any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/personalInfo`, allUserData);
+  }
+  verifyCode(code: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/verifyCode`, code);
+  }
+
 }

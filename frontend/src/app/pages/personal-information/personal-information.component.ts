@@ -6,7 +6,7 @@ import { SurnameInputComponent } from "../../components/surname-input/surname-in
 import { BirthDateComponent } from "../../components/birth-date/birth-date.component";
 import { PhoneInputComponent } from "../../components/phone-input/phone-input.component";
 import { AddressInputComponent } from "../../components/address-input/address-input.component";
-import { HttpClient } from '@angular/common/http';
+import { AccountService } from '../../services/account.service';
 import { RegisterDataService } from '../../services/register-data.service';
 import { GenderInputComponent } from '../../components/gender-input/gender-input.component';
 import { CommonModule } from '@angular/common';
@@ -42,7 +42,7 @@ export class PersonalInformationComponent {
 
   constructor(
     private router: Router,
-    private http: HttpClient,
+    private accountService: AccountService,
     private registerDataService: RegisterDataService
   ) { }
 
@@ -95,7 +95,7 @@ export class PersonalInformationComponent {
 
     const allUserData = { email, username, password, ...personalData };
 
-    this.http.post('http://localhost:8081/api/account/personalInfo', allUserData)
+    this.accountService.personalInfo(allUserData)
       .subscribe({
         next: () => {
         console.log('Registro completo:', allUserData);
