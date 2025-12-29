@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
+import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.component";
 import { CommonModule } from '@angular/common';
 import { SwapListComponent } from '../../components/swap-list/swap-list.component';
 
 @Component({
   selector: 'app-my-swaps-page',
   standalone: true,
-  imports: [CommonModule, SwapListComponent],
+  imports: [CommonModule, AppNavbarComponent, SwapListComponent],
   templateUrl: './my-swaps.component.html',
   styleUrl: './my-swaps.component.css'
 })
