@@ -57,6 +57,11 @@ public class UserService {
         return mapper.entityToDTO(user);
     }
 
+    public String getUsernameById(String id) {
+        return repository.findUsernameById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+    }
+
     public List<UserDTO> getAllUsers() {
         return repository.findAllUsers()
                 .stream()

@@ -54,8 +54,8 @@ export class SearchService {
     });
   }
   
-  getUserById(userId: string): Observable<UserSwapDTO> {
-    return this.http.get<UserSwapDTO>(`/search/user/${userId}`);
+  getUserById(username: string): Observable<UserSwapDTO> {
+    return this.http.get<UserSwapDTO>(`/search/user/${username}`);
   }
   
   sendSwapRequest(payload: SwapDTO): Observable<any> {

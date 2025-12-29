@@ -154,9 +154,9 @@ export class HomeComponent implements OnInit {
   
 
   goToSwap(card: CardModel) {
-    if (!card.userId) return;
+    if (!card.username) return;
 
-    this.router.navigate(['/swap', card.userId], { 
+    this.router.navigate(['/swap', card.username], { 
       queryParams: { skillName: card.skillTitle } 
     });
   }

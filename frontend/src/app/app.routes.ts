@@ -32,7 +32,6 @@ import { CodeSentConfirmationComponent } from './pages/code-sent-confirmation/co
 import { FilterSkillsComponent } from './components/filter-skills/filter-skills.component';
 import { PrivacyAndSecurityComponent } from './pages/privacy-and-security/privacy-and-security.component';
 import { EmailSentComponent } from './pages/email-sent/email-sent.component';
-import { IndexComponent } from './pages/index/index.component';
 import { SwapComponent } from './pages/swap/swap.component';
 import { SwapSkillsComponent } from './components/swap-skills/swap-skills.component';
 import { SwapInterestsComponent } from './components/swap-interests/swap-interests.component';
@@ -79,8 +78,7 @@ export const appRoutes: Routes = [
   { path: '404', component: Error404Component },
   { path: 'privacy-and-security', component: PrivacyAndSecurityComponent, canActivate: [AuthGuard] },
   { path: 'user-search', component: UserSearchComponent },
-  { path: 'swap/:targetId', component: SwapComponent, canActivate: [AuthGuard] },
-  { path: 'index', component: IndexComponent },
+  { path: 'swap/:username', component: SwapComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
 
 ];
