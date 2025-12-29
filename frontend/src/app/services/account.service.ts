@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient,HttpContext,HttpParams} from '@angular/common/http';
+import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { SKIP_LOADING } from '../interceptors/loading.interceptor';
 
@@ -9,7 +9,7 @@ import { SKIP_LOADING } from '../interceptors/loading.interceptor';
 export class AccountService {
   private apiUrl = 'http://localhost:8081/api/account';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getProfileData(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/profileData`);
@@ -33,20 +33,20 @@ export class AccountService {
 
   uploadProfilePhoto(file: File): Observable<string> {
     const formData = new FormData();
-    formData.append('file', file); 
+    formData.append('file', file);
 
     return this.http.post(
-      `${this.apiUrl}/upload-photo`, 
-      formData, 
-      { responseType: 'text' } 
+      `${this.apiUrl}/upload-photo`,
+      formData,
+      { responseType: 'text' }
     );
   }
 
   //obtenir el perfil públic d'ALGÚ ALTRE
-  getPublicProfile(targetUsername: string): Observable<any> { 
+  getPublicProfile(targetUsername: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/public/${targetUsername}`);
   }
-  
+
   deleteAccount(): Observable<any> {
     // Asegúrate de que esta ruta coincida con tu backend (/delete o raíz)
     return this.http.delete(`${this.apiUrl}/deleteProfile`);
@@ -67,5 +67,5 @@ export class AccountService {
       }
     );
   }
-  
+
 }
