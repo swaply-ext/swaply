@@ -37,7 +37,7 @@ import { SwapSkillsComponent } from './components/swap-skills/swap-skills.compon
 import { SwapInterestsComponent } from './components/swap-interests/swap-interests.component';
 import { DeleteAccountConfirmationComponent } from './pages/delete-account-confirmation/delete-account-confirmation.component';
 import { UserSearchComponent } from './components/user-search/user-search.component';
-
+import { getProfileDataResolver } from './resolver/get-profile-data.service';
 
 // Creamos una ruta para la verificación de correo
 // Ahora usamos el componente real EmailVerificationComponent
@@ -68,7 +68,7 @@ export const appRoutes: Routes = [
   { path: 'pass-verification', component: PassVerificationComponent },
   { path: 'side-menu', component: SideMenuComponent }, // ruta para el componente del menú lateral
   { path: 'exit', component: ExitComponent },
-  { path: 'myprofile', component: PrivateProfileComponent, canActivate: [AuthGuard] },
+  { path: 'myprofile', component: PrivateProfileComponent, canActivate: [AuthGuard], resolve: { profileData: getProfileDataResolver }}, //resolve:{nombre_del_objeto: tipo_del_objeto}. Esto le pasa al .ts un objeto llamado nombre_del_objeto del tipo indicado.
   { path: 'search-skills', component: SkillSearchComponent }, //barra de busqueda componente
   { path: 'filter-skills', component: FilterSkillsComponent },
   {path: 'location-search', component: LocationSearchComponent },
