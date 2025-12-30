@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { SwapService } from '../../services/swap.service';
 import { UsersService } from '../../services/users.service';
 import { AccountService } from '../../services/account.service';
+import { Swap } from '../../models/swap.model';
 
 export interface Profile {
   title?: string;
@@ -11,15 +12,6 @@ export interface Profile {
   profilePhotoUrl: string;
   location: string;
   username: string;
-}
-
-export interface Swap {
-  id: string;
-  requestedUserId: string;
-  skill: string;
-  interest: string;
-  status: 'ACCEPTED' | 'STANDBY' | 'DENIED';
-  isRequester: boolean;
 }
 
 @Component({
