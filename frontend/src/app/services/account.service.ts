@@ -11,7 +11,8 @@ export interface Account {
   providedIn: 'root'
 })
 export class AccountService {
-  private apiUrl = 'http://localhost:8081/api/account';
+  // Ajusta la URL base si es necesario
+  private apiUrl = '/account'; 
 
   constructor(private http: HttpClient) { }
 

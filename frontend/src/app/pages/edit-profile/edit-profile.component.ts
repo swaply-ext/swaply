@@ -8,9 +8,18 @@ import { AccountService } from '../../services/account.service';
 import { DiscardButtonComponent } from '../../components/discard-button/discard-button.component';
 import { SkillsPanelComponent } from '../../components/skills-panel/skills-panel.component';
 import { InterestsPanelComponent } from '../../components/interests-panel/interests-panel.component';
+import { LocationSearchComponent } from '../../components/location-search/location-search.component';
+import { delay } from 'rxjs';
 interface Skill {
   id: string;
   level: number;
+}
+
+interface Location {
+  placeId: string;
+  lat: number;
+  lon: number;
+  displayName: string;
 }
 
 interface ProfileData {
@@ -19,7 +28,7 @@ interface ProfileData {
   username: string;
   description: string;
   birthDate: string;
-  location: string;
+  location: Location | string;
   gender: string;
   email: string;
   profilePhotoUrl: string;
@@ -37,6 +46,7 @@ interface ProfileData {
     DiscardButtonComponent,
     SkillsPanelComponent,
     InterestsPanelComponent
+    , LocationSearchComponent
   ],
   templateUrl: './edit-profile.component.html',
   styleUrls: ['./edit-profile.component.css']
@@ -45,6 +55,7 @@ export class EditProfileComponent implements OnInit {
   public interests: Array<Skill> = [];
   public skills: Array<Skill> = [];
   public profileData: ProfileData = {} as ProfileData;
+  private locationData: Location | null = null;
 
   isUploadingPhoto = false;
 
@@ -90,12 +101,18 @@ export class EditProfileComponent implements OnInit {
 
   // Mapear datos del usuario a la estructura ProfileData
   mapProfileData(user: any): void {
+
+    if (user.location && typeof user.location === 'object' && user.location.displayName) {
+      this.locationData = user.location;
+    } else {
+      this.locationData = null;
+    }
     this.profileData = {
       name: user.name,
       surname: user.surname,
       username: user.username,
       description: user.description,
-      location: user.location,
+      location: this.locationData ? this.locationData.displayName : (user.location || ''),
       birthDate: user.birthDate ? new Date(user.birthDate).toISOString().substring(0, 10) : '',
       gender: user.gender,
       email: user.email,
@@ -107,18 +124,18 @@ export class EditProfileComponent implements OnInit {
     this.surname = this.profileData.surname;
     this.username = this.profileData.username;
     this.description = this.profileData.description;
-    this.location = this.profileData.location;
+    this.location = this.profileData.location as string;
     this.birthDate = this.profileData.birthDate;
     this.gender = this.profileData.gender;
     this.email = this.profileData.email;
-    if(this.profileData.profilePhotoUrl) {
-        this.profilePhotoUrl = this.profileData.profilePhotoUrl;
+    if (this.profileData.profilePhotoUrl) {
+      this.profilePhotoUrl = this.profileData.profilePhotoUrl;
     }
   }
 
   onPhotoSelected(event: any): void {
     const file = event.target.files[0];
-    
+
     // Resetear error previo
     delete this.errorMessages['profilePhoto'];
 
@@ -143,7 +160,7 @@ export class EditProfileComponent implements OnInit {
         next: (url) => {
           console.log('Foto subida correctamente:', url);
           // Actualizamos la vista con la nueva URL de Azure
-          this.profilePhotoUrl = url; 
+          this.profilePhotoUrl = url;
           this.isUploadingPhoto = false;
         },
         error: (err) => {
@@ -154,6 +171,9 @@ export class EditProfileComponent implements OnInit {
     }
   }
   save() {
+
+    const finalLocationValue: Location | string = this.locationData || this.location;
+
     // Resetear errores al inicio
     this.errorMessages = {};
     // Validar los campos del formulario
@@ -164,6 +184,7 @@ export class EditProfileComponent implements OnInit {
       console.error('No se pudo actualizar el perfil: campos obligatorios incompletos o formatos inválidos.');
       return;
     }
+
     //recoger los datos del formulario
     const updatedUser: ProfileData = {
       name: this.name,
@@ -171,11 +192,13 @@ export class EditProfileComponent implements OnInit {
       username: this.username.toLowerCase(),
       description: this.description,
       birthDate: this.birthDate,
-      location: this.location,
+      location: finalLocationValue,
       gender: this.gender,
       email: this.email.toLowerCase(),
       profilePhotoUrl: this.profilePhotoUrl
     };
+    console.log(updatedUser)
+
     //llamar al servicio para actualizar los datos y sobrecribir los datos actuales
     this.accountService.updateEditProfileData(updatedUser).subscribe({
       next: (success) => {
@@ -189,7 +212,7 @@ export class EditProfileComponent implements OnInit {
       error: (err) => {
         console.error('Error al actualizar el perfil:', err);
 
-        // Detectar si el usuario ya existen 
+        // Detectar si el usuario ya existen
         if (err.status === 409) {
           if (this.username.toLowerCase() === this.profileData.username.toLowerCase()) {
             console.log('El nombre de usuario es el mismo que el actual, no se muestra error.');
@@ -239,9 +262,7 @@ export class EditProfileComponent implements OnInit {
     // Validar location
     if (!this.location) {
       this.errorMessages['location'] = 'La ubicación es obligatoria.';
-    } else if (this.validateLocationFormat(this.location)) {
-      this.errorMessages['location'] = 'La ubicación debe tener entre 3 y 30 caracteres. Solo letras, espacios, comas y guiones.';
-    } else {
+    }  else {
       delete this.errorMessages['location'];
     }
     // Validar birthDate
@@ -286,16 +307,7 @@ export class EditProfileComponent implements OnInit {
     if (!requeriments.test(username)) return true;
     else return false;
   }
-  private validateLocationFormat(location: string): boolean {
-    const minLength = 3;
-    const maxLength = 30;
-    const requeriments = /^[A-Za-z ,-]+$/
-
-    if (location.length < minLength) return true;
-    if (location.length > maxLength) return true;
-    if (!requeriments.test(location)) return true;
-    else return false;
-  }
+  
   private isToday(date: Date): boolean {
     const today = new Date();
     return (
@@ -318,6 +330,21 @@ export class EditProfileComponent implements OnInit {
       age--;
     }
     return age;
+  }
+
+  onLocationSelected(newLocation: Location | null): void {
+    // 1. Guarda el objeto Location completo para el envío al backend
+    this.locationData = newLocation; // locationData ahora es tipo location | null
+
+    if (newLocation) {
+      // 2. Actualiza la variable `location` (el string de display)
+      this.location = newLocation.displayName;
+    } else {
+      // Manejar la limpieza si el usuario borra la ubicación
+      this.location = '';
+    }
+    // Llamar a validate para mostrar errores si fuera necesario
+    this.validate();
   }
 
 

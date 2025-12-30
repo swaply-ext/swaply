@@ -37,7 +37,7 @@ public class HomeService {
                 ? myUser.getSkills().stream().map(s -> normalizeString(s.getId())).collect(Collectors.toSet())
                 : Collections.emptySet();
 
-        String myLocation = (myUser.getLocation() != null) ? normalizeString(myUser.getLocation()) : "";
+        String myLocation = (myUser.getLocation() != null) ? normalizeString(myUser.getLocation().getDisplayName()) : "";
 
         
         List<User> candidates = userRepository.findUsersByMultipleSkillIds(myInterestIds);
@@ -78,7 +78,7 @@ public class HomeService {
     private boolean checkLocationMatch(User candidate, String myLocation) {
         if (myLocation.isEmpty()) return false;
         if (candidate.getLocation() == null) return false;
-        String candidateLoc = normalizeString(candidate.getLocation());
+        String candidateLoc = normalizeString(candidate.getLocation().getDisplayName());
         return candidateLoc.contains(myLocation) || myLocation.contains(candidateLoc);
     }
 

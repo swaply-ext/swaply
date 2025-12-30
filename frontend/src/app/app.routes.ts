@@ -1,3 +1,4 @@
+import { LocationSearchComponent } from './components/location-search/location-search.component';
 import { Routes } from '@angular/router';
 import { HomeComponent } from './pages/home/home.component';
 import { SkillsComponent } from './pages/skills/skills.component';
@@ -31,7 +32,6 @@ import { CodeSentConfirmationComponent } from './pages/code-sent-confirmation/co
 import { FilterSkillsComponent } from './components/filter-skills/filter-skills.component';
 import { PrivacyAndSecurityComponent } from './pages/privacy-and-security/privacy-and-security.component';
 import { EmailSentComponent } from './pages/email-sent/email-sent.component';
-import { IndexComponent } from './pages/index/index.component';
 import { SwapComponent } from './pages/swap/swap.component';
 import { SwapSkillsComponent } from './components/swap-skills/swap-skills.component';
 import { SwapInterestsComponent } from './components/swap-interests/swap-interests.component';
@@ -71,14 +71,14 @@ export const appRoutes: Routes = [
   { path: 'myprofile', component: PrivateProfileComponent, canActivate: [AuthGuard] },
   { path: 'search-skills', component: SkillSearchComponent }, //barra de busqueda componente
   { path: 'filter-skills', component: FilterSkillsComponent },
+  {path: 'location-search', component: LocationSearchComponent },
   { path: 'swap-skills', component: SwapSkillsComponent },
   { path: 'swap-interests', component: SwapInterestsComponent },
   { path: 'delete-account-confirmation', component: DeleteAccountConfirmationComponent },
   { path: '404', component: Error404Component },
   { path: 'privacy-and-security', component: PrivacyAndSecurityComponent, canActivate: [AuthGuard] },
   { path: 'user-search', component: UserSearchComponent },
-  { path: 'swap/:targetId', component: SwapComponent, canActivate: [AuthGuard] },
-  { path: 'index', component: IndexComponent },
+  { path: 'swap/:username', component: SwapComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
-  
+
 ];

@@ -9,7 +9,7 @@ import { UserSearchItem } from '../components/user-search/user-search.component'
 })
 export class UsersService {
 
-  private apiUrl = 'http://localhost:8081/api/users';
+  private apiUrl = '/users';
 
   constructor(private http: HttpClient) { }
 

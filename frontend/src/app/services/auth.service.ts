@@ -2,27 +2,24 @@ import { Injectable, signal } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 
-
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrl = 'http://localhost:8081/api/auth';
-
-  constructor(private http: HttpClient) { }
+  private http = inject(HttpClient);
+  
+  // URL base para no repetir código
+  private baseUrl = '/auth';
 
   isLoggedIn = signal<boolean>(!!localStorage.getItem('authToken'));
 
   login(credentials: any) {
-    console.log(this.isLoggedIn())
+    console.log(this.isLoggedIn());
     return this.http.post(`${this.baseUrl}/login`, credentials, {
-
-      // SALTAR PANTALLA DE CARGA
       // context: new HttpContext().set(SKIP_LOADING, true),
       responseType: 'text',
       observe: 'response'
     }).pipe(
-
       tap((response) => {
         if (response.status === 200) {
           const token = response.body as string;
@@ -37,8 +34,6 @@ export class AuthService {
     localStorage.setItem('authToken', token);
     this.isLoggedIn.set(true);
   }
-
-
 
   logout() {
     localStorage.removeItem('authToken');
@@ -63,6 +58,16 @@ export class AuthService {
   sendRecoveryMail(email: string): Observable<HttpResponse<any>> {
     return this.http.post(`${this.baseUrl}/recoveryMail`, email, {
       observe: 'response'
+    });
+  }
+  
+  /**
+   * Envía la solicitud de cambio de contraseña.
+   * El HttpInterceptor se encargará de añadir el token en el header.
+   */
+  changePassword(credentials: {password: string, newPassword: string}) {
+    return this.http.post(`${this.baseUrl}/passwordChange`, credentials, {
+      observe: 'response' // Necesario para leer el status 200 completo
     });
   }
 }

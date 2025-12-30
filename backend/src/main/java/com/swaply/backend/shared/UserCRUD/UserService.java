@@ -12,7 +12,6 @@ import com.swaply.backend.application.auth.service.PasswordService;
 import com.swaply.backend.shared.UserCRUD.Model.User;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.shared.UserCRUD.exception.UserNotFoundException;
-import java.text.Normalizer;
 import java.util.regex.Pattern;
 
 @Service
@@ -56,6 +55,11 @@ public class UserService {
         User user = repository.findUserById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
         return mapper.entityToDTO(user);
+    }
+
+    public String getUsernameById(String id) {
+        return repository.findUsernameById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
     }
 
     public List<UserDTO> getAllUsers() {

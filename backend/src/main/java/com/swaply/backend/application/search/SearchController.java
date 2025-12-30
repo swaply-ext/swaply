@@ -29,13 +29,13 @@ public class SearchController {
         return ResponseEntity.ok(results);
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<UserSwapDTO> getUserById(
-            @PathVariable String userId,
+    @GetMapping("/user/{username}")
+    public ResponseEntity<UserSwapDTO> getUserByUsername(
+            @PathVariable String username,
             @AuthenticationPrincipal SecurityUser user) {
 
 
-    UserSwapDTO target = searchService.getUserById(userId);
+    UserSwapDTO target = searchService.getUserByUsername(username);
 
         if (target != null) {
             return ResponseEntity.ok(target);

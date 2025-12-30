@@ -23,7 +23,7 @@ export interface SkillDisplay extends SkillsModel {
   providedIn: 'root'
 })
 export class SkillsService {
-  private apiUrl = 'http://localhost:8081/api/skills';
+  private apiUrl = '/skills';
   constructor(private http: HttpClient) { }
 
 
