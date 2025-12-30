@@ -78,6 +78,7 @@ export const appRoutes: Routes = [
   { path: '404', component: Error404Component },
   { path: 'privacy-and-security', component: PrivacyAndSecurityComponent, canActivate: [AuthGuard] },
   { path: 'user-search', component: UserSearchComponent },
+  { path: 'chat', loadComponent: () => import('./pages/chat/chat.component').then(m => m.ChatComponent), canActivate: [AuthGuard] },
   { path: 'swap/:username', component: SwapComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
 

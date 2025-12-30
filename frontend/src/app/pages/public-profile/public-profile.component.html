@@ -5,6 +5,12 @@
 
   <app-profile-info [profileData]="profileData"[isPublic]="true" [skills]="skills">
   </app-profile-info>
+  
+    <div class="profile-actions">
+      <button class="send-message-btn" (click)="contactUser()">Enviar mensaje</button>
+    </div>
+
+</div>
 
   <div class="profile-panels-container">
     <app-skills-panel class="profile-skills" [SkillInput]="skills" [isPublic]="true"></app-skills-panel>
@@ -59,5 +65,3 @@
       </article>
     </div>
   </section>
-
-</div>

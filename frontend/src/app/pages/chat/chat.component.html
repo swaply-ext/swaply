@@ -1,0 +1,172 @@
+<div class="chat-root">
+  <aside class="chat-side">
+    <div class="search-box">
+      <input type="text" placeholder="Buscar usuarios" [(ngModel)]="searchQuery" (input)="search()" />
+    </div>
+
+    <div class="conversations">
+      <h4>Conversaciones</h4>
+      <div *ngIf="loadingConversations">Cargando...</div>
+      <ul>
+        <li *ngFor="let c of conversations" (click)="selectConversation(c)" [class.active]="selectedConversation?.id === c.id">
+          <div class="conv-title">{{ participantsNames(c.participants) }}</div>
+          <div class="conv-last">{{ c.lastMessage?.text }}</div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="users-search">
+      <h4>Usuarios</h4>
+      <ul>
+        <li *ngFor="let u of users" (click)="selectUser(u)">
+          <div class="user-name">{{ u.fullName || u.username }}</div>
+          <div class="user-username">@<span>{{ u.username }}</span></div>
+        </li>
+      </ul>
+    </div>
+  </aside>
+
+  <section class="chat-main">
+    <div class="chat-header">
+      <div *ngIf="selectedConversation"> 
+        Conversación con: {{ participantsNames(selectedConversation.participants) }}
+      </div>
+      <div *ngIf="!selectedConversation">Selecciona una conversación o busca un usuario</div>
+    </div>
+
+    <div class="chat-messages">
+      <div *ngIf="!selectedConversation" class="empty">No hay conversación seleccionada</div>
+      <div *ngIf="selectedConversation">
+        <div *ngFor="let m of messages" class="message" [class.mine]="m.senderId === 'me'">
+          <div class="msg-text">{{ m.text }}</div>
+          <div class="msg-time">{{ m.timestamp | date:'short' }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-input">
+      <input [(ngModel)]="newMessage" placeholder="Escribe un mensaje..." (keydown.enter)="send()" />
+      <button (click)="send()">Enviar</button>
+    </div>
+  </section>
+</div>
+<div class="chat-root">
+  <aside class="chat-side">
+    <div class="search-box">
+      <input type="text" placeholder="Buscar usuarios" [(ngModel)]="searchQuery" (input)="search()" />
+    </div>
+
+    <div class="conversations">
+      <h4>Conversaciones</h4>
+      <div *ngIf="loadingConversations">Cargando...</div>
+      <ul>
+        <li *ngFor="let c of conversations" (click)="selectConversation(c)" [class.active]="selectedConversation?.id === c.id">
+          <div class="conv-title">{{ participantsNames(c.participants) }}</div>
+          <div class="conv-last">{{ c.lastMessage?.text }}</div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="users-search">
+      <h4>Usuarios</h4>
+      <ul>
+        <li *ngFor="let u of users" (click)="selectUser(u)">
+          <div class="user-name">{{ u.fullName || u.username }}</div>
+          <div class="user-username">@<span>{{ u.username }}</span></div>
+        </li>
+      </ul>
+    </div>
+  </aside>
+
+  <section class="chat-main">
+    <div class="chat-header">
+      <div *ngIf="selectedConversation"> 
+        Conversación con: {{ participantsNames(selectedConversation.participants) }}
+      </div>
+      <div *ngIf="!selectedConversation">Selecciona una conversación o busca un usuario</div>
+    </div>
+
+    <div class="chat-messages">
+      <div *ngIf="!selectedConversation" class="empty">No hay conversación seleccionada</div>
+      <div *ngIf="selectedConversation">
+        <div *ngFor="let m of messages" class="message" [class.mine]="m.senderId === 'me'">
+          <div class="msg-text">{{ m.text }}</div>
+          <div class="msg-time">{{ m.timestamp | date:'short' }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-input">
+      <input [(ngModel)]="newMessage" placeholder="Escribe un mensaje..." (keydown.enter)="send()" />
+      <button (click)="send()">Enviar</button>
+    </div>
+  </section>
+</div>
+<div class="chat-root">
+  <aside class="chat-side">
+    <div class="search-box">
+      <input type="text" placeholder="Buscar usuarios" [(ngModel)]="searchQuery" (input)="search()" />
+    </div>
+
+    <div class="conversations">
+      <h4>Conversaciones</h4>
+      <div *ngIf="loadingConversations">Cargando...</div>
+      <ul>
+        <li *ngFor="let c of conversations" (click)="selectConversation(c)" [class.active]="selectedConversation?.id === c.id">
+          <div class="conv-title">{{ participantsNames(c.participants) }}</div>
+          <div class="conv-last">{{ c.lastMessage?.text }}</div>
+        </li>
+      </ul>
+    </div>
+<div class="chat-root">
+  <aside class="chat-side">
+    <div class="search-box">
+      <input type="text" placeholder="Buscar usuarios" [(ngModel)]="searchQuery" (input)="search()" />
+    </div>
+
+    <div class="conversations">
+      <h4>Conversaciones</h4>
+      <div *ngIf="loadingConversations">Cargando...</div>
+      <ul>
+        <li *ngFor="let c of conversations" (click)="selectConversation(c)" [class.active]="selectedConversation?.id === c.id">
+          <div class="conv-title">{{ participantsNames(c.participants) }}</div>
+          <div class="conv-last">{{ c.lastMessage?.text }}</div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="users-search">
+      <h4>Usuarios</h4>
+      <ul>
+        <li *ngFor="let u of users" (click)="selectUser(u)">
+          <div class="user-name">{{ u.fullName || u.username }}</div>
+          <div class="user-username">@{{ u.username }}</div>
+        </li>
+      </ul>
+    </div>
+  </aside>
+
+  <section class="chat-main">
+    <div class="chat-header">
+      <div *ngIf="selectedConversation"> 
+        Conversación con: {{ participantsNames(selectedConversation.participants) }}
+      </div>
+      <div *ngIf="!selectedConversation">Selecciona una conversación o busca un usuario</div>
+    </div>
+
+    <div class="chat-messages">
+      <div *ngIf="!selectedConversation" class="empty">No hay conversación seleccionada</div>
+      <div *ngIf="selectedConversation">
+        <div *ngFor="let m of messages" class="message" [class.mine]="m.senderId === 'me'">
+          <div class="msg-text">{{ m.text }}</div>
+          <div class="msg-time">{{ m.timestamp | date:'short' }}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-input">
+      <input [(ngModel)]="newMessage" placeholder="Escribe un mensaje..." (keydown.enter)="send()" />
+      <button (click)="send()">Enviar</button>
+    </div>
+  </section>
+</div>

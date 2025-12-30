@@ -41,6 +41,43 @@ export class AuthService {
     this.isLoggedIn.set(false);
   }
 
+  // -----------------------------------------------------------------------
+  // NUEVOS MÉTODOS NECESARIOS PARA EL CHAT
+  // -----------------------------------------------------------------------
+
+  /**
+   * Devuelve el token en crudo. 
+   * Necesario para que el ChatService pueda conectarse al WebSocket.
+   */
+  getToken(): string | null {
+    return localStorage.getItem('authToken');
+  }
+
+  /**
+   * Extrae el ID (o username) del usuario desde el Token JWT.
+   * Necesario para saber de qué lado pintar los mensajes (derecha o izquierda).
+   */
+  getUserIdFromToken(): string {
+    const token = this.getToken();
+    if (!token) return '';
+
+    try {
+      // El JWT tiene 3 partes separadas por puntos. La segunda es el payload.
+      const payload = token.split('.')[1];
+      
+      // Decodificamos de Base64 a string
+      const decodedPayload = atob(payload); 
+      
+      // Convertimos a objeto JSON
+      const parsed = JSON.parse(decodedPayload);
+      
+      // 'sub' es el campo estándar donde Spring Security guarda el usuario
+      return parsed.sub || ''; 
+    } catch (error) {
+      return '';
+    }
+  }
+
   /**
    * Envía la solicitud de cambio de contraseña.
    * El HttpInterceptor se encargará de añadir el token en el header.
