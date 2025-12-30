@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.component";
 import { ProfileInfoComponent } from "../../components/profile-info/profile-info.component";
 import { SkillsPanelComponent } from '../../components/skills-panel/skills-panel.component';
 import { InterestsPanelComponent } from '../../components/interests-panel/interests-panel.component';
-
 import { AccountService } from '../../services/account.service';
+import { Router } from '@angular/router';
+import { ChatService } from '../../services/chat.service';
 
 //STRICTA (El que necessitan los comps hijos <app-skills-panel>)
 interface PanelSkill {
@@ -39,7 +40,7 @@ CommonModule,
 AppNavbarComponent,
 ProfileInfoComponent,
 SkillsPanelComponent,
-InterestsPanelComponent
+InterestsPanelComponent,
 ],
 templateUrl: './public-profile.component.html',
 styleUrls: ['./public-profile.component.css']
@@ -54,8 +55,27 @@ public isHistoryOpen: boolean = true;
 
   constructor(
     private accountService: AccountService,
-    private route: ActivatedRoute 
+    private route: ActivatedRoute,
+    private chatService: ChatService,
+    private router: Router
   ) { }
+
+  // Abrir conversación con este usuario y navegar a /chat
+  contactUser() {
+    const target = this.profileData?.username;
+    if (!target) return;
+    this.chatService.createRoomWithUsername(target).subscribe({
+      next: (room: any) => {
+        // Navigate to chat and select the room
+        this.router.navigate(['/chat'], { queryParams: { roomId: room.id } });
+      },
+      error: (err: any) => {
+        console.error('Error creando sala', err);
+        // Fallback: navigate to chat without room
+        this.router.navigate(['/chat']);
+      }
+    });
+  }
 
 ngOnInit(): void {
     this.route.paramMap.subscribe(params => {

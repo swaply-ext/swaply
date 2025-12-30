@@ -36,7 +36,6 @@ import { SwapSkillsComponent } from './components/swap-skills/swap-skills.compon
 import { SwapInterestsComponent } from './components/swap-interests/swap-interests.component';
 import { DeleteAccountConfirmationComponent } from './pages/delete-account-confirmation/delete-account-confirmation.component';
 import { UserSearchComponent } from './components/user-search/user-search.component';
-import { ChatComponent } from './pages/chat/chat.component';
 
 
 // Creamos una ruta para la verificación de correo
@@ -77,8 +76,8 @@ export const appRoutes: Routes = [
   { path: '404', component: Error404Component },
   { path: 'privacy-and-security', component: PrivacyAndSecurityComponent, canActivate: [AuthGuard] },
   { path: 'user-search', component: UserSearchComponent },
+  { path: 'chat', loadComponent: () => import('./pages/chat/chat.component').then(m => m.ChatComponent), canActivate: [AuthGuard] },
   { path: 'swap/:username', component: SwapComponent, canActivate: [AuthGuard] },
-  { path: 'chat', component: ChatComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
   
 ];

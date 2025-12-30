@@ -39,12 +39,14 @@ public class ChatWebSocketController {
         chatMessageDTO.setRoomId(roomId); 
         chatMessageDTO.setSenderId(user.getUsername()); // Asegurar el remitente también
 
-        // 3. Guardar (Sin validar permisos de nuevo)
-        // El servicio solo se encarga de la lógica de negocio y persistencia.
-        ChatMessageDTO savedMessage = chatService.sendChatMessage(chatMessageDTO);
+    // 3. Guardar (Sin validar permisos de nuevo)
+    // El servicio solo se encarga de la lógica de negocio y persistencia.
+    System.out.println("[ChatWebSocketController] processMessage from=" + user.getUsername() + " roomId=" + roomId + " payload=" + chatMessageDTO);
+    ChatMessageDTO savedMessage = chatService.sendChatMessage(chatMessageDTO);
+    System.out.println("[ChatWebSocketController] savedMessage id=" + (savedMessage==null?"null":savedMessage.getId()));
 
-        // 4. Notificar a la sala
-        messagingTemplate.convertAndSend("/topic/room/" + roomId, savedMessage);
+    // 4. Notificar a la sala
+    messagingTemplate.convertAndSend("/topic/room/" + roomId, savedMessage);
     }
 
     @MessageExceptionHandler

@@ -1,154 +1,119 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ChatService } from '../../services/chat.service';
-import { AuthService } from '../../services/auth.service'; // Necessari per saber el "meu" ID
-import { ChatMessageDTO, ChatRoomViewModel } from '../../models/chat.models';
-import { Subscription } from 'rxjs';
-import { ActivatedRoute } from '@angular/router'; 
+import { ChatService, UserBrief, Message } from '../../services/chat.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
-  selector: 'app-chat',
   standalone: true,
+  selector: 'app-chat',
   imports: [CommonModule, FormsModule],
-  templateUrl: './chat.component.html',
+  templateUrl: './chat.component.clean.html',
   styleUrls: ['./chat.component.css']
 })
-export class ChatComponent implements OnInit, OnDestroy {
+export class ChatComponent implements OnInit {
+  searchQuery = '';
+  users: UserBrief[] = [];
+  conversations: any[] = [];
+  selectedConversation: any | null = null;
+  messages: Message[] = [];
+  newMessage = '';
 
-  @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
+  loadingConversations = false;
 
-  chatService = inject(ChatService);
-  authService = inject(AuthService);
+  private roomSub: any;
 
-  // Estat
-  rooms: ChatRoomViewModel[] = [];
-  selectedRoom: ChatRoomViewModel | null = null;
-  messages: ChatMessageDTO[] = [];
-  currentUserId: string = '';
-  
-  // Inputs
-  newMessageText: string = '';
-  targetUsernameInput: string = '';
-
-  // Subscripcions
-  private roomSubscription: any; // STOMP subscription
-  private msgSubscription: Subscription = new Subscription();
-  private route = inject(ActivatedRoute); 
+  constructor(private chat: ChatService, private route: ActivatedRoute, private router: Router) {}
 
   ngOnInit(): void {
-    // 1. Identificar l'usuari actual (per saber quins missatges són "meus")
-    // (Assumeixo que tens un mètode així al authService, si no, caldrà crear-lo)
-    this.currentUserId = this.authService.getUserIdFromToken() || ''; 
+    this.loadConversations();
 
-    if (!this.currentUserId) {
-      console.error('Usuario no autenticado. No se puede iniciar el chat.');
-      return;
-    }
-
-    // 2. Connectar al Socket
-    this.chatService.connect();
-
-    // 3. Carregar la llista de xats
-    this.loadRoomsAndSelect();
-    // 4. Escoltar nous missatges globals (per actualitzar llista o xat obert)
-    this.msgSubscription = this.chatService.onNewMessage$.subscribe((msg) => {
-      this.handleIncomingMessage(msg);
-    });
-  }
-
-loadRoomsAndSelect() {
-    this.chatService.getMyRooms().subscribe({
-      next: (data) => {
-        this.rooms = data; // (Ja ve mapejat del servei com a ViewModel)
-        
-        // 4. MÀGIA: Mirem si hem de obrir una sala específica
-        this.route.queryParams.subscribe(params => {
-          const roomIdToOpen = params['roomId'];
-          if (roomIdToOpen) {
-            const targetRoom = this.rooms.find(r => r.id === roomIdToOpen);
-            if (targetRoom) {
-              this.selectRoom(targetRoom);
-            }
-          }
-        });
-      },
-      error: (err) => console.error('Error cargando salas', err)
-    });
-  }
-
-  selectRoom(room: ChatRoomViewModel) {
-    if (this.selectedRoom?.id === room.id) return; // Ja estem aquí
-
-    this.selectedRoom = room;
-    this.messages = []; // Netejar vista mentre carrega
-
-    // 1. Gestionar subscripció al socket
-    if (this.roomSubscription) {
-      this.roomSubscription.unsubscribe(); // Deixar d'escoltar la sala anterior
-    }
-    this.roomSubscription = this.chatService.joinRoom(room.id);
-
-    // 2. Carregar historial
-    this.chatService.getChatHistory(room.id).subscribe({
-      next: (history) => {
-        this.messages = history; // Assumeixo que el backend ja els envia ordenats, si no: .sort()
-        this.scrollToBottom();
+    // If navigated with ?roomId=..., select it when rooms load
+    this.route.queryParamMap.subscribe(q => {
+      const roomId = q.get('roomId');
+      if (roomId) {
+        // ensure we have latest rooms then select
+        this.loadConversations(roomId);
       }
     });
   }
 
-  sendMessage() {
-    if (!this.newMessageText.trim() || !this.selectedRoom) return;
-
-    this.chatService.sendMessage(
-      this.selectedRoom.id,
-      this.newMessageText,
-      this.currentUserId
-    );
-    this.newMessageText = ''; // Netejar input
+  // Return comma-separated participant usernames (safe for template)
+  participantsNames(participants: UserBrief[] | undefined): string {
+    if (!participants || participants.length === 0) return '';
+    return participants.map(p => p.username).join(', ');
   }
 
-  createChat() {
-    // Aquí implementaries la lògica de crear sala per username
-    // Potser necessites primer buscar l'ID de l'usuari a partir del username
-    // o el backend ja accepta username.
-    console.log('Crear xat amb:', this.targetUsernameInput);
-  }
-
-  // --- LÒGICA INTERNA ---
-
-  private handleIncomingMessage(msg: ChatMessageDTO) {
-    // 1. Si és de la sala oberta, l'afegim a la llista visual
-    if (this.selectedRoom && msg.roomId === this.selectedRoom.id) {
-      this.messages.push(msg);
-      this.scrollToBottom();
+  selectConversation(conv: any) {
+    if (!conv) return;
+    this.selectedConversation = conv;
+    this.loadMessages(conv.id);
+    // subscribe to websocket topic for live messages
+    if (this.roomSub) {
+      // no-op: subjects are per-room in service
     }
-
-    // 2. Actualitzar la vista prèvia a la llista de l'esquerra (efecte WhatsApp)
-    const roomIndex = this.rooms.findIndex(r => r.id === msg.roomId);
-    if (roomIndex !== -1) {
-      const room = this.rooms[roomIndex];
-      room.lastMessagePreview = msg.content;
-      room.lastMessageTime = msg.timestamp;
-      
-      // Moure a dalt de tot
-      this.rooms.splice(roomIndex, 1);
-      this.rooms.unshift(room);
-    }
+    this.chat.subscribeToRoom(conv.id).subscribe((m: Message) => {
+      this.messages.push(m);
+      setTimeout(() => this.scrollToBottom(), 50);
+    });
   }
 
-  private scrollToBottom(): void {
-    setTimeout(() => {
-      if (this.scrollContainer) {
-        this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight;
+  search() {
+    const q = (this.searchQuery || '').trim();
+    if (!q) { this.users = []; return; }
+    this.chat.searchUsers(q).subscribe(r => this.users = r);
+  }
+
+  async selectUser(user: UserBrief) {
+    // create or get conversation with user (backend expects username)
+    this.chat.createRoomWithUsername(user.username).subscribe((conv: any) => {
+      this.selectedConversation = conv;
+      this.loadMessages(conv.id);
+      // refresh conversations list
+      this.loadConversations();
+    });
+  }
+
+  loadConversations(selectedRoomId?: string) {
+    this.loadingConversations = true;
+    this.chat.getRooms().subscribe(dto => {
+      console.log('[Chat] getConversations response', dto);
+      this.conversations = dto.chatRooms || [];
+      this.loadingConversations = false;
+      if (selectedRoomId) {
+        const found = this.conversations.find((c: any) => c.id === selectedRoomId);
+        if (found) this.selectConversation(found);
       }
-    }, 50);
+    }, () => this.loadingConversations = false);
   }
 
-  ngOnDestroy(): void {
-    this.msgSubscription.unsubscribe();
-    if (this.roomSubscription) this.roomSubscription.unsubscribe();
-    this.chatService.disconnect();
+  loadMessages(conversationId: string) {
+    console.log('[Chat] loadMessages for', conversationId);
+    this.chat.getHistory(conversationId).subscribe(msgs => {
+      console.log('[Chat] getHistory response', msgs);
+      // backend ChatMessage has 'content' and 'senderId' -> map to local Message
+      this.messages = (msgs || []).map((m: any) => ({ id: m.id, senderId: m.senderId, text: m.content, timestamp: m.timestamp }));
+      setTimeout(() => this.scrollToBottom(), 50);
+    });
+  }
+
+  send() {
+    if (!this.selectedConversation || !this.newMessage.trim()) return;
+    const text = this.newMessage.trim();
+    const convId = this.selectedConversation.id;
+    // Send via WebSocket
+    this.chat.sendWsMessage(convId, text);
+    // optimistic push
+    this.messages.push({ senderId: 'me', text, timestamp: new Date().toISOString() });
+    this.newMessage = '';
+    this.scrollToBottom();
+    this.loadConversations();
+  }
+
+  private scrollToBottom() {
+    try {
+      const el = document.querySelector('.chat-messages');
+      if (el) el.scrollTop = el.scrollHeight;
+    } catch (e) { /* ignore */ }
   }
 }

@@ -14,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/chat")
+@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true") 
 public class ChatController {
 
     @Autowired
@@ -22,7 +23,18 @@ public class ChatController {
     // Obtener todas las salas del usuario logueado
     @GetMapping("/rooms")
     public ResponseEntity<SendChatRoomsDTO> getMyRooms(@AuthenticationPrincipal SecurityUser user) {
-        return ResponseEntity.ok(chatService.getChatRoomsByUserId(user.getUsername()));
+        System.out.println("[ChatController] getMyRooms called for user=" + (user==null?"null":user.getUsername()));
+        if (user == null) {
+            System.out.println("[ChatController] Unauthorized request to /rooms - missing principal");
+            return ResponseEntity.status(401).build();
+        }
+        try {
+            return ResponseEntity.ok(chatService.getChatRoomsByUserId(user.getUsername()));
+        } catch (Exception e) {
+            System.out.println("[ChatController] error in getMyRooms: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(500).build();
+        }
     }
 
     // Obtener historial de una sala específica
@@ -32,7 +44,14 @@ public class ChatController {
             @PathVariable String roomId,
             @RequestParam(defaultValue = "0") int page) {
 
-        return ResponseEntity.ok(chatService.getChatHistoryByRoomId(roomId, user.getUsername(), page));
+        if (user == null) return ResponseEntity.status(401).build();
+        try {
+            return ResponseEntity.ok(chatService.getChatHistoryByRoomId(roomId, user.getUsername(), page));
+        } catch (Exception e) {
+            System.out.println("[ChatController] error in getHistory: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(500).build();
+        }
     }
 
     // Crear una sala (ej: cuando un usuario pulsa "Contactar" en un producto)
@@ -40,15 +59,31 @@ public class ChatController {
     public ResponseEntity<ChatRoom> createRoom(
             @AuthenticationPrincipal SecurityUser user,
             @PathVariable String targetUserId) {
-        return ResponseEntity.ok(chatService.createChatRoom(user.getUsername(), targetUserId));
+        if (user == null) return ResponseEntity.status(401).build();
+        try {
+            ChatRoom room = chatService.createChatRoom(user.getUsername(), targetUserId);
+            System.out.println("[ChatController] created/fetched room id=" + room.getId());
+            return ResponseEntity.ok(room);
+        } catch (Exception e) {
+            System.out.println("[ChatController] error creating room: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(500).build();
+        }
     }
 
     @PostMapping("/messageReaded/{roomId}")
     public ResponseEntity<Boolean> readedMessage(
             @AuthenticationPrincipal SecurityUser user,
             @PathVariable String roomId) {
-        chatService.readedMessage(roomId, user.getUsername());
-        return ResponseEntity.ok(true);
+        if (user == null) return ResponseEntity.status(401).build();
+        try {
+            chatService.readedMessage(roomId, user.getUsername());
+            return ResponseEntity.ok(true);
+        } catch (Exception e) {
+            System.out.println("[ChatController] error in readedMessage: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(500).build();
+        }
     }
 
 

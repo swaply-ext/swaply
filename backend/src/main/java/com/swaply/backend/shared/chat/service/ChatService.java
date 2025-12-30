@@ -67,8 +67,10 @@ public class ChatService {
     }
 
     public SendChatRoomsDTO getChatRoomsByUserId(String userId) {
+        System.out.println("[ChatService] getChatRoomsByUserId userId=" + userId);
         // 1. Obtenemos todas las salas de una sola vez
         List<ChatRoom> rooms = chatRoomRepository.findRoomsByUserId(userId);
+        System.out.println("[ChatService] roomsFound=" + (rooms==null?0:rooms.size()));
 
         // 2. Creamos una lista para guardar los nombres (Usernames)
         List<String> otherUsernames = new ArrayList<>();
