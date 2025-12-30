@@ -33,7 +33,7 @@ import { PrivacyAndSecurityComponent } from './pages/privacy-and-security/privac
 import { EmailSentComponent } from './pages/email-sent/email-sent.component';
 import { IndexComponent } from './pages/index/index.component';
 import { DeleteAccountConfirmationComponent } from './pages/delete-account-confirmation/delete-account-confirmation.component';
-import { PrivateProfileResolver } from './resolver/get-profile-data.service';
+import { getProfileDataResolver } from './resolver/get-profile-data.service';
 
 // Creamos una ruta para la verificación de correo
 // Ahora usamos el componente real EmailVerificationComponent
@@ -64,7 +64,7 @@ export const appRoutes: Routes = [
   { path: 'pass-verification', component: PassVerificationComponent },
   { path: 'side-menu', component: SideMenuComponent }, // ruta para el componente del menú lateral
   { path: 'exit', component: ExitComponent },
-  { path: 'myprofile', component: PrivateProfileComponent, canActivate: [AuthGuard], resolve: { profileData: PrivateProfileResolver }}, //resolve: para indicarle que tipo de datos va a devolverle al .ts
+  { path: 'myprofile', component: PrivateProfileComponent, canActivate: [AuthGuard], resolve: { profileData: getProfileDataResolver }}, //resolve:{nombre_del_objeto: tipo_del_objeto}. Esto le pasa al .ts un objeto llamado nombre_del_objeto del tipo indicado.
   { path: 'search-skills', component: SkillSearchComponent }, //barra de busqueda componente
   { path: 'filter-skills', component: FilterSkillsComponent },
   { path: 'delete-account-confirmation', component: DeleteAccountConfirmationComponent },
