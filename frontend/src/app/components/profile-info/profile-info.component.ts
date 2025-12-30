@@ -3,20 +3,10 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ProfileData } from '../../models/private-profile-data.model';
-import { UserLocation } from '../../models/user-location.model';
-
-interface Location {
-  placeId: string;
-  lat: number;
-  lon: number;
-  displayName: string;
-}
+// import { UserLocation } from '../../models/user-location.model';
+import { UserSkills} from '../../models/user-skills.model';
 
 
-interface PanelSkill {
-  id: string;
-  level: number;
-}
 
 @Component({
   selector: 'app-profile-info',
@@ -31,7 +21,7 @@ export class ProfileInfoComponent implements OnChanges {
   // SOLUCIÓN: Añadimos el input para que Angular no de error
   @Input() isReadOnly: boolean = false;
   @Input() isPublic: boolean = false;
-  @Input() skills: PanelSkill[] = [];
+  @Input() skills: UserSkills[] = [];
 
   ngOnChanges(): void {
     console.log('ProfileData changed:', this.profileData);
@@ -53,7 +43,7 @@ export class ProfileInfoComponent implements OnChanges {
 
   goToSwap(): void {
     if (!this.profileData?.username) return;
-  
+
     const targetUsername = this.profileData.username;
     let queryParms: any = {};
 
@@ -67,5 +57,5 @@ export class ProfileInfoComponent implements OnChanges {
     }
 
     this.router.navigate(['/swap', targetUsername], { queryParams: queryParms });
-  }  
+  }
 }
