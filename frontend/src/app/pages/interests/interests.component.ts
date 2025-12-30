@@ -27,9 +27,7 @@ interface Category {
   skills: SkillItem[];
 }
 
-interface Account {
-  interests: UserSkill[]
-}
+
 
 interface UserSkill {
   id: string;
@@ -129,7 +127,7 @@ export class InterestsComponent {
         name: skill.name,
         icon: skill.icon,
         id: skill.id,
-        level: skill.level
+        level: 0
       });
     });
     this.categories = grouped;

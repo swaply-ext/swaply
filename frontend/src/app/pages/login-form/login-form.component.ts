@@ -61,7 +61,7 @@ export class LoginFormComponent {
       next: () => {
         this.router.navigate(['/']);
       },
-      error: (err) => {
+      error: (err: HttpErrorResponse) => {
         if (err.status == 401) {
           this.router.navigate(['/error-auth']);
         } else {

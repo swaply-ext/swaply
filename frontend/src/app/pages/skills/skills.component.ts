@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SkillCardComponent } from '../../components/skill-card/skill-card.component';
-import { AccountService } from '../../services/account.service';
+import { AccountService, Account } from '../../services/account.service';
 import { SkillsService, SkillsModel } from '../../services/skills.service';
 
 
@@ -21,9 +21,7 @@ interface Category {
   skills: SkillItem[];
 }
 
-interface Account {
-  skills: UserSkill[]
-}
+
 
 interface UserSkill {
   id: string;

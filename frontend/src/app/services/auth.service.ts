@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 
@@ -20,7 +20,7 @@ export class AuthService {
       responseType: 'text',
       observe: 'response'
     }).pipe(
-      tap((response) => {
+      tap((response: HttpResponse<string>) => {
         if (response.status === 200) {
           const token = response.body as string;
           localStorage.setItem('authToken', token);

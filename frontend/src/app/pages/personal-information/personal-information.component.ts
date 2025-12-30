@@ -110,8 +110,14 @@ export class PersonalInformationComponent {
     this.accountService.personalInfo(allUserData)
       .subscribe({
         next: () => {
-        console.log('Registro completo:', allUserData);
-        this.router.navigate(['/']);
+          console.log('Registro completo:', allUserData);
+          this.router.navigate(['/']);
+        },
+        error: (err) => {
+          console.error('Error al añadir información personal:', err.message);
+          this.setError(err.message);
+        }
+    });
     this.registerDataService.personalInformation(allUserData).subscribe({
       next: (success) => {
         if (success) {
@@ -125,6 +131,7 @@ export class PersonalInformationComponent {
       }
     })
   }
+
   private setError(msg: string) {
     this.showError = true;
     this.hasErrorAll = true;

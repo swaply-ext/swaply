@@ -4,7 +4,8 @@ import { Observable, of } from 'rxjs';
 import { SKIP_LOADING } from '../interceptors/loading.interceptor';
 
 export interface Account {
-  interests: { id: string, level: number }[]
+  interests: { id: string, level: number }[];
+  skills?: { id: string, level: number }[];
 }
 
 @Injectable({
@@ -73,7 +74,7 @@ export class AccountService {
     );
   }
 
-  getAccount(): Observable<any> {
+  getAccount(): Observable<Account> {
     return this.http.get<Account>(this.apiUrl);
   }
 
