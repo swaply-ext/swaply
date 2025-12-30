@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { DropdownMenuComponent, DropdownMenuData } from '../dropdown-menu/dropdown-menu.component';
 import { AccountService } from '../../services/account.service';
 import { AuthService } from '../../services/auth.service';
@@ -17,7 +18,7 @@ export class AppNavbarComponent implements OnInit {
   showDropdown = false;
   dropdownMenuData!: DropdownMenuData;
 
-  constructor(private accountService: AccountService, private authService: AuthService) {}
+  constructor(private router: Router, private accountService: AccountService, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.accountService.getProfileData().subscribe({
@@ -43,5 +44,9 @@ export class AppNavbarComponent implements OnInit {
 
   isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
+  }
+
+    goToNotifications() {
+    this.router.navigate(['/notifications']);
   }
 }

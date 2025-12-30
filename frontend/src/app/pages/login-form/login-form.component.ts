@@ -15,9 +15,9 @@ interface User {
 }
 
 @Component({
-  selector: 'login-form', // Nombre del componente en el HTML
+  selector: 'login-form',
   standalone: true,
-  imports: [              // Componentes y módulos que se usan en la plantilla
+  imports: [
     EmailInputComponent,
     PasswordInputComponent,
     TermsCheckboxComponent,
@@ -25,10 +25,10 @@ interface User {
     LoginRegisterButtonsComponent,
     CommonModule
   ],
-  templateUrl: './login-form.component.html', // Ruta al archivo HTML
-  styleUrls: ['./login-form.component.css']   // Ruta al archivo CSS
+  templateUrl: './login-form.component.html',
+  styleUrls: ['./login-form.component.css']
 })
-// Propiedades que almacenan el estado del formulario
+
 export class LoginFormComponent {
   email = '';
   password = '';

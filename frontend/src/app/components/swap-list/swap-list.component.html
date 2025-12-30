@@ -1,0 +1,121 @@
+<section class="interchanges-list-section">
+
+
+  @if (loading()) {
+    <div class="loading-state">Cargando intercambios...</div>
+  }
+
+  @if (!loading() && swaps().length > 0) {
+    <div class="swaps-container">
+
+      @for (swap of swaps(); track swap.id) {
+
+        <div class="interchange-box">
+          <div class="interchange-content">
+
+            <div class="interchange-card-wrapper">
+              <h3 class="section-title">Habilidad a aprender</h3>
+
+              <div class="skill-card">
+                <img [src]="getImageToLearn(swap)" [alt]="swap.interest" class="activity-img">
+
+                <div class="card-details">
+                  <h4>Clase de {{ swap.interest }}</h4>
+
+                  @let otherUser = getOtherProfile(swap.requestedUserId);
+
+                  <div class="badges-group">
+                    <div class="info-badge">
+                      <span class="material-symbols-outlined badge-icon">location_on</span>
+                      <span class="badge-text">{{ otherUser?.location || '...' }}</span>
+                    </div>
+
+                    @if (otherUser) {
+                      <div class="info-badge user-link-container"
+                           [routerLink]="['/public-profile', otherUser.username]"
+                           style="cursor: pointer;">
+                        <div class="avatar-wrapper">
+                          <img [src]="otherUser.profilePhotoUrl" alt="Avatar" class="user-avatar">
+                        </div>
+                        <span class="badge-text">{{ '@'+ otherUser.username }}</span>
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="arrow-container">
+              <span class="material-symbols-outlined swap-icon">swap_horiz</span>
+            </div>
+
+            <div class="interchange-card-wrapper">
+              <h3 class="section-title">Habilidad a enseñar</h3>
+
+              <div class="skill-card">
+                <img [src]="getImageToTeach(swap)" [alt]="swap.skill" class="activity-img">
+
+                <div class="card-details">
+                  <h4>Clase de {{ swap.skill }}</h4>
+
+                  <div class="badges-group">
+                    <div class="info-badge">
+                      <span class="material-symbols-outlined badge-icon">location_on</span>
+                      <span class="badge-text">{{ currentUser()?.location }}</span>
+                    </div>
+                    <div class="info-badge user-link-container"
+                         [routerLink]="['/public-profile', currentUser()?.username]"
+                         style="cursor: pointer;">
+                      <div class="avatar-wrapper">
+                        <img [src]="currentUser()?.profilePhotoUrl" alt="Avatar" class="user-avatar">
+                      </div>
+                      <span class="badge-text">{{ '@'+ currentUser()?.username }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="actions-area">
+
+            @if (swap.status === 'ACCEPTED') {
+              <span class="status-badge confirmed">
+                <span class="material-symbols-outlined">check_circle</span>
+                Intercambio confirmado
+              </span>
+            }
+
+            @if (swap.status === 'DENIED') {
+              <span class="status-badge denied">
+                <span class="material-symbols-outlined">cancel</span>
+                Intercambio rechazado
+              </span>
+            }
+
+            @if (swap.status === 'STANDBY') {
+              <button class="btn-action btn-reject" (click)="denyIntercambio(swap)">
+                <span class="material-symbols-outlined">cancel</span>
+                Rechazar
+              </button>
+
+              <button class="btn-action btn-accept" (click)="confirmIntercambio(swap)">
+                <span class="material-symbols-outlined">check_circle</span>
+                Aceptar
+              </button>
+            }
+
+          </div>
+        </div>
+        }
+    </div>
+  }
+
+  @if (!loading() && swaps().length === 0) {
+    <div class="interchange-box empty-state">
+      <p>No tienes ningún intercambio activo.</p>
+    </div>
+  }
+
+</section>

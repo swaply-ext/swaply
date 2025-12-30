@@ -32,6 +32,8 @@ import { CodeSentConfirmationComponent } from './pages/code-sent-confirmation/co
 import { FilterSkillsComponent } from './components/filter-skills/filter-skills.component';
 import { PrivacyAndSecurityComponent } from './pages/privacy-and-security/privacy-and-security.component';
 import { EmailSentComponent } from './pages/email-sent/email-sent.component';
+import { MySwapsPageComponent } from './pages/my-swaps/my-swaps.component';
+import { SwapRequestsComponent } from './pages/swap-requests/swap-requests.component';
 import { SwapComponent } from './pages/swap/swap.component';
 import { SwapSkillsComponent } from './components/swap-skills/swap-skills.component';
 import { SwapInterestsComponent } from './components/swap-interests/swap-interests.component';
@@ -71,11 +73,13 @@ export const appRoutes: Routes = [
   { path: 'myprofile', component: PrivateProfileComponent, canActivate: [AuthGuard], resolve: { profileData: getProfileDataResolver }}, //resolve:{nombre_del_objeto: tipo_del_objeto}. Esto le pasa al .ts un objeto llamado nombre_del_objeto del tipo indicado.
   { path: 'search-skills', component: SkillSearchComponent }, //barra de busqueda componente
   { path: 'filter-skills', component: FilterSkillsComponent },
-  {path: 'location-search', component: LocationSearchComponent },
+  { path: 'location-search', component: LocationSearchComponent },
   { path: 'swap-skills', component: SwapSkillsComponent },
+  { path: 'notifications', component: SwapRequestsComponent },
   { path: 'swap-interests', component: SwapInterestsComponent },
   { path: 'delete-account-confirmation', component: DeleteAccountConfirmationComponent },
   { path: '404', component: Error404Component },
+  { path: 'my-swaps', component: MySwapsPageComponent,},
   { path: 'privacy-and-security', component: PrivacyAndSecurityComponent, canActivate: [AuthGuard] },
   { path: 'user-search', component: UserSearchComponent },
   { path: 'swap/:username', component: SwapComponent, canActivate: [AuthGuard] },
