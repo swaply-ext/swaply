@@ -5,21 +5,13 @@ import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.compo
 import { SwapService } from '../../services/swap.service';
 import { UsersService } from '../../services/users.service';
 import { AccountService } from '../../services/account.service';
+import { Swap } from '../../models/swap.model';
 
 
 export interface Profile {
   username: string;
   profilePhotoUrl: string;
   location: string;
-}
-
-export interface Swap {
-  id: string;
-  requestedUserId: string;
-  skill: string;
-  interest: string;
-  status: 'ACCEPTED' | 'STANDBY' | 'DENIED';
-  isRequester: boolean;
 }
 
 @Component({
