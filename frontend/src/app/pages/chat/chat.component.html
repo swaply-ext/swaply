@@ -37,7 +37,7 @@
     <div class="chat-messages">
       <div *ngIf="!selectedConversation" class="empty">No hay conversación seleccionada</div>
       <div *ngIf="selectedConversation">
-        <div *ngFor="let m of messages" class="message" [class.mine]="m.senderId === 'me'">
+        <div *ngFor="let m of messages" class="message" [class.mine]="m.senderId === currentUserId">
           <div class="msg-text">{{ m.text }}</div>
           <div class="msg-time">{{ m.timestamp | date:'short' }}</div>
         </div>

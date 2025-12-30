@@ -6,7 +6,6 @@ import { ProfileInfoComponent } from "../../components/profile-info/profile-info
 import { SkillsPanelComponent } from '../../components/skills-panel/skills-panel.component';
 import { InterestsPanelComponent } from '../../components/interests-panel/interests-panel.component';
 import { AccountService } from '../../services/account.service';
-import { Router } from '@angular/router';
 import { ChatService } from '../../services/chat.service';
 
 //STRICTA (El que necessitan los comps hijos <app-skills-panel>)

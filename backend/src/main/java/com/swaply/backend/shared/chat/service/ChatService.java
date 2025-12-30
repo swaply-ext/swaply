@@ -170,10 +170,16 @@ public class ChatService {
     }
 
     public ChatRoom createChatRoom(String user1, String user2) {
+        // user1: current user id (from SecurityUser.getUsername())
+        // user2: target username (from frontend)
+        if (user1 == null) throw new UserNotFoundException("Usuario remitente nulo");
+
         UserDTO user = userService.getUserByUsername(user2);
-        String UserId2 = user.getId();
-        if (user == null)
-            throw new UserNotFoundException("El usuario no existe");
+        if (user == null) {
+            throw new UserNotFoundException("El usuario objetivo no existe: " + user2);
+        }
+    String UserId2 = user.getId();
+    System.out.println("[ChatService] createChatRoom user1(id)=" + user1 + " targetUsername=" + user2 + " targetId=" + UserId2);
 
         String generatedId = (user1.compareTo(UserId2) < 0) ? user1 + "_" + UserId2 : UserId2 + "_" + user1;
 
@@ -187,7 +193,7 @@ public class ChatService {
         initialUnreadMap.put(user1, 0);
         initialUnreadMap.put(UserId2, 0);
 
-        ChatRoom newRoom = ChatRoom.builder()
+    ChatRoom newRoom = ChatRoom.builder()
                 .id(generatedId)
                 .type("chatRoom")
                 .participants(List.of(user1, UserId2))
@@ -196,7 +202,9 @@ public class ChatService {
                 .isActive(true)
                 .build();
 
-        return chatRoomRepository.save(newRoom);
+    ChatRoom saved = chatRoomRepository.save(newRoom);
+    System.out.println("[ChatService] created ChatRoom id=" + saved.getId());
+    return saved;
     }
 
     public void readedMessage(String roomId, String userId) {

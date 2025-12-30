@@ -28,8 +28,13 @@
 
   <section class="chat-main">
     <div class="chat-header">
-      <div *ngIf="selectedConversation"> 
-        Conversación con: {{ participantsNames(selectedConversation.participants) }}
+      <div *ngIf="selectedConversation">
+        <div class="chat-header-left">
+          <img class="chat-header-avatar" [src]="selectedConversation.partnerAvatar || 'assets/default-image.jpg'" alt="avatar" />
+          <div class="chat-header-meta">
+            <div class="chat-header-title">Conversación con: {{ selectedConversation.partnerUsername || participantsNames(selectedConversation.participants) }}</div>
+          </div>
+        </div>
       </div>
       <div *ngIf="!selectedConversation">Selecciona una conversación o busca un usuario</div>
     </div>

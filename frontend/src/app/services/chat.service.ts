@@ -27,6 +27,9 @@ export class ChatService {
   private base = 'http://localhost:8081/api/chat';
 
   private client: Client | null = null;
+  private _connectedResolver: (() => void) | null = null;
+  private _connectedRejector: ((err: any) => void) | null = null;
+  private _connectedPromise: Promise<void> | null = null;
   private roomSubjects = new Map<string, Subject<Message>>();
 
   constructor(private http: HttpClient) {}
@@ -55,13 +58,16 @@ export class ChatService {
   }
 
   // WebSocket / STOMP
-  connectIfNeeded(authToken?: string) {
-    if (this.client && this.client.active) return;
+  /**
+   * Ensure a STOMP connection exists and resolve when connected.
+   * Returns a promise that resolves when STOMP is ready.
+   */
+  connectIfNeeded(authToken?: string): Promise<void> {
+    if (this.client && this.client.active) return Promise.resolve();
 
     const brokerURL = 'http://localhost:8081/ws-chat';
     this.client = new Client({
       webSocketFactory: () => {
-        // SockJS package can be CommonJS or ESM; handle both shapes safely
         const Sock: any = (SockJS as any).default ?? SockJS as any;
         return new Sock(brokerURL) as any;
       },
@@ -71,11 +77,22 @@ export class ChatService {
 
     if (authToken) this.client.connectHeaders = { Authorization: `Bearer ${authToken}` } as any;
 
+    // create a new promise for connection state
+    this._connectedPromise = new Promise<void>((resolve, reject) => {
+      this._connectedResolver = () => resolve();
+      this._connectedRejector = (err: any) => reject(err);
+    });
+
     this.client.onConnect = (frame: Frame) => {
-      // connected
+      if (this._connectedResolver) this._connectedResolver();
+    };
+
+    this.client.onStompError = (frame: any) => {
+      if (this._connectedRejector) this._connectedRejector(new Error(frame && frame.body ? frame.body : 'STOMP error'));
     };
 
     this.client.activate();
+    return this._connectedPromise;
   }
 
   disconnect() {
@@ -91,21 +108,27 @@ export class ChatService {
     if (!subj) {
       subj = new Subject<Message>();
       this.roomSubjects.set(roomId, subj);
-      if (!this.client) this.connectIfNeeded(localStorage.getItem('authToken') || undefined);
-      if (this.client) {
-        this.client.subscribe(`/topic/room/${roomId}`, (m: StompMessage) => {
-          try {
-            const payload = JSON.parse(m.body);
-            const mapped: Message = {
-              id: payload.id,
-              senderId: payload.senderId,
-              text: payload.content || payload.text || '',
-              timestamp: payload.timestamp
-            };
-            subj!.next(mapped);
-          } catch (e) { /* ignore parse errors */ }
+      // Ensure connection established before subscribing
+      this.connectIfNeeded(localStorage.getItem('authToken') || undefined)
+        .then(() => {
+          if (!this.client) throw new Error('STOMP client missing after connect');
+          this.client.subscribe(`/topic/room/${roomId}`, (m: StompMessage) => {
+            try {
+              const payload = JSON.parse(m.body);
+              const mapped: Message = {
+                id: payload.id,
+                senderId: payload.senderId,
+                text: payload.content || payload.text || '',
+                timestamp: payload.timestamp
+              };
+              subj!.next(mapped);
+            } catch (e) { /* ignore parse errors */ }
+          });
+        })
+        .catch(err => {
+          // Forward connection errors to subscriber
+          subj!.error(err);
         });
-      }
     }
     return subj.asObservable();
   }
