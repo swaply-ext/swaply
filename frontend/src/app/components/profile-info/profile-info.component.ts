@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ProfileData } from '../../models/private-profile-data.model';
+import { UserLocation } from '../../models/user-location.model';
 
 interface Location {
   placeId: string;
@@ -10,6 +11,7 @@ interface Location {
   lon: number;
   displayName: string;
 }
+
 
 interface PanelSkill {
   id: string;

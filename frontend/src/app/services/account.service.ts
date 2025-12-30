@@ -12,7 +12,7 @@ export class AccountService {
 
   constructor(private http: HttpClient) {}
 
-  getProfileData(): Observable<ProfileDataDTO> {
+  getProfileData(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/profileData`);
   }
 
