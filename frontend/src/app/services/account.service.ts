@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { SKIP_LOADING } from '../interceptors/loading.interceptor';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 export interface Account {
   interests: { id: string, level: number }[];
@@ -56,22 +55,6 @@ export class AccountService {
   deleteAccount(): Observable<any> {
     // Asegúrate de que esta ruta coincida con tu backend (/delete o raíz)
     return this.http.delete(`${this.apiUrl}/deleteProfile`);
-  }
-
-  searchSkills(query: string): Observable<any[]> {
-    if (!query || !query.trim()) {
-      return of([]);
-    }
-
-    const params = new HttpParams().set('query', query);
-
-    return this.http.get<any[]>(
-      `${this.apiUrl}/skills`,
-      {
-        params,
-        context: new HttpContext().set(SKIP_LOADING, true)
-      }
-    );
   }
 
   getAccount(): Observable<Account> {

@@ -12,7 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Observable, Subject, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, tap, catchError } from 'rxjs/operators';
-import { AccountService } from '../../services/account.service';
+import { SkillsService } from '../../services/skills.service';
 
 
 export interface Skill {
@@ -34,7 +34,7 @@ export interface Skill {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterSkillsComponent {
-private accountService = inject(AccountService);
+private skillsService = inject(SkillsService);
   private el = inject(ElementRef)
 
   @Output() filterChange = new EventEmitter<string>();
@@ -94,7 +94,7 @@ private accountService = inject(AccountService);
         if (!selectedIds) {
           return of([]);
         }
-        return this.accountService.searchSkills(selectedIds).pipe(
+        return this.skillsService.searchSkills(selectedIds).pipe(
           catchError(() => of([]))
         );
       }),

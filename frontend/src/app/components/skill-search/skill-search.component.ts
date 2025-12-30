@@ -8,13 +8,13 @@ import {
   Output,
   EventEmitter,
   OnInit,
-  OnDestroy
+  OnDestroy,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Observable, Subject, Subscription, interval, of } from 'rxjs';
+import { Subject, Subscription, interval, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, tap, catchError, filter } from 'rxjs/operators';
-import { AccountService } from '../../services/account.service';
+import { SkillsService } from '../../services/skills.service';
 
 export interface Skill {
   id: string;
@@ -24,21 +24,16 @@ export interface Skill {
   icon: string;
 }
 
-
-
 @Component({
   selector: 'app-skill-search',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-  ],
+  imports: [CommonModule, FormsModule],
   templateUrl: './skill-search.component.html',
   styleUrl: './skill-search.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SkillSearchComponent {
-  private accountService = inject(AccountService);
+  private skillsService = inject(SkillsService);
   private el = inject(ElementRef);
 
   @Output() skillSelected = new EventEmitter<string>();
@@ -48,7 +43,6 @@ export class SkillSearchComponent {
   results = signal<Skill[]>([]);
   isLoading = signal(false);
   showDropdown = signal(false);
-
 
   placeholderText = 'Buscar habilidad...';
   private placeholders = [
@@ -66,33 +60,34 @@ export class SkillSearchComponent {
 
   constructor() {
     this.searchTermSubject.pipe(
-      // delay entre teclas para evitar muchas peticiones
-      debounceTime(300),
-      // no busca si el texto es el mismo que el anterior
-      distinctUntilChanged(),
-      // Busca si tiene mas de 1 letra o si se ha borrado todo
-      filter(term => term.length > 0 || term.length === 0),
-      // Esto hace que se active un spinner (pantalla de carga) mientras se carga
-      tap(() => this.isLoading.set(true)),
-      // Cancela búsquedas anteriores y lanza la nueva
-      switchMap(term => {
-        if (term.length === 0) {
-          return of([]);
-        }
-        return this.accountService.searchSkills(term).pipe(
-          catchError(() => of([]))
-        );
-      }),
-      // Desactiva el spinner (incluso si ha fallado)
-      tap(() => this.isLoading.set(false))
-    ).subscribe(results => {
-      // Actualiza los resulyados
-      this.results.set(results);
+        // delay entre teclas para evitar muchas peticiones
+        debounceTime(300),
+        // no busca si el texto es el mismo que el anterior
+        distinctUntilChanged(),
+        // Busca si tiene mas de 1 letra o si se ha borrado todo
+        filter((term) => term.length > 0 || term.length === 0),
+        // Esto hace que se active un spinner (pantalla de carga) mientras se carga
+        tap(() => this.isLoading.set(true)),
+        // Cancela búsquedas anteriores y lanza la nueva
+        switchMap((term) => {
+          if (term.length === 0) {
+            return of([]);
+          }
+          return this.skillsService.searchSkills(term).pipe(
+            catchError(() => of([]))
+          );
+        }),
+        // Desactiva el spinner (incluso si ha fallado)
+        tap(() => this.isLoading.set(false))
+      )
+      .subscribe((results) => {
+        // Actualiza los resulyados
+        this.results.set(results as Skill[]);
 
-      if (results.length > 0) {
-        this.showDropdown.set(true);
-      }
-    });
+        if (results.length > 0) {
+          this.showDropdown.set(true);
+        }
+      });
   }
 
   ngOnInit() {
