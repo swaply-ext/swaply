@@ -56,7 +56,7 @@ export class DropdownMenuComponent {
   }
 
   goToMySwaps() {
-   // this.router.navigate(['/my-swaps']);
+   this.router.navigate(['/my-swaps']);
   }
 
   goToSettings() {
