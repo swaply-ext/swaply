@@ -5,7 +5,6 @@ import { SwapService } from '../../services/swap.service';
 import { UsersService } from '../../services/users.service';
 import { AccountService } from '../../services/account.service';
 
-// Asegúrate de que estas interfaces estén disponibles o impórtalas si las mueves a un models.ts
 export interface Profile {
   title?: string;
   imgToTeach?: string;
@@ -36,9 +35,8 @@ export class SwapListComponent implements OnInit {
   private accountService = inject(AccountService);
   private usersService = inject(UsersService);
 
-  // --- CAMBIO IMPORTANTE: Input para recibir datos del padre ---
   @Input() set swapsList(data: Swap[]) {
-    // Cuando el padre nos manda datos, actualizamos la señal y cargamos perfiles
+
     this.swaps.set(data);
     this.loadOtherProfiles(data);
     this.loading.set(false);
@@ -52,17 +50,15 @@ export class SwapListComponent implements OnInit {
   loading = signal(true);
 
   ngOnInit(): void {
-    // 1. Cargamos nuestro perfil (necesario para pintar la tarjeta correctamente)
+
     this.accountService.getProfileData().subscribe({
       next: (user) => this.currentUser.set(user),
       error: () => console.error('Error cargando perfil propio')
     });
 
-    // YA NO cargamos los swaps aquí. Esperamos a que el padre nos los pase vía @Input.
 
   }
 
-  // --- El resto de métodos se quedan igual ---
 
   loadOtherProfiles(swapsList: Swap[]) {
     const userIds = new Set(swapsList.map(s => s.requestedUserId));
@@ -114,14 +110,13 @@ export class SwapListComponent implements OnInit {
   }
 
   private assignImageToSkill(category: string, skillName: string): string | undefined {
-    // Tu lógica de imágenes existente...
+
     if (!skillName) return undefined;
 
     const name = skillName.toLowerCase();
 
-    // Mapa de palabras clave a imágenes y carpetas
+
     const skillMap: { [key: string]: { folder: string, filename: string } } = {
-      // Deportes
       'fútbol': { folder: 'sports', filename: 'football.jpg' },
       'futbol': { folder: 'sports', filename: 'football.jpg' },
       'pádel': { folder: 'sports', filename: 'padel.jpg' },
@@ -133,7 +128,6 @@ export class SwapListComponent implements OnInit {
       'voley': { folder: 'sports', filename: 'voleyball.jpg' },
       'boxeo': { folder: 'sports', filename: 'boxing.jpg' },
 
-      // Música
       'guitarra': { folder: 'music', filename: 'guitar.jpg' },
       'piano': { folder: 'music', filename: 'piano.jpg' },
       'violín': { folder: 'music', filename: 'violin.jpg' },
@@ -143,7 +137,7 @@ export class SwapListComponent implements OnInit {
       'saxofón': { folder: 'music', filename: 'saxophone.jpg' },
       'saxofon': { folder: 'music', filename: 'saxophone.jpg' },
 
-      // Ocio / Otros
+
       'dibujo': { folder: 'leisure', filename: 'draw.jpg' },
       'cocina': { folder: 'leisure', filename: 'cook.jpg' },
       'baile': { folder: 'leisure', filename: 'dance.jpg' },
@@ -158,7 +152,7 @@ export class SwapListComponent implements OnInit {
       }
     }
 
-    // Si no hay coincidencia, asigna carpeta según categoría
+
     let folder = 'leisure';
     if (category) {
       const cat = category.toLowerCase();

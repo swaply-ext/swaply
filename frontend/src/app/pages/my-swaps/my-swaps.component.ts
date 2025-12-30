@@ -18,14 +18,14 @@ export class MySwapsPageComponent implements OnInit {
   private usersService = inject(UsersService);
   private router = inject(Router);
 
-  // Datos
+
   acceptedSwaps: Swap[] = [];
   pendingSwaps: Swap[] = [];
-  
-  // Mapa de perfiles (ID usuario -> Datos perfil)
+
+
   pendingProfiles = new Map<string, Profile>();
 
-  // Estado de carga (Renombrado a isLoading para coincidir con tu HTML)
+
   isLoading = true;
 
   ngOnInit() {
@@ -34,16 +34,14 @@ export class MySwapsPageComponent implements OnInit {
 
   loadAllSwaps() {
     this.isLoading = true;
-    
+
     this.swapService.getAllSwaps().subscribe({
       next: (data: Swap[]) => {
-        // 1. Filtrar Aceptados
+
         this.acceptedSwaps = data.filter(s => s.status === 'ACCEPTED');
 
-        // 2. Filtrar Pendientes (donde NO soy yo el que pidió)
         this.pendingSwaps = data.filter(s => s.status === 'STANDBY' && s.isRequester === false);
 
-        // 3. Cargar perfiles necesarios para el banner
         this.loadPendingProfiles();
 
         this.isLoading = false;
@@ -57,7 +55,7 @@ export class MySwapsPageComponent implements OnInit {
 
   loadPendingProfiles() {
     const userIds = new Set(this.pendingSwaps.map(s => s.requestedUserId));
-    
+
     userIds.forEach(id => {
       this.usersService.getUserById(id).subscribe(profile => {
         this.pendingProfiles.set(id, profile);
@@ -65,19 +63,17 @@ export class MySwapsPageComponent implements OnInit {
     });
   }
 
-  // --- MÉTODOS QUE FALTABAN Y CAUSABAN EL ERROR ---
 
-  // 1. Método para obtener el usuario del banner (Soluciona el error getRequesterUser)
   getRequesterUser(swap: Swap): Profile | undefined {
     return this.pendingProfiles.get(swap.requestedUserId);
   }
 
-  // 2. Getter para el texto del banner (Soluciona error de bannerText)
+
   get bannerText(): string {
     const count = this.pendingSwaps.length;
     if (count === 0) return '';
-    
-    // Obtenemos el nombre del primer usuario pendiente
+
+
     const firstSwap = this.pendingSwaps[0];
     const firstProfile = this.pendingProfiles.get(firstSwap.requestedUserId);
     const name = firstProfile?.username || 'Usuario';
@@ -91,6 +87,6 @@ export class MySwapsPageComponent implements OnInit {
 
   // 3. Navegación
   goToRequests() {
-    this.router.navigate(['/notifications']); 
+    this.router.navigate(['/notifications']);
   }
 }

@@ -32,7 +32,6 @@ import { CodeSentConfirmationComponent } from './pages/code-sent-confirmation/co
 import { FilterSkillsComponent } from './components/filter-skills/filter-skills.component';
 import { PrivacyAndSecurityComponent } from './pages/privacy-and-security/privacy-and-security.component';
 import { EmailSentComponent } from './pages/email-sent/email-sent.component';
-import { IndexComponent } from './pages/index/index.component';
 import { MySwapsPageComponent } from './pages/my-swaps/my-swaps.component';
 import { SwapRequestsComponent } from './pages/swap-requests/swap-requests.component';
 import { SwapComponent } from './pages/swap/swap.component';
@@ -74,7 +73,7 @@ export const appRoutes: Routes = [
   { path: 'myprofile', component: PrivateProfileComponent, canActivate: [AuthGuard] },
   { path: 'search-skills', component: SkillSearchComponent }, //barra de busqueda componente
   { path: 'filter-skills', component: FilterSkillsComponent },
-  {path: 'location-search', component: LocationSearchComponent },
+  { path: 'location-search', component: LocationSearchComponent },
   { path: 'swap-skills', component: SwapSkillsComponent },
   { path: 'notifications', component: SwapRequestsComponent },
   { path: 'swap-interests', component: SwapInterestsComponent },
