@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpResponse } from '@angular/common/http';
 import { RegisterDataService } from '../../services/register-data.service';
 import { AuthService } from '../../services/auth.service';
 
@@ -23,7 +23,6 @@ export class EmailVerificationComponent implements OnInit {
   constructor(
     private location: Location,
     private router: Router,
-    private http: HttpClient,
     private registerDataService: RegisterDataService,
     private authService: AuthService
   ) { }
@@ -98,29 +97,29 @@ export class EmailVerificationComponent implements OnInit {
     };
 
     console.log('Enviando verificación:', verifyData);
-    this.http.post('http://localhost:8081/api/auth/registerCodeVerify', verifyData, { responseType: 'text' })
+    this.authService.verifyRegistrationCode(this.email, fullCode)
       .subscribe({
-        next: (response) => {
+        next: (response: HttpResponse<string>) => {
           console.log('Respuesta del backend:', response);
-  if (response) {
-    // Guardar token en el servicio
-    this.registerDataService.setRegisterData({ token: response });
+          if (response.status === 202 && response.body) {
+            // Guardar token en el servicio
+            this.registerDataService.setRegisterData({ token: response.body });
 
-    // Guardar token en localStorage con la misma clave que usa el interceptor
-    this.authService.autenticateUser(response);
+            // Guardar token en localStorage con la misma clave que usa el interceptor
+            this.authService.autenticateUser(response.body);
 
-    // Redirigir al usuario
-    this.router.navigate(['/confirmation']);
-  } else {
-    this.showError = true;
-    this.message = 'Error de servidor. Inténtalo más tarde.';
-  }
+            // Redirigir al usuario
+            this.router.navigate(['/confirmation']);
+          } else {
+            this.showError = true;
+            this.message = 'Error de servidor. Inténtalo más tarde.';
+          }
         },
         error: (error) => {
           console.error('Error en la verificación:', error);
           if (error.status === 401) {
             this.showError = true;
-            this.message = 'Código de verificación incorrecto'
+            this.message = 'Código de verificación incorrecto';
           } else {
             this.showError = true;
             this.message = 'Error de servidor. Inténtalo más tarde.';

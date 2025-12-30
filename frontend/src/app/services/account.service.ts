@@ -2,6 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+export interface Account {
+  interests: { id: string, level: number }[];
+  skills?: { id: string, level: number }[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -9,7 +14,7 @@ export class AccountService {
   // Ajusta la URL base si es necesario
   private apiUrl = '/account'; 
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getProfileData(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/profileData`);
@@ -26,29 +31,49 @@ export class AccountService {
   updateEditProfileData(data: any): Observable<boolean> {
     return this.http.patch<boolean>(`${this.apiUrl}/editProfileData`, data);
   }
+
   changesStatusSwap(data: any): Observable<boolean> {
     return this.http.patch<boolean>(`${this.apiUrl}/changesStatusSwap`, data);
   }
 
   uploadProfilePhoto(file: File): Observable<string> {
     const formData = new FormData();
-    formData.append('file', file); 
+    formData.append('file', file);
 
-    // { responseType: 'text' } es necesario porque el backend devuelve un String (la URL)
     return this.http.post(
-      `${this.apiUrl}/upload-photo`, 
-      formData, 
-      { responseType: 'text' } 
+      `${this.apiUrl}/upload-photo`,
+      formData,
+      { responseType: 'text' }
     );
   }
 
   //obtenir el perfil públic d'ALGÚ ALTRE
-  getPublicProfile(targetUsername: string): Observable<any> { 
+  getPublicProfile(targetUsername: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/public/${targetUsername}`);
   }
-  
+
   deleteAccount(): Observable<any> {
     // Asegúrate de que esta ruta coincida con tu backend (/delete o raíz)
     return this.http.delete(`${this.apiUrl}/deleteProfile`);
   }
+
+  getAccount(): Observable<Account> {
+    return this.http.get<Account>(this.apiUrl);
+  }
+
+  updateInterests(interests: { id: string, level: number }[]): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/interests`, { interests });
+  }
+
+  personalInfo(allUserData:any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/personalInfo`, allUserData);
+  }
+  verifyCode(code: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/verifyCode`, code);
+  }
+
+  updateSkills(skills: any): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/skills`, { skills });
+  }
+
 }

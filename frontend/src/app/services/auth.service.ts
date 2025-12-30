@@ -1,7 +1,6 @@
 import { Injectable, signal, inject } from '@angular/core';
-import { HttpClient, HttpContext, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
-import { SKIP_LOADING } from '../interceptors/loading.interceptor';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +20,7 @@ export class AuthService {
       responseType: 'text',
       observe: 'response'
     }).pipe(
-      tap((response) => {
+      tap((response: HttpResponse<string>) => {
         if (response.status === 200) {
           const token = response.body as string;
           localStorage.setItem('authToken', token);
@@ -41,6 +40,27 @@ export class AuthService {
     this.isLoggedIn.set(false);
   }
 
+  verifyRegistrationCode(email: string, code: string): Observable<HttpResponse<string>> {
+    const verifyData = { email, code };
+    return this.http.post(`${this.baseUrl}/registerCodeVerify`, verifyData, {
+      responseType: 'text',
+      observe: 'response'
+    });
+  }
+
+  passwordReset(token: string, password: string): Observable<HttpResponse<any>> {
+    const payload = { token, password };
+    return this.http.post(`${this.baseUrl}/passwordReset`, payload, {
+      observe: 'response'
+    });
+  }
+
+  sendRecoveryMail(email: string): Observable<HttpResponse<any>> {
+    return this.http.post(`${this.baseUrl}/recoveryMail`, email, {
+      observe: 'response'
+    });
+  }
+  
   /**
    * Envía la solicitud de cambio de contraseña.
    * El HttpInterceptor se encargará de añadir el token en el header.
