@@ -10,7 +10,7 @@
       <span class="material-icons share-icon">share</span>
     </div>
 
-    <p class="location">{{ profileData.location }}</p>
+    <p *ngIf="profileData.location != null" class="location">{{ profileData.location.displayName }}</p>
 
     <div class="rating">
       <i class="material-icons" *ngFor="let starNum of starsArray">
@@ -25,6 +25,11 @@
       <span>{{ profileData.rating }}</span>
     </div>
   </div>
+
+  <button *ngIf="isPublic" class="btn-swap-internal" (click)="goToSwap()">
+    <span class="material-icons">swap_horiz</span>
+    SWAP
+  </button>
 
   <div class="description">
     {{ profileData.description }}

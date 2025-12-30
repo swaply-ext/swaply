@@ -1,3 +1,4 @@
+import { LocationSearchComponent } from './components/location-search/location-search.component';
 import { Routes } from '@angular/router';
 import { HomeComponent } from './pages/home/home.component';
 import { SkillsComponent } from './pages/skills/skills.component';
@@ -73,6 +74,7 @@ export const appRoutes: Routes = [
   { path: 'myprofile', component: PrivateProfileComponent, canActivate: [AuthGuard] },
   { path: 'search-skills', component: SkillSearchComponent }, //barra de busqueda componente
   { path: 'filter-skills', component: FilterSkillsComponent },
+  {path: 'location-search', component: LocationSearchComponent },
   { path: 'swap-skills', component: SwapSkillsComponent },
   { path: 'notifications', component: SwapRequestsComponent },
   { path: 'swap-interests', component: SwapInterestsComponent },
@@ -81,8 +83,7 @@ export const appRoutes: Routes = [
   { path: 'my-swaps', component: MySwapsPageComponent,},
   { path: 'privacy-and-security', component: PrivacyAndSecurityComponent, canActivate: [AuthGuard] },
   { path: 'user-search', component: UserSearchComponent },
-  { path: 'swap/:targetId', component: SwapComponent, canActivate: [AuthGuard] },
-  { path: 'index', component: IndexComponent },
+  { path: 'swap/:username', component: SwapComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
-  
+
 ];

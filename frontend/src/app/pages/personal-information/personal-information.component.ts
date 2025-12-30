@@ -5,11 +5,18 @@ import { NameInputComponent } from "../../components/name-input/name-input.compo
 import { SurnameInputComponent } from "../../components/surname-input/surname-input.component";
 import { BirthDateComponent } from "../../components/birth-date/birth-date.component";
 import { PhoneInputComponent } from "../../components/phone-input/phone-input.component";
-import { AddressInputComponent } from "../../components/address-input/address-input.component";
-import { HttpClient } from '@angular/common/http';
 import { RegisterDataService } from '../../services/register-data.service';
 import { GenderInputComponent } from '../../components/gender-input/gender-input.component';
-import { CommonModule } from '@angular/common';
+import { LocationSearchComponent } from '../../components/location-search/location-search.component';
+import { NgIf } from '@angular/common';
+
+interface Location {
+  placeId: string;
+  lat: number;
+  lon: number;
+  displayName: string;
+}
+
 
 @Component({
   selector: 'app-personal-information',
@@ -20,21 +27,22 @@ import { CommonModule } from '@angular/common';
     BirthDateComponent,
     GenderInputComponent,
     PhoneInputComponent,
-    AddressInputComponent,
-    CommonModule
+    NgIf,
+    LocationSearchComponent
   ],
   standalone: true,
   styleUrls: ['./personal-information.component.css'],
   templateUrl: './personal-information.component.html',
 })
 export class PersonalInformationComponent {
+
+
   name = '';
   surname = '';
   birthDate!: Date;
   gender = '';
-  location = '';
+  location: Location | null = null;
   phone = 0;
-  postalCode = 0;
 
   showError = false;
   hasErrorAll = false;
@@ -42,7 +50,6 @@ export class PersonalInformationComponent {
 
   constructor(
     private router: Router,
-    private http: HttpClient,
     private registerDataService: RegisterDataService
   ) { }
 
@@ -53,9 +60,8 @@ export class PersonalInformationComponent {
     this.surname = data.surname || '';
     this.birthDate = data.birthDate ? new Date(data.birthDate) : new Date();
     this.gender = data.gender || '';
-    this.location = data.location || '';
+    this.location = data.location as Location | null; // Lo casteamos para seguridad si viene del servicio.
     this.phone = data.phone || 0;
-    this.postalCode = data.postalCode || 0;
   }
 
   registerData() {
@@ -65,13 +71,16 @@ export class PersonalInformationComponent {
       this.birthDate = new Date(this.birthDate);
     }
 
+    if (!this.location || !this.location.displayName) {
+        return this.setError('Debes seleccionar una ubicación válida de la lista.');
+    }
+
     if (!this.name || this.validateName(this.name)) return this.setError('Debes introducir un nombre válido');
     if (!this.surname || this.validateName(this.surname)) return this.setError('Debes introducir un apellido válido');
     if (!this.birthDate || this.isFutureDate(this.birthDate) || this.isToday(this.birthDate)) return this.setError('Debes introducir una fecha de nacimiento válida');
     if (!this.gender) return this.setError('Debes seleccionar un género');
     if (!this.phone || this.validatePhone(this.phone)) return this.setError('Debes introducir un número de teléfono válido');
-    if (!this.postalCode || this.validatePostal(this.postalCode)) return this.setError('Debes introducir un código postal válido');
-    if (!this.location || this.validateLocation(this.location)) return this.setError('Debes introducir una dirección válida');
+
 
     const personalData = {
       name: this.name,
@@ -80,34 +89,34 @@ export class PersonalInformationComponent {
       gender: this.gender,
       phone: this.phone,
       location: this.location,
-      postalCode: this.postalCode
     };
 
     this.registerDataService.setRegisterData(personalData);
 
     let { token, email, username, password } = this.registerDataService.getRegisterData();
-    if (!token) token = localStorage.getItem('token') || '';
+    if (!token) token = localStorage.getItem('authToken') || '';
 
     if (!token) {
+      console.log(localStorage.getItem('authToken'));
       this.setError('No se ha verificado el email. Regresa al registro.');
       return;
     }
 
     const allUserData = { email, username, password, ...personalData };
 
-    this.http.post('http://localhost:8081/api/account/personalInfo', allUserData)
-      .subscribe({
-        next: () => {
-        console.log('Registro completo:', allUserData);
-        this.router.navigate(['/']);
+    this.registerDataService.personalInformation(allUserData).subscribe({
+      next: (success) => {
+        if (success) {
+          console.log('Información personal añadida con éxito.');
+          this.router.navigate(['/']);
+        }
       },
       error: (err) => {
-        console.error('Error al actualizar información:', err);
-        this.setError('Error al actualizar información. Inténtalo más tarde.');
+        console.error('Error al añadir información personal:', err.message);
+        this.setError(err.message);
       }
-    });
+    })
   }
-
   private setError(msg: string) {
     this.showError = true;
     this.hasErrorAll = true;
@@ -127,16 +136,7 @@ export class PersonalInformationComponent {
     else return false;
   }
 
-  private validateLocation(location: string): boolean {
-    const minLength = 3;
-    const maxLength = 50;
-    const requirements = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñçÇïÏ0-9\s,'ºª-]+$/;
-    
-    if (location.length < minLength) return true;
-    if (location.length > maxLength) return true;
-    if (!requirements.test(location)) return true;
-    else return false;
-  }
+
 
   private isToday(date: Date): boolean {
     const today = new Date();
@@ -164,18 +164,8 @@ export class PersonalInformationComponent {
     else return false;
   }
 
-  private validatePostal(postalCode: number): boolean {
-    const length = 5;
-    const requirements = /^[0-9]+$/;
-    const numString = postalCode.toString();
-    const min = 1001;
-    const max = 52999;
-
-
-    if (numString.length != length) return true;
-    if (!requirements.test(numString)) return true;
-    if (postalCode > max) return true;
-    if (postalCode < min) return true;
-    else return false;
+  onLocationSelected(newLocation: Location | null): void {
+    this.location = newLocation;
+    console.log('Ubicación seleccionada capturada:', this.location);
   }
 }

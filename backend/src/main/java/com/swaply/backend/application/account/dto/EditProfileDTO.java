@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.swaply.backend.shared.UserCRUD.Model.UserSkills;
+import com.swaply.backend.shared.UserCRUD.Model.Location;
+
 
 @Data
 @NoArgsConstructor
@@ -22,6 +24,6 @@ public class EditProfileDTO {
     private String description;
     private String email;
     private Date birthDate;
-    private String location;
+    private Location location;
     private String gender;
 }

@@ -1,0 +1,31 @@
+<div class="nearby-search">
+
+  <input
+    type="text"
+    [placeholder]="placeholder"
+    [ngModel]="searchTerm"
+    (ngModelChange)="onSearchTermChanged($event)"
+    (focus)="onInputFocus()"
+    (click)="onInputFocus()"
+  />
+
+  <span class="" *ngIf="!isLoading()"></span>
+
+
+  <div class="search-dropdown" *ngIf="results().length > 0 && showDropdown()">
+    <ul>
+      <li *ngFor="let location of results()" (click)="onSelectlocation(location)">
+        <!-- <span class="dropdown-icon">{{ location.icon }}</span> -->
+        <div class="dropdown-text">
+          <span class="dropdown-name">{{ location.displayName }}</span>
+          <!-- <span class="dropdown-cat">{{ location.category }}</span> -->
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="search-dropdown empty" *ngIf="!isLoading() && results().length === 0 && searchTerm.length > 0 && showDropdown()">
+    Sin resultados
+  </div>
+
+</div>

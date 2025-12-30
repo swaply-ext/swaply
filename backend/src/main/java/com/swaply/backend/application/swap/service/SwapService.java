@@ -2,7 +2,6 @@ package com.swaply.backend.application.swap.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import com.swaply.backend.application.auth.exception.SwapNotFoundException;
@@ -17,7 +16,6 @@ import com.swaply.backend.shared.UserCRUD.Model.Swap;
 import com.swaply.backend.shared.UserCRUD.Model.User;
 import com.swaply.backend.shared.UserCRUD.exception.UserNotFoundException;
 import com.swaply.backend.shared.mail.MailService;
-import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 
 @Service
 public class SwapService {

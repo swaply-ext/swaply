@@ -93,7 +93,7 @@ public class SearchService {
         }
         
         String myLocation = (me != null && me.getLocation() != null) 
-                ? normalizeKey(me.getLocation()) : "";
+                ? normalizeKey(me.getLocation().getDisplayName()) : "";
 
         List<UserSwapDTO> results = new ArrayList<>();
 
@@ -161,7 +161,7 @@ public class SearchService {
 
     private boolean checkLocationMatch(User candidate, String myLocation) {
         if (myLocation.isEmpty() || candidate.getLocation() == null) return false;
-        String candidateLoc = normalizeKey(candidate.getLocation());
+        String candidateLoc = normalizeKey(candidate.getLocation().getDisplayName());
         return candidateLoc.contains(myLocation) || myLocation.contains(candidateLoc);
     }
 
@@ -172,7 +172,7 @@ public class SearchService {
         dto.setName(user.getName());
         dto.setUsername(user.getUsername());
         dto.setProfilePhotoUrl(user.getProfilePhotoUrl());
-        dto.setLocation(user.getLocation()); 
+        dto.setLocation(user.getLocation().getDisplayName()); 
         dto.setRating(user.getRating() != null ? user.getRating() : 5.0); 
         dto.setDistance(distanceLabel); 
         dto.setSwapMatch(isMatch);
@@ -194,8 +194,8 @@ public class SearchService {
     }
 
 
-    public UserSwapDTO getUserById(String userId) {
-        Optional<User> userOpt = userRepository.findUserById(userId);
+    public UserSwapDTO getUserByUsername(String username) {
+        Optional<User> userOpt = userRepository.findUserByUsername(username);
 
         if (userOpt.isEmpty()) {
             return null;
@@ -208,7 +208,7 @@ public class SearchService {
         dto.setName(user.getName());
         dto.setUsername(user.getUsername());
         dto.setProfilePhotoUrl(user.getProfilePhotoUrl());
-        dto.setLocation(user.getLocation());
+        dto.setLocation(user.getLocation().getDisplayName());
 
         
         if (user.getSkills() != null && !user.getSkills().isEmpty()) {
