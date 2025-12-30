@@ -1,6 +1,5 @@
 <section class="interchanges-list-section">
-  
-  <h2 class="page-title">Mis Intercambios</h2>
+
 
   @if (loading()) {
     <div class="loading-state">Cargando intercambios...</div>
@@ -8,31 +7,31 @@
 
   @if (!loading() && swaps().length > 0) {
     <div class="swaps-container">
-      
+
       @for (swap of swaps(); track swap.id) {
-        
+
         <div class="interchange-box">
           <div class="interchange-content">
 
             <div class="interchange-card-wrapper">
               <h3 class="section-title">Habilidad a aprender</h3>
-              
+
               <div class="skill-card">
                 <img [src]="getImageToLearn(swap)" [alt]="swap.interest" class="activity-img">
-                
+
                 <div class="card-details">
                   <h4>Clase de {{ swap.interest }}</h4>
-                  
+
                   @let otherUser = getOtherProfile(swap.requestedUserId);
-                  
+
                   <div class="badges-group">
                     <div class="info-badge">
                       <span class="material-symbols-outlined badge-icon">location_on</span>
                       <span class="badge-text">{{ otherUser?.location || '...' }}</span>
                     </div>
-                    
+
                     @if (otherUser) {
-                      <div class="info-badge user-link-container" 
+                      <div class="info-badge user-link-container"
                            [routerLink]="['/public-profile', otherUser.username]"
                            style="cursor: pointer;">
                         <div class="avatar-wrapper">
@@ -52,18 +51,18 @@
 
             <div class="interchange-card-wrapper">
               <h3 class="section-title">Habilidad a enseñar</h3>
-              
+
               <div class="skill-card">
                 <img [src]="getImageToTeach(swap)" [alt]="swap.skill" class="activity-img">
-                
+
                 <div class="card-details">
                   <h4>Clase de {{ swap.skill }}</h4>
-                  
+
                   <div class="badges-group">
                     <div class="info-badge">
                       <span class="material-symbols-outlined badge-icon">location_on</span>
                       <span class="badge-text">{{ currentUser()?.location }}</span>
-                    </div>   
+                    </div>
                     <div class="info-badge user-link-container"
                          [routerLink]="['/public-profile', currentUser()?.username]"
                          style="cursor: pointer;">
@@ -80,7 +79,7 @@
           </div>
 
           <div class="actions-area">
-            
+
             @if (swap.status === 'ACCEPTED') {
               <span class="status-badge confirmed">
                 <span class="material-symbols-outlined">check_circle</span>
@@ -100,7 +99,7 @@
                 <span class="material-symbols-outlined">cancel</span>
                 Rechazar
               </button>
-              
+
               <button class="btn-action btn-accept" (click)="confirmIntercambio(swap)">
                 <span class="material-symbols-outlined">check_circle</span>
                 Aceptar

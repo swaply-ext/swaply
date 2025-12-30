@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { DropdownMenuComponent, DropdownMenuData } from '../dropdown-menu/dropdown-menu.component';
 import { AccountService } from '../../services/account.service';
 import { AuthService } from '../../services/auth.service';
@@ -17,13 +18,13 @@ export class AppNavbarComponent implements OnInit {
   showDropdown = false;
   dropdownMenuData!: DropdownMenuData;
 
-  constructor(private accountService: AccountService, private authService: AuthService) {}
+  constructor(private router: Router, private accountService: AccountService, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.accountService.getProfileData().subscribe({
       next: (user) => {
         this.dropdownMenuData = {
-          
+
           //Aquí deberia de llegar un DTO específico co nestso campos, actualmente se utiliza un DTO erroneo para hacer el apaño
           fullName: `${user.name} ${user.surname}`,
           username: user.username,
@@ -40,8 +41,12 @@ export class AppNavbarComponent implements OnInit {
   toggleDropdown() {
     this.showDropdown = !this.showDropdown;
   }
-  
+
   isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
+  }
+
+    goToNotifications() {
+    this.router.navigate(['/notifications']);
   }
 }
