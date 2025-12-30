@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #FCFCFC;">
+    <div class="container" style="max-width: 40rem; margin: 1rem auto; background-color: #FCFCFC; border-radius: 1rem; box-shadow: 0 0 1rem rgba(0, 0, 0, 0.1); text-align: center;">
+        
+        <div class="header" style="background-color: #023047; padding: 1rem; margin-bottom: 1rem; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+            <img src="cid:logo_swp_invert" alt="Swaply" style="width: 15rem;">
+        </div>
+
+        <div>
+            <h1 style="color: #292929; margin-bottom: 1.3rem; font-size: 1.5rem;">¡Nueva Solicitud de Intercambio!</h1>
+
+            <p style="color: #292929; line-height: 1.6; padding-left: 2rem; padding-right: 2rem;">
+                Hola <strong th:text="${receiverName}">Usuario</strong>,
+            </p>
+
+            <p style="color: #292929; line-height: 1.6; padding-left: 2rem; padding-right: 2rem;">
+                El usuario <strong th:text="${requesterName}">Sender</strong> está interesado en aprender tu habilidad:
+            </p>
+
+            <div style="background-color: #e0f2fe; padding: 1.5rem; margin: 1rem 2rem; border-radius: 0.5rem; border-left: 0.313rem solid #023047; text-align: left;">
+                <p style="margin: 0.5rem 0;">📚 <strong>Te enseña:</strong> <span th:text="${skillOffered}">Habilidad</span></p>
+                <p style="margin: 0.5rem 0;">🎓 <strong>Quiere aprender:</strong> <span th:text="${skillRequested}">Interés</span></p>
+            </div>
+
+            <p style="color: #292929; line-height: 1.6; padding-left: 2rem; padding-right: 2rem;">
+                Entra en la aplicación para aceptar o rechazar esta solicitud.
+            </p>
+
+            <img src="cid:swaply_hands" style="width: 10rem; margin-top: 1rem;">
+        </div>
+
+        <div class="footer-separator" style="border-top: 0.3rem solid #9e9d9d; margin-top: 2rem; padding-top: 1.2rem; margin-left: 2rem; margin-right: 2rem;">
+            <p style="margin-top: 0.6rem; padding-bottom: 0.8rem; font-size: 0.6rem; color: #555555;">
+                © 2024 Swaply Inc. | Política de Privacidad | Soporte
+            </p>
+        </div>
+    </div>
+</body>
+</html>

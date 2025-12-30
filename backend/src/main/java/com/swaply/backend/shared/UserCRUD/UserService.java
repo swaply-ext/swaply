@@ -1,5 +1,6 @@
 package com.swaply.backend.shared.UserCRUD;
 
+import java.text.Normalizer;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -11,6 +12,7 @@ import com.swaply.backend.application.auth.service.PasswordService;
 import com.swaply.backend.shared.UserCRUD.Model.User;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.shared.UserCRUD.exception.UserNotFoundException;
+import java.util.regex.Pattern;
 
 @Service
 public class UserService {
@@ -55,6 +57,11 @@ public class UserService {
         return mapper.entityToDTO(user);
     }
 
+    public String getUsernameById(String id) {
+        return repository.findUsernameById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+    }
+
     public List<UserDTO> getAllUsers() {
         return repository.findAllUsers()
                 .stream()
@@ -62,12 +69,20 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public List<UserDTO> findUsersByUsernameContaining(String usernameFragment) {
-        return repository.findUsersByUsernameContaining(usernameFragment)
-                .stream()
-                .map(mapper::entityToDTO)
-                .collect(Collectors.toList());
-    }
+    private String normalizeString(String input) {
+    if (input == null) return "";
+    String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
+    Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+    return pattern.matcher(normalized).replaceAll("").toLowerCase();
+}
+
+        public List<UserDTO> findUsersByUsernameContaining(String usernameFragment) {
+    String normalized = normalizeString(usernameFragment);
+    return repository.findUsersByUsernameContaining(normalized)
+            .stream()
+            .map(mapper::entityToDTO)
+            .collect(Collectors.toList());
+}
 
     public void deleteUserById(String id) {
         if (!repository.existsUserById(id)) {

@@ -10,6 +10,28 @@ import { ProfileData } from '../../models/private-profile-data.model';
 import { UserSkills } from '../../models/user-skills.model';
 import { ActivatedRoute } from '@angular/router'; //Con este import se accede al resolver
 
+
+interface Skill {
+  id: string;
+  level: number;
+}
+
+interface Location {
+  placeId: string;
+  lat: number;
+  lon: number;
+  displayName: string;
+}
+
+
+interface ProfileData {
+  fullName: string;
+  username: string;
+  location: Location;
+  description: string;
+  profilePhotoUrl: string;
+  rating: number;
+}
 @Component({
   selector: 'app-private-profile',
   standalone: true,

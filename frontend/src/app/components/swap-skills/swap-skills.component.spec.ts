@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { IndexComponent } from './index.component';
+import { SwapSkillsComponent } from './swap-skills.component';
 
-describe('IndexComponent', () => {
-  let component: IndexComponent;
-  let fixture: ComponentFixture<IndexComponent>;
+describe('SwapSkillsComponent', () => {
+  let component: SwapSkillsComponent;
+  let fixture: ComponentFixture<SwapSkillsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [IndexComponent]
+      imports: [SwapSkillsComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(IndexComponent);
+    fixture = TestBed.createComponent(SwapSkillsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
