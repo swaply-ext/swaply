@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.component";
 import { ProfileInfoComponent } from "../../components/profile-info/profile-info.component";
 import { SkillsPanelComponent } from '../../components/skills-panel/skills-panel.component';
@@ -23,13 +23,20 @@ interface BackendSkill {
   level?: number;
 }
 
+interface Location {
+  placeId: string;
+  lat: number;
+  lon: number;
+  displayName: string;
+}
+
 interface ProfileData {
-fullName: string;
-username: string;
-location: string;
-description: string;
-profilePhotoUrl: string;
-rating: number;
+  fullName: string;
+  username: string;
+  location: Location;
+  description: string;
+  profilePhotoUrl: string;
+  rating: number;
 }
 
 @Component({
@@ -80,14 +87,11 @@ public isHistoryOpen: boolean = true;
 ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       const usernameFromUrl = params.get('username');
-      
       if (usernameFromUrl) {
         this.getPublicProfileFromBackend(usernameFromUrl);
       }
     });
 }
-
-
 
   getPublicProfileFromBackend(username: string): void {
     this.accountService.getPublicProfile(username).subscribe({

@@ -1,3 +1,4 @@
+import { LocationSearchComponent } from './components/location-search/location-search.component';
 import { Routes } from '@angular/router';
 import { HomeComponent } from './pages/home/home.component';
 import { SkillsComponent } from './pages/skills/skills.component';
@@ -70,6 +71,7 @@ export const appRoutes: Routes = [
   { path: 'myprofile', component: PrivateProfileComponent, canActivate: [AuthGuard] },
   { path: 'search-skills', component: SkillSearchComponent }, //barra de busqueda componente
   { path: 'filter-skills', component: FilterSkillsComponent },
+  {path: 'location-search', component: LocationSearchComponent },
   { path: 'swap-skills', component: SwapSkillsComponent },
   { path: 'swap-interests', component: SwapInterestsComponent },
   { path: 'delete-account-confirmation', component: DeleteAccountConfirmationComponent },
@@ -79,5 +81,5 @@ export const appRoutes: Routes = [
   { path: 'chat', loadComponent: () => import('./pages/chat/chat.component').then(m => m.ChatComponent), canActivate: [AuthGuard] },
   { path: 'swap/:username', component: SwapComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
-  
+
 ];

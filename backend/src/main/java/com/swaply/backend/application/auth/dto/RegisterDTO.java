@@ -21,6 +21,5 @@ public class RegisterDTO {
     @JsonFormat(pattern="dd/MM/yyyy")
     private Date birthDate;
     private int phone;
-    private int postalCode;
     private String location;
 }

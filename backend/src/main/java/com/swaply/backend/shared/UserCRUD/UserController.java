@@ -18,13 +18,6 @@ public class UserController {
         this.service = service;
     }
 
-    // No se si hay que dejar esto, puede ser util para un Admin o testing tal vez
-
-    // @PostMapping
-    // public ResponseEntity<UserDTO> createUser(@RequestBody RegisterDTO user) {
-    //     UserDTO createdUser = service.createUser(user);
-    //     return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
-    // }
 
     @GetMapping
     public ResponseEntity<List<UserDTO>> getAll(@RequestParam(required = false) String contains) {
@@ -38,6 +31,11 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserDTO> getUserById(@PathVariable String id) {
         return ResponseEntity.ok(service.getUserByID(id));
+    }
+
+    @GetMapping("/{id}/username")
+    public ResponseEntity<String> getUsernameById(@PathVariable String id) {
+        return ResponseEntity.ok(service.getUsernameById(id));
     }
 
     @DeleteMapping("/{id}")

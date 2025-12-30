@@ -8,19 +8,19 @@ import { SKIP_LOADING } from '../interceptors/loading.interceptor';
 })
 export class AuthService {
   private http = inject(HttpClient);
+  
+  // URL base para no repetir código
+  private baseUrl = '/auth';
 
   isLoggedIn = signal<boolean>(!!localStorage.getItem('authToken'));
 
   login(credentials: any) {
-    console.log(this.isLoggedIn())
-    return this.http.post('http://localhost:8081/api/auth/login', credentials, {
-
-      // SALTAR PANTALLA DE CARGA
+    console.log(this.isLoggedIn());
+    return this.http.post(`${this.baseUrl}/login`, credentials, {
       // context: new HttpContext().set(SKIP_LOADING, true),
       responseType: 'text',
       observe: 'response'
     }).pipe(
-
       tap((response) => {
         if (response.status === 200) {
           const token = response.body as string;
@@ -78,4 +78,13 @@ export class AuthService {
     }
   }
 
+  /**
+   * Envía la solicitud de cambio de contraseña.
+   * El HttpInterceptor se encargará de añadir el token en el header.
+   */
+  changePassword(credentials: {password: string, newPassword: string}) {
+    return this.http.post(`${this.baseUrl}/passwordChange`, credentials, {
+      observe: 'response' // Necesario para leer el status 200 completo
+    });
+  }
 }
