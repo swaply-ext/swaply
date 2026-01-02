@@ -1,117 +1,397 @@
-.chat-root{
-  display:flex;
-  height:100vh;
-  background: #f8f9fb;
-  color: #222;
+/* =========================================
+   CONTENEDOR PRINCIPAL
+   ========================================= */
+.chat-container {
+  display: flex;
+  /* Altura ajustada para no chocar con el navbar (ajusta 80px según tu nav) */
+  height: calc(100vh - 100px); 
+  width: 95%;
+  max-width: 1400px;
+  margin: 20px auto;
+  background-color: var(--bg-panel); /* #022c38 */
+  border-radius: 16px;
+  box-shadow: var(--shadow-large);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  font-family: var(--font-secondary, sans-serif);
 }
 
-.chat-side{
-  width:320px;
-  border-right:1px solid #e6e6e6;
-  padding:12px;
-  box-sizing:border-box;
-  overflow:auto;
-  background: #fff;
+/* =========================================
+   SIDEBAR (IZQUIERDA)
+   ========================================= */
+.chat-sidebar {
+  width: 320px;
+  background-color: rgba(0, 0, 0, 0.2); /* Un poco más oscuro que el panel */
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
 }
 
-.chat-main{
-  flex:1;
-  display:flex;
-  flex-direction:column;
+/* Header del Sidebar */
+.sidebar-header {
+  padding: 20px;
+  background-color: var(--principal-color-1); /* #023047 */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.search-box input{
-  width:100%;
-  padding:8px;
-  box-sizing:border-box;
-  border:1px solid #ddd;
-  border-radius:6px;
-  background: #fbfbfb;
+.sidebar-header h3 {
+  color: var(--text-white, #fff);
+  margin: 0 0 15px 0;
+  font-family: var(--font-primary, sans-serif);
+  font-weight: 700;
 }
 
-.conversations h4, .users-search h4{ margin:8px 0; color:#666 }
-.conversations ul, .users-search ul{ list-style:none; padding:0; margin:0 }
-
-.conversations li, .users-search li{
-  padding:8px;
-  border-bottom:1px solid #f2f2f2;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  gap:10px;
+/* Buscador */
+.search-box {
+  position: relative;
 }
 
-.conversations li.active{ background:#f7f7f7 }
-
-/* Avatar rules: force reasonable sizes and cover */
-.conversations li .avatar,
-.users-search li .avatar,
-.chat-header .avatar{
-  width:40px;
-  height:40px;
-  border-radius:50%;
-  overflow:hidden;
-  flex:0 0 40px;
-  background:#e9e9e9;
+.search-box input {
+  width: 100%;
+  padding: 10px 15px 10px 35px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: var(--bg-input, rgba(255, 255, 255, 0.1));
+  color: white;
+  outline: none;
+  font-size: 0.9rem;
+  box-sizing: border-box; /* Importante para que no se salga */
 }
 
-.conversations li .avatar img,
-.users-search li .avatar img,
-.chat-header .avatar img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
+.search-box i {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted, #ccc);
+  font-size: 0.8rem;
 }
 
-/* Header layout (avatar + title) */
-.chat-header{
-  padding:12px;
-  border-bottom:1px solid #eee;
-  background:#fafafa;
-}
-.chat-header .header-row{ display:flex; align-items:center; gap:12px }
-.chat-header .title{ font-weight:600 }
-.chat-header .subtitle{ font-size:0.9rem; color:#666 }
-
-/* Specific selector for implementations that put the class on the IMG directly */
-.chat-header-left{ display:flex; align-items:center; gap:12px }
-.chat-header-avatar{
-  width:48px !important;
-  height:48px !important;
-  border-radius:50% !important;
-  object-fit:cover !important;
-  overflow:hidden !important;
-  flex:0 0 48px !important;
-  display:block !important;
+/* Lista de Conversaciones */
+.conversations-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 0;
 }
 
-.chat-messages{ flex:1; padding:16px; overflow:auto; background:transparent }
-
-.message{ margin-bottom:12px; display:flex; gap:8px; align-items:flex-end }
-.message{ max-width:70%; }
-
-.message.mine{ align-self:flex-end; text-align:right; flex-direction:row-reverse }
-.message:not(.mine){ align-self:flex-start; text-align:left }
-
-/* Avatar small inside messages */
-.message .msg-avatar{
-  width:28px; height:28px; border-radius:50%; overflow:hidden; flex:0 0 28px;
+.conversation-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.02);
 }
-.message .msg-avatar img{ width:100%; height:100%; object-fit:cover }
 
-.msg-text{ display:inline-block; padding:10px 14px; border-radius:14px; background:#f1f0f0; box-shadow:0 1px 0 rgba(0,0,0,0.03) }
-.message.mine .msg-text{ background:#dcf8c6 }
-.msg-time{ font-size:0.75rem; color:#9b9b9b; margin-top:6px }
+.conversation-item:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
 
-.chat-input{ padding:12px; border-top:1px solid #eee; display:flex; gap:8px; background:#fff }
-.chat-input input{ flex:1; padding:10px; border:1px solid #ddd; border-radius:8px }
-.chat-input button{ padding:8px 12px; border-radius:8px; background:#0d6efd; color:#fff; border:none }
+.conversation-item.active {
+  background-color: rgba(60, 181, 124, 0.15); /* Tinte verde */
+  border-left: 4px solid var(--principal-color-2); /* #3cb57c */
+}
 
-/* Make sure generic images never overflow */
-.chat-root img{ max-width:100%; height:auto; }
+/* Avatares en la lista */
+.avatar-container {
+  position: relative;
+  margin-right: 15px;
+  flex-shrink: 0;
+}
 
-@media (max-width:800px){
-  .chat-root{ flex-direction:column }
-  .chat-side{ width:100%; height:200px }
+.avatar-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover; /* CLAVE: Evita que la imagen se estire */
+  border: 2px solid var(--principal-color-2);
+}
+
+/* Info del usuario en la lista */
+.conversation-info {
+  flex: 1;
+  overflow: hidden;
+}
+
+.info-top {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.partner-name {
+  color: var(--text-white, #fff);
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.time-ago {
+  font-size: 0.75rem;
+  color: var(--text-muted, #ccc);
+}
+
+.info-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.last-message {
+  color: var(--text-muted, #aaa);
+  font-size: 0.85rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 160px;
+  margin: 0;
+}
+
+.unread-badge {
+  background-color: var(--principal-color-2);
+  color: #fff;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-weight: bold;
+}
+
+/* Mensajes de carga / vacío */
+.loading-state, .empty-state-side {
+  text-align: center;
+  padding: 20px;
+  color: var(--text-muted);
+}
+
+/* =========================================
+   AREA PRINCIPAL DE CHAT
+   ========================================= */
+.chat-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-image: linear-gradient(rgba(2, 44, 56, 0.95), rgba(2, 44, 56, 0.95)), url('/assets/swaply-pattern.png'); /* Opcional si tienes patrón */
+  background-size: cover;
+  position: relative;
+}
+
+/* Header del Chat Activo */
+.chat-header {
+  height: 70px;
+  padding: 0 20px;
+  background-color: rgba(2, 48, 71, 0.9); /* --principal-color-1 con opacidad */
+  backdrop-filter: blur(5px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-user-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.header-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--secundary-color-2);
+}
+
+.header-text h3 {
+  margin: 0;
+  color: var(--text-white);
+  font-size: 1.1rem;
+}
+
+.username-handle {
+  font-size: 0.8rem;
+  color: var(--principal-color-2); /* Menta */
+}
+
+/* Área de Mensajes (Scroll) */
+.messages-area {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Filas de mensajes */
+.message-row {
+  display: flex;
+  width: 100%;
+}
+
+/* Alineación MÍA (Derecha) */
+.message-row.mine {
+  justify-content: flex-end;
+}
+
+/* Alineación SUYA (Izquierda) */
+.message-row.theirs {
+  justify-content: flex-start;
+}
+
+/* Burbujas */
+.message-bubble {
+  max-width: 70%;
+  padding: 10px 15px;
+  border-radius: 15px;
+  position: relative;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  word-wrap: break-word;
+}
+
+/* Estilo burbuja MÍA */
+.message-row.mine .message-bubble {
+  background-color: var(--principal-color-2); /* Verde Menta */
+  color: #023047; /* Azul Oscuro para contraste */
+  border-top-right-radius: 2px; /* Punta */
+}
+
+.message-row.mine .msg-time {
+  color: rgba(2, 48, 71, 0.6); /* Color oscuro semi-transparente */
+}
+
+/* Estilo burbuja SUYA */
+.message-row.theirs .message-bubble {
+  background-color: var(--bg-card); /* #00414b */
+  color: var(--text-white);
+  border-top-left-radius: 2px; /* Punta */
+}
+
+.message-row.theirs .msg-time {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.msg-time {
+  display: block;
+  font-size: 0.7rem;
+  text-align: right;
+  margin-top: 4px;
+}
+
+/* Input Area */
+.chat-input-area {
+  padding: 15px 20px;
+  background-color: var(--principal-color-1);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.chat-input-area input {
+  flex: 1;
+  padding: 12px 20px;
+  border-radius: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: var(--bg-input);
+  color: white;
+  outline: none;
+  font-family: var(--font-secondary);
+}
+
+.chat-input-area input:focus {
+  border-color: var(--principal-color-2);
+}
+
+.chat-input-area button {
+  background-color: transparent;
+  color: var(--principal-color-2);
+  border: none;
+  font-size: 1.3rem;
+  cursor: pointer;
+  padding: 10px;
+  transition: transform 0.2s;
+}
+
+.chat-input-area button:hover:not(:disabled) {
+  transform: scale(1.1);
+  color: var(--principal-color-2-hover);
+}
+
+.chat-input-area button:disabled {
+  color: var(--text-muted);
+  cursor: default;
+}
+
+/* Estado sin chat seleccionado */
+.no-chat-selected {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.placeholder-icon {
+  width: 100px;
+  opacity: 0.2;
+  margin-bottom: 20px;
+  filter: grayscale(100%);
+}
+
+.no-chat-selected h2 {
+  color: var(--principal-color-2);
+  margin-bottom: 10px;
+}
+
+/* Scrollbars personalizados (Estilo Chrome/Safari/Edge) */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .chat-container {
+    height: calc(100vh - 70px);
+    width: 100%;
+    margin: 0;
+    border-radius: 0;
+    border: none;
+  }
+
+  .chat-sidebar {
+    width: 100%;
+    /* Si hay chat activo, ocultamos el sidebar en móvil */
+    display: flex; 
+  }
+
+  .chat-main {
+    width: 100%;
+    display: none; /* Por defecto oculto en móvil si no hay selección */
+  }
+
+  /* Clases auxiliares para alternar visibilidad en móvil (requeriría lógica TS extra) */
+  /* Por ahora, este CSS asume desktop-first, pero se adapta bien */
+}
+
+.chat-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  /* Elimina la referencia a la imagen si no existe para quitar el error 404 */
+  /* background-image: linear-gradient(...), url('/assets/swaply-pattern.png'); */
+  background-color: #0d3b4c; /* Un color de fondo sólido que combine (basado en tus variables) */
+  position: relative;
 }
