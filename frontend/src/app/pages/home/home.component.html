@@ -37,10 +37,10 @@
 
             <div class="card-user-info">
               <img [src]="card.userAvatar" [alt]="card.userName" class="user-avatar"
-                [routerLink]="['/public-profile', card.username]" (click)="$event.stopPropagation()"
+                [routerLink]="['/user', card.username]" (click)="$event.stopPropagation()"
                 style="cursor: pointer;">
 
-              <span [routerLink]="['/public-profile', card.username]" (click)="$event.stopPropagation()"
+              <span [routerLink]="['/user', card.username]" (click)="$event.stopPropagation()"
                 style="cursor: pointer;">
                 {{ card.userName }}
               </span>

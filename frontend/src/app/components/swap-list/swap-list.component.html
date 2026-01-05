@@ -32,7 +32,7 @@
 
                     @if (otherUser) {
                       <div class="info-badge user-link-container"
-                           [routerLink]="['/public-profile', otherUser.username]"
+                           [routerLink]="['/user', otherUser.username]"
                            style="cursor: pointer;">
                         <div class="avatar-wrapper">
                           <img [src]="otherUser.profilePhotoUrl" alt="Avatar" class="user-avatar">
@@ -64,7 +64,7 @@
                       <span class="badge-text">{{ currentUser()?.location?.displayName }}</span>
                     </div>
                     <div class="info-badge user-link-container"
-                         [routerLink]="['/public-profile', currentUser()?.username]"
+                         [routerLink]="['/user', currentUser()?.username]"
                          style="cursor: pointer;">
                       <div class="avatar-wrapper">
                         <img [src]="currentUser()?.profilePhotoUrl" alt="Avatar" class="user-avatar">

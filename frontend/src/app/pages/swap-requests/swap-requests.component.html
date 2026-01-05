@@ -31,7 +31,7 @@
           <div class="request-card fade-in">
 
             <div class="user-section"
-                 [routerLink]="['/public-profile', user?.username]"
+                 [routerLink]="['/user', user?.username]"
                  title="Ver perfil">
               <img [src]="user?.profilePhotoUrl || 'assets/default-avatar.png'"
                    class="avatar"
@@ -41,7 +41,7 @@
             <div class="info-section">
 
               <div class="request-header">
-                <a class="username" [routerLink]="['/public-profile', user?.username]">
+                <a class="username" [routerLink]="['/user', user?.username]">
                   {{ user?.username || 'Usuario' }}
                 </a>
                 <span> solicita intercambio.</span>

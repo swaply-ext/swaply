@@ -11,7 +11,7 @@ import { NextSwapComponent } from '../../components/next-swap/next-swap.componen
 
 export interface CardModel {
   userId?: string;
-  username?: string; //per la ruta /public-profile/:username
+  username?: string; //per la ruta /user/:username
   userName: string;
   userAvatar: string;
   skillTitle: string;
@@ -26,9 +26,9 @@ export interface CardModel {
   selector: 'app-home',
   standalone: true,
   imports: [
-    CommonModule, 
-    AppNavbarComponent, 
-    SkillSearchComponent, 
+    CommonModule,
+    AppNavbarComponent,
+    SkillSearchComponent,
     FilterSkillsComponent,
     NextSwapComponent,
     RouterLink
@@ -41,18 +41,18 @@ export class HomeComponent implements OnInit {
 
   constructor(private accountService: AccountService) { }
 
-  
+
   private searchService = inject(SearchService);
   private router = inject(Router);
 
-  private allCards: CardModel[] = []; 
+  private allCards: CardModel[] = [];
   cards = signal<CardModel[]>([]);
-  
+
   isLoadingMatches = signal(false);
-  
+
   // Esta bandera controla si mostramos las etiquetas de estado o no
   hasSearched = signal(false);
-  
+
   itemsToShow = signal(6);
   canLoadMore = computed(() => this.cards().length < this.allCards.length);
 
@@ -62,9 +62,9 @@ export class HomeComponent implements OnInit {
 
   loadInitialRecommendations() {
     this.isLoadingMatches.set(true);
-    // Resetear hasSearched a false para que el HTML sepa que son recomendaciones 
-    this.hasSearched.set(false); 
-    
+    // Resetear hasSearched a false para que el HTML sepa que son recomendaciones
+    this.hasSearched.set(false);
+
     this.searchService.getRecommendations().subscribe({
       next: (matches) => this.processResults(matches),
       error: (err) => {
@@ -94,16 +94,16 @@ export class HomeComponent implements OnInit {
       }
     });
   }
-  
+
   private processResults(matches: UserSwapDTO[]) {
     this.allCards = matches.map(m => ({
       userId: m.userId,
       username: (m as any).username || m.userId,
       userName: m.name,
       userAvatar: m.profilePhotoUrl || 'assets/default-image.jpg',
-      skillTitle: m.skillName, 
-      skillIcon: m.skillIcon,   
-      skillImage: this.assignImageToSkill(m.skillCategory, m.skillName), 
+      skillTitle: m.skillName,
+      skillIcon: m.skillIcon,
+      skillImage: this.assignImageToSkill(m.skillCategory, m.skillName),
       distance: m.distance,
       rating: m.rating || 0,
       isMatch: m.isSwapMatch
@@ -119,8 +119,8 @@ export class HomeComponent implements OnInit {
   }
 
   loadMore() {
-    this.itemsToShow.update(val => val + 6); 
-    this.updateView(); 
+    this.itemsToShow.update(val => val + 6);
+    this.updateView();
   }
 
 
@@ -150,17 +150,17 @@ export class HomeComponent implements OnInit {
       else if (name.includes('digital')) { filename = 'digital_entertainment.jpg'; folder = 'leisure'; }
       return filename ? `assets/photos_skills/${folder}/${filename}` : undefined;
   }
-  
-  
+
+
 
   goToSwap(card: CardModel) {
     if (!card.username) return;
 
-    this.router.navigate(['/swap', card.username], { 
-      queryParams: { skillName: card.skillTitle } 
+    this.router.navigate(['/swap', card.username], {
+      queryParams: { skillName: card.skillTitle }
     });
   }
-  
+
   hasIntercambio = signal(true);
   isConfirmed = signal(false);
   skillToLearn = signal({ titulo: 'Clase de Guitarra Acústica', img: 'assets/photos_skills/music/guitar.jpg', hora: 'Hoy, 18:00h', via: 'Vía Napoli 5' });
