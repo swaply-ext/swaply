@@ -6,15 +6,9 @@ import { AccountService } from '../../services/account.service';
 import { SearchService, UserSwapDTO, SwapDTO } from '../../services/search.services';
 import { SwapSkillsComponent } from "../../components/swap-skills/swap-skills.component";
 import { SwapInterestsComponent } from "../../components/swap-interests/swap-interests.component";
+import { ProfileDataDTO } from '../../models/profile-data-dto.model';
 
-interface UserProfile {
-  username: string;
-  name: string;
-  location?: string;
-  skills?: any[];
-  interests?: any[];
-  profilePhotoUrl?: string;
-}
+
 
 @Component({
   selector: 'app-swap',
@@ -25,11 +19,11 @@ interface UserProfile {
 })
 export class SwapComponent implements OnInit {
 
-  myUser = signal<UserProfile | null>(null);
+  myUser = signal<ProfileDataDTO | null>(null);
   targetUser = signal<UserSwapDTO | null>(null);
 
-  selectedTeachSkill = signal<any>(null); 
-  
+  selectedTeachSkill = signal<any>(null);
+
   selectedTargetSkill = signal<{
     skillName: string;
     skillIcon?: string;
@@ -37,15 +31,15 @@ export class SwapComponent implements OnInit {
     location?: string;
   } | null>(null);
 
-  targetUserInterests = signal<any[]>([]); 
-  mySkillsDisplay = signal<any[]>([]); 
+  targetUserInterests = signal<any[]>([]);
+  mySkillsDisplay = signal<any[]>([]);
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private accountService: AccountService,
     private searchService: SearchService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const targetUsername = this.route.snapshot.paramMap.get('username');
@@ -55,16 +49,16 @@ export class SwapComponent implements OnInit {
     this.accountService.getProfileData().subscribe({
       next: (me) => {
         this.myUser.set(me);
-        
+
         if (me.skills && me.skills.length > 0) {
           const myVisualSkills = me.skills.map((s: any, index: number) => {
             const realName = s.name || s.id || 'Skill sin nombre';
             return {
               ...s,
               id: s.id || realName,
-              name: realName, 
+              name: realName,
               image: s.image || this.assignImageToSkill(s.category, realName),
-              selected: index === 0 
+              selected: index === 0
             };
           });
 
@@ -74,7 +68,7 @@ export class SwapComponent implements OnInit {
       }
     });
 
-    // CARGAR USUARIO DESTINO 
+    // CARGAR USUARIO DESTINO
     if (targetUsername) {
       this.searchService.getUserByUsername(targetUsername).subscribe({
         next: (user) => {
@@ -107,8 +101,8 @@ export class SwapComponent implements OnInit {
           // Si hay parametro URL, buscamos esa skill y la ponemos PRIMERA
           if (paramSkillName) {
             const targetNameInfo = paramSkillName.toLowerCase();
-            const foundIndex = allInterests.findIndex(s => 
-               s.name.toLowerCase().includes(targetNameInfo) || targetNameInfo.includes(s.name.toLowerCase())
+            const foundIndex = allInterests.findIndex(s =>
+              s.name.toLowerCase().includes(targetNameInfo) || targetNameInfo.includes(s.name.toLowerCase())
             );
 
             // Si la encontramos y no está ya la primera, la movemos al principio
@@ -120,8 +114,8 @@ export class SwapComponent implements OnInit {
 
           // Marcamos la primera (índice 0) como seleccionada
           allInterests = allInterests.map((item, index) => ({
-             ...item,
-             selected: index === 0
+            ...item,
+            selected: index === 0
           }));
 
           this.targetUserInterests.set(allInterests);
@@ -132,7 +126,7 @@ export class SwapComponent implements OnInit {
             skillName: selectedItem.name,
             skillIcon: (selectedItem as any).icon,
             skillImage: selectedItem.image,
-            location: user.location
+            location: user.location.displayName
           });
         }
       });
@@ -142,16 +136,16 @@ export class SwapComponent implements OnInit {
   selectTargetInterest(item: any) {
     const updatedList = this.targetUserInterests().map(skill => ({
       ...skill,
-      selected: skill.name === item.name 
+      selected: skill.name === item.name
     }));
     this.targetUserInterests.set(updatedList);
 
     const currentUser = this.targetUser();
     this.selectedTargetSkill.set({
       skillName: item.name,
-      skillIcon: item.icon, 
+      skillIcon: item.icon,
       skillImage: item.image || this.assignImageToSkill(item.category, item.name),
-      location: currentUser?.location
+      location: currentUser?.location.displayName
     });
   }
 
@@ -168,9 +162,9 @@ export class SwapComponent implements OnInit {
     this.mySkillsDisplay.set(updatedList);
 
     this.selectedTeachSkill.set({
-        ...item,
-        name: item.name, 
-        image: item.image || this.assignImageToSkill(item.category, item.name)
+      ...item,
+      name: item.name,
+      image: item.image || this.assignImageToSkill(item.category, item.name)
     });
   }
 
@@ -181,8 +175,8 @@ export class SwapComponent implements OnInit {
 
   getTargetSkillImage() {
     return this.selectedTargetSkill()?.skillImage
-        || this.selectedTargetSkill()?.skillIcon
-        || 'assets/default-avatar.png';
+      || this.selectedTargetSkill()?.skillIcon
+      || 'assets/default-avatar.png';
   }
 
   cancelSwap() { this.router.navigate(['/home']); }
@@ -218,30 +212,30 @@ export class SwapComponent implements OnInit {
     if (!skillName) return undefined;
     const name = skillName.toLowerCase();
     const map: any = {
-      'futbol': ['sports','football.jpg'],
-      'fútbol': ['sports','football.jpg'],
-      'padel': ['sports','padel.jpg'],
-      'pádel': ['sports','padel.jpg'],
-      'basket': ['sports','basketball.jpg'],
-      'basquet': ['sports','basketball.jpg'],
-      'baloncesto': ['sports','basketball.jpg'],
-      'voley': ['sports','voleyball.jpg'],
-      'vóley': ['sports','voleyball.jpg'],
-      'boxeo': ['sports','boxing.jpg'],
-      'guitarra': ['music','guitar.jpg'],
-      'piano': ['music','piano.jpg'],
-      'violin': ['music','violin.jpg'],
-      'violín': ['music','violin.jpg'],
-      'bateria': ['music','drums.jpg'],
-      'batería': ['music','drums.jpg'],
-      'saxofon': ['music','saxophone.jpg'],
-      'saxofón': ['music','saxophone.jpg'],
-      'dibujo': ['leisure','draw.jpg'],
-      'cocina': ['leisure','cook.jpg'],
-      'manualidades': ['leisure','crafts.jpg'],
-      'digital': ['leisure','digital_entertainment.jpg'],
-      'baile': ['leisure','dance.jpg'],
-      'dance': ['leisure','dance.jpg']
+      'futbol': ['sports', 'football.jpg'],
+      'fútbol': ['sports', 'football.jpg'],
+      'padel': ['sports', 'padel.jpg'],
+      'pádel': ['sports', 'padel.jpg'],
+      'basket': ['sports', 'basketball.jpg'],
+      'basquet': ['sports', 'basketball.jpg'],
+      'baloncesto': ['sports', 'basketball.jpg'],
+      'voley': ['sports', 'voleyball.jpg'],
+      'vóley': ['sports', 'voleyball.jpg'],
+      'boxeo': ['sports', 'boxing.jpg'],
+      'guitarra': ['music', 'guitar.jpg'],
+      'piano': ['music', 'piano.jpg'],
+      'violin': ['music', 'violin.jpg'],
+      'violín': ['music', 'violin.jpg'],
+      'bateria': ['music', 'drums.jpg'],
+      'batería': ['music', 'drums.jpg'],
+      'saxofon': ['music', 'saxophone.jpg'],
+      'saxofón': ['music', 'saxophone.jpg'],
+      'dibujo': ['leisure', 'draw.jpg'],
+      'cocina': ['leisure', 'cook.jpg'],
+      'manualidades': ['leisure', 'crafts.jpg'],
+      'digital': ['leisure', 'digital_entertainment.jpg'],
+      'baile': ['leisure', 'dance.jpg'],
+      'dance': ['leisure', 'dance.jpg']
     };
 
     for (const key of Object.keys(map)) {
@@ -250,11 +244,11 @@ export class SwapComponent implements OnInit {
         return `assets/photos_skills/${folder}/${file}`;
       }
     }
-    
+
     if (category) {
-        if (category.toLowerCase().includes('sport')) return 'assets/photos_skills/sports/football.jpg';
-        if (category.toLowerCase().includes('music')) return 'assets/photos_skills/music/guitar.jpg';
-        if (category.toLowerCase().includes('leisure')) return 'assets/photos_skills/leisure/crafts.jpg';
+      if (category.toLowerCase().includes('sport')) return 'assets/photos_skills/sports/football.jpg';
+      if (category.toLowerCase().includes('music')) return 'assets/photos_skills/music/guitar.jpg';
+      if (category.toLowerCase().includes('leisure')) return 'assets/photos_skills/leisure/crafts.jpg';
     }
 
     return undefined;

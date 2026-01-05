@@ -27,7 +27,7 @@
                   <div class="badges-group">
                     <div class="info-badge">
                       <span class="material-symbols-outlined badge-icon">location_on</span>
-                      <span class="badge-text">{{ otherUser?.location || '...' }}</span>
+                      <span class="badge-text">{{ otherUser?.location?.displayName }}</span>
                     </div>
 
                     @if (otherUser) {
@@ -61,7 +61,7 @@
                   <div class="badges-group">
                     <div class="info-badge">
                       <span class="material-symbols-outlined badge-icon">location_on</span>
-                      <span class="badge-text">{{ currentUser()?.location }}</span>
+                      <span class="badge-text">{{ currentUser()?.location?.displayName }}</span>
                     </div>
                     <div class="info-badge user-link-container"
                          [routerLink]="['/public-profile', currentUser()?.username]"

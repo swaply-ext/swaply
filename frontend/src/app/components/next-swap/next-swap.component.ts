@@ -4,29 +4,8 @@ import { AccountService } from '../../services/account.service';
 import { SwapService } from '../../services/swap.service';
 import { UsersService } from '../../services/users.service';
 import { RouterLink } from '@angular/router';
-
-interface profileToTeach {
-  title: string;
-  imgToTeach: string;
-  profilePhotoUrl: string;
-  location: string;
-  username: string;
-}
-interface profileToLearn {
-  title: string;
-  imgToLearn: string;
-  profilePhotoUrl: string;
-  location: string;
-  username: string;
-}
-interface nextSwap {
-  id: string;
-  requestedUserId: string;
-  skill: string;
-  interest: string;
-  status: 'ACCEPTED' | 'STANDBY' | 'DENIED';
-  isRequester: boolean;
-}
+import { Swap } from '../../models/swap.model';
+import { SwapProfileData } from '../../models/swap-profile-data';
 
 @Component({
   selector: 'app-next-swap',
@@ -41,9 +20,9 @@ export class NextSwapComponent {
     private accountService: AccountService,
     private usersService: UsersService) { }
 
-  nextSwap = signal<nextSwap | null>(null);
-  profileToTeach = signal<profileToTeach | null>(null);
-  profileToLearn = signal<profileToLearn | null>(null);
+  nextSwap = signal<Swap | null>(null);
+  profileToTeach = signal<SwapProfileData | null>(null);
+  profileToLearn = signal<SwapProfileData | null>(null);
 
   hasIntercambio = signal(true);
   isConfirmed = signal(false);
