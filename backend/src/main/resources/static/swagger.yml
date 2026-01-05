@@ -253,8 +253,6 @@ components:
           format: date
         phone:
           type: integer
-        postalCode:
-          type: integer
         location:
           type: string
           
