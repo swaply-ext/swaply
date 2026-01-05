@@ -15,10 +15,10 @@ interface AvatarOption {
   selector: 'app-profile-selector',
   standalone: true,
   imports: [CommonModule, NextButtonComponent],
-  templateUrl: './profile-selector.component.html',
-  styleUrl: './profile-selector.component.css',
+  templateUrl: './avatar-selector.component.html',
+  styleUrl: './avatar-selector.component.css',
 })
-export class ProfileSelectorComponent {
+export class AvatarSelectorComponent {
   profilePhotoUrl: string | null = null;
   isUploadingPhoto = false;
   isReadingPhoto = false;
