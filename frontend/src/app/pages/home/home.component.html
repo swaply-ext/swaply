@@ -33,7 +33,8 @@
             {{ card.skillIcon || '🎓' }}
           </div>
 
-          <div class="card-content clickable-user">
+          <div class="card-content clickable-user" [routerLink]="['/user', card.username]">
+
 
             <div class="card-user-info">
               <img [src]="card.userAvatar" [alt]="card.userName" class="user-avatar"
