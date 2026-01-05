@@ -237,9 +237,7 @@ img {
   margin-bottom: 0.75rem;
   width: fit-content;
   border-radius: 1rem;
-  padding: 0.5rem 0.75rem;
-  padding-left: 0.5rem;
-  margin-left: -0.5rem;
+  padding-right: 0.5rem;
 }
 
 .user-avatar {
@@ -345,8 +343,6 @@ img {
   cursor: pointer;
   transition: opacity 0.2s;
 }
-
-
 
 .clickable-user:hover .user-name-hover {
   text-decoration: underline;

@@ -54,7 +54,7 @@
               targetSkill.location || targetUser()?.location
             }}</span>
           </div>
-          <div class="username">
+          <div class="target-username"  [routerLink]="['/user', targetUser()?.username]">
             <img
               class="small-avatar"
               [src]="

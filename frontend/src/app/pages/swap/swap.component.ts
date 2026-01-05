@@ -7,13 +7,15 @@ import { SearchService, UserSwapDTO, SwapDTO } from '../../services/search.servi
 import { SwapSkillsComponent } from "../../components/swap-skills/swap-skills.component";
 import { SwapInterestsComponent } from "../../components/swap-interests/swap-interests.component";
 import { ProfileDataDTO } from '../../models/profile-data-dto.model';
+import { RouterLink } from '@angular/router';
+
 
 
 
 @Component({
   selector: 'app-swap',
   standalone: true,
-  imports: [CommonModule, AppNavbarComponent, SwapSkillsComponent, SwapInterestsComponent],
+  imports: [CommonModule, AppNavbarComponent, SwapSkillsComponent, SwapInterestsComponent, RouterLink],
   templateUrl: './swap.component.html',
   styleUrls: ['./swap.component.css']
 })
