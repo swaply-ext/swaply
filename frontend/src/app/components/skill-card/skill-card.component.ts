@@ -48,7 +48,11 @@ export class SkillCardComponent implements OnChanges {
 
     if (!this.editable || !this.skill) return;
 
-    if (this.skill.level === clickedLevel) {
+    if (this.skill.level === 0 && clickedLevel <= 1){
+      console.log(clickedLevel)
+      this.skill.level = 1;
+    }
+    else if (this.skill.level === clickedLevel) {
       this.skill.level = 0;
     } else {
       this.skill.level = clickedLevel;
@@ -61,8 +65,6 @@ export class SkillCardComponent implements OnChanges {
   toggleCardLevel() {
     if (!this.editable || !this.skill) return;
 
-    if (this.skill.level === 0 || this.skill.level === 1) {
-      this.changeLevel(1);
-    }
+    this.changeLevel(this.skill.level);
   }
 }
