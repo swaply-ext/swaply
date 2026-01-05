@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { SKIP_LOADING } from '../interceptors/loading.interceptor';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,9 @@ export class SwapService {
   constructor(private http: HttpClient) {}
   
   getNextSwap(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/showNextSwap`);
+    return this.http.get<any>(`${this.apiUrl}/showNextSwap`, {
+      context: new HttpContext().set(SKIP_LOADING, true)
+    });
   }
 
   getAllSwaps(): Observable<any> {
@@ -19,6 +22,9 @@ export class SwapService {
   }
   updateSwapStatus(swapId: string, status: 'ACCEPTED' | 'DENIED'): Observable<any> {
     const params = new HttpParams().set('status', status);
-    return this.http.patch(`${this.apiUrl}/${swapId}/status`, {}, { params });
+    return this.http.patch(`${this.apiUrl}/${swapId}/status`, {}, { 
+      params,
+      context: new HttpContext().set(SKIP_LOADING, true)
+    });
   }
 }

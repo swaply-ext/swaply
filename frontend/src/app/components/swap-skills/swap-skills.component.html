@@ -8,7 +8,7 @@
 
   <div *ngIf="open" class="skills-grid">
     <app-skill-card
-      *ngFor="let item of SkillsInput"
+      *ngFor="let item of SkillsInput; trackBy: trackBySkill" 
       [id]="item.id || item.name" 
       [level]="item.level || 0"
       

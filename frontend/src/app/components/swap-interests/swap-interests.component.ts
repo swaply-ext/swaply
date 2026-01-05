@@ -41,4 +41,9 @@ export class SwapInterestsComponent {
   onCardClick(item: any) {
     this.skillSelected.emit(item);
   }
+
+  trackByInterest(index: number, interest: any) {
+  return interest.id || interest.name; 
+}
+
 }

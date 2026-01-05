@@ -55,7 +55,9 @@ export class SearchService {
   }
   
   getUserByUsername(username: string): Observable<UserSwapDTO> {
-    return this.http.get<UserSwapDTO>(`/search/user/${username}`);
+    return this.http.get<UserSwapDTO>(`/search/user/${username}`, {
+      context: new HttpContext().set(SKIP_LOADING, true)
+    });
   }
   
   sendSwapRequest(payload: SwapDTO): Observable<any> {
