@@ -1,0 +1,181 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.profile-card {
+    background-color: var(--bg-interchange);
+    padding: 2.5rem 2rem;
+    border-radius: 1rem;
+    width: 100%;
+    max-width: 28.125rem;
+    box-shadow: var(--shadow-large);
+    text-align: center;
+    border: 0.0625rem solid rgba(255, 255, 255, 0.05);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.card-header {
+    margin-bottom: 2rem;
+}
+
+.card-header .title {
+    color: var(--principal-color-2);
+    font-family: var(--font-primary);
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.0625rem;
+}
+
+.card-header .subtitle {
+    color: var(--text-muted);
+    font-family: var(--font-secondary);
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+.avatar-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+    justify-items: center;
+}
+
+.avatar-item {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.2s ease;
+}
+
+.avatar-item:focus {
+    outline: none;
+}
+
+.avatar-item:hover {
+    transform: scale(1.05);
+}
+
+.avatar-item.selected::before {
+    content: '';
+    position: absolute;
+    width: 5.625rem;
+    height: 5.625rem;
+    border: 0.25rem solid var(--principal-color-2);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 0.9375rem rgba(60, 181, 124, 0.4);
+    z-index: 0;
+}
+
+.avatar-circle {
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+    background-color: var(--secundary-color-2);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.generic-user-icon {
+    font-size: 3rem;
+    color: var(--principal-color-3);
+}
+
+.is-upload-btn .avatar-circle {
+    background-color: var(--secundary-color-2);
+    border: none;
+}
+
+.is-upload-btn .spinner {
+    border: 0.1875rem solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--principal-color-2);
+    width: 1.875rem;
+    height: 1.875rem;
+    animation: spin 1s linear infinite;
+}
+
+.is-upload-btn .action-badge {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 2rem;
+    height: 2rem;
+    background-color: var(--principal-color-2);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0.125rem 0.3125rem rgba(0, 0, 0, 0.2);
+    z-index: 10;
+    transition: transform 0.2s ease, background-color 0.2s;
+}
+
+.is-upload-btn .action-badge .material-symbols-outlined {
+    font-size: 1.5rem;
+    color: var(--principal-color-1);
+    font-weight: bold;
+}
+
+.is-upload-btn .action-badge:hover {
+    background-color: var(--principal-color-2-hover);
+    transform: scale(1.1);
+}
+
+.card-footer {
+    display: flex;
+    justify-content: center;
+}
+
+.btn-continue {
+    background-color: var(--principal-color-2);
+    color: var(--principal-color-1);
+    font-family: var(--font-secondary);
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    padding: 0.75rem 2.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s;
+    box-shadow: var(--shadow);
+}
+
+.btn-continue:hover {
+    background-color: var(--principal-color-2-hover);
+    color: var(--text-white);
+}
+
+.btn-continue:active {
+    transform: scale(0.98);
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}

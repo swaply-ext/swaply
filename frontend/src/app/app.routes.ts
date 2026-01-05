@@ -40,6 +40,7 @@ import { SwapInterestsComponent } from './components/swap-interests/swap-interes
 import { DeleteAccountConfirmationComponent } from './pages/delete-account-confirmation/delete-account-confirmation.component';
 import { UserSearchComponent } from './components/user-search/user-search.component';
 import { getProfileDataResolver } from './resolver/get-profile-data.service';
+import { ProfileSelectorComponent } from './pages/profile-selector/profile-selector.component';
 
 // Creamos una ruta para la verificación de correo
 // Ahora usamos el componente real EmailVerificationComponent
@@ -83,6 +84,7 @@ export const appRoutes: Routes = [
   { path: 'privacy-and-security', component: PrivacyAndSecurityComponent, canActivate: [AuthGuard] },
   { path: 'user-search', component: UserSearchComponent },
   { path: 'swap/:username', component: SwapComponent, canActivate: [AuthGuard] },
+  { path: 'select-avatar', component:ProfileSelectorComponent, canActivate: [AuthGuard]},
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
 
 ];
