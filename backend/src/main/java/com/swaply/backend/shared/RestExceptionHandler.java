@@ -38,7 +38,7 @@ public class RestExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<String> handleRuntimeException (RuntimeException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -54,7 +54,7 @@ public class RestExceptionHandler {
     }
     @ExceptionHandler(NewPasswordMatchesOldException.class)
     public ResponseEntity<String> handleNewPasswordMatchesOld(NewPasswordMatchesOldException e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
     
 }
