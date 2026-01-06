@@ -3,10 +3,8 @@ import { HttpClient, HttpContext } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 import { SKIP_LOADING } from '../interceptors/loading.interceptor';
 import { Client, Message as StompMessage } from '@stomp/stompjs';
-// CORRECCIÓN AQUÍ: Importación por defecto en lugar de namespace
 import SockJS from 'sockjs-client';
 
-// Interfaces
 export interface ChatRoomDTO {
   id: string;
   participants: string[];
@@ -38,30 +36,29 @@ export class ChatService {
 
   constructor(private http: HttpClient) {}
 
-  // 1. Obtener lista de rooms
+  //OBTENER ROOMS (no va por backend error 500)
   getRooms(): Observable<SendChatRoomsDTO> {
     return this.http.get<SendChatRoomsDTO>(`${this.base}/rooms`, {
       context: new HttpContext().set(SKIP_LOADING, true)
     });
   }
 
-  // 2. Obtener historial
+  //obtener el historial SI Q FUNCIONA DE UNA ROOM
   getHistory(roomId: string): Observable<ChatMessage[]> {
     return this.http.get<ChatMessage[]>(`${this.base}/history/${roomId}`);
   }
 
-  // 3. Crear room
+  //CREAR UNA ROOM
   createRoomWithUsername(targetUsername: string): Observable<ChatRoomDTO> {
     return this.http.post<ChatRoomDTO>(`${this.base}/rooms/create/${targetUsername}`, {});
   }
 
-  // 4. Lógica WebSocket
+  //logica WEBSOCKET API
   async connectIfNeeded(authToken?: string): Promise<void> {
     if (this.client && this.client.active) return;
     if (this._connectedPromise) return this._connectedPromise;
 
     this._connectedPromise = new Promise((resolve, reject) => {
-      // CORRECCIÓN: La fábrica ahora usa la importación correcta
       const factory = () => new SockJS('http://localhost:8081/ws-chat');
       
       this.client = new Client({
