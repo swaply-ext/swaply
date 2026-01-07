@@ -7,6 +7,7 @@
     'is-editable': editable,
     'selected': selected
   }"
+  (click)="toggleCardLevel()"
 >
   <div class="card-header">
     <span class="skill-name">{{ skill.name }}</span>
@@ -16,19 +17,19 @@
   <div class="level-bar">
     <div
       class="level-block"
-      (click)="changeLevel(1)"
+      (click)="changeLevel(1, $event)"
       [class.filled]="skill.level >= 1">
     </div>
 
     <div
       class="level-block"
-      (click)="changeLevel(2)"
+      (click)="changeLevel(2, $event)"
       [class.filled]="skill.level >= 2">
     </div>
 
     <div
       class="level-block"
-      (click)="changeLevel(3)"
+      (click)="changeLevel(3, $event)"
       [class.filled]="skill.level >= 3">
     </div>
   </div>
