@@ -32,6 +32,5 @@ public class UserSwapDTO {
 
     // Lista de todas las skills
     private List<SkillItemDTO> userSkills;
-
-
+    private List<SkillItemDTO> interests;
 }

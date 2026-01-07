@@ -9,7 +9,7 @@ export interface UserSwapDTO {
   name: string;
   username: string;
   profilePhotoUrl: string;
-  location: UserLocation;
+  location: string;
 
   skillName: string;
   skillIcon: string;

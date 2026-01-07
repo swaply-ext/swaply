@@ -9,9 +9,6 @@ import { SwapInterestsComponent } from "../../components/swap-interests/swap-int
 import { ProfileDataDTO } from '../../models/profile-data-dto.model';
 import { RouterLink } from '@angular/router';
 
-
-
-
 @Component({
   selector: 'app-swap',
   standalone: true,
@@ -59,7 +56,7 @@ export class SwapComponent implements OnInit {
               const mainSkill = {
                 id: target.skillName,
                 name: target.skillName,
-                category: target.skillCategory,
+                category: target.skillCategory || '', 
                 level: target.skillLevel,
                 icon: target.skillIcon
               };
@@ -67,17 +64,18 @@ export class SwapComponent implements OnInit {
               const secondarySkills = (target.userSkills || [])
                 .filter(s => s.name !== mainSkill.name)
                 .map(s => ({
-                   id: s.name, name: s.name, category: s.category, level: s.level
+                   id: s.name, name: s.name, category: s.category || '', level: s.level
                 }));
 
               let allTargetSkills = [mainSkill, ...secondarySkills];
 
+              // Filtrar contra MIS intereses
               let filteredTargetSkills = this.filterMatch(allTargetSkills, me.interests || []);
 
               if (paramSkillName && filteredTargetSkills.length > 0) {
                 const searchName = paramSkillName.toLowerCase();
                 const idx = filteredTargetSkills.findIndex(s => 
-                  s.name.toLowerCase().includes(searchName) || searchName.includes(s.name.toLowerCase())
+                  (s.name || '').toLowerCase().includes(searchName) || searchName.includes((s.name || '').toLowerCase())
                 );
                 if (idx > 0) {
                   const [item] = filteredTargetSkills.splice(idx, 1);
@@ -94,7 +92,7 @@ export class SwapComponent implements OnInit {
                   skillName: item.name,
                   skillIcon: (item as any).icon,
                   skillImage: item.image,
-                  location: target.location
+                  location: target.location 
                 });
               } else {
                 this.selectedTargetSkill.set({
@@ -138,10 +136,13 @@ export class SwapComponent implements OnInit {
     this.targetUserInterests.set(updatedList);
 
     const currentUser = this.targetUser();
+    
+    const categorySafe = item.category || '';
+
     const safeImage = item.image 
-                   || this.assignImageToSkill(item.category, item.name) 
-                   || 'assets/default-avatar.png';
-                   
+                    || this.assignImageToSkill(categorySafe, item.name) 
+                    || 'assets/default-avatar.png';
+                    
     this.selectedTargetSkill.set({
       skillName: item.name,
       skillIcon: item.icon, 
@@ -160,9 +161,12 @@ export class SwapComponent implements OnInit {
       };
     });
     this.mySkillsDisplay.set(updatedList);
+    
+    const categorySafe = item.category || '';
+    
     this.selectedTeachSkill.set({
         ...item,
-        image: item.image || this.assignImageToSkill(item.category, item.name)
+        image: item.image || this.assignImageToSkill(categorySafe, item.name)
     });
   }
 
@@ -230,11 +234,12 @@ export class SwapComponent implements OnInit {
   private processVisuals(list: any[]): any[] {
     return list.map((item, index) => {
       const realName = item.name || item.id || 'Skill';
+      const categorySafe = item.category || '';
       return {
         ...item,
         id: item.id || realName,
         name: realName,
-        image: item.image || this.assignImageToSkill(item.category, realName),
+        image: item.image || this.assignImageToSkill(categorySafe, realName),
         selected: index === 0
       };
     });
@@ -242,7 +247,10 @@ export class SwapComponent implements OnInit {
 
   private assignImageToSkill(category: string, skillName: string): string | undefined {
     if (!skillName) return undefined;
-    const name = skillName.toLowerCase();
+    
+    // Convertir a minusculas de forma segura
+    const name = String(skillName).toLowerCase();
+    
     const map: any = {
       'futbol': ['sports', 'football.jpg'],
       'fútbol': ['sports', 'football.jpg'],
@@ -278,9 +286,11 @@ export class SwapComponent implements OnInit {
     }
 
     if (category) {
-      if (category.toLowerCase().includes('sport')) return 'assets/photos_skills/sports/football.jpg';
-      if (category.toLowerCase().includes('music')) return 'assets/photos_skills/music/guitar.jpg';
-      if (category.toLowerCase().includes('leisure')) return 'assets/photos_skills/leisure/crafts.jpg';
+      // Seguridad: Asegurar que category es string antes de toLowerCase
+      const catLower = String(category).toLowerCase();
+      if (catLower.includes('sport')) return 'assets/photos_skills/sports/football.jpg';
+      if (catLower.includes('music')) return 'assets/photos_skills/music/guitar.jpg';
+      if (catLower.includes('leisure')) return 'assets/photos_skills/leisure/crafts.jpg';
     }
 
     return undefined;

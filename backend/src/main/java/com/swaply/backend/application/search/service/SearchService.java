@@ -146,7 +146,12 @@ public class SearchService {
         dto.setName(user.getName());
         dto.setUsername(user.getUsername());
         dto.setProfilePhotoUrl(user.getProfilePhotoUrl());
-        dto.setLocation(user.getLocation().getDisplayName());
+        
+        // Manejo seguro de Location para evitar NullPointerException
+        if (user.getLocation() != null) {
+            dto.setLocation(user.getLocation().getDisplayName());
+        }
+        
         dto.setRating(user.getRating() != null ? user.getRating() : 5.0);
         dto.setDistance(distanceLabel);
         dto.setSwapMatch(isMatch);
@@ -175,7 +180,10 @@ public class SearchService {
         dto.setName(user.getName());
         dto.setUsername(user.getUsername());
         dto.setProfilePhotoUrl(user.getProfilePhotoUrl());
-        dto.setLocation(user.getLocation().getDisplayName());
+        
+        if (user.getLocation() != null) {
+            dto.setLocation(user.getLocation().getDisplayName());
+        }
 
         if (user.getSkills() != null && !user.getSkills().isEmpty()) {
             UserSkills s = user.getSkills().get(0);
@@ -184,8 +192,9 @@ public class SearchService {
             dto.setSkillLevel(s.getLevel());
             dto.setSkillCategory(s.getCategory());
 
-            List<UserSwapDTO.SkillItem> allSkills = user.getSkills().stream()
-                    .map(skill -> new UserSwapDTO.SkillItem(
+            // CORREGIDO: Usamos SkillItemDTO en lugar de UserSwapDTO.SkillItem
+            List<SkillItemDTO> allSkills = user.getSkills().stream()
+                    .map(skill -> new SkillItemDTO(
                             skill.getName() != null ? skill.getName() : skill.getId(),
                             skill.getCategory(),
                             skill.getLevel()
@@ -195,17 +204,18 @@ public class SearchService {
             dto.setUserSkills(allSkills);
         }
         
+        // CORREGIDO: Mapeo de Interests usando SkillItemDTO
         if (user.getInterests() != null && !user.getInterests().isEmpty()) {
-        List<UserSwapDTO.SkillItem> interestsDto = user.getInterests().stream()
-            .map(interest -> new UserSwapDTO.SkillItem(
-                interest.getName() != null ? interest.getName() : interest.getId(),
-                interest.getCategory(),
-                interest.getLevel()
-            ))
-            .collect(Collectors.toList());
-        
-        dto.setInterests(interestsDto);
-    }
+            List<SkillItemDTO> interestsDto = user.getInterests().stream()
+                .map(interest -> new SkillItemDTO(
+                    interest.getName() != null ? interest.getName() : interest.getId(),
+                    interest.getCategory(),
+                    interest.getLevel()
+                ))
+                .collect(Collectors.toList());
+            
+            dto.setInterests(interestsDto);
+        }
 
         dto.setRating(4.8);
         dto.setDistance("Cerca de ti");
