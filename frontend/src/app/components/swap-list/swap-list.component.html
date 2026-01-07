@@ -27,12 +27,12 @@
                   <div class="badges-group">
                     <div class="info-badge">
                       <span class="material-symbols-outlined badge-icon">location_on</span>
-                      <span class="badge-text">{{ otherUser?.location || '...' }}</span>
+                      <span class="badge-text">{{ otherUser?.location?.displayName }}</span>
                     </div>
 
                     @if (otherUser) {
                       <div class="info-badge user-link-container"
-                           [routerLink]="['/public-profile', otherUser.username]"
+                           [routerLink]="['/user', otherUser.username]"
                            style="cursor: pointer;">
                         <div class="avatar-wrapper">
                           <img [src]="otherUser.profilePhotoUrl" alt="Avatar" class="user-avatar">
@@ -61,10 +61,10 @@
                   <div class="badges-group">
                     <div class="info-badge">
                       <span class="material-symbols-outlined badge-icon">location_on</span>
-                      <span class="badge-text">{{ currentUser()?.location }}</span>
+                      <span class="badge-text">{{ currentUser()?.location?.displayName }}</span>
                     </div>
                     <div class="info-badge user-link-container"
-                         [routerLink]="['/public-profile', currentUser()?.username]"
+                         [routerLink]="['/user', currentUser()?.username]"
                          style="cursor: pointer;">
                       <div class="avatar-wrapper">
                         <img [src]="currentUser()?.profilePhotoUrl" alt="Avatar" class="user-avatar">

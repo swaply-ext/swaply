@@ -1,20 +1,21 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { SKIP_LOADING } from '../interceptors/loading.interceptor'; 
+import { SKIP_LOADING } from '../interceptors/loading.interceptor';
+import { UserLocation } from '../models/user-location.model';
 
 export interface UserSwapDTO {
   userId: string;
   name: string;
   username: string;
   profilePhotoUrl: string;
-  location: string;
-  
+  location: UserLocation;
+
   skillName: string;
   skillIcon: string;
   skillLevel: number;
   skillCategory: string;
-  
+
   isSwapMatch: boolean;
   rating: number;
   distance: string;
@@ -48,22 +49,22 @@ export class SearchService {
 
   getMatches(skill: string): Observable<UserSwapDTO[]> {
     const params = new HttpParams().set('skill', skill);
-    return this.http.get<UserSwapDTO[]>(`/search/match`, { 
+    return this.http.get<UserSwapDTO[]>(`/search/match`, {
       params,
-      context: new HttpContext().set(SKIP_LOADING, true) 
+      context: new HttpContext().set(SKIP_LOADING, true)
     });
   }
 
-  getRecommendations(): Observable<UserSwapDTO[]> {    
+  getRecommendations(): Observable<UserSwapDTO[]> {
     return this.http.get<UserSwapDTO[]>(`/home/recommendations`, {
       context: new HttpContext().set(SKIP_LOADING, true)
     });
   }
-  
+
   getUserByUsername(username: string): Observable<UserSwapDTO> {
     return this.http.get<UserSwapDTO>(`/search/user/${username}`);
   }
-  
+
   sendSwapRequest(payload: SwapDTO): Observable<any> {
     // cambiamos a patch y usamos el endpoint solicitado
     return this.http.patch(`/swap/request`, payload);

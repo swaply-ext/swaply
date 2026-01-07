@@ -6,26 +6,22 @@ import { AccountService } from '../../services/account.service';
 import { SearchService, UserSwapDTO, SwapDTO } from '../../services/search.services';
 import { SwapSkillsComponent } from "../../components/swap-skills/swap-skills.component";
 import { SwapInterestsComponent } from "../../components/swap-interests/swap-interests.component";
+import { ProfileDataDTO } from '../../models/profile-data-dto.model';
+import { RouterLink } from '@angular/router';
 
-interface UserProfile {
-  username: string;
-  name: string;
-  location?: string;
-  skills?: any[];
-  interests?: any[];
-  profilePhotoUrl?: string;
-}
+
+
 
 @Component({
   selector: 'app-swap',
   standalone: true,
-  imports: [CommonModule, AppNavbarComponent, SwapSkillsComponent, SwapInterestsComponent],
+  imports: [CommonModule, AppNavbarComponent, SwapSkillsComponent, SwapInterestsComponent, RouterLink],
   templateUrl: './swap.component.html',
   styleUrls: ['./swap.component.css']
 })
 export class SwapComponent implements OnInit {
 
-  myUser = signal<UserProfile | null>(null);
+  myUser = signal<ProfileDataDTO | null>(null);
   targetUser = signal<UserSwapDTO | null>(null);
 
   selectedTeachSkill = signal<any>(null); 
@@ -45,7 +41,7 @@ export class SwapComponent implements OnInit {
     private router: Router,
     private accountService: AccountService,
     private searchService: SearchService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     const targetUsername = this.route.snapshot.paramMap.get('username');
@@ -137,7 +133,7 @@ export class SwapComponent implements OnInit {
 
     const updatedList = this.targetUserInterests().map(skill => ({
       ...skill,
-      selected: skill.name === item.name 
+      selected: skill.name === item.name
     }));
     this.targetUserInterests.set(updatedList);
 
@@ -248,30 +244,30 @@ export class SwapComponent implements OnInit {
     if (!skillName) return undefined;
     const name = skillName.toLowerCase();
     const map: any = {
-      'futbol': ['sports','football.jpg'],
-      'fútbol': ['sports','football.jpg'],
-      'padel': ['sports','padel.jpg'],
-      'pádel': ['sports','padel.jpg'],
-      'basket': ['sports','basketball.jpg'],
-      'basquet': ['sports','basketball.jpg'],
-      'baloncesto': ['sports','basketball.jpg'],
-      'voley': ['sports','voleyball.jpg'],
-      'vóley': ['sports','voleyball.jpg'],
-      'boxeo': ['sports','boxing.jpg'],
-      'guitarra': ['music','guitar.jpg'],
-      'piano': ['music','piano.jpg'],
-      'violin': ['music','violin.jpg'],
-      'violín': ['music','violin.jpg'],
-      'bateria': ['music','drums.jpg'],
-      'batería': ['music','drums.jpg'],
-      'saxofon': ['music','saxophone.jpg'],
-      'saxofón': ['music','saxophone.jpg'],
-      'dibujo': ['leisure','draw.jpg'],
-      'cocina': ['leisure','cook.jpg'],
-      'manualidades': ['leisure','crafts.jpg'],
-      'digital': ['leisure','digital_entertainment.jpg'],
-      'baile': ['leisure','dance.jpg'],
-      'dance': ['leisure','dance.jpg']
+      'futbol': ['sports', 'football.jpg'],
+      'fútbol': ['sports', 'football.jpg'],
+      'padel': ['sports', 'padel.jpg'],
+      'pádel': ['sports', 'padel.jpg'],
+      'basket': ['sports', 'basketball.jpg'],
+      'basquet': ['sports', 'basketball.jpg'],
+      'baloncesto': ['sports', 'basketball.jpg'],
+      'voley': ['sports', 'voleyball.jpg'],
+      'vóley': ['sports', 'voleyball.jpg'],
+      'boxeo': ['sports', 'boxing.jpg'],
+      'guitarra': ['music', 'guitar.jpg'],
+      'piano': ['music', 'piano.jpg'],
+      'violin': ['music', 'violin.jpg'],
+      'violín': ['music', 'violin.jpg'],
+      'bateria': ['music', 'drums.jpg'],
+      'batería': ['music', 'drums.jpg'],
+      'saxofon': ['music', 'saxophone.jpg'],
+      'saxofón': ['music', 'saxophone.jpg'],
+      'dibujo': ['leisure', 'draw.jpg'],
+      'cocina': ['leisure', 'cook.jpg'],
+      'manualidades': ['leisure', 'crafts.jpg'],
+      'digital': ['leisure', 'digital_entertainment.jpg'],
+      'baile': ['leisure', 'dance.jpg'],
+      'dance': ['leisure', 'dance.jpg']
     };
 
     for (const key of Object.keys(map)) {
@@ -280,11 +276,11 @@ export class SwapComponent implements OnInit {
         return `assets/photos_skills/${folder}/${file}`;
       }
     }
-    
+
     if (category) {
-        if (category.toLowerCase().includes('sport')) return 'assets/photos_skills/sports/football.jpg';
-        if (category.toLowerCase().includes('music')) return 'assets/photos_skills/music/guitar.jpg';
-        if (category.toLowerCase().includes('leisure')) return 'assets/photos_skills/leisure/crafts.jpg';
+      if (category.toLowerCase().includes('sport')) return 'assets/photos_skills/sports/football.jpg';
+      if (category.toLowerCase().includes('music')) return 'assets/photos_skills/music/guitar.jpg';
+      if (category.toLowerCase().includes('leisure')) return 'assets/photos_skills/leisure/crafts.jpg';
     }
 
     return undefined;

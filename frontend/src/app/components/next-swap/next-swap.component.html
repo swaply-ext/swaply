@@ -1,31 +1,44 @@
 <section class="interchange-section">
   <ng-container *ngIf="hasIntercambio(); else noIntercambio">
-    
     <div class="interchange-box">
       <div class="interchange-content">
-
         <div class="interchange-card-wrapper">
           <h3 class="section-title">Tu próxima habilidad para aprender</h3>
-          
+
           <div class="skill-card">
-            <img [src]="imageToLearn()" alt="{{ nextSwap()?.interest }}" class="activity-img">
-            
+            <img
+              [src]="imageToLearn()"
+              alt="{{ nextSwap()?.interest }}"
+              class="activity-img"
+            />
+
             <div class="card-details">
               <h4>Clase de {{ nextSwap()?.interest }}</h4>
-              
+
               <div class="badges-group">
                 <div class="info-badge">
-                  <span class="material-symbols-outlined badge-icon">location_on</span>
-                  <span class="badge-text">{{ profileToLearn()?.location }}</span>
+                  <span class="material-symbols-outlined badge-icon"
+                    >location_on</span
+                  >
+                  <span class="badge-text">{{
+                    profileToLearn()?.location?.displayName
+                  }}</span>
                 </div>
-                <div class="info-badge user-link-container" 
-                     [routerLink]="['/public-profile', profileToLearn()?.username]"
-                     style="cursor: pointer;">
-                  
+                <div
+                  class="info-badge user-link-container"
+                  [routerLink]="['/user', profileToLearn()?.username]"
+                  style="cursor: pointer"
+                >
                   <div class="avatar-wrapper">
-                    <img [src]="profileToLearn()?.profilePhotoUrl" alt="Avatar" class="user-avatar">
+                    <img
+                      [src]="profileToLearn()?.profilePhotoUrl"
+                      alt="Avatar"
+                      class="user-avatar"
+                    />
                   </div>
-                  <span class="badge-text">{{ '@'+ profileToLearn()?.username }}</span>
+                  <span class="badge-text">{{
+                    "@" + profileToLearn()?.username
+                  }}</span>
                 </div>
               </div>
             </div>
@@ -38,36 +51,49 @@
 
         <div class="interchange-card-wrapper">
           <h3 class="section-title">Tu próxima habilidad para enseñar</h3>
-          
+
           <div class="skill-card">
-            <img [src]="imageToTeach()" alt="{{ nextSwap()?.skill }}" class="activity-img">
-            
+            <img
+              [src]="imageToTeach()"
+              alt="{{ nextSwap()?.skill }}"
+              class="activity-img"
+            />
+
             <div class="card-details">
               <h4>Clase de {{ nextSwap()?.skill }}</h4>
-              
+
               <div class="badges-group">
                 <div class="info-badge">
-                  <span class="material-symbols-outlined badge-icon">location_on</span>
-                  <span class="badge-text">{{ profileToTeach()?.location }}</span>
-                </div>   
-                <div class="info-badge user-link-container"
-                     [routerLink]="['/public-profile', profileToTeach()?.username]"
-                     style="cursor: pointer;">
-                  
+                  <span class="material-symbols-outlined badge-icon"
+                    >location_on</span
+                  >
+                  <span class="badge-text">{{
+                    profileToTeach()?.location?.displayName
+                  }}</span>
+                </div>
+                <div
+                  class="info-badge user-link-container"
+                  [routerLink]="['/user', profileToTeach()?.username]"
+                  style="cursor: pointer"
+                >
                   <div class="avatar-wrapper">
-                    <img [src]="profileToTeach()?.profilePhotoUrl" alt="Avatar" class="user-avatar">
+                    <img
+                      [src]="profileToTeach()?.profilePhotoUrl"
+                      alt="Avatar"
+                      class="user-avatar"
+                    />
                   </div>
-                  <span class="badge-text">{{ '@'+ profileToTeach()?.username }}</span>
+                  <span class="badge-text">{{
+                    "@" + profileToTeach()?.username
+                  }}</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
-
       </div>
 
       <div class="actions-area">
-        
         <ng-container *ngIf="isConfirmed()">
           <span class="status-badge confirmed">
             <span class="material-symbols-outlined">check_circle</span>
@@ -87,13 +113,12 @@
             <span class="material-symbols-outlined">cancel</span>
             Rechazar intercambio
           </button>
-          
+
           <button class="btn-action btn-accept" (click)="confirmIntercambio()">
             <span class="material-symbols-outlined">check_circle</span>
             Aceptar intercambio
           </button>
         </ng-container>
-
       </div>
     </div>
   </ng-container>

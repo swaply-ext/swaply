@@ -1,17 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200");
 
 /* --- Configuración Global y Fuentes --- */
 ::ng-deep * {
-  font-family: 'Inter', sans-serif !important;
+  font-family: "Inter", sans-serif !important;
   box-sizing: border-box;
 }
 
 ::ng-deep .material-symbols-outlined {
-  font-family: 'Material Symbols Outlined' !important;
+  font-family: "Material Symbols Outlined" !important;
   font-weight: normal;
   font-style: normal;
-  font-size: 24px;
+  font-size: 1.5rem;
   display: inline-block;
   line-height: 1;
   text-transform: none;
@@ -26,7 +26,7 @@
 ::ng-deep select,
 ::ng-deep textarea,
 ::ng-deep ::placeholder {
-  font-family: 'Inter', sans-serif !important;
+  font-family: "Inter", sans-serif !important;
 }
 
 :host {
@@ -57,7 +57,7 @@ img {
 }
 
 .main-content {
-  max-width: 1280px;
+  max-width: 80rem;
   margin: 0 auto;
   padding: 2rem;
 }
@@ -84,11 +84,12 @@ img {
 
 .action-buttons .btn {
   padding: 1rem 0;
-  width: 250px;
-  border-radius: 9999px;
+  width: 15.625rem;
+  border-radius: 625rem;
   font-size: 1.125rem;
   font-weight: 700;
-  transition: background-color 0.3s, transform 0.1s, opacity 0.1s, border-color 0.3s;
+  transition: background-color 0.3s, transform 0.1s, opacity 0.1s,
+    border-color 0.3s;
 }
 
 .action-buttons .btn:active {
@@ -97,9 +98,9 @@ img {
 }
 
 .btn-primary {
-  background-color: #3CB57C;
+  background-color: #3cb57c;
   color: #ffffff;
-  border: 2px solid #3CB57C;
+  border: 2px solid #3cb57c;
 }
 
 .btn-primary:hover {
@@ -109,7 +110,7 @@ img {
 .btn-secondary {
   background-color: transparent;
   color: #ffffff;
-  border: 2px solid #3CB57C;
+  border: 2px solid #3cb57c;
 }
 
 .btn-secondary:hover {
@@ -151,19 +152,19 @@ img {
 }
 
 .nearby-search input {
-  width: 280px;
+  width: 17.5rem;
   padding: 0.6rem 1rem 0.6rem 2.5rem;
-  border-radius: 9999px;
-  background-color: #143F4C;
+  border-radius: 625rem;
+  background-color: #143f4c;
   color: #e5e7eb;
-  border: 1px solid transparent;
+  border: 0.0625rem solid transparent;
   outline: none;
   transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .nearby-search input:focus {
-  border-color: #3CB57C;
-  box-shadow: 0 0 10px 0px rgba(60, 181, 124, 0.3);
+  border-color: #3cb57c;
+  box-shadow: 0 0 0.625rem 0 rgba(60, 181, 124, 0.3);
 }
 
 .nearby-search .search-icon {
@@ -172,7 +173,7 @@ img {
   top: 50%;
   transform: translateY(-50%);
   color: #6b7280;
-  font-size: 20px;
+  font-size: 1.25rem;
   pointer-events: none;
   user-select: none;
 }
@@ -181,21 +182,21 @@ img {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background-color: #143F4C;
+  background-color: #143f4c;
   color: #e5e7eb;
   padding: 0.6rem 1rem;
-  border-radius: 9999px;
+  border-radius: 625rem;
   font-weight: 600;
   transition: background-color 0.3s, filter 0.3s;
 }
 
 .btn-filter:hover {
-  background-color: #1F4E5D;
+  background-color: #1f4e5d;
   filter: brightness(1.2);
 }
 
 .btn-filter .material-symbols-outlined {
-  font-size: 20px;
+  font-size: 1.25rem;
 }
 
 .card-grid {
@@ -205,9 +206,9 @@ img {
 }
 
 .skill-card {
-  background-color: #1F4E5D;
+  background-color: #1f4e5d;
   border-radius: 0.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.25rem 0.375rem -0.0625rem rgba(0, 0, 0, 0.1);
   overflow: hidden;
   cursor: pointer;
   transition: transform 0.3s, box-shadow 0.3s;
@@ -215,12 +216,12 @@ img {
 
 .skill-card:hover {
   transform: scale(1.03);
-  box-shadow: 0 0 15px 0px rgba(60, 181, 124, 0.4);
+  box-shadow: 0 0 0.9375rem 0 rgba(60, 181, 124, 0.4);
 }
 
 .card-image {
   width: 100%;
-  height: 160px;
+  height: 10rem;
   object-fit: cover;
 }
 
@@ -234,12 +235,14 @@ img {
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 0.75rem;
-  padding-left: 0;
+  width: fit-content;
+  border-radius: 1rem;
+  padding-right: 0.5rem;
 }
 
 .user-avatar {
-  width: 32px;
-  height: 32px;
+  width: 2rem;
+  height: 2rem;
   border-radius: 50%;
   object-fit: cover;
 }
@@ -248,6 +251,10 @@ img {
   font-size: 0.9rem;
   font-weight: 500;
   color: #d1d5db;
+}
+
+.card-user-info:hover {
+  background-color: var(--principal-color-2-hover);
 }
 
 .card-content h3 {
@@ -278,13 +285,13 @@ img {
 }
 
 .card-footer .rating {
-  color: #F59E0B;
+  color: #f59e0b;
 }
 
 .card-footer .card-icon {
-  font-size: 18px;
+  font-size: 1.125rem;
   position: relative;
-  top: -1px;
+  top: -0.0625rem;
 }
 
 .see-more-button {
@@ -294,8 +301,9 @@ img {
 
 .see-more-button .btn-primary {
   padding: 1rem 0;
-  width: 250px;
-  transition: background-color 0.3s, transform 0.1s, opacity 0.1s, border-color 0.3s;
+  width: 15.625rem;
+  transition: background-color 0.3s, transform 0.1s, opacity 0.1s,
+    border-color 0.3s;
 }
 
 .see-more-button .btn-primary:active {
@@ -309,8 +317,8 @@ img {
   margin-bottom: 0.5rem;
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 0;
+  gap: 0.375rem;
+  padding: 0.25rem 0;
 }
 
 .match-status.is-match {
@@ -318,9 +326,9 @@ img {
 }
 
 .loading-matches-indicator {
-text-align: center;
-color: white;
-padding: 2rem;
+  text-align: center;
+  color: white;
+  padding: 2rem;
 }
 
 .match-status.no-match {
@@ -328,16 +336,12 @@ padding: 2rem;
 }
 
 .match-status .material-symbols-outlined {
-  font-size: 18px;
+  font-size: 1.125rem;
 }
 
 .clickable-user {
   cursor: pointer;
   transition: opacity 0.2s;
-}
-
-.clickable-user:hover {
-  opacity: 0.8;
 }
 
 .clickable-user:hover .user-name-hover {
@@ -346,7 +350,7 @@ padding: 2rem;
 }
 .card-image-placeholder {
   height: 10rem;
-  background: #143F4C;
+  background: #143f4c;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -355,48 +359,44 @@ padding: 2rem;
   user-select: none;
 }
 
-
 .see-more-button {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 1rem 0; 
+  padding: 1rem 0;
 }
-
 
 .see-more-button p {
   margin: 0;
-  font-weight: 500; 
+  font-weight: 500;
 }
-
 
 .msg-no-results {
   color: #9ca3af;
   font-size: 1.1rem;
 }
 
-
 .msg-instruction {
   color: #6b7280;
-  font-size: 1rem; 
+  font-size: 1rem;
 }
 
 .spinner-mini {
-position:relative;
-display:inline-block;
-margin-right: 10px;
+  position: relative;
+  display: inline-block;
+  margin-right: 0.625rem;
 }
 
 /* --- Responsive --- */
-@media (max-width: 1024px) {
+@media (max-width: 64rem) {
   .card-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   /* Nota: Los estilos responsive para .interchange-populated se han movido a next-exchange.component.css */
 }
 
-@media (max-width: 768px) {
+@media (max-width: 48rem) {
   .main-content {
     padding: 1rem;
   }
@@ -412,7 +412,7 @@ margin-right: 10px;
 
   .action-buttons .btn {
     width: 100%;
-    max-width: 350px;
+    max-width: 21.875rem;
   }
 
   .nearby-header {
@@ -433,10 +433,10 @@ margin-right: 10px;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    background-color: #143F4C;
+    background-color: #143f4c;
     color: #e5e7eb;
     padding: 0.6rem 1rem;
-    border-radius: 9999px;
+    border-radius: 625rem;
     font-weight: 600;
     cursor: pointer;
     width: fit-content;
@@ -444,17 +444,17 @@ margin-right: 10px;
   }
 
   .filter-box:hover {
-    background-color: #1F4E5D;
+    background-color: #1f4e5d;
     filter: brightness(1.2);
   }
 
   .filter-box .material-symbols-outlined {
-    font-size: 20px;
+    font-size: 1.25rem;
     color: #e5e7eb;
   }
 
   .filter-text {
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: 600;
     color: #e5e7eb;
   }
@@ -462,14 +462,14 @@ margin-right: 10px;
   .filter-dropdown {
     position: absolute;
     margin-top: 0.5rem;
-    width: 220px;
-    border: 1px solid #143F4C;
-    border-radius: 8px;
-    background-color: #143F4C;
-    padding: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
+    width: 13.75rem;
+    border: 0.0625rem solid #143f4c;
+    border-radius: 0.5rem;
+    background-color: #143f4c;
+    padding: 0.625rem;
+    box-shadow: 0 0.125rem 0.375rem rgba(0, 0, 0, 0.25);
     color: #e5e7eb;
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(0.25rem);
     z-index: 50;
   }
 }

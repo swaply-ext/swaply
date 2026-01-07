@@ -1,5 +1,6 @@
 package com.swaply.backend.application.search.service;
 
+import com.swaply.backend.application.search.dto.SkillItemDTO;
 import com.swaply.backend.application.search.dto.UserSwapDTO;
 import com.swaply.backend.shared.UserCRUD.Model.User;
 import com.swaply.backend.shared.UserCRUD.Model.UserSkills;

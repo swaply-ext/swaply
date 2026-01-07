@@ -26,19 +26,12 @@ public class UserSwapDTO {
     // Info del Match
     @JsonProperty("isSwapMatch")
     private boolean isSwapMatch;  
+    
     private Double rating;        
     private String distance;
 
     // Lista de todas las skills
-    private List<SkillItem> userSkills;
-    private List<SkillItem> interests;
-    
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor 
-    public static class SkillItem {
-        private String name;
-        private String category;
-        private Integer level;
-    }
+    private List<SkillItemDTO> userSkills;
+
+
 }

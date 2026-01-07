@@ -2,7 +2,7 @@ import { Component, OnChanges, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { ProfileData } from '../../models/private-profile-data.model';
+import { PrivateProfileData } from '../../models/private-profile-data.model';
 // import { UserLocation } from '../../models/user-location.model';
 import { UserSkills} from '../../models/user-skills.model';
 
@@ -16,7 +16,7 @@ import { UserSkills} from '../../models/user-skills.model';
   styleUrls: ['./profile-info.component.css']
 })
 export class ProfileInfoComponent implements OnChanges {
-  @Input() profileData!: ProfileData;
+  @Input() profileData!: PrivateProfileData;
 
   // SOLUCIÓN: Añadimos el input para que Angular no de error
   @Input() isReadOnly: boolean = false;

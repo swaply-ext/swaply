@@ -76,7 +76,7 @@ export class UserSearchComponent {
 
   onSelectUser(user: UserSearchItem) {
 
-    this.router.navigate(['/public-profile', user.username]); 
+    this.router.navigate(['/user', user.username]); 
     this.searchTerm = user.username;
     this.results.set([]);
     this.showDropdown.set(false);
