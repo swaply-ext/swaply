@@ -104,6 +104,10 @@ export class SwapComponent implements OnInit {
 
           let allInterests = [mainSkill, ...secondarySkills];
 
+          // FILTRAR por mis intereses
+          const myInterests = this.mySkillsDisplay();
+          allInterests = this.filterTargetSkillsByMyInterests(allInterests, myInterests);
+
           // Si hay parametro URL, buscamos esa skill y la ponemos PRIMERA
           if (paramSkillName) {
             const targetNameInfo = paramSkillName.toLowerCase();
@@ -111,7 +115,6 @@ export class SwapComponent implements OnInit {
                s.name.toLowerCase().includes(targetNameInfo) || targetNameInfo.includes(s.name.toLowerCase())
             );
 
-            // Si la encontramos y no está ya la primera, la movemos al principio
             if (foundIndex > 0) {
               const [itemToMove] = allInterests.splice(foundIndex, 1);
               allInterests.unshift(itemToMove);
@@ -199,8 +202,8 @@ export class SwapComponent implements OnInit {
 
     const payload: SwapDTO = {
       requestedUsername: targetUser.username,
-      skill: targetItem.name,
-      interest: myItem.name
+      skill: myItem.name,
+      interest: targetItem.name
     };
 
     this.searchService.sendSwapRequest(payload).subscribe({
@@ -258,5 +261,13 @@ export class SwapComponent implements OnInit {
     }
 
     return undefined;
+  }
+
+  private filterTargetSkillsByMyInterests(targetSkills: any[], myInterests: any[]): any[] {
+    if (!myInterests || myInterests.length === 0) return [];
+    const interestKeys = myInterests.map(i => i.name.toLowerCase());
+    return targetSkills.filter(skill => 
+      interestKeys.some(key => skill.name.toLowerCase().includes(key))
+    );
   }
 }
