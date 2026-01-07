@@ -56,7 +56,7 @@ export class SwapComponent implements OnInit {
         next: (target) => {
           this.targetUser.set(target);
 
-          // ARGAR MI USUARIO
+          // CARGAR MI USUARIO
           this.accountService.getProfileData().subscribe({
             next: (me) => {
               this.myUser.set(me);
@@ -126,7 +126,13 @@ export class SwapComponent implements OnInit {
     }
   }
 
-  selectTargetInterest(item: any) {
+  // --- CORRECCIÓN APLICADA AQUÍ ---
+  selectTargetInterest(event: any) {
+    // 1. DESEMPAQUETAR: El componente hijo emite { skill: item }, así que sacamos 'skill'.
+    // Si viene directo (por seguridad), usamos 'event'.
+    const item = event.skill ? event.skill : event;
+
+    // 2. ACTUALIZAR LISTA (borde azul)
     const updatedList = this.targetUserInterests().map(skill => ({
       ...skill,
       selected: skill.name === item.name 
@@ -134,10 +140,17 @@ export class SwapComponent implements OnInit {
     this.targetUserInterests.set(updatedList);
 
     const currentUser = this.targetUser();
+    
+    // 3. CALCULAR IMAGEN SEGURA (evita undefined)
+    const safeImage = item.image 
+                   || this.assignImageToSkill(item.category, item.name) 
+                   || 'assets/default-avatar.png';
+
+    // 4. ACTUALIZAR CARTA SUPERIOR
     this.selectedTargetSkill.set({
       skillName: item.name,
       skillIcon: item.icon, 
-      skillImage: item.image,
+      skillImage: safeImage,
       location: currentUser?.location
     });
   }
@@ -152,7 +165,12 @@ export class SwapComponent implements OnInit {
       };
     });
     this.mySkillsDisplay.set(updatedList);
-    this.selectedTeachSkill.set(item);
+    
+    // Aseguramos también aquí que la imagen se setea correctamente
+    this.selectedTeachSkill.set({
+        ...item,
+        image: item.image || this.assignImageToSkill(item.category, item.name)
+    });
   }
 
   getTargetSkillName() {
@@ -161,9 +179,7 @@ export class SwapComponent implements OnInit {
   }
 
   getTargetSkillImage() {
-    return this.selectedTargetSkill()?.skillImage
-        || this.selectedTargetSkill()?.skillIcon
-        || 'assets/default-avatar.png';
+    return this.selectedTargetSkill()?.skillImage || 'assets/default-avatar.png';
   }
 
   cancelSwap() { this.router.navigate(['/home']); }
