@@ -33,16 +33,17 @@
             {{ card.skillIcon || '🎓' }}
           </div>
 
-          <div class="card-content clickable-user">
+          <div class="card-content clickable-user" [routerLink]="['/user', card.username]">
+
 
             <div class="card-user-info">
-              <img [src]="card.userAvatar" [alt]="card.userName" class="user-avatar"
-                [routerLink]="['/public-profile', card.username]" (click)="$event.stopPropagation()"
+              <img [src]="card.userAvatar" [alt]="card.username" class="user-avatar"
+                [routerLink]="['/user', card.username]" (click)="$event.stopPropagation()"
                 style="cursor: pointer;">
 
-              <span [routerLink]="['/public-profile', card.username]" (click)="$event.stopPropagation()"
+              <span [routerLink]="['/user', card.username]" (click)="$event.stopPropagation()"
                 style="cursor: pointer;">
-                {{ card.userName }}
+                {{ card.username }}
               </span>
             </div>
 
@@ -62,7 +63,7 @@
 
             <div class="card-footer">
               <span class="location" [class.nearby]="card.distance === 'Cerca de ti'">
-                <span class="material-symbols-outlined card-icon">location_on</span> {{ card.distance }}
+                <span class="material-symbols-outlined card-icon">location_on</span> {{ card.distance }}km
               </span>
               <span class="rating"><span class="material-symbols-outlined card-icon">star</span> {{ card.rating
                 }}</span>

@@ -1,28 +1,35 @@
 <div class="login-logo-wrapper">
-  <img src="assets/logo_swp_invert.png" alt="Logo" class="login-logo" draggable="false">
+  <img
+    src="assets/logo_swp_invert.png"
+    alt="Logo"
+    class="login-logo"
+    draggable="false"
+  />
 </div>
-
 
 <div class="login-container" id="login">
   <h2>INICIAR SESIÓN</h2>
 
-
   <form>
-
-    <app-email-input (emailChange)="email = $event" [hasError]="showError"></app-email-input>
-    <app-password-input (passwordChange)="password = $event" [hasError]="showError"></app-password-input>
-    <app-terms-checkbox (checkedChange)="accepted = $event"></app-terms-checkbox>
-
-    <p><small *ngIf="showError" class="error-message">
-        Debes aceptar los términos y rellenar todos los campos.
-      </small></p>
+    <app-email-input
+      (emailChange)="email = $event"
+      [hasError]="showError"
+    ></app-email-input>
+    <app-password-input
+      (passwordChange)="password = $event"
+      [hasError]="showError"
+    ></app-password-input>
 
     <div>
-      <a routerLink="/recovery-password"><strong>He olvidado la contraseña.</strong></a>
+      <a routerLink="/recovery-password"
+        ><strong>He olvidado la contraseña.</strong></a
+      >
     </div>
 
-    <app-login-register-buttons (registerClick)="register()" (loginClick)="login()">
+    <app-login-register-buttons
+      (registerClick)="register()"
+      (loginClick)="login()"
+    >
     </app-login-register-buttons>
-
   </form>
 </div>

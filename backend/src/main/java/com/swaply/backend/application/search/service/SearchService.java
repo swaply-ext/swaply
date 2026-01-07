@@ -1,5 +1,6 @@
 package com.swaply.backend.application.search.service;
 
+import com.swaply.backend.application.search.dto.SkillItemDTO;
 import com.swaply.backend.application.search.dto.UserSwapDTO;
 import com.swaply.backend.shared.UserCRUD.Model.User;
 import com.swaply.backend.shared.UserCRUD.Model.UserSkills;
@@ -221,8 +222,8 @@ public class SearchService {
             dto.setSkillCategory(s.getCategory());
 
             
-            List<UserSwapDTO.SkillItem> allSkills = user.getSkills().stream()
-                    .map(skill -> new UserSwapDTO.SkillItem(
+            List<SkillItemDTO> allSkills = user.getSkills().stream()
+                    .map(skill -> new SkillItemDTO(
                             skill.getName() != null ? skill.getName() : skill.getId(),
                             skill.getCategory(),
                             skill.getLevel()
