@@ -243,7 +243,7 @@
   font-size: 1.125rem;
   cursor: pointer;
   transition: 0.2s ease;
-  min-width: 150px;
+  min-width: 9.375rem;
 }
 
 .btn-create {
@@ -256,10 +256,43 @@
 }
 
 .btn-cancel {
-  background: #ef4444;
+  background: var(--error-color-1);
   color: white;
 }
 
 .btn-cancel:hover {
-  background: #dc2626;
+  background: var( --error-color-2);
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 9.375rem;
+  text-align: center;
+  color: #777;
+  padding: 1.25rem;
+  background-color: var(--principal-color-1);
+  border-radius: 0.75rem;
+  border: 0.0625rem dashed #777;
+}
+
+.icon-empty {
+  font-size: 2.5rem;
+  margin-bottom: 0.625rem;
+  opacity: 0.6;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.btn-create:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
 }

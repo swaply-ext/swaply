@@ -9,7 +9,7 @@ export interface UserSwapDTO {
   name: string;
   username: string;
   profilePhotoUrl: string;
-  location: UserLocation;
+  location: string;
 
   skillName: string;
   skillIcon: string;
@@ -22,6 +22,12 @@ export interface UserSwapDTO {
 
   // lista opcional de skills que viene del back
   userSkills?: {
+    name: string;
+    category: string;
+    level: number;
+  }[];
+
+  interests?: {
     name: string;
     category: string;
     level: number;
