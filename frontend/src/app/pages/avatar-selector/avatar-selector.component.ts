@@ -25,14 +25,14 @@ export class AvatarSelectorComponent {
   private readonly imgBaseUrl = 'https://swaplystorage.blob.core.windows.net/default-img/avatar-';
 
   avatars: AvatarOption[] = [
-    { id: 1, type: 'image', imageUrl: `${this.imgBaseUrl}default.webp`}, 
-    { id: 3, type: 'image', imageUrl: `${this.imgBaseUrl}img1.webp`},
-    { id: 4, type: 'image', imageUrl: `${this.imgBaseUrl}img2.webp`},
-    { id: 5, type: 'image', imageUrl: `${this.imgBaseUrl}img3.webp`},
-    { id: 6, type: 'image', imageUrl: `${this.imgBaseUrl}img4.webp`},
-    { id: 2, type: 'image', imageUrl: `${this.imgBaseUrl}img5.webp`},
-    { id: 7, type: 'image', imageUrl: `${this.imgBaseUrl}img6.webp`},
-    { id: 8, type: 'image', imageUrl: `${this.imgBaseUrl}img7.webp`},
+    { id: 1, type: 'image', imageUrl: `${this.imgBaseUrl}default.webp` },
+    { id: 3, type: 'image', imageUrl: `${this.imgBaseUrl}img1.webp` },
+    { id: 4, type: 'image', imageUrl: `${this.imgBaseUrl}img2.webp` },
+    { id: 5, type: 'image', imageUrl: `${this.imgBaseUrl}img3.webp` },
+    { id: 6, type: 'image', imageUrl: `${this.imgBaseUrl}img4.webp` },
+    { id: 2, type: 'image', imageUrl: `${this.imgBaseUrl}img5.webp` },
+    { id: 7, type: 'image', imageUrl: `${this.imgBaseUrl}img6.webp` },
+    { id: 8, type: 'image', imageUrl: `${this.imgBaseUrl}img7.webp` },
     { id: 'upload', type: 'upload-action' },
   ];
 
@@ -86,7 +86,8 @@ export class AvatarSelectorComponent {
       }
     } else {
       console.log('Continuando con avatar ID:', selectedId);
-      this.router.navigate(['/home']);}
+      this.router.navigate(['/home']);
+    }
   }
 
   onPhotoSelected(event: any): void {
