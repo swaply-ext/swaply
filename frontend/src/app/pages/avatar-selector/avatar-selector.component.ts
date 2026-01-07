@@ -3,13 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NextButtonComponent } from '../../components/next-button/next-button.component';
 import { AccountService } from '../../services/account.service';
 import { Router } from '@angular/router';
-
-// Definimos una interfaz simple para los datos del avatar
-interface AvatarOption {
-  id: number | string;
-  type: 'image' | 'upload-action';
-  imageUrl?: string; // Opcional: URL si tuvieras las imágenes reales
-}
+import { AvatarOption } from '../../models/avatar-option.model';
 
 @Component({
   selector: 'app-profile-selector',
@@ -28,24 +22,22 @@ export class AvatarSelectorComponent {
   // Signal para rastrear el ID del avatar seleccionado actualmente.
   // Inicializamos con el ID 1 (como en la segunda imagen de referencia).
   selectedAvatarId = signal<number | string>(1);
+  private readonly imgBaseUrl = 'https://swaplystorage.blob.core.windows.net/default-img/avatar-';
 
-  // Datos simulados para los 8 avatares + el botón de subir
   avatars: AvatarOption[] = [
-    { id: 1, type: 'image', imageUrl: 'https://swaplystorage.blob.core.windows.net/default-img/avatar-default.webp' }, // Gris claro (simula el icono por defecto)
-    { id: 3, type: 'image', imageUrl: 'https://swaplystorage.blob.core.windows.net/default-img/avatar-img1.webp' },
-    { id: 4, type: 'image', imageUrl: 'https://swaplystorage.blob.core.windows.net/default-img/avatar-img2.webp' },
-    { id: 5, type: 'image', imageUrl: 'https://swaplystorage.blob.core.windows.net/default-img/avatar-img3.webp' },
-    { id: 6, type: 'image', imageUrl: 'https://swaplystorage.blob.core.windows.net/default-img/avatar-img4.webp' },
-    { id: 2, type: 'image', imageUrl: 'https://swaplystorage.blob.core.windows.net/default-img/avatar-img5.webp' },
-    { id: 7, type: 'image', imageUrl: 'https://swaplystorage.blob.core.windows.net/default-img/avatar-img6.webp' },
-    { id: 8, type: 'image', imageUrl: 'https://swaplystorage.blob.core.windows.net/default-img/avatar-img7.webp' }, // Repetir una imagen para completar
-    // El último elemento es la acción de "subir propia"
+    { id: 1, type: 'image', imageUrl: `${this.imgBaseUrl}default.webp`}, 
+    { id: 3, type: 'image', imageUrl: `${this.imgBaseUrl}img1.webp`},
+    { id: 4, type: 'image', imageUrl: `${this.imgBaseUrl}img2.webp`},
+    { id: 5, type: 'image', imageUrl: `${this.imgBaseUrl}img3.webp`},
+    { id: 6, type: 'image', imageUrl: `${this.imgBaseUrl}img4.webp`},
+    { id: 2, type: 'image', imageUrl: `${this.imgBaseUrl}img5.webp`},
+    { id: 7, type: 'image', imageUrl: `${this.imgBaseUrl}img6.webp`},
+    { id: 8, type: 'image', imageUrl: `${this.imgBaseUrl}img7.webp`},
     { id: 'upload', type: 'upload-action' },
   ];
 
   constructor(private accountService: AccountService, private router: Router) { }
 
-  // Método para actualizar la selección
   selectAvatar(id: number | string): void {
     this.selectedAvatarId.set(id);
     if (id !== 'upload') {
@@ -90,13 +82,11 @@ export class AvatarSelectorComponent {
           }
         });
       } else {
-        //If no avatar is selected, just navigate to home
         this.router.navigate(['/home']);
       }
     } else {
       console.log('Continuando con avatar ID:', selectedId);
-      // Maybe show a message to select a photo
-    }
+      this.router.navigate(['/home']);}
   }
 
   onPhotoSelected(event: any): void {
