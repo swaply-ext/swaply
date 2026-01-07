@@ -6,7 +6,7 @@ import { SkillsPanelComponent } from '../../components/skills-panel/skills-panel
 import { InterestsPanelComponent } from '../../components/interests-panel/interests-panel.component';
 import { AccountService } from '../../services/account.service';
 import { ProfileDataDTO } from '../../models/profile-data-dto.model';
-import { ProfileData } from '../../models/private-profile-data.model';
+import { PrivateProfileData } from '../../models/private-profile-data.model';
 import { UserSkills } from '../../models/user-skills.model';
 import { ActivatedRoute } from '@angular/router'; //Con este import se accede al resolver
 
@@ -27,7 +27,7 @@ export class PrivateProfileComponent implements OnInit {
 
   public interests: Array<UserSkills> = [];
   public skills: Array<UserSkills> = [];
-  public profileViewData!: ProfileData;
+  public profileViewData!: PrivateProfileData;
 
   constructor(private accountService: AccountService, private resolver: ActivatedRoute) { } //declaramos el resolver
 

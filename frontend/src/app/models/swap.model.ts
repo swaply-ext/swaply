@@ -1,3 +1,4 @@
+
 export interface Swap {
   id: string;
   requestedUserId: string;

@@ -5,12 +5,13 @@ import { SwapService } from '../../services/swap.service';
 import { UsersService } from '../../services/users.service';
 import { AccountService } from '../../services/account.service';
 import { Swap } from '../../models/swap.model';
+import { UserLocation } from '../../models/user-location.model';
 
 export interface Profile {
   title?: string;
   imgToTeach?: string;
   profilePhotoUrl: string;
-  location: string;
+  location: UserLocation;
   username: string;
 }
 

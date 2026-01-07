@@ -1,5 +1,5 @@
 import { UserLocation } from "./user-location.model";
-export interface ProfileData {
+export interface PrivateProfileData {
   fullName: string;
   username: string;
   location: UserLocation;

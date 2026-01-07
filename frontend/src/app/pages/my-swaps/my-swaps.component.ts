@@ -2,9 +2,10 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.component";
-import { SwapListComponent, Swap, Profile } from '../../components/swap-list/swap-list.component';
+import { SwapListComponent, Profile } from '../../components/swap-list/swap-list.component';
 import { SwapService } from '../../services/swap.service';
 import { UsersService } from '../../services/users.service';
+import { Swap } from '../../models/swap.model';
 
 @Component({
   selector: 'app-my-swaps-page',

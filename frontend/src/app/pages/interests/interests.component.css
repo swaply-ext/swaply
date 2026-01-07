@@ -2,7 +2,8 @@
 .interests-container {
   flex: 1;
   padding: 1.5rem 2rem;
-  border: 0.1rem solid var(--border-color);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.4);
   border-radius: 1.2rem;
   background-color: var(--bg-panel);
   color: var(--principal-color-2);
@@ -67,7 +68,7 @@ p {
 
 .chips-container.open {
   max-height: 2000px; /* Suficiente para expandir */
-  padding: 1rem 0;
+  padding: 2rem 1rem;
 }
 
 /* Acciones y Botón Guardar */

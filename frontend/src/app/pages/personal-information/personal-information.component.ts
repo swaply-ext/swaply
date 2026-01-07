@@ -5,7 +5,6 @@ import { NameInputComponent } from "../../components/name-input/name-input.compo
 import { SurnameInputComponent } from "../../components/surname-input/surname-input.component";
 import { BirthDateComponent } from "../../components/birth-date/birth-date.component";
 import { PhoneInputComponent } from "../../components/phone-input/phone-input.component";
-import { AddressInputComponent } from "../../components/address-input/address-input.component";
 import { AccountService } from '../../services/account.service';
 import { RegisterDataService } from '../../services/register-data.service';
 import { GenderInputComponent } from '../../components/gender-input/gender-input.component';
