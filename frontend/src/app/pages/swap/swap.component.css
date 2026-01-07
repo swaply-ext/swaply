@@ -256,12 +256,12 @@
 }
 
 .btn-cancel {
-  background: #ef4444;
+  background: var(--error-color-1);
   color: white;
 }
 
 .btn-cancel:hover {
-  background: #dc2626;
+  background: var( --error-color-2);
 }
 
 .empty-state {

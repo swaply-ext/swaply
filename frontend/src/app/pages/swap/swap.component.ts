@@ -69,7 +69,6 @@ export class SwapComponent implements OnInit {
 
               let allTargetSkills = [mainSkill, ...secondarySkills];
 
-              // Filtrar contra MIS intereses
               let filteredTargetSkills = this.filterMatch(allTargetSkills, me.interests || []);
 
               if (paramSkillName && filteredTargetSkills.length > 0) {
@@ -170,6 +169,14 @@ export class SwapComponent implements OnInit {
     });
   }
 
+  getTeachSkillName() {
+    const info = this.selectedTeachSkill();
+    if (this.mySkillsDisplay().length === 0) {
+        return info?.name || 'Yo'; 
+    }
+    return info?.name ? `Clase de ${info.name}` : '';
+  }
+
   getTargetSkillName() {
     const info = this.selectedTargetSkill();
     
@@ -248,7 +255,6 @@ export class SwapComponent implements OnInit {
   private assignImageToSkill(category: string, skillName: string): string | undefined {
     if (!skillName) return undefined;
     
-    // Convertir a minusculas de forma segura
     const name = String(skillName).toLowerCase();
     
     const map: any = {
@@ -286,7 +292,6 @@ export class SwapComponent implements OnInit {
     }
 
     if (category) {
-      // Seguridad: Asegurar que category es string antes de toLowerCase
       const catLower = String(category).toLowerCase();
       if (catLower.includes('sport')) return 'assets/photos_skills/sports/football.jpg';
       if (catLower.includes('music')) return 'assets/photos_skills/music/guitar.jpg';
