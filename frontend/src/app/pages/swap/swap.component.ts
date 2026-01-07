@@ -37,6 +37,7 @@ export class SwapComponent implements OnInit {
     skillImage?: string;
     location?: string;
   } | null>(null);
+  
   targetUserInterests = signal<any[]>([]); 
 
   constructor(
@@ -50,13 +51,11 @@ export class SwapComponent implements OnInit {
     const targetUsername = this.route.snapshot.paramMap.get('username');
     const paramSkillName = this.route.snapshot.queryParamMap.get('skillName');
 
-    // CARGAR USUARIO DESTINO 
     if (targetUsername) {
       this.searchService.getUserByUsername(targetUsername).subscribe({
         next: (target) => {
           this.targetUser.set(target);
 
-          // CARGAR MI USUARIO
           this.accountService.getProfileData().subscribe({
             next: (me) => {
               this.myUser.set(me);
@@ -79,7 +78,6 @@ export class SwapComponent implements OnInit {
 
               let filteredTargetSkills = this.filterMatch(allTargetSkills, me.interests || []);
 
-              // Si hay parametro URL, buscamos esa skill y la ponemos PRIMERA
               if (paramSkillName && filteredTargetSkills.length > 0) {
                 const searchName = paramSkillName.toLowerCase();
                 const idx = filteredTargetSkills.findIndex(s => 
@@ -103,7 +101,12 @@ export class SwapComponent implements OnInit {
                   location: target.location
                 });
               } else {
-                this.selectedTargetSkill.set(null);
+                this.selectedTargetSkill.set({
+                    skillName: target.name || target.username,
+                    skillIcon: undefined,
+                    skillImage: target.profilePhotoUrl || 'assets/default-avatar.png',
+                    location: target.location
+                });
               }
               
               const targetInterests = target.interests || [];
@@ -117,7 +120,10 @@ export class SwapComponent implements OnInit {
               if (visualMySkills.length > 0) {
                 this.selectedTeachSkill.set(visualMySkills[0]);
               } else {
-                this.selectedTeachSkill.set(null);
+                this.selectedTeachSkill.set({
+                    name: me.name || me.username,
+                    image: me.profilePhotoUrl || 'assets/default-avatar.png'
+                });
               }
             }
           });
@@ -126,13 +132,9 @@ export class SwapComponent implements OnInit {
     }
   }
 
-  // --- CORRECCIÓN APLICADA AQUÍ ---
   selectTargetInterest(event: any) {
-    // 1. DESEMPAQUETAR: El componente hijo emite { skill: item }, así que sacamos 'skill'.
-    // Si viene directo (por seguridad), usamos 'event'.
     const item = event.skill ? event.skill : event;
 
-    // 2. ACTUALIZAR LISTA (borde azul)
     const updatedList = this.targetUserInterests().map(skill => ({
       ...skill,
       selected: skill.name === item.name 
@@ -140,13 +142,10 @@ export class SwapComponent implements OnInit {
     this.targetUserInterests.set(updatedList);
 
     const currentUser = this.targetUser();
-    
-    // 3. CALCULAR IMAGEN SEGURA (evita undefined)
     const safeImage = item.image 
                    || this.assignImageToSkill(item.category, item.name) 
                    || 'assets/default-avatar.png';
-
-    // 4. ACTUALIZAR CARTA SUPERIOR
+                   
     this.selectedTargetSkill.set({
       skillName: item.name,
       skillIcon: item.icon, 
@@ -165,8 +164,6 @@ export class SwapComponent implements OnInit {
       };
     });
     this.mySkillsDisplay.set(updatedList);
-    
-    // Aseguramos también aquí que la imagen se setea correctamente
     this.selectedTeachSkill.set({
         ...item,
         image: item.image || this.assignImageToSkill(item.category, item.name)
@@ -175,6 +172,11 @@ export class SwapComponent implements OnInit {
 
   getTargetSkillName() {
     const info = this.selectedTargetSkill();
+    
+    if (this.targetUserInterests().length === 0) {
+        return info?.skillName || 'Usuario'; 
+    }
+    
     return info?.skillName ? `Clase de ${info.skillName}` : '';
   }
 
@@ -190,7 +192,7 @@ export class SwapComponent implements OnInit {
     const targetUser = this.targetUser();
 
     if (!targetItem || !myItem || !targetUser) {
-      alert("Error: Debes seleccionar una habilidad válida en cada lado.");
+      alert("No se puede crear el intercambio. No existen coincidencias compatibles.");
       return;
     }
 
