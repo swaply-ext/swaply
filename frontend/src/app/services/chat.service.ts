@@ -27,12 +27,15 @@ export interface ChatMessage {
   timestamp: string;
 }
 
+// chat.service.ts
+
 @Injectable({ providedIn: 'root' })
 export class ChatService {
   private base = 'http://localhost:8081/api/chat';
   private client: Client | null = null;
   private roomSubjects = new Map<string, Subject<ChatMessage>>();
-  
+  public currentUserId: string = '';
+
   private _connectedPromise: Promise<void> | null = null;
 
   constructor(private http: HttpClient) {}
@@ -61,7 +64,7 @@ export class ChatService {
 
     this._connectedPromise = new Promise((resolve, reject) => {
       const factory = () => new SockJS('http://localhost:8081/ws-chat');
-      
+
       this.client = new Client({
         webSocketFactory: factory,
         connectHeaders: {
@@ -92,7 +95,7 @@ export class ChatService {
 
       this.connectIfNeeded(localStorage.getItem('authToken') || '').then(() => {
         if (!this.client) return;
-        
+
         this.client.subscribe(`/topic/room/${roomId}`, (message: StompMessage) => {
           try {
             const body = JSON.parse(message.body);
@@ -100,7 +103,7 @@ export class ChatService {
               id: body.id,
               roomId: body.roomId,
               senderId: body.senderId,
-              content: body.content || body.text, 
+              content: body.content || body.text,
               timestamp: body.timestamp
             };
             subj.next(chatMsg);

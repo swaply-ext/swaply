@@ -1,4 +1,12 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, signal } from '@angular/core';
+import { AuthService } from './../../services/auth.service';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ViewChild,
+  ElementRef,
+  signal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -6,7 +14,6 @@ import { Subscription, interval } from 'rxjs';
 import { ChatService, ChatMessage } from '../../services/chat.service';
 import { AccountService } from '../../services/account.service';
 import { AppNavbarComponent } from '../../components/app-navbar/app-navbar.component';
-
 
 interface UIConversation {
   roomId: string;
@@ -20,30 +27,25 @@ interface UIConversation {
 @Component({
   standalone: true,
   selector: 'app-chat',
-  imports: [
-    CommonModule, 
-    FormsModule,
-    AppNavbarComponent
-    ],
+  imports: [CommonModule, FormsModule, AppNavbarComponent],
   templateUrl: './chat.component.html',
-  styleUrls: ['./chat.component.css']
+  styleUrls: ['./chat.component.css'],
 })
 export class ChatComponent implements OnInit, OnDestroy {
   @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
 
-  currentUserId: string = ''; 
+  currentUserId: string = '';
   currentUserAvatar: string = '';
 
+  conversations: UIConversation[] = [];
+  selectedConversation: UIConversation | null = null;
+  messages: ChatMessage[] = [];
 
-  conversations: UIConversation[] = []; 
-  selectedConversation: UIConversation | null = null; 
-  messages: ChatMessage[] = []; 
-  
   newMessage: string = '';
   searchQuery: string = '';
 
   isMobile: boolean = false;
-  
+
   loadingConversations: boolean = true;
   private pollingSub: Subscription | null = null;
   private chatSub: Subscription | null = null;
@@ -52,32 +54,32 @@ export class ChatComponent implements OnInit, OnDestroy {
     private chatService: ChatService,
     private accountService: AccountService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
     this.checkScreenSize();
     window.addEventListener('resize', () => this.checkScreenSize());
-    
+
+    // 1. Obtenemos el ID directamente (porque es un string, no un observable)
+    const userId = this.authService.getUserIdFromToken();
+    this.currentUserId = userId;
+    this.chatService.currentUserId = userId; // Sincroniza con el servicio también
+
+    // 2. Ahora cargamos el resto de cosas que sí dependen de suscripciones
     this.accountService.getProfileData().subscribe({
-      next: (profile: any) => {
-        this.currentUserId = profile.username; 
-        this.currentUserAvatar = profile.profilePicture || 'assets/default-image.jpg';
-        
+      next: (account: any) => {
         this.loadConversations();
 
-        this.route.queryParams.subscribe(params => {
+        this.route.queryParams.subscribe((params) => {
           const roomId = params['roomId'];
           if (roomId) {
             this.handleDeepLink(roomId);
           }
         });
-
-        this.pollingSub = interval(1000000).subscribe(() => {
-          this.loadConversations(false);
-        });
       },
-      error: (err) => console.error('Error cargando perfil', err)
+      error: (err) => console.error('Error cargando perfil', err),
     });
   }
 
@@ -103,15 +105,19 @@ export class ChatComponent implements OnInit, OnDestroy {
 
         const mapped: UIConversation[] = dto.chatRooms.map((room, index) => {
           const partnerName = dto.username[index] || 'Usuario desconocido';
-          const existing = this.conversations.find(c => c.roomId === room.id);
-          
+          const existing = this.conversations.find((c) => c.roomId === room.id);
+
           return {
             roomId: room.id,
             partnerUsername: partnerName,
-            partnerAvatar: existing ? existing.partnerAvatar : 'assets/default-image.jpg', 
+            partnerAvatar: existing
+              ? existing.partnerAvatar
+              : 'assets/default-image.jpg',
             lastMessage: room.lastMessagePreview || 'Nueva conversación',
-            lastMessageTime: room.lastMessageTime ? new Date(room.lastMessageTime) : null,
-            unreadCount: 0 
+            lastMessageTime: room.lastMessageTime
+              ? new Date(room.lastMessageTime)
+              : null,
+            unreadCount: 0,
           };
         });
 
@@ -125,16 +131,16 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.loadingConversations = false;
 
         this.fetchAvatarsForConversations();
-        
+
         if (this.selectedConversation) {
         }
       },
-      error: () => this.loadingConversations = false
+      error: () => (this.loadingConversations = false),
     });
   }
 
   fetchAvatarsForConversations() {
-    this.conversations.forEach(conv => {
+    this.conversations.forEach((conv) => {
       if (conv.partnerAvatar === 'assets/default-image.jpg') {
         this.accountService.getPublicProfile(conv.partnerUsername).subscribe({
           next: (profile: any) => {
@@ -142,24 +148,24 @@ export class ChatComponent implements OnInit, OnDestroy {
               conv.partnerAvatar = profile.profilePicture;
             }
           },
-          error: () => {} 
+          error: () => {},
         });
       }
     });
   }
 
   handleDeepLink(roomId: string) {
-    const found = this.conversations.find(c => c.roomId === roomId);
+    const found = this.conversations.find((c) => c.roomId === roomId);
     if (found) {
       this.selectConversation(found);
     } else {
       const tempConv: UIConversation = {
         roomId: roomId,
-        partnerUsername: 'Cargando...', 
+        partnerUsername: 'Cargando...',
         partnerAvatar: 'assets/default-image.jpg',
         lastMessage: '',
         lastMessageTime: new Date(),
-        unreadCount: 0
+        unreadCount: 0,
       };
       this.selectConversation(tempConv);
     }
@@ -174,23 +180,25 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { roomId: conv.roomId },
-      queryParamsHandling: 'merge'
+      queryParamsHandling: 'merge',
     });
 
-    this.chatService.getHistory(conv.roomId).subscribe(msgs => {
-        this.messages = msgs;
-        this.scrollToBottom();
+    this.chatService.getHistory(conv.roomId).subscribe((msgs) => {
+      this.messages = msgs;
+      this.scrollToBottom();
     });
 
     if (this.chatSub) this.chatSub.unsubscribe();
-    
-    this.chatSub = this.chatService.subscribeToRoom(conv.roomId).subscribe((msg) => {
-      this.messages.push(msg);
-      this.scrollToBottom();
-      
-      conv.lastMessage = msg.content;
-      conv.lastMessageTime = new Date(msg.timestamp);
-    });
+
+    this.chatSub = this.chatService
+      .subscribeToRoom(conv.roomId)
+      .subscribe((msg) => {
+        this.messages.push(msg);
+        this.scrollToBottom();
+
+        conv.lastMessage = msg.content;
+        conv.lastMessageTime = new Date(msg.timestamp);
+      });
   }
 
   sendMessage(): void {
@@ -205,7 +213,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   get filteredConversations(): UIConversation[] {
     if (!this.searchQuery) return this.conversations;
-    return this.conversations.filter(c => 
+    return this.conversations.filter((c) =>
       c.partnerUsername.toLowerCase().includes(this.searchQuery.toLowerCase())
     );
   }
@@ -213,7 +221,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   private scrollToBottom(): void {
     setTimeout(() => {
       if (this.scrollContainer) {
-        this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight;
+        this.scrollContainer.nativeElement.scrollTop =
+          this.scrollContainer.nativeElement.scrollHeight;
       }
     }, 100);
   }

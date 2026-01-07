@@ -1,16 +1,16 @@
 <app-app-navbar></app-app-navbar>
-<div class="chat-container">  
+<div class="chat-container">
   <aside class="chat-sidebar" [style.display]="(selectedConversation && isMobile) ? 'none' : 'flex'">
     <div class="sidebar-header">
       <div class="logo-container">
         <img src="assets/logo_swp_invert.png" alt="Swaply" class="sidebar-logo">
       </div>
-      
+
       <div class="search-box">
         <span class="material-icons search-icon">search</span>
-        <input 
-          type="text" 
-          placeholder="Buscar..." 
+        <input
+          type="text"
+          placeholder="Buscar..."
           [(ngModel)]="searchQuery"
         >
       </div>
@@ -25,21 +25,21 @@
         <p>No se encontraron chats.</p>
       </div>
 
-      <div 
-        *ngFor="let conv of filteredConversations" 
+      <div
+        *ngFor="let conv of filteredConversations"
         class="conversation-item"
         [class.active]="selectedConversation?.roomId === conv.roomId"
         (click)="selectConversation(conv)"
       >
         <div class="avatar-container">
-          <img 
-            [src]="conv.partnerAvatar || 'assets/default-image.jpg'" 
-            alt="Avatar" 
+          <img
+            [src]="conv.partnerAvatar || 'assets/default-image.jpg'"
+            alt="Avatar"
             class="avatar-img"
             onerror="this.src='assets/default-image.jpg'"
           >
         </div>
-        
+
         <div class="conversation-info">
           <div class="info-top">
             <span class="partner-name">{{ conv.partnerUsername }}</span>
@@ -73,8 +73,8 @@
             <span class="material-icons">arrow_back</span>
           </button>
 
-          <img 
-            [src]="selectedConversation.partnerAvatar || 'assets/default-image.jpg'" 
+          <img
+            [src]="selectedConversation.partnerAvatar || 'assets/default-image.jpg'"
             class="header-avatar"
             onerror="this.src='assets/default-image.jpg'"
           >
@@ -85,13 +85,12 @@
         </div>
         <div class="header-actions"></div>
       </header>
-
       <div class="messages-area" #scrollContainer>
-        <div *ngFor="let msg of messages" 
+        <div *ngFor="let msg of messages"
              class="message-row"
-             [class.mine]="msg.senderId === currentUserId"
-             [class.theirs]="msg.senderId !== currentUserId">
-          
+             [class.mine]="msg.senderId.toString() === currentUserId"
+             [class.theirs]="msg.senderId.toString() !== currentUserId">
+
           <div class="message-bubble">
             <div class="msg-content">{{ msg.content }}</div>
             <span class="msg-time">{{ msg.timestamp | date:'HH:mm' }}</span>
@@ -100,9 +99,9 @@
       </div>
 
       <div class="chat-input-area">
-        <input 
-          type="text" 
-          placeholder="Escribe un mensaje..." 
+        <input
+          type="text"
+          placeholder="Escribe un mensaje..."
           [(ngModel)]="newMessage"
           (keydown.enter)="sendMessage()"
           autocomplete="off"
