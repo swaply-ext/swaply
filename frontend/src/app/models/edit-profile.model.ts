@@ -11,9 +11,6 @@ export interface EditProfileData {
   gender: string;
   email: string;
   profilePhotoUrl: string;
-}
-
-export interface GetEditProfileData extends EditProfileData {
   interests: UserSkills[];
   skills: UserSkills[];
 }

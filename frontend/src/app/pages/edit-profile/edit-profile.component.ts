@@ -9,11 +9,10 @@ import { DiscardButtonComponent } from '../../components/discard-button/discard-
 import { SkillsPanelComponent } from '../../components/skills-panel/skills-panel.component';
 import { InterestsPanelComponent } from '../../components/interests-panel/interests-panel.component';
 import { LocationSearchComponent } from '../../components/location-search/location-search.component';
-import { delay } from 'rxjs';
 import { ValidateInputsService } from '../../services/validate-inputs.service';
 import { UserSkills } from '../../models/user-skills.model';
 import { UserLocation } from '../../models/user-location.model';
-import { EditProfileData, GetEditProfileData } from '../../models/edit-profile.model';
+import { EditProfileData } from '../../models/edit-profile.model';
 
 @Component({
   selector: 'app-profile',
@@ -54,7 +53,7 @@ export class EditProfileComponent implements OnInit {
   location = "";
   gender = "";
   email = "";
-  profilePhotoUrl = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
+  profilePhotoUrl = 'https://swaplystorage.blob.core.windows.net/default-img/avatar-default.webp';
 
   // Variable única para mensajes de error personalizados por campo
   errorMessages: { [key: string]: string } = {};
@@ -65,7 +64,7 @@ export class EditProfileComponent implements OnInit {
   // Obtener datos del perfil desde el backend
   getProfileDataFromBackend(): void {
     this.accountService.getEditProfileData().subscribe({
-      next: (user: GetEditProfileData) => {
+      next: (user: EditProfileData) => {
         console.log('Datos recibidos del backend', user);
         this.splitAndSendUser(user);
       },
@@ -75,7 +74,7 @@ export class EditProfileComponent implements OnInit {
     });
   }
 
-  splitAndSendUser(user: GetEditProfileData): void {
+  splitAndSendUser(user: EditProfileData): void {
     this.interests = user.interests;
     this.skills = user.skills;
     this.mapProfileData(user);
@@ -84,7 +83,7 @@ export class EditProfileComponent implements OnInit {
   }
 
   // Mapear datos del usuario a la estructura EditProfileData
-  mapProfileData(user: GetEditProfileData): void {
+  mapProfileData(user: EditProfileData): void {
 
     if (user.location && typeof user.location === 'object' && user.location.displayName) {
       this.locationData = user.location;
@@ -100,7 +99,9 @@ export class EditProfileComponent implements OnInit {
       birthDate: user.birthDate ? new Date(user.birthDate).toISOString().substring(0, 10) : '',
       gender: user.gender,
       email: user.email,
-      profilePhotoUrl: user.profilePhotoUrl || this.profilePhotoUrl
+      profilePhotoUrl: user.profilePhotoUrl || this.profilePhotoUrl,
+      interests: user.interests || [],
+      skills: user.skills || []
     };
 
     // Asignar también a las variables individuales que usa el template
@@ -177,7 +178,9 @@ export class EditProfileComponent implements OnInit {
       location: finalLocationValue,
       gender: this.gender,
       email: this.email.toLowerCase(),
-      profilePhotoUrl: this.profilePhotoUrl
+      profilePhotoUrl: this.profilePhotoUrl,
+      interests: this.interests,
+      skills: this.skills      
     };
     console.log(updatedUser)
 
