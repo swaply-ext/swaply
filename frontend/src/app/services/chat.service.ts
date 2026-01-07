@@ -16,6 +16,7 @@ export interface ChatRoomDTO {
 export interface SendChatRoomsDTO {
   username: string[];
   chatRooms: ChatRoomDTO[];
+  profilePhotos: Record<string, string>;
 }
 
 export interface ChatMessage {

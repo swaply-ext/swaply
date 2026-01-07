@@ -93,7 +93,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     this.chatService.getRooms().subscribe({
       next: (dto) => {
-        if (!dto.chatRooms || !dto.username) {
+        if (!dto.chatRooms || !dto.username || dto.profilePhotos) {
           this.conversations = [];
           this.loadingConversations = false;
           return;
