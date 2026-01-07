@@ -11,7 +11,7 @@ import { NextSwapComponent } from '../../components/next-swap/next-swap.componen
 
 export interface CardModel {
   userId?: string;
-  username?: string; //per la ruta /public-profile/:username
+  username?: string; // para la ruta /public-profile/:username
   userName: string;
   userAvatar: string;
   skillTitle: string;
@@ -20,6 +20,7 @@ export interface CardModel {
   distance: string;
   rating: number;
   isMatch: boolean;
+  skillLevel?: string; // Propiedad añadida para el diseño
 }
 
 @Component({
@@ -40,7 +41,6 @@ export interface CardModel {
 export class HomeComponent implements OnInit {
 
   constructor(private accountService: AccountService) { }
-
   
   private searchService = inject(SearchService);
   private router = inject(Router);
@@ -49,8 +49,6 @@ export class HomeComponent implements OnInit {
   cards = signal<CardModel[]>([]);
   
   isLoadingMatches = signal(false);
-  
-  // Esta bandera controla si mostramos las etiquetas de estado o no
   hasSearched = signal(false);
   
   itemsToShow = signal(6);
@@ -62,7 +60,6 @@ export class HomeComponent implements OnInit {
 
   loadInitialRecommendations() {
     this.isLoadingMatches.set(true);
-    // Resetear hasSearched a false para que el HTML sepa que son recomendaciones 
     this.hasSearched.set(false); 
     
     this.searchService.getRecommendations().subscribe({
@@ -81,7 +78,6 @@ export class HomeComponent implements OnInit {
     }
 
     this.isLoadingMatches.set(true);
-    // Marcamos true para que el HTML active las etiquetas de estado
     this.hasSearched.set(true);
 
     this.searchService.getMatches(skillQuery).subscribe({
@@ -106,12 +102,25 @@ export class HomeComponent implements OnInit {
       skillImage: this.assignImageToSkill(m.skillCategory, m.skillName), 
       distance: m.distance,
       rating: m.rating || 0,
-      isMatch: m.isSwapMatch
+      isMatch: m.isSwapMatch,
+      skillLevel: this.getLevelLabel((m as any).skillLevel)
     }));
 
     this.itemsToShow.set(6);
     this.updateView();
     this.isLoadingMatches.set(false);
+  }
+
+  private getLevelLabel(levelNumber: number | undefined): string {
+    // Si no viene dato o es 0, devolvemos vacío para que el HTML oculte el badge
+    if (!levelNumber) return '';
+
+    switch (levelNumber) {
+      case 1: return 'Principiante';
+      case 2: return 'Intermedio';
+      case 3: return 'Experto';
+      default: return 'Intermedio';
+    }
   }
 
   private updateView() {
@@ -122,7 +131,6 @@ export class HomeComponent implements OnInit {
     this.itemsToShow.update(val => val + 6); 
     this.updateView(); 
   }
-
 
   private assignImageToSkill(category: string, skillName: string): string | undefined {
       const name = skillName ? skillName.toLowerCase() : '';
@@ -151,11 +159,8 @@ export class HomeComponent implements OnInit {
       return filename ? `assets/photos_skills/${folder}/${filename}` : undefined;
   }
   
-  
-
   goToSwap(card: CardModel) {
     if (!card.username) return;
-
     this.router.navigate(['/swap', card.username], { 
       queryParams: { skillName: card.skillTitle } 
     });
@@ -165,7 +170,6 @@ export class HomeComponent implements OnInit {
   isConfirmed = signal(false);
   skillToLearn = signal({ titulo: 'Clase de Guitarra Acústica', img: 'assets/photos_skills/music/guitar.jpg', hora: 'Hoy, 18:00h', via: 'Vía Napoli 5' });
   skillToTeach = signal({ titulo: 'Taller de Manualidades', img: 'assets/photos_skills/leisure/crafts.jpg', hora: 'Hoy, 18:00h', via: 'Vía Napoli 5' });
-
 
   toggleIntercambio() {
     this.hasIntercambio.update(v => !v);

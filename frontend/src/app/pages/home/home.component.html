@@ -19,33 +19,51 @@
         </div>
       </div>
 
-      <div *ngIf="isLoadingMatches()" class = loading-matches-indicator>
-        <div class="spinner-mini"></div> Cargando
-        resultados...
+      <div *ngIf="isLoadingMatches()" class="loading-matches-indicator">
+        <div class="spinner-mini"></div> Cargando resultados...
       </div>
 
       <div class="card-grid" *ngIf="!isLoadingMatches()">
         <div class="skill-card" *ngFor="let card of cards()" (click)="goToSwap(card)">
 
-          <img *ngIf="card.skillImage" [src]="card.skillImage" [alt]="card.skillTitle" class="card-image"
-            (error)="card.skillImage = undefined">
-          <div *ngIf="!card.skillImage" class="card-image-placeholder">
-            {{ card.skillIcon || '🎓' }}
+          <div class="card-image-wrapper">
+            <img *ngIf="card.skillImage" [src]="card.skillImage" [alt]="card.skillTitle" class="card-image"
+              (error)="card.skillImage = undefined">
+            
+            <div *ngIf="!card.skillImage" class="card-image-placeholder">
+              {{ card.skillIcon || '🎓' }}
+            </div>
           </div>
 
           <div class="card-content clickable-user">
 
-            <div class="card-user-info">
-              <img [src]="card.userAvatar" [alt]="card.userName" class="user-avatar"
-                [routerLink]="['/public-profile', card.username]" (click)="$event.stopPropagation()"
-                style="cursor: pointer;">
+            <div class="card-header-row">
+              
+              <div class="card-user-info">
+                <img [src]="card.userAvatar" [alt]="card.userName" class="user-avatar"
+                  [routerLink]="['/public-profile', card.username]" (click)="$event.stopPropagation()"
+                  style="cursor: pointer;">
 
-              <span [routerLink]="['/public-profile', card.username]" (click)="$event.stopPropagation()"
-                style="cursor: pointer;">
-                {{ card.userName }}
-              </span>
+                <span [routerLink]="['/public-profile', card.username]" (click)="$event.stopPropagation()"
+                  style="cursor: pointer;">
+                  {{ card.userName }}
+                </span>
+              </div>
+
+              <div class="skill-level-badge" 
+                   *ngIf="card.skillLevel" 
+                   [ngClass]="card.skillLevel.toLowerCase()">
+                
+                <span class="level-text">{{ card.skillLevel }}</span>
+                
+                <div class="level-bars">
+                  <div class="bar"></div>
+                  <div class="bar"></div>
+                  <div class="bar"></div>
+                </div>
+              </div>
+
             </div>
-
             <h3>{{ card.skillTitle }}</h3>
 
             <ng-container *ngIf="hasSearched()">
@@ -64,8 +82,9 @@
               <span class="location" [class.nearby]="card.distance === 'Cerca de ti'">
                 <span class="material-symbols-outlined card-icon">location_on</span> {{ card.distance }}
               </span>
-              <span class="rating"><span class="material-symbols-outlined card-icon">star</span> {{ card.rating
-                }}</span>
+              <span class="rating">
+                <span class="material-symbols-outlined card-icon">star</span> {{ card.rating }}
+              </span>
             </div>
           </div>
         </div>
