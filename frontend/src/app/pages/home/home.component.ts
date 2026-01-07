@@ -8,19 +8,8 @@ import { SearchService, UserSwapDTO } from '../../services/search.services';
 import { RouterLink } from '@angular/router';
 import { AccountService } from '../../services/account.service';
 import { NextSwapComponent } from '../../components/next-swap/next-swap.component';
+import { NextSwap } from '../../models/next-swap.model';
 
-export interface CardModel {
-  userId?: string;
-  username?: string; //per la ruta /user/:username
-  userName: string;
-  userAvatar: string;
-  skillTitle: string;
-  skillImage?: string;
-  skillIcon?: string;
-  distance: string;
-  rating: number;
-  isMatch: boolean;
-}
 
 @Component({
   selector: 'app-home',
@@ -45,8 +34,8 @@ export class HomeComponent implements OnInit {
   private searchService = inject(SearchService);
   private router = inject(Router);
 
-  private allCards: CardModel[] = [];
-  cards = signal<CardModel[]>([]);
+  private allCards: NextSwap[] = [];
+  cards = signal<NextSwap[]>([]);
 
   isLoadingMatches = signal(false);
 
@@ -153,7 +142,7 @@ export class HomeComponent implements OnInit {
 
 
 
-  goToSwap(card: CardModel) {
+  goToSwap(card: NextSwap) {
     if (!card.username) return;
 
     this.router.navigate(['/swap', card.username], {
