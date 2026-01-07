@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -6,6 +6,7 @@ import { Subscription, interval } from 'rxjs';
 import { ChatService, ChatMessage } from '../../services/chat.service';
 import { AccountService } from '../../services/account.service';
 import { AppNavbarComponent } from '../../components/app-navbar/app-navbar.component';
+
 
 interface UIConversation {
   roomId: string;
@@ -22,7 +23,7 @@ interface UIConversation {
   imports: [
     CommonModule, 
     FormsModule,
-    AppNavbarComponent 
+    AppNavbarComponent
     ],
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css']
@@ -32,6 +33,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   currentUserId: string = ''; 
   currentUserAvatar: string = '';
+
 
   conversations: UIConversation[] = []; 
   selectedConversation: UIConversation | null = null; 
@@ -71,7 +73,7 @@ export class ChatComponent implements OnInit, OnDestroy {
           }
         });
 
-        this.pollingSub = interval(5000).subscribe(() => {
+        this.pollingSub = interval(1000000).subscribe(() => {
           this.loadConversations(false);
         });
       },
