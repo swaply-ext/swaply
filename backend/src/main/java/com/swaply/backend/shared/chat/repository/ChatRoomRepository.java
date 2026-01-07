@@ -1,7 +1,10 @@
 package com.swaply.backend.shared.chat.repository;
 
 import com.azure.spring.data.cosmos.repository.CosmosRepository;
+import com.azure.spring.data.cosmos.repository.Query;
 import com.swaply.backend.shared.chat.model.ChatRoom;
+
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -10,7 +13,8 @@ import java.util.Optional;
 /**
  * Repository for ChatRoom entities stored in Cosmos DB.
  *
- * Important: avoid using com.azure.cosmos.models.PartitionKey in method signatures
+ * Important: avoid using com.azure.cosmos.models.PartitionKey in method
+ * signatures
  * because Spring Data Cosmos may try to serialize it into SQL parameters which
  * can trigger Jackson serialization errors. Use String-based params instead.
  */
@@ -42,9 +46,8 @@ public interface ChatRoomRepository extends CosmosRepository<ChatRoom, String> {
         deleteById(id);
     }
 
-    default List<ChatRoom> findRoomsByUserId(String userId) {
-        return findByParticipantsContaining(userId);
-    }
+    @Query("SELECT * FROM c WHERE ARRAY_CONTAINS(c.participants, @userId)")
+    List<ChatRoom> findRoomsByUserId(@Param("userId") String userId);
 
     default boolean isUserInRoom(String roomId, String username) {
         return existsByIdAndParticipantsContaining(roomId, username);

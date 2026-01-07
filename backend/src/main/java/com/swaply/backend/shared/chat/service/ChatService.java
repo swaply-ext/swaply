@@ -65,35 +65,49 @@ public class ChatService {
 
         return page.getContent();
     }
+public SendChatRoomsDTO getChatRoomsByUserId(String userId) {
+    System.out.println("--- Iniciando getChatRoomsByUserId ---");
+    System.out.println("Buscando salas para el usuario ID: " + userId);
 
-    public SendChatRoomsDTO getChatRoomsByUserId(String userId) {
-        List<ChatRoom> rooms = chatRoomRepository.findRoomsByUserId(userId);
+    List<ChatRoom> rooms = chatRoomRepository.findRoomsByUserId(userId);
+    System.out.println("Salas encontradas: " + (rooms != null ? rooms.size() : 0));
 
-        List<String> otherUsernames = new ArrayList<>();
+    List<String> otherUsernames = new ArrayList<>();
+    List<String> otherProfilePhotos = new ArrayList<>();
 
-        // 3. Recorremos las salas
-        for (ChatRoom room : rooms) {
-            // Buscamos el ID del otro participante
-            String otherUserId = room.getParticipants().stream()
-                    .filter(id -> !id.equals(userId))
-                    .findFirst()
-                    .orElse(null);
+    for (ChatRoom room : rooms) {
+        System.out.println("\nProcesando Sala ID: " + room.getId()); // Asumiendo que tiene getId()
+        
+        // Buscamos el ID del otro participante
+        String otherUserId = room.getParticipants().stream()
+                .filter(id -> !id.equals(userId))
+                .findFirst()
+                .orElse(null);
 
-            if (otherUserId != null) {
+        System.out.println("ID del otro participante encontrado: " + otherUserId);
 
-                // 1. Buscamos al usuario completo en la base de datos usando su ID
-                String otherUsername = userService.getUsernameById(otherUserId);
+        if (otherUserId != null) {
+            String otherUsername = userService.getUsernameById(otherUserId);
+            String otherProfilePhoto = userService.getProfilePhotoById(otherUserId);
+            System.out.println("Username obtenido de la DB: " + otherUsername);
 
-                // 2. Verificamos que exista (buena práctica para evitar NullPointerException)
-                if (otherUsername != null) {
-                    // 3. Añadimos su USERNAME a la lista, no su ID
-                    otherUsernames.add(otherUsername);
-                } else {
-                    // Opcional: Qué hacer si el usuario fue borrado o no existe
-                    otherUsernames.add("Usuario Desconocido");
-                }
+            if (otherUsername != null) {
+                otherUsernames.add(otherUsername);
+                otherProfilePhotos.add(otherProfilePhoto);
+                System.out.println("Añadido con éxito: " + otherUsername);
+            } else {
+                System.out.println("ADVERTENCIA: No se encontró username para el ID: " + otherUserId);
+                otherUsernames.add("Usuario Desconocido");
             }
+        } else {
+            System.out.println("OJO: Sala vacía o sin otro participante aparte del usuario actual.");
         }
+    }
+
+    System.out.println("\n--- Resumen final ---");
+    System.out.println("Lista total de nombres generada: " + otherUsernames);
+    
+    // Aquí deberías retornar tu DTO (completando la lógica que falte)
 
         // 4. Construimos el objeto final
         return SendChatRoomsDTO.builder()

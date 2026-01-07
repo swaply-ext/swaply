@@ -17,4 +17,6 @@ public class SendChatRoomsDTO {
     private List<String> username;
     
     private List<ChatRoom> chatRooms;
+
+    private List<String> profilePhotos;
 }
