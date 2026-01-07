@@ -31,14 +31,14 @@ export class AvatarSelectorComponent {
 
   // Datos simulados para los 8 avatares + el botón de subir
   avatars: AvatarOption[] = [
-    { id: 1, type: 'image', imageUrl: 'assets/default-image.jpg' }, // Gris claro (simula el icono por defecto)
-    { id: 3, type: 'image', imageUrl: 'assets/people_demo/ana_lopez.jpg' },
-    { id: 4, type: 'image', imageUrl: 'assets/people_demo/carlos_rodriguez.jpg' },
-    { id: 5, type: 'image', imageUrl: 'assets/people_demo/elena_figuera.jpg' },
-    { id: 6, type: 'image', imageUrl: 'assets/people_demo/juan_perez.png' },
-    { id: 2, type: 'image', imageUrl: 'assets/people_demo/luis_martin.jpg' },
-    { id: 7, type: 'image', imageUrl: 'assets/people_demo/marina_garcia.jpg' },
-    { id: 8, type: 'image', imageUrl: 'assets/people_demo/ana_lopez.jpg' }, // Repetir una imagen para completar
+    { id: 1, type: 'image', imageUrl: 'https://swaplystorage.blob.core.windows.net/default-img/avatar-default.webp' }, // Gris claro (simula el icono por defecto)
+    { id: 3, type: 'image', imageUrl: 'https://swaplystorage.blob.core.windows.net/default-img/avatar-img1.webp' },
+    { id: 4, type: 'image', imageUrl: 'https://swaplystorage.blob.core.windows.net/default-img/avatar-img2.webp' },
+    { id: 5, type: 'image', imageUrl: 'https://swaplystorage.blob.core.windows.net/default-img/avatar-img3.webp' },
+    { id: 6, type: 'image', imageUrl: 'https://swaplystorage.blob.core.windows.net/default-img/avatar-img4.webp' },
+    { id: 2, type: 'image', imageUrl: 'https://swaplystorage.blob.core.windows.net/default-img/avatar-img5.webp' },
+    { id: 7, type: 'image', imageUrl: 'https://swaplystorage.blob.core.windows.net/default-img/avatar-img6.webp' },
+    { id: 8, type: 'image', imageUrl: 'https://swaplystorage.blob.core.windows.net/default-img/avatar-img7.webp' }, // Repetir una imagen para completar
     // El último elemento es la acción de "subir propia"
     { id: 'upload', type: 'upload-action' },
   ];
