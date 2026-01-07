@@ -105,14 +105,14 @@ export class ChatComponent implements OnInit, OnDestroy {
 
         const mapped: UIConversation[] = dto.chatRooms.map((room, index) => {
           const partnerName = dto.username[index] || 'Usuario desconocido';
+          const partnerPhoto = dto.partnerAvatar[index] || 'assets/default-image.jpg';
+
           const existing = this.conversations.find((c) => c.roomId === room.id);
 
           return {
             roomId: room.id,
             partnerUsername: partnerName,
-            partnerAvatar: existing
-              ? existing.partnerAvatar
-              : 'assets/default-image.jpg',
+            partnerAvatar: partnerPhoto,
             lastMessage: room.lastMessagePreview || 'Nueva conversación',
             lastMessageTime: room.lastMessageTime
               ? new Date(room.lastMessageTime)
@@ -130,7 +130,6 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.conversations = mapped;
         this.loadingConversations = false;
 
-        this.fetchAvatarsForConversations();
 
         if (this.selectedConversation) {
         }
@@ -139,20 +138,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     });
   }
 
-  fetchAvatarsForConversations() {
-    this.conversations.forEach((conv) => {
-      if (conv.partnerAvatar === 'assets/default-image.jpg') {
-        this.accountService.getPublicProfile(conv.partnerUsername).subscribe({
-          next: (profile: any) => {
-            if (profile && profile.profilePicture) {
-              conv.partnerAvatar = profile.profilePicture;
-            }
-          },
-          error: () => {},
-        });
-      }
-    });
-  }
+
 
   handleDeepLink(roomId: string) {
     const found = this.conversations.find((c) => c.roomId === roomId);
