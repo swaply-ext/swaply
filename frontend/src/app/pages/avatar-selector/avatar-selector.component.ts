@@ -4,6 +4,7 @@ import { NextButtonComponent } from '../../components/next-button/next-button.co
 import { AccountService } from '../../services/account.service';
 import { Router } from '@angular/router';
 import { AvatarOption } from '../../models/avatar-option.model';
+import { ValidateInputsService } from '../../services/validate-inputs.service';
 
 @Component({
   selector: 'app-profile-selector',
@@ -36,7 +37,11 @@ export class AvatarSelectorComponent {
     { id: 'upload', type: 'upload-action' },
   ];
 
-  constructor(private accountService: AccountService, private router: Router) { }
+  constructor(
+    private accountService: AccountService, 
+    private router: Router,
+    private validateInputsService: ValidateInputsService
+  ) { }
 
   selectAvatar(id: number | string): void {
     this.selectedAvatarId.set(id);
@@ -98,19 +103,17 @@ export class AvatarSelectorComponent {
 
     if (file) {
       this.isReadingPhoto = true;
-      // validación del formato
-      const validExtensions = ['jpeg', 'jpg', 'png', 'webp', 'heic', 'heif'];
-      const fileExtension = file.name.split('.').pop().toLowerCase();
-      if (!fileExtension || !validExtensions.includes(fileExtension)) {
-        this.errorMessages['profilePhoto'] =
-          'Solo se permiten imágenes JPG, PNG, WEBP, HEIC o HEIF.';
+
+      // Validación de formato
+      if (!this.validateInputsService.isImageExtensionValid(file)) {
+        this.errorMessages['profilePhoto'] = 'Solo se permiten imágenes JPG, PNG, WEBP, HEIC o HEIF.';
         this.isReadingPhoto = false;
         return;
       }
+
       // Validación de tamaño (2MB)
-      if (file.size > 2 * 1024 * 1024) {
-        this.errorMessages['profilePhoto'] =
-          'La imagen es demasiado grande. Máximo 2MB.';
+      if (!this.validateInputsService.isImageSizeValid(file, 2)) {
+        this.errorMessages['profilePhoto'] = 'La imagen es demasiado grande. Máximo 2MB.';
         this.isReadingPhoto = false;
         return;
       }

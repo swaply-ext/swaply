@@ -72,4 +72,21 @@ export class ValidateInputsService {
     const requirements = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñçÇïÏ0-9\s,'ºª-]+$/;
     return location.length >= minLength && location.length <= maxLength && requirements.test(location);
   }
+
+  public isImageExtensionValid(file: File): boolean {
+    if (!file) {
+      return false;
+    }
+    const validExtensions = ['jpeg', 'jpg', 'png', 'webp', 'heic', 'heif'];
+    const fileExtension = file.name.split('.').pop()?.toLowerCase();
+    return !!fileExtension && validExtensions.includes(fileExtension);
+  }
+
+  public isImageSizeValid(file: File, maxSizeInMB: number): boolean {
+    if (!file) {
+      return false;
+    }
+    const maxSizeInBytes = maxSizeInMB * 1024 * 1024;
+    return file.size <= maxSizeInBytes;
+  }
 }

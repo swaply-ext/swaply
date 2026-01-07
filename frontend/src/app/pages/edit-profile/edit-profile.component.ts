@@ -10,6 +10,8 @@ import { SkillsPanelComponent } from '../../components/skills-panel/skills-panel
 import { InterestsPanelComponent } from '../../components/interests-panel/interests-panel.component';
 import { LocationSearchComponent } from '../../components/location-search/location-search.component';
 import { delay } from 'rxjs';
+import { ValidateInputsService } from '../../services/validate-inputs.service';
+
 interface Skill {
   id: string;
   level: number;
@@ -59,7 +61,10 @@ export class EditProfileComponent implements OnInit {
 
   isUploadingPhoto = false;
 
-  constructor(private accountService: AccountService) { }
+  constructor(
+    private accountService: AccountService,
+    private validateInputsService: ValidateInputsService
+  ) { }
 
   // Variables individuales para enlazar con el formulario
   name = "";
@@ -140,15 +145,13 @@ export class EditProfileComponent implements OnInit {
     delete this.errorMessages['profilePhoto'];
 
     if (file) {
-      // validación del formato
-      const validExtensions = ['jpeg', 'jpg', 'png', 'webp', 'heic', 'heif'];
-      const fileExtension = file.name.split('.').pop().toLowerCase();
-      if (!fileExtension || !validExtensions.includes(fileExtension)) {
+      // Validación de formato
+      if (!this.validateInputsService.isImageExtensionValid(file)) {
         this.errorMessages['profilePhoto'] = 'Solo se permiten imágenes JPG, PNG, WEBP, HEIC o HEIF.';
         return;
       }
       // Validación de tamaño (2MB)
-      if (file.size > 2 * 1024 * 1024) {
+      if (!this.validateInputsService.isImageSizeValid(file, 2)) {
         this.errorMessages['profilePhoto'] = 'La imagen es demasiado grande. Máximo 2MB.';
         return;
       }

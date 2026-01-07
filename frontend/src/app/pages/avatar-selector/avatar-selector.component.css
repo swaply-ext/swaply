@@ -182,12 +182,9 @@
 
 .error-message {
     color: var(--error-color-1);
-    /* Red color for errors */
     font-size: 0.875rem;
     margin-top: -1.5rem;
-    /* Adjust to position it below the grid */
     margin-bottom: 1.5rem;
-    /* Ensure space before the footer */
     display: block;
     width: 100%;
 }
