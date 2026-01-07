@@ -113,6 +113,7 @@ public SendChatRoomsDTO getChatRoomsByUserId(String userId) {
         return SendChatRoomsDTO.builder()
                 .username(otherUsernames) // Ahora pasamos la lista de nombres reales
                 .chatRooms(rooms)
+                .profilePhotos(otherProfilePhotos)
                 .build();
     }
 
