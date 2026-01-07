@@ -9,7 +9,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, interval } from 'rxjs';
 import { ChatService, ChatMessage } from '../../services/chat.service';
 import { AccountService } from '../../services/account.service';
 import { AppNavbarComponent } from '../../components/app-navbar/app-navbar.component';
@@ -48,6 +48,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   loadingConversations: boolean = true;
   private pollingSub: Subscription | null = null;
   private chatSub: Subscription | null = null;
+  private activeRoomSub: Subscription | null = null; 
 
   constructor(
     private chatService: ChatService,
@@ -67,23 +68,38 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     this.accountService.getProfileData().subscribe({
       next: (account: any) => {
-        // Asegúrate de usar la propiedad correcta de tu backend para la foto
         this.currentUserAvatar = account.profilePicture || 'assets/default-image.jpg';
-
         this.loadConversations();
 
-        this.route.queryParams.subscribe((params) => {
-          const roomId = params['roomId'];
-          if (roomId) {
-            this.handleDeepLink(roomId);
-          }
+        //Escuchar cambios de sala desde el servicio (invisible URL)
+        this.activeRoomSub = this.chatService.activeRoom$.subscribe(roomId => {
+            if (roomId) {
+                this.handleDeepLink(roomId);
+            }
         });
+
+        // Si hay ID, lo pasamos al servicio y limpiamos la URL
+        const urlRoomId = this.route.snapshot.queryParamMap.get('roomId');
+        if (urlRoomId) {
+            this.chatService.setActiveRoom(urlRoomId);
+            // Limpiar URL
+            this.router.navigate([], {
+                relativeTo: this.route,
+                queryParams: { roomId: null },
+                queryParamsHandling: 'merge',
+                replaceUrl: true
+            });
+        }
       },
       error: (err) => {
         console.error('Error cargando perfil', err);
-        // Intentamos cargar conversaciones incluso si falla el perfil
         this.loadConversations();
       },
+    });
+
+    //Polling cada 5s para actualizar lista
+    this.pollingSub = interval(5000).subscribe(() => {
+        this.loadConversations(false);
     });
   }
 
@@ -94,6 +110,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.pollingSub) this.pollingSub.unsubscribe();
     if (this.chatSub) this.chatSub.unsubscribe();
+    if (this.activeRoomSub) this.activeRoomSub.unsubscribe();
   }
 
   loadConversations(showLoading = true): void {
@@ -112,7 +129,6 @@ export class ChatComponent implements OnInit, OnDestroy {
             ? dto.username[index]
             : 'Usuario desconocido';
 
-          // Aseguramos que existe el array y el índice antes de acceder
           const partnerPhoto = (dto.partnerAvatar && dto.partnerAvatar[index])
             ? dto.partnerAvatar[index]
             : 'assets/default-image.jpg';
@@ -127,7 +143,6 @@ export class ChatComponent implements OnInit, OnDestroy {
           };
         });
 
-        // Ordenar por fecha
         mapped.sort((a, b) => {
           const timeA = a.lastMessageTime ? a.lastMessageTime.getTime() : 0;
           const timeB = b.lastMessageTime ? b.lastMessageTime.getTime() : 0;
@@ -137,30 +152,13 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.conversations = mapped;
         this.loadingConversations = false;
 
-        // --- CORRECCIÓN CLAVE ---
-        // Si tenemos una conversación seleccionada, hay que reconectarla
-        // con el nuevo objeto que acaba de llegar del servidor
         if (this.selectedConversation) {
           const updatedConversation = this.conversations.find(
             (c) => c.roomId === this.selectedConversation?.roomId
           );
-
           if (updatedConversation) {
-            // Actualizamos la referencia para que la UI se entere de los cambios (foto, lastMessage, etc)
             this.selectedConversation = updatedConversation;
           }
-        }
-        // Caso especial: Si venimos de un enlace directo (URL) y aún no habíamos seleccionado nada
-        // pero la lista acaba de cargar, intentamos seleccionar automáticamente
-        else {
-           const urlRoomId = this.route.snapshot.queryParams['roomId'];
-           if (urlRoomId) {
-             const found = this.conversations.find(c => c.roomId === urlRoomId);
-             if (found) {
-                // Seleccionamos sin recargar historial si ya lo tenemos
-                this.selectedConversation = found;
-             }
-           }
         }
       },
       error: () => (this.loadingConversations = false),
@@ -168,14 +166,12 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   handleDeepLink(roomId: string) {
-    // Intentamos buscar en la lista actual
     const found = this.conversations.find((c) => c.roomId === roomId);
 
     if (found) {
-      this.selectConversation(found);
+      this.selectConversation(found, false); // false = no setear estado de nuevo
     } else {
-      // Si no existe (porque la lista no ha cargado aún o es un chat nuevo),
-      // creamos un objeto temporal. loadConversations lo actualizará cuando termine.
+      //Objete temporal si no está en la lista
       const tempConv: UIConversation = {
         roomId: roomId,
         partnerUsername: 'Cargando...',
@@ -184,27 +180,24 @@ export class ChatComponent implements OnInit, OnDestroy {
         lastMessageTime: new Date(),
         unreadCount: 0,
       };
-
-      // Importante: No añadimos tempConv a 'conversations' para no ensuciar la lista,
-      // solo lo establecemos como seleccionado.
-      this.selectConversation(tempConv);
+      this.selectConversation(tempConv, false);
     }
   }
 
-  selectConversation(conv: UIConversation): void {
-    // Evitamos recargar si ya estamos en esa sala
+
+  selectConversation(conv: UIConversation, updateService: boolean = true): void {
     if (this.selectedConversation?.roomId === conv.roomId && this.messages.length > 0) return;
 
     this.selectedConversation = conv;
     this.messages = [];
 
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: { roomId: conv.roomId },
-      queryParamsHandling: 'merge',
-    });
+    //CAMBIO: Actualizar servicio, NO URL
+    if (updateService) {
+        this.chatService.setActiveRoom(conv.roomId);
+        // Al actualizar el servicio, se disparará activeRoomSub -> handleDeepLink
+        return; 
+    }
 
-    // 1. Cargar historial
     this.chatService.getHistory(conv.roomId).subscribe({
         next: (msgs) => {
             this.messages = msgs;
@@ -213,7 +206,6 @@ export class ChatComponent implements OnInit, OnDestroy {
         error: (err) => console.error('Error historial', err)
     });
 
-    // 2. Conectar WebSocket
     if (this.chatSub) this.chatSub.unsubscribe();
 
     this.chatSub = this.chatService
@@ -222,23 +214,18 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.messages.push(msg);
         this.scrollToBottom();
 
-        // Actualizar el "último mensaje" en la vista de lista
-        // (Esto actualiza la vista lateral en tiempo real)
         if (this.selectedConversation) {
             this.selectedConversation.lastMessage = msg.content;
             this.selectedConversation.lastMessageTime = new Date(msg.timestamp);
 
-            // También actualizamos el objeto dentro del array principal para mantener coherencia
             const inList = this.conversations.find(c => c.roomId === conv.roomId);
             if (inList) {
                 inList.lastMessage = msg.content;
                 inList.lastMessageTime = new Date(msg.timestamp);
-
-                // Reordenamos la lista para que el chat suba (opcional)
                 this.conversations.sort((a, b) => {
-                     const tA = a.lastMessageTime?.getTime() || 0;
-                     const tB = b.lastMessageTime?.getTime() || 0;
-                     return tB - tA;
+                      const tA = a.lastMessageTime?.getTime() || 0;
+                      const tB = b.lastMessageTime?.getTime() || 0;
+                      return tB - tA;
                 });
             }
         }
@@ -247,10 +234,8 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   sendMessage(): void {
     if (!this.newMessage.trim() || !this.selectedConversation) return;
-
     const text = this.newMessage;
     const roomId = this.selectedConversation.roomId;
-
     this.chatService.sendWsMessage(roomId, text);
     this.newMessage = '';
   }

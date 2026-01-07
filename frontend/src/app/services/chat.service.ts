@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpContext } from '@angular/common/http';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, BehaviorSubject } from 'rxjs'; // <--- Importamos BehaviorSubject
 import { SKIP_LOADING } from '../interceptors/loading.interceptor';
 import { Client, Message as StompMessage } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
@@ -27,8 +27,6 @@ export interface ChatMessage {
   timestamp: string;
 }
 
-// chat.service.ts
-
 @Injectable({ providedIn: 'root' })
 export class ChatService {
   private base = 'http://localhost:8081/api/chat';
@@ -36,18 +34,26 @@ export class ChatService {
   private roomSubjects = new Map<string, Subject<ChatMessage>>();
   public currentUserId: string = '';
 
+  //GESTIÓN DE SALA ACTIVA (OCULTA EN URL)
+  private activeRoomSource = new BehaviorSubject<string | null>(null);
+  public activeRoom$ = this.activeRoomSource.asObservable();
   private _connectedPromise: Promise<void> | null = null;
 
   constructor(private http: HttpClient) {}
 
-  //OBTENER ROOMS (no va por backend error 500)
+  //Método para cambiar la sala activa desde cualquier componente, para elñ public profile
+  public setActiveRoom(roomId: string | null) {
+    this.activeRoomSource.next(roomId);
+  }
+
+  //OBTENER ROOMS
   getRooms(): Observable<SendChatRoomsDTO> {
     return this.http.get<SendChatRoomsDTO>(`${this.base}/rooms`, {
       context: new HttpContext().set(SKIP_LOADING, true)
     });
   }
 
-  //obtener el historial SI Q FUNCIONA DE UNA ROOM
+  //obtener el historial
   getHistory(roomId: string): Observable<ChatMessage[]> {
     return this.http.get<ChatMessage[]>(`${this.base}/history/${roomId}`);
   }
