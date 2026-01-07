@@ -11,30 +11,9 @@ import { InterestsPanelComponent } from '../../components/interests-panel/intere
 import { LocationSearchComponent } from '../../components/location-search/location-search.component';
 import { delay } from 'rxjs';
 import { ValidateInputsService } from '../../services/validate-inputs.service';
-
-interface Skill {
-  id: string;
-  level: number;
-}
-
-interface Location {
-  placeId: string;
-  lat: number;
-  lon: number;
-  displayName: string;
-}
-
-interface ProfileData {
-  name: string;
-  surname: string;
-  username: string;
-  description: string;
-  birthDate: string;
-  location: Location | string;
-  gender: string;
-  email: string;
-  profilePhotoUrl: string;
-}
+import { UserSkills } from '../../models/user-skills.model';
+import { UserLocation } from '../../models/user-location.model';
+import { EditProfileData, GetEditProfileData } from '../../models/edit-profile.model';
 
 @Component({
   selector: 'app-profile',
@@ -54,10 +33,10 @@ interface ProfileData {
   styleUrls: ['./edit-profile.component.css']
 })
 export class EditProfileComponent implements OnInit {
-  public interests: Array<Skill> = [];
-  public skills: Array<Skill> = [];
-  public profileData: ProfileData = {} as ProfileData;
-  private locationData: Location | null = null;
+  public interests: Array<UserSkills> = [];
+  public skills: Array<UserSkills> = [];
+  public profileData: EditProfileData = {} as EditProfileData;
+  private locationData: UserLocation | null = null;
 
   isUploadingPhoto = false;
 
@@ -86,7 +65,7 @@ export class EditProfileComponent implements OnInit {
   // Obtener datos del perfil desde el backend
   getProfileDataFromBackend(): void {
     this.accountService.getEditProfileData().subscribe({
-      next: (user) => {
+      next: (user: GetEditProfileData) => {
         console.log('Datos recibidos del backend', user);
         this.splitAndSendUser(user);
       },
@@ -96,7 +75,7 @@ export class EditProfileComponent implements OnInit {
     });
   }
 
-  splitAndSendUser(user: any): void {
+  splitAndSendUser(user: GetEditProfileData): void {
     this.interests = user.interests;
     this.skills = user.skills;
     this.mapProfileData(user);
@@ -104,8 +83,8 @@ export class EditProfileComponent implements OnInit {
     console.log(this.interests)
   }
 
-  // Mapear datos del usuario a la estructura ProfileData
-  mapProfileData(user: any): void {
+  // Mapear datos del usuario a la estructura EditProfileData
+  mapProfileData(user: GetEditProfileData): void {
 
     if (user.location && typeof user.location === 'object' && user.location.displayName) {
       this.locationData = user.location;
@@ -175,7 +154,7 @@ export class EditProfileComponent implements OnInit {
   }
   save() {
 
-    const finalLocationValue: Location | string = this.locationData || this.location;
+    const finalLocationValue: UserLocation | string = this.locationData || this.location;
 
     // Resetear errores al inicio
     this.errorMessages = {};
@@ -189,7 +168,7 @@ export class EditProfileComponent implements OnInit {
     }
 
     //recoger los datos del formulario
-    const updatedUser: ProfileData = {
+    const updatedUser: EditProfileData = {
       name: this.name,
       surname: this.surname,
       username: this.username.toLowerCase(),
@@ -335,8 +314,8 @@ export class EditProfileComponent implements OnInit {
     return age;
   }
 
-  onLocationSelected(newLocation: Location | null): void {
-    // 1. Guarda el objeto Location completo para el envío al backend
+  onLocationSelected(newLocation: UserLocation | null): void {
+    // 1. Guarda el objeto UserLocation completo para el envío al backend
     this.locationData = newLocation; // locationData ahora es tipo location | null
 
     if (newLocation) {
