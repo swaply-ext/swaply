@@ -67,12 +67,8 @@ public class ChatService {
     }
 
     public SendChatRoomsDTO getChatRoomsByUserId(String userId) {
-        System.out.println("[ChatService] getChatRoomsByUserId userId=" + userId);
-        // 1. Obtenemos todas las salas de una sola vez
         List<ChatRoom> rooms = chatRoomRepository.findRoomsByUserId(userId);
-        System.out.println("[ChatService] roomsFound=" + (rooms==null?0:rooms.size()));
 
-        // 2. Creamos una lista para guardar los nombres (Usernames)
         List<String> otherUsernames = new ArrayList<>();
 
         // 3. Recorremos las salas
@@ -86,12 +82,12 @@ public class ChatService {
             if (otherUserId != null) {
 
                 // 1. Buscamos al usuario completo en la base de datos usando su ID
-                UserDTO otherUserDto = userService.getUserByID(otherUserId);
+                String otherUsername = userService.getUsernameById(otherUserId);
 
                 // 2. Verificamos que exista (buena práctica para evitar NullPointerException)
-                if (otherUserDto != null) {
+                if (otherUsername != null) {
                     // 3. Añadimos su USERNAME a la lista, no su ID
-                    otherUsernames.add(otherUserDto.getUsername());
+                    otherUsernames.add(otherUsername);
                 } else {
                     // Opcional: Qué hacer si el usuario fue borrado o no existe
                     otherUsernames.add("Usuario Desconocido");
