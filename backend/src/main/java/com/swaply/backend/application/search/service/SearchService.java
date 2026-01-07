@@ -193,7 +193,7 @@ public class SearchService {
 
             dto.setUserSkills(allSkills);
         }
-
+        
         dto.setRating(4.8);
         dto.setDistance("Cerca de ti");
         dto.setSwapMatch(false);

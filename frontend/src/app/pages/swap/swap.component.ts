@@ -51,11 +51,12 @@ export class SwapComponent implements OnInit {
     const targetUsername = this.route.snapshot.paramMap.get('username');
     const paramSkillName = this.route.snapshot.queryParamMap.get('skillName');
 
-    // CARGAR MI USUARIO
+    // 1. CARGAR MI USUARIO
     this.accountService.getProfileData().subscribe({
       next: (me) => {
         this.myUser.set(me);
         
+        // Configurar lo que YO enseño (Mis Skills)
         if (me.skills && me.skills.length > 0) {
           const myVisualSkills = me.skills.map((s: any, index: number) => {
             const realName = s.name || s.id || 'Skill sin nombre';
@@ -74,69 +75,80 @@ export class SwapComponent implements OnInit {
       }
     });
 
-    // CARGAR USUARIO DESTINO 
+    // 2. CARGAR USUARIO DESTINO 
     if (targetUsername) {
       this.searchService.getUserByUsername(targetUsername).subscribe({
         next: (user) => {
           this.targetUser.set(user);
 
-          // Construir lista con skill principal + secundarias
+          // Construir lista con skill principal + secundarias del OTRO usuario
           const mainSkill = {
             id: user.skillName,
             name: user.skillName,
             category: user.skillCategory,
-            level: user.skillLevel,
+            level: user.skillLevel, // Nivel que él ofrece
             icon: user.skillIcon,
             image: this.assignImageToSkill(user.skillCategory, user.skillName),
             selected: false
           };
 
+          // Unir con secundarias evitando duplicados
           const secondarySkills = (user.userSkills || [])
-            .filter(s => s.name !== mainSkill.name) // Evitar duplicados
+            .filter(s => s.name !== mainSkill.name) 
             .map(s => ({
               id: s.name,
               name: s.name,
               category: s.category,
-              level: s.level,
+              level: s.level, // Nivel que él ofrece
               image: this.assignImageToSkill(s.category, s.name),
               selected: false
             }));
 
-          let allInterests = [mainSkill, ...secondarySkills];
+          let allTargetSkills = [mainSkill, ...secondarySkills];
 
-          // FILTRAR por mis intereses
-          const myInterests = this.mySkillsDisplay();
-          allInterests = this.filterTargetSkillsByMyInterests(allInterests, myInterests);
+          // --- LOGICA DE FILTRADO ---
+          // Obtenemos MIS INTERESES reales desde el perfil cargado
+          const myProfile = this.myUser();
+          const myInterests = myProfile?.interests || [];
 
-          // Si hay parametro URL, buscamos esa skill y la ponemos PRIMERA
+          // Filtramos: Solo lo que ofrece el otro QUE coincida con mis intereses Y cumpla el nivel
+          allTargetSkills = this.filterTargetSkillsByMyInterests(allTargetSkills, myInterests);
+
+          // Si hay parametro URL, buscamos esa skill y la ponemos PRIMERA (si pasó el filtro)
           if (paramSkillName) {
             const targetNameInfo = paramSkillName.toLowerCase();
-            const foundIndex = allInterests.findIndex(s => 
+            const foundIndex = allTargetSkills.findIndex(s => 
                s.name.toLowerCase().includes(targetNameInfo) || targetNameInfo.includes(s.name.toLowerCase())
             );
 
             if (foundIndex > 0) {
-              const [itemToMove] = allInterests.splice(foundIndex, 1);
-              allInterests.unshift(itemToMove);
+              const [itemToMove] = allTargetSkills.splice(foundIndex, 1);
+              allTargetSkills.unshift(itemToMove);
             }
           }
 
-          // Marcamos la primera (índice 0) como seleccionada
-          allInterests = allInterests.map((item, index) => ({
-             ...item,
-             selected: index === 0
-          }));
+          // Si quedó alguna skill tras el filtro, seleccionamos la primera
+          if (allTargetSkills.length > 0) {
+            allTargetSkills = allTargetSkills.map((item, index) => ({
+               ...item,
+               selected: index === 0
+            }));
 
-          this.targetUserInterests.set(allInterests);
+            this.targetUserInterests.set(allTargetSkills);
 
-          // Actualizamos la carta grande superior con la primera (la seleccionada)
-          const selectedItem = allInterests[0];
-          this.selectedTargetSkill.set({
-            skillName: selectedItem.name,
-            skillIcon: (selectedItem as any).icon,
-            skillImage: selectedItem.image,
-            location: user.location
-          });
+            // Actualizamos la carta grande superior
+            const selectedItem = allTargetSkills[0];
+            this.selectedTargetSkill.set({
+              skillName: selectedItem.name,
+              skillIcon: (selectedItem as any).icon,
+              skillImage: selectedItem.image,
+              location: user.location
+            });
+          } else {
+            // Caso borde: El usuario no tiene nada que coincida con tus intereses/nivel
+            this.targetUserInterests.set([]);
+            this.selectedTargetSkill.set(null); 
+          }
         }
       });
     }
@@ -196,14 +208,14 @@ export class SwapComponent implements OnInit {
     const targetUser = this.targetUser();
 
     if (!targetItem || !myItem || !targetUser) {
-      alert("Error: Selecciona una habilidad en cada lado.");
+      alert("Error: Debes seleccionar una habilidad válida en cada lado.");
       return;
     }
 
     const payload: SwapDTO = {
       requestedUsername: targetUser.username,
-      skill: myItem.name,
-      interest: targetItem.name
+      skill: myItem.name,    // Lo que yo enseño
+      interest: targetItem.name // Lo que quiero aprender de él
     };
 
     this.searchService.sendSwapRequest(payload).subscribe({
@@ -263,11 +275,34 @@ export class SwapComponent implements OnInit {
     return undefined;
   }
 
+  /**
+   * Filtra las skills del otro usuario.
+   * Condiciones:
+   * 1. Debe existir en MIS intereses (coincidencia de nombre).
+   * 2. El nivel que ofrece el usuario debe ser >= mi nivel de interés.
+   */
   private filterTargetSkillsByMyInterests(targetSkills: any[], myInterests: any[]): any[] {
     if (!myInterests || myInterests.length === 0) return [];
-    const interestKeys = myInterests.map(i => i.name.toLowerCase());
-    return targetSkills.filter(skill => 
-      interestKeys.some(key => skill.name.toLowerCase().includes(key))
-    );
+    
+    return targetSkills.filter(targetSkill => {
+      // Nombre de la skill ofertada
+      const targetName = (targetSkill.name || targetSkill.id || '').toLowerCase();
+      const targetLevel = targetSkill.level !== undefined ? targetSkill.level : 0;
+
+      // Buscar si tengo ese interés específico
+      const matchingInterest = myInterests.find(myInterest => {
+         const interestName = (myInterest.name || myInterest.id || '').toLowerCase();
+         // Coincidencia laxa de nombres (ej: "futbol" coincide con "clase de futbol")
+         return targetName.includes(interestName) || interestName.includes(targetName);
+      });
+
+      // Si no es de mi interés, descartar
+      if (!matchingInterest) return false;
+
+      // Verificar Nivel: Lo que él ofrece >= Lo que yo necesito
+      const myInterestLevel = matchingInterest.level !== undefined ? matchingInterest.level : 0;
+      
+      return targetLevel >= myInterestLevel;
+    });
   }
 }
