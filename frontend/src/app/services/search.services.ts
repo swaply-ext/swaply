@@ -25,6 +25,12 @@ export interface UserSwapDTO {
     category: string;
     level: number;
   }[];
+
+  interests?: {
+    name: string;
+    category: string;
+    level: number;
+  }[];
 }
 
 // dto para la petición de intercambio

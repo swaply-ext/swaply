@@ -194,6 +194,18 @@ public class SearchService {
             dto.setUserSkills(allSkills);
         }
         
+        if (user.getInterests() != null && !user.getInterests().isEmpty()) {
+        List<UserSwapDTO.SkillItem> interestsDto = user.getInterests().stream()
+            .map(interest -> new UserSwapDTO.SkillItem(
+                interest.getName() != null ? interest.getName() : interest.getId(),
+                interest.getCategory(),
+                interest.getLevel()
+            ))
+            .collect(Collectors.toList());
+        
+        dto.setInterests(interestsDto);
+    }
+
         dto.setRating(4.8);
         dto.setDistance("Cerca de ti");
         dto.setSwapMatch(false);
