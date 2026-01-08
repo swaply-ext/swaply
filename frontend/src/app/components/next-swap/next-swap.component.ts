@@ -222,7 +222,7 @@ export class NextSwapComponent {
 
   getLevelText(level: number): string {
     switch (level) {
-      case 1: return 'principiante';
+      case 1: return 'Principiante';
       case 2: return 'Intermedio';
       case 3: return 'Experto';
       default: return 'unknown';
