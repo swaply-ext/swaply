@@ -6,13 +6,9 @@ import { SwapService } from '../../services/swap.service';
 import { UsersService } from '../../services/users.service';
 import { AccountService } from '../../services/account.service';
 import { Swap } from '../../models/swap.model';
+import { ProfileDataDTO } from '../../models/profile-data-dto.model';
 
 
-export interface Profile {
-  username: string;
-  profilePhotoUrl: string;
-  location: string;
-}
 
 @Component({
   selector: 'app-swap-requests',
@@ -28,7 +24,7 @@ export class SwapRequestsComponent implements OnInit {
   requests = signal<Swap[]>([]);
   loading = signal<boolean>(true);
 
-  profilesMap = signal<Map<string, Profile>>(new Map());
+  profilesMap = signal<Map<string, ProfileDataDTO>>(new Map());
 
   ngOnInit() {
     this.loadRequests();
@@ -91,7 +87,7 @@ export class SwapRequestsComponent implements OnInit {
   }
 
 
-  getProfile(userId: string): Profile | undefined {
+  getProfile(userId: string): ProfileDataDTO | undefined {
     return this.profilesMap().get(userId);
   }
 

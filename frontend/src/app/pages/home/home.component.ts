@@ -4,31 +4,21 @@ import { Router } from '@angular/router';
 import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.component";
 import { SkillSearchComponent } from '../../components/skill-search/skill-search.component';
 import { FilterSkillsComponent } from '../../components/filter-skills/filter-skills.component';
-import { SearchService, UserSwapDTO } from '../../services/search.services';
+import { SearchService} from '../../services/search.services';
+import { UserSwapDTO } from '../../models/userSwapDTO.model';
 import { RouterLink } from '@angular/router';
 import { AccountService } from '../../services/account.service';
 import { NextSwapComponent } from '../../components/next-swap/next-swap.component';
+import { NextSwap } from '../../models/next-swap.model';
 
-export interface CardModel {
-  userId?: string;
-  username?: string; //per la ruta /public-profile/:username
-  userName: string;
-  userAvatar: string;
-  skillTitle: string;
-  skillImage?: string;
-  skillIcon?: string;
-  distance: string;
-  rating: number;
-  isMatch: boolean;
-}
 
 @Component({
   selector: 'app-home',
   standalone: true,
   imports: [
-    CommonModule, 
-    AppNavbarComponent, 
-    SkillSearchComponent, 
+    CommonModule,
+    AppNavbarComponent,
+    SkillSearchComponent,
     FilterSkillsComponent,
     NextSwapComponent,
     RouterLink
@@ -41,18 +31,18 @@ export class HomeComponent implements OnInit {
 
   constructor(private accountService: AccountService) { }
 
-  
+
   private searchService = inject(SearchService);
   private router = inject(Router);
 
-  private allCards: CardModel[] = []; 
-  cards = signal<CardModel[]>([]);
-  
+  private allCards: NextSwap[] = [];
+  cards = signal<NextSwap[]>([]);
+
   isLoadingMatches = signal(false);
-  
+
   // Esta bandera controla si mostramos las etiquetas de estado o no
   hasSearched = signal(false);
-  
+
   itemsToShow = signal(6);
   canLoadMore = computed(() => this.cards().length < this.allCards.length);
 
@@ -62,9 +52,9 @@ export class HomeComponent implements OnInit {
 
   loadInitialRecommendations() {
     this.isLoadingMatches.set(true);
-    // Resetear hasSearched a false para que el HTML sepa que son recomendaciones 
-    this.hasSearched.set(false); 
-    
+    // Resetear hasSearched a false para que el HTML sepa que son recomendaciones
+    this.hasSearched.set(false);
+
     this.searchService.getRecommendations().subscribe({
       next: (matches) => this.processResults(matches),
       error: (err) => {
@@ -94,16 +84,16 @@ export class HomeComponent implements OnInit {
       }
     });
   }
-  
+
   private processResults(matches: UserSwapDTO[]) {
     this.allCards = matches.map(m => ({
       userId: m.userId,
       username: (m as any).username || m.userId,
       userName: m.name,
       userAvatar: m.profilePhotoUrl || 'assets/default-image.jpg',
-      skillTitle: m.skillName, 
-      skillIcon: m.skillIcon,   
-      skillImage: this.assignImageToSkill(m.skillCategory, m.skillName), 
+      skillTitle: m.skillName,
+      skillIcon: m.skillIcon,
+      skillImage: this.assignImageToSkill(m.skillCategory, m.skillName),
       distance: m.distance,
       rating: m.rating || 0,
       isMatch: m.isSwapMatch
@@ -119,8 +109,8 @@ export class HomeComponent implements OnInit {
   }
 
   loadMore() {
-    this.itemsToShow.update(val => val + 6); 
-    this.updateView(); 
+    this.itemsToShow.update(val => val + 6);
+    this.updateView();
   }
 
 
@@ -150,17 +140,17 @@ export class HomeComponent implements OnInit {
       else if (name.includes('digital')) { filename = 'digital_entertainment.jpg'; folder = 'leisure'; }
       return filename ? `assets/photos_skills/${folder}/${filename}` : undefined;
   }
-  
-  
 
-  goToSwap(card: CardModel) {
+
+
+  goToSwap(card: NextSwap) {
     if (!card.username) return;
 
-    this.router.navigate(['/swap', card.username], { 
-      queryParams: { skillName: card.skillTitle } 
+    this.router.navigate(['/swap', card.username], {
+      queryParams: { skillName: card.skillTitle }
     });
   }
-  
+
   hasIntercambio = signal(true);
   isConfirmed = signal(false);
   skillToLearn = signal({ titulo: 'Clase de Guitarra Acústica', img: 'assets/photos_skills/music/guitar.jpg', hora: 'Hoy, 18:00h', via: 'Vía Napoli 5' });

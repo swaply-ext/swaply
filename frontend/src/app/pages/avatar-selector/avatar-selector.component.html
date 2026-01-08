@@ -1,0 +1,53 @@
+<div class="container">
+    <div class="profile-card">
+        <header class="card-header">
+            <h1 class="title">FOTO DE PERFIL</h1>
+            <p class="subtitle">Escoge una foto de perfil o sube la tuya propia</p>
+        </header>
+
+        <input type="file" #fileInput style="display: none" (change)="onPhotoSelected($event)"
+            accept=".jpg,.jpeg,.png,.webp,.heic,.heif" />
+
+        <div class="avatar-grid">
+            @for (avatar of avatars; track avatar.id) {
+
+            <button class="avatar-item" [class.selected]="selectedAvatarId() === avatar.id"
+                [class.is-upload-btn]="avatar.type === 'upload-action'"
+                (click)="(avatar.type === 'upload-action' && !profilePhotoUrl) ? fileInput.click() : selectAvatar(avatar.id)"
+                type="button">
+
+                <div class="avatar-circle"
+                    [ngStyle]="{'background-image': (avatar.type === 'upload-action' && profilePhotoUrl && !isUploadingPhoto) ? 'url(' + profilePhotoUrl + ')' : (avatar.imageUrl ? 'url(' + avatar.imageUrl + ')' : 'none')}">
+
+                    @if (avatar.type === 'image' && !avatar.imageUrl) {
+                    <span class="material-symbols-outlined generic-user-icon">person</span>
+                    }
+
+                    @if (avatar.type === 'upload-action') {
+                    @if (isUploadingPhoto || isReadingPhoto) {
+                    <div class="spinner"></div>
+                    } @else if (!profilePhotoUrl) {
+                    <span class="material-symbols-outlined generic-user-icon">person</span>
+                    }
+                    }
+                </div>
+
+                @if (avatar.type === 'upload-action') {
+                <div class="action-badge" (click)="$event.stopPropagation(); fileInput.click()"
+                    title="Subir o cambiar foto">
+                    <span class="material-symbols-outlined">add</span>
+                </div>
+                }
+            </button>
+            }
+        </div>
+
+        <small *ngIf="errorMessages['profilePhoto']" class="error-message">
+            {{ errorMessages["profilePhoto"] }}
+        </small>
+
+        <footer class="card-footer">
+            <app-next-button (submit)="onContinue()"></app-next-button>
+        </footer>
+    </div>
+</div>

@@ -9,30 +9,10 @@ import { DiscardButtonComponent } from '../../components/discard-button/discard-
 import { SkillsPanelComponent } from '../../components/skills-panel/skills-panel.component';
 import { InterestsPanelComponent } from '../../components/interests-panel/interests-panel.component';
 import { LocationSearchComponent } from '../../components/location-search/location-search.component';
-import { delay } from 'rxjs';
-interface Skill {
-  id: string;
-  level: number;
-}
-
-interface Location {
-  placeId: string;
-  lat: number;
-  lon: number;
-  displayName: string;
-}
-
-interface ProfileData {
-  name: string;
-  surname: string;
-  username: string;
-  description: string;
-  birthDate: string;
-  location: Location | string;
-  gender: string;
-  email: string;
-  profilePhotoUrl: string;
-}
+import { ValidateInputsService } from '../../services/validate-inputs.service';
+import { UserSkills } from '../../models/user-skills.model';
+import { UserLocation } from '../../models/user-location.model';
+import { EditProfileData } from '../../models/edit-profile.model';
 
 @Component({
   selector: 'app-profile',
@@ -52,14 +32,17 @@ interface ProfileData {
   styleUrls: ['./edit-profile.component.css']
 })
 export class EditProfileComponent implements OnInit {
-  public interests: Array<Skill> = [];
-  public skills: Array<Skill> = [];
-  public profileData: ProfileData = {} as ProfileData;
-  private locationData: Location | null = null;
+  public interests: Array<UserSkills> = [];
+  public skills: Array<UserSkills> = [];
+  public profileData: EditProfileData = {} as EditProfileData;
+  private locationData: UserLocation | null = null;
 
   isUploadingPhoto = false;
 
-  constructor(private accountService: AccountService) { }
+  constructor(
+    private accountService: AccountService,
+    private validateInputsService: ValidateInputsService
+  ) { }
 
   // Variables individuales para enlazar con el formulario
   name = "";
@@ -70,7 +53,7 @@ export class EditProfileComponent implements OnInit {
   location = "";
   gender = "";
   email = "";
-  profilePhotoUrl = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
+  profilePhotoUrl = 'https://swaplystorage.blob.core.windows.net/default-img/avatar-default.webp';
 
   // Variable única para mensajes de error personalizados por campo
   errorMessages: { [key: string]: string } = {};
@@ -81,7 +64,7 @@ export class EditProfileComponent implements OnInit {
   // Obtener datos del perfil desde el backend
   getProfileDataFromBackend(): void {
     this.accountService.getEditProfileData().subscribe({
-      next: (user) => {
+      next: (user: EditProfileData) => {
         console.log('Datos recibidos del backend', user);
         this.splitAndSendUser(user);
       },
@@ -91,7 +74,7 @@ export class EditProfileComponent implements OnInit {
     });
   }
 
-  splitAndSendUser(user: any): void {
+  splitAndSendUser(user: EditProfileData): void {
     this.interests = user.interests;
     this.skills = user.skills;
     this.mapProfileData(user);
@@ -99,8 +82,8 @@ export class EditProfileComponent implements OnInit {
     console.log(this.interests)
   }
 
-  // Mapear datos del usuario a la estructura ProfileData
-  mapProfileData(user: any): void {
+  // Mapear datos del usuario a la estructura EditProfileData
+  mapProfileData(user: EditProfileData): void {
 
     if (user.location && typeof user.location === 'object' && user.location.displayName) {
       this.locationData = user.location;
@@ -116,7 +99,9 @@ export class EditProfileComponent implements OnInit {
       birthDate: user.birthDate ? new Date(user.birthDate).toISOString().substring(0, 10) : '',
       gender: user.gender,
       email: user.email,
-      profilePhotoUrl: user.profilePhotoUrl || this.profilePhotoUrl
+      profilePhotoUrl: user.profilePhotoUrl || this.profilePhotoUrl,
+      interests: user.interests || [],
+      skills: user.skills || []
     };
 
     // Asignar también a las variables individuales que usa el template
@@ -140,15 +125,13 @@ export class EditProfileComponent implements OnInit {
     delete this.errorMessages['profilePhoto'];
 
     if (file) {
-      // validación del formato
-      const validExtensions = ['jpeg', 'jpg', 'png', 'webp', 'heic', 'heif'];
-      const fileExtension = file.name.split('.').pop().toLowerCase();
-      if (!fileExtension || !validExtensions.includes(fileExtension)) {
+      // Validación de formato
+      if (!this.validateInputsService.isImageExtensionValid(file)) {
         this.errorMessages['profilePhoto'] = 'Solo se permiten imágenes JPG, PNG, WEBP, HEIC o HEIF.';
         return;
       }
       // Validación de tamaño (2MB)
-      if (file.size > 2 * 1024 * 1024) {
+      if (!this.validateInputsService.isImageSizeValid(file, 2)) {
         this.errorMessages['profilePhoto'] = 'La imagen es demasiado grande. Máximo 2MB.';
         return;
       }
@@ -172,7 +155,7 @@ export class EditProfileComponent implements OnInit {
   }
   save() {
 
-    const finalLocationValue: Location | string = this.locationData || this.location;
+    const finalLocationValue: UserLocation | string = this.locationData || this.location;
 
     // Resetear errores al inicio
     this.errorMessages = {};
@@ -186,7 +169,7 @@ export class EditProfileComponent implements OnInit {
     }
 
     //recoger los datos del formulario
-    const updatedUser: ProfileData = {
+    const updatedUser: EditProfileData = {
       name: this.name,
       surname: this.surname,
       username: this.username.toLowerCase(),
@@ -195,7 +178,9 @@ export class EditProfileComponent implements OnInit {
       location: finalLocationValue,
       gender: this.gender,
       email: this.email.toLowerCase(),
-      profilePhotoUrl: this.profilePhotoUrl
+      profilePhotoUrl: this.profilePhotoUrl,
+      interests: this.interests,
+      skills: this.skills      
     };
     console.log(updatedUser)
 
@@ -228,112 +213,62 @@ export class EditProfileComponent implements OnInit {
   }
 
   validate(): boolean {
-    // Validar campos obligatorios
-    if (!this.gender) this.errorMessages['gender'] = 'El género es obligatorio.';
+    this.errorMessages = {};
 
-    // Validar name y surname
+    // Validar name
     if (!this.name.trim()) {
-      this.errorMessages['name'] = 'El nombre completo es obligatorio.';
-    } else {
-      delete this.errorMessages['name'];
+      this.errorMessages['name'] = 'El nombre es obligatorio.';
+    } else if (!this.validateInputsService.isNameValid(this.name)) {
+      this.errorMessages['name'] = 'El nombre debe tener entre 3 y 30 caracteres y solo contener letras, espacios, apóstrofes o guiones.';
     }
+
+    // Validar surname
     if (!this.surname.trim()) {
       this.errorMessages['surname'] = 'El apellido es obligatorio.';
-    } else {
-      delete this.errorMessages['surname'];
+    } else if (!this.validateInputsService.isSurnameValid(this.surname)) {
+      this.errorMessages['surname'] = 'El apellido debe tener entre 3 y 30 caracteres y solo contener letras, espacios, apóstrofes o guiones.';
     }
 
     // Validar username
     if (!this.username.trim()) {
       this.errorMessages['username'] = 'El nombre de usuario es obligatorio.';
-    } else if (this.validateUsernameFormat(this.username)) {
+    } else if (!this.validateInputsService.isUsernameValid(this.username)) {
       this.errorMessages['username'] = 'El nombre de usuario debe tener entre 3 y 30 caracteres, solo letras minúsculas, números, guiones y guiones bajos.';
-    } else {
-      delete this.errorMessages['username'];
     }
+
     // Validar email
     if (!this.email.trim()) {
       this.errorMessages['email'] = 'El correo electrónico es obligatorio.';
-    } else if (!this.validateEmail(this.email)) {
-      this.errorMessages['email'] = 'El formato debe ser: "ejempplo@ejemplo.com"';
-    } else {
-      delete this.errorMessages['email'];
+    } else if (!this.validateInputsService.isEmailValid(this.email)) {
+      this.errorMessages['email'] = 'El formato debe ser: "ejemplo@ejemplo.com"';
     }
+
     // Validar location
-    if (!this.location) {
-      this.errorMessages['location'] = 'La ubicación es obligatoria.';
-    }  else {
-      delete this.errorMessages['location'];
+    if (!this.location.trim()) {
+        this.errorMessages['location'] = 'La ubicación es obligatoria.';
+    } else if (!this.validateInputsService.isLocationValid(this.location)) {
+        this.errorMessages['location'] = 'La ubicación contiene caracteres no válidos.';
     }
+
+    // Validar gender
+    if (!this.validateInputsService.isGenderValid(this.gender)) {
+      this.errorMessages['gender'] = 'El género es obligatorio.';
+    }
+
     // Validar birthDate
-    if (!this.birthDate) {
-      this.errorMessages['birthDate'] = 'La fecha de nacimiento es obligatoria.';
-    } else {
-      const date = new Date(this.birthDate);
-
-      if (this.isFutureDate(date) || this.isToday(date)) {
-        this.errorMessages['birthDate'] = 'La fecha de nacimiento no es válida.';
-      } else {
-        const age = this.calculateAge(date);
-        if (age < 18 || age > 120) {
-          this.errorMessages['birthDate'] = 'La edad debe estar entre 18 y 120 años.';
-        } else {
-          delete this.errorMessages['birthDate'];
-        }
-      }
+    const birthDateValidation = this.validateInputsService.validateBirthDate(this.birthDate);
+    if (!birthDateValidation.isValid) {
+      this.errorMessages['birthDate'] = birthDateValidation.message;
     }
 
-    //devolver si hay errores o no
-    if (Object.keys(this.errorMessages).length > 0) {
-      return false;
-    } else {
-      return true;
-    }
+    return Object.keys(this.errorMessages).length === 0;
   }
   private refreshPage() {
     window.location.reload();
   }
-  private validateEmail(email: string): boolean {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-  }
-  private validateUsernameFormat(username: string): boolean {
-    const minLength = 3;
-    const maxLength = 30;
-    const requeriments = /^[a-z0-9_-]+$/
 
-    if (username.length < minLength) return true;
-    if (username.length > maxLength) return true;
-    if (!requeriments.test(username)) return true;
-    else return false;
-  }
-  
-  private isToday(date: Date): boolean {
-    const today = new Date();
-    return (
-      date.getDate() === today.getDate() &&
-      date.getMonth() === today.getMonth() &&
-      date.getFullYear() === today.getFullYear()
-    );
-  }
-
-  private isFutureDate(date: Date): boolean {
-    const today = new Date();
-    return date > today;
-  }
-
-  private calculateAge(birthDate: Date): number {
-    const today = new Date();
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
-    return age;
-  }
-
-  onLocationSelected(newLocation: Location | null): void {
-    // 1. Guarda el objeto Location completo para el envío al backend
+  onLocationSelected(newLocation: UserLocation | null): void {
+    // 1. Guarda el objeto UserLocation completo para el envío al backend
     this.locationData = newLocation; // locationData ahora es tipo location | null
 
     if (newLocation) {
