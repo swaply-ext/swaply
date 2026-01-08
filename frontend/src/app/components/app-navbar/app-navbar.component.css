@@ -194,6 +194,7 @@
   border-radius: 50%;
   border: 0.125rem solid var(--profile-pic-border);
   object-fit: cover;
+  cursor: pointer;
 }
 
 button {
