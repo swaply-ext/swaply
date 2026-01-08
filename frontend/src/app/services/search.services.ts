@@ -2,44 +2,10 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SKIP_LOADING } from '../interceptors/loading.interceptor';
-import { UserLocation } from '../models/user-location.model';
+import { SwapDTO } from '../models/swapDTO.model';
+import { UserSwapDTO } from '../models/UserSwapDTO.model';
 
-export interface UserSwapDTO {
-  userId: string;
-  name: string;
-  username: string;
-  profilePhotoUrl: string;
-  location: string;
 
-  skillName: string;
-  skillIcon: string;
-  skillLevel: number;
-  skillCategory: string;
-
-  isSwapMatch: boolean;
-  rating: number;
-  distance: string;
-
-  // lista opcional de skills que viene del back
-  userSkills?: {
-    name: string;
-    category: string;
-    level: number;
-  }[];
-
-  interests?: {
-    name: string;
-    category: string;
-    level: number;
-  }[];
-}
-
-// dto para la petición de intercambio
-export interface SwapDTO {
-  requestedUsername: string;
-  skill: string;
-  interest: string;
-}
 
 @Injectable({
   providedIn: 'root'

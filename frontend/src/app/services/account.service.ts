@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ProfileDataDTO } from '../models/profile-data-dto.model';
 
 export interface Account {
   interests: { id: string, level: number }[];
