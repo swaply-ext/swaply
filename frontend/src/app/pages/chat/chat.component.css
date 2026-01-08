@@ -253,6 +253,7 @@
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  scroll-behavior: smooth;
   gap: 0.75rem;
   background-color: rgba(0, 0, 0, 0.1);
 }
@@ -425,7 +426,7 @@
     padding: 0 1rem;
     height: 4.5rem;
   }
-  
+
   .chat-input-area {
     padding: 1rem;
   }
