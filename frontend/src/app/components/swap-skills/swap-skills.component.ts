@@ -30,4 +30,9 @@ export class SwapSkillsComponent {
   onCardClick(item: any) {
     this.skillSelected.emit(item);
   }
+
+  trackBySkill(index: number, skill: any) {
+  return skill.id || skill.name; 
+}
+
 }
