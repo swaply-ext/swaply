@@ -4,6 +4,8 @@ import { AccountService } from '../../services/account.service';
 import { SwapService } from '../../services/swap.service';
 import { UsersService } from '../../services/users.service';
 import { RouterLink } from '@angular/router';
+import { UserSkills } from '../../models/user-skills.model';
+
 
 interface profileToTeach {
   title: string;
@@ -11,6 +13,7 @@ interface profileToTeach {
   profilePhotoUrl: string;
   location: string;
   username: string;
+  skills: UserSkills[];
 }
 interface profileToLearn {
   title: string;
@@ -18,6 +21,8 @@ interface profileToLearn {
   profilePhotoUrl: string;
   location: string;
   username: string;
+  rating: number;
+  skills: UserSkills[];
 }
 interface nextSwap {
   id: string;
@@ -48,6 +53,12 @@ export class NextSwapComponent {
   hasIntercambio = signal(true);
   isConfirmed = signal(false);
   isDenied = signal(false);
+
+  getStarIcon(rating: number): string {
+    const decimal = rating - Math.floor(rating);
+    if (decimal >= 0.5) return 'star_half';
+    return 'star';
+  }
 
   imageToLearn = computed(() => {
     const swap = this.nextSwap();
@@ -95,7 +106,12 @@ export class NextSwapComponent {
   getUserTeach(): void {
     this.accountService.getProfileData().subscribe({
       next: (user) => {
-        this.profileToTeach.set(user);
+        this.profileToTeach.set({
+          ...user,
+          skills: user.skills || []
+        });
+
+        console.log('skills teach:', this.profileToTeach()?.skills);
       },
       error: (err) => {
         this.nextSwap.set(null);
@@ -107,7 +123,13 @@ export class NextSwapComponent {
   getUserLearn(userId: string): void {
     this.usersService.getUserById(userId).subscribe({
       next: (user) => {
-        this.profileToLearn.set(user);
+        // Add default rating if not provided by backend
+        this.profileToLearn.set({
+          ...user,
+          rating: user.rating ?? 3.8,
+          skills: user.skills || []
+        });
+         console.log('skills learn:', this.profileToLearn()?.skills);
       },
       error: (err) => {
       }
@@ -124,7 +146,7 @@ export class NextSwapComponent {
     this.swapService.updateSwapStatus(currentSwap.id, 'ACCEPTED').subscribe({
       next: async (response) => {
         this.isConfirmed.set(true);
-        await this.sleep(5000);
+        await this.sleep(1000);
         this.ngOnInit();
       },
       error: (err) => {
@@ -143,7 +165,7 @@ export class NextSwapComponent {
     this.swapService.updateSwapStatus(currentSwap.id, 'DENIED').subscribe({
       next: async () => {
         this.isDenied.set(true);
-        await this.sleep(5000);
+        await this.sleep(1000);
         this.ngOnInit();
       },
       error: (err) => {
@@ -163,6 +185,7 @@ export class NextSwapComponent {
       'futbol': { folder: 'sports', filename: 'football.jpg' },
       'pádel': { folder: 'sports', filename: 'padel.jpg' },
       'padel': { folder: 'sports', filename: 'padel.jpg' },
+      'básquet': { folder: 'sports', filename: 'basketball.jpg' },
       'basquet': { folder: 'sports', filename: 'basketball.jpg' },
       'baloncesto': { folder: 'sports', filename: 'basketball.jpg' },
       'basket': { folder: 'sports', filename: 'basketball.jpg' },
@@ -207,6 +230,28 @@ export class NextSwapComponent {
 
     return undefined;
   }
+
+  private normalizeString(str: string): string {
+    return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+
+  getSkillLevel(skills: UserSkills[], skillName: string): number {
+    const normalizedName = this.normalizeString(skillName);
+    const skill = skills.find(s => this.normalizeString(s.id) === normalizedName);
+    console.log('skills:', skills, 'skillName:', skillName, 'normalized:', normalizedName, 'found skill:', skill, 'level:', skill?.level);
+    return skill ? Number(skill.level) || 0 : 0 ;
+    
+  }
+
+  getLevelText(level: number): string {
+    switch (level) {
+      case 1: return 'principiante';
+      case 2: return 'Intermedio';
+      case 3: return 'Experto';
+      default: return 'unknown';
+    }
+  }
+
 
   private sleep(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));

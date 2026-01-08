@@ -13,6 +13,18 @@
             <div class="card-details">
               <h4>Clase de {{ nextSwap()?.interest }}</h4>
               
+              <div class="level-container" [ngClass]="{
+                'mid-level': getSkillLevel(profileToLearn()?.skills || [], nextSwap()?.interest || '') === 2,
+                'high-level': getSkillLevel(profileToLearn()?.skills || [], nextSwap()?.interest || '') === 3
+              }">
+                <span class="level-text">{{ getLevelText(getSkillLevel(profileToLearn()?.skills || [], nextSwap()?.interest || '')) }}</span>
+                <div class="level-bar">
+                  <div class="level-block" [class.filled]="getSkillLevel(profileToLearn()?.skills || [], nextSwap()?.interest || '') >= 1"></div>
+                  <div class="level-block" [class.filled]="getSkillLevel(profileToLearn()?.skills || [], nextSwap()?.interest || '') >= 2"></div>
+                  <div class="level-block" [class.filled]="getSkillLevel(profileToLearn()?.skills || [], nextSwap()?.interest || '') >= 3"></div>
+                </div>
+              </div>
+              
               <div class="badges-group">
                 <div class="info-badge">
                   <span class="material-symbols-outlined badge-icon">location_on</span>
@@ -26,6 +38,10 @@
                     <img [src]="profileToLearn()?.profilePhotoUrl" alt="Avatar" class="user-avatar">
                   </div>
                   <span class="badge-text">{{ '@'+ profileToLearn()?.username }}</span>
+                  <span class="rating">
+                    <span class="material-symbols-outlined star-icon">{{ getStarIcon(profileToLearn()?.rating ?? 0) }}</span>
+                    <span class="rating-value">{{ profileToLearn()?.rating }}</span>
+                  </span>
                 </div>
               </div>
             </div>
@@ -44,7 +60,7 @@
             
             <div class="card-details">
               <h4>Clase de {{ nextSwap()?.skill }}</h4>
-              
+
               <div class="badges-group">
                 <div class="info-badge">
                   <span class="material-symbols-outlined badge-icon">location_on</span>
