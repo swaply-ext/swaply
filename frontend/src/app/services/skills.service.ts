@@ -3,22 +3,10 @@ import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import {map} from 'rxjs/operators';
 import { SKIP_LOADING } from '../interceptors/loading.interceptor';
+import { UserSkills } from '../models/user-skills.model';
+import { SkillDisplay, SkillsModel } from '../models/skills.models';
 
-export interface SkillInput {
-  id: string;
-  level: number;
-}
 
-export interface SkillsModel {
-  id: string;
-  name: string;
-  icon: string;
-  category: string;
-}
-
-export interface SkillDisplay extends SkillsModel {
-  level: number;
-}
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +17,7 @@ export class SkillsService {
 
 
 
-  getSkillDisplay(input: SkillInput): Observable<SkillDisplay> {
+  getSkillDisplay(input: UserSkills): Observable<SkillDisplay> {
     return this.http.get<SkillsModel>(`${this.apiUrl}/${input.id}`).pipe(
       map((skill: SkillsModel) => {
         return {

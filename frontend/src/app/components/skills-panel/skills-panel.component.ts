@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { SkillCardComponent } from '../skill-card/skill-card.component';
-import { SkillInput } from '../../services/skills.service';
+import { UserSkills } from '../../models/skills.models';
 
 @Component({
   selector: 'app-skills-panel',
@@ -12,7 +12,7 @@ import { SkillInput } from '../../services/skills.service';
   imports: [CommonModule, SkillCardComponent]
 })
 export class SkillsPanelComponent {
-  @Input() SkillInput: Array<SkillInput> = [];
+  @Input() SkillInput: Array<UserSkills> = [];
   @Input() editable: boolean = false;
   @Input() isPublic: boolean = false;
 
@@ -24,7 +24,7 @@ export class SkillsPanelComponent {
     this.open = !this.open;
   }
 
-  goToSkills() { 
+  goToSkills() {
       this.router.navigate(['/skills']);
   }
 

@@ -2,29 +2,17 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { SkillsService, SkillsModel } from '../../services/skills.service';
+import { SkillsService } from '../../services/skills.service';
+import { SkillDisplay, SkillsModel } from '../../models/skills.models';
 import { AccountService, Account } from '../../services/account.service';
 import { SkillCardComponent } from '../../components/skill-card/skill-card.component';
 
-interface SkillDTO {
-  id: string;
-  name: string;
-  category: string;
-  icon: string;
-  level: number;
-}
 
-interface SkillItem {
-  id: string;
-  name: string;
-  icon: string;
-  level: number;
-}
 
 interface Category {
   name: string;
   isOpen: boolean;
-  skills: SkillItem[];
+  skills: SkillDisplay[];
 }
 
 
@@ -127,6 +115,7 @@ export class InterestsComponent {
         name: skill.name,
         icon: skill.icon,
         id: skill.id,
+        category: skill.category,
         level: 0
       });
     });

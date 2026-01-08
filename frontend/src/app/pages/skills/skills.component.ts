@@ -4,29 +4,18 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SkillCardComponent } from '../../components/skill-card/skill-card.component';
 import { AccountService, Account } from '../../services/account.service';
-import { SkillsService, SkillsModel } from '../../services/skills.service';
+import { SkillsService } from '../../services/skills.service';
+import { SkillDisplay, SkillsModel, UserSkills } from '../../models/skills.models'; 
 
 
-
-interface SkillItem {
-  id: string;
-  name: string;
-  icon: string;
-  level: number;
-}
 
 interface Category {
   name: string;
   isOpen: boolean;
-  skills: SkillItem[];
+  skills: SkillDisplay[];
 }
 
 
-
-interface UserSkill {
-  id: string;
-  level: number;
-}
 
 @Component({
   selector: 'app-skills',
@@ -74,7 +63,7 @@ export class SkillsComponent {
       });
   }
 
-  private setLevel(mySkills: UserSkill[]) {
+  private setLevel(mySkills: UserSkills[]) {
     this.categories = this.categories.map(category => ({
       ...category,
       skills: category.skills.map(skill => {
@@ -118,6 +107,7 @@ export class SkillsComponent {
         name: skill.name,
         icon: skill.icon,
         id: skill.id,
+        category: skill.category,
         level: 0 //inicializar nivel a 0 para evitar undefined y problemas
       });
     });

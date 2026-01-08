@@ -1,5 +1,5 @@
+import { SkillDisplay } from "./skills.models";
 import { UserLocation } from "./user-location.model";
-import { userSkillDTO } from "./userSkillDTO.model";
 
 export interface UserSwapDTO {
   userId: string;
@@ -8,16 +8,13 @@ export interface UserSwapDTO {
   profilePhotoUrl: string;
   location: UserLocation;
 
-  skillName: string;
-  skillIcon: string;
-  skillLevel: number;
-  skillCategory: string;
+  skill: SkillDisplay;
 
   isSwapMatch: boolean;
   rating: number;
   distance: string;
 
   // lista opcional de skills que viene del back
-  userSkills?: userSkillDTO[];
-  interests?: userSkillDTO[];
+  userSkills?: SkillDisplay[];
+  interests?: SkillDisplay[];
 }

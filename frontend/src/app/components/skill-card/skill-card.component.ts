@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnChanges, inject, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SkillsService, SkillDisplay } from './../../services/skills.service';
+import { SkillsService } from './../../services/skills.service';
+import { SkillDisplay } from '../../models/skills.models'; // Ajusta la ruta relativa según corresponda
 
 @Component({
   selector: 'app-skill-card',

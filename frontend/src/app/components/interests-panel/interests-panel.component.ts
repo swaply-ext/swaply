@@ -2,7 +2,7 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { SkillCardComponent } from '../skill-card/skill-card.component';
-import { SkillInput } from '../../services/skills.service';
+import { UserSkills } from '../../models/user-skills.model';
 
 @Component({
   selector: 'app-interests-panel',
@@ -12,7 +12,7 @@ import { SkillInput } from '../../services/skills.service';
   imports: [CommonModule, SkillCardComponent]
 })
 export class InterestsPanelComponent {
-  @Input() InterestsInput: Array<SkillInput> = [];
+  @Input() InterestsInput: Array<UserSkills> = [];
   @Input() editable: boolean = false;
   @Input() isPublic: boolean = false;
 
