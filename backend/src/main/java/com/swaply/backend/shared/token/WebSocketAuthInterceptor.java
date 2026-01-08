@@ -33,15 +33,13 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor {
 
         if (accessor != null && accessor.getCommand() != null) {
             
-            // ----------------------------------------------------------------
-            // FASE 1: AUTENTICACIÓN (CONNECT)
-            // ----------------------------------------------------------------
+            // Autenticación inicial de la conexión
             if (StompCommand.CONNECT.equals(accessor.getCommand())) {
                 String authHeader = accessor.getFirstNativeHeader("Authorization");
                 if (authHeader != null && authHeader.startsWith("Bearer ")) {
-                    String token = authHeader.substring(7); // Mejor usar substring
+                    String token = authHeader.substring(7);
                     try {
-                        String username = jwtService.extractUserIdFromSessionToken(token); // O extractUserIdFromSessionToken según tu implementación
+                        String username = jwtService.extractUserIdFromSessionToken(token);
                         
                         if (username != null) {
                             UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
@@ -49,18 +47,14 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor {
                                     userDetails, null, userDetails.getAuthorities()
                             );
                             accessor.setUser(authToken); 
-                            // System.out.println("✅ WS Auth Exitosa para: " + username);
                         }
                     } catch (Exception e) {
-                        // System.err.println("❌ Error token WS: " + e.getMessage());
-                        return null; // Rechazar conexión silenciosamente o lanzar excepción
+                        return null; 
                     }
                 }
             }
 
-            // ----------------------------------------------------------------
-            // FASE 2: AUTORIZACIÓN DE SUSCRIPCIÓN (SUBSCRIBE)
-            // ----------------------------------------------------------------
+            // Validación de permisos de suscripción
             else if (StompCommand.SUBSCRIBE.equals(accessor.getCommand())) {
                 String destination = accessor.getDestination();
                 Authentication user = (Authentication) accessor.getUser();
@@ -71,45 +65,33 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor {
                 
                 String currentUsername = user.getName();
 
-                // CASO A: Suscripción a una SALA DE CHAT (/topic/room/{roomId})
+                // Validación de acceso a salas de chat
                 if (destination != null && destination.startsWith("/topic/room/")) {
                     String roomId = destination.substring("/topic/room/".length());
                     
-                    // Validar si el usuario pertenece a esa sala
                     boolean isMember = chatService.isUserInRoom(roomId, currentUsername);
                     if (!isMember) {
-                        System.err.println("⛔ Acceso denegado a sala: " + roomId + " para usuario: " + currentUsername);
                         throw new AccessDeniedException("No perteneces a esta sala");
                     }
                 }
                 
-                // CASO B: Suscripción a NOTIFICACIONES PRIVADAS (/topic/user/{userId}/updates)
-                // ESTO ES LO QUE FALLABA ANTES
+                // Validación de acceso a notificaciones privadas
                 else if (destination != null && destination.startsWith("/topic/user/")) {
-                    // Formato esperado: /topic/user/{username}/updates
-                    // Extraemos el username que está entre "/topic/user/" y "/updates"
                     String prefix = "/topic/user/";
                     String suffix = "/updates";
                     
                     if (destination.endsWith(suffix)) {
                         String targetUser = destination.substring(prefix.length(), destination.length() - suffix.length());
                         
-                        // Validar que el usuario solo escuche SU PROPIO canal
                         if (!targetUser.equals(currentUsername)) {
-                            System.err.println("⛔ Intento de espionaje. Usuario " + currentUsername + " intentó escuchar a " + targetUser);
                             throw new AccessDeniedException("No puedes escuchar notificaciones de otro usuario");
                         }
                     }
                 }
             }
             
-            // ----------------------------------------------------------------
-            // FASE 3: ENVÍO DE MENSAJES (SEND)
-            // ----------------------------------------------------------------
             else if (StompCommand.SEND.equals(accessor.getCommand())) {
-                // Opcional: Validar que si envía a /app/chat.send/{roomId}, tenga permiso.
-                // Por ahora lo dejamos pasar porque el Controller también valida.
-                // Si quieres validarlo aquí, usa una lógica similar al CASO A de arriba.
+                // El controlador valida los permisos de envío
             }
         }
         return message;

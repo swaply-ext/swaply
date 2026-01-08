@@ -23,30 +23,23 @@ public class ChatWebSocketController {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-    @MessageMapping("/chat.send/{roomId}")  //NAMEING
+    @MessageMapping("/chat.send/{roomId}")
     public void processMessage(
             Principal principal,
             @DestinationVariable String roomId,
             @Payload ChatMessageDTO chatMessageDTO) {
 
-        // 1. Obtener usuario (Esto es seguro, el Interceptor rechaza si es null)
         Authentication auth = (Authentication) principal;
         SecurityUser user = (SecurityUser) auth.getPrincipal();
 
-        // 2. SEGURIDAD CRÍTICA: Sobrescribir el roomId del DTO
-        // El interceptor validó que el usuario puede escribir en el {roomId} de la URL.
-        // Debemos forzar que el mensaje se guarde con ESE id, ignorando lo que venga en el JSON.
+        // Seguridad: Forzar roomId de la URL y remitente autenticado para evitar suplantación
         chatMessageDTO.setRoomId(roomId); 
-        chatMessageDTO.setSenderId(user.getUsername()); // Asegurar el remitente también
+        chatMessageDTO.setSenderId(user.getUsername()); 
 
-    // 3. Guardar (Sin validar permisos de nuevo)
-    // El servicio solo se encarga de la lógica de negocio y persistencia.
-    System.out.println("[ChatWebSocketController] processMessage from=" + user.getUsername() + " roomId=" + roomId + " payload=" + chatMessageDTO);
-    ChatMessageDTO savedMessage = chatService.sendChatMessage(chatMessageDTO);
-    System.out.println("[ChatWebSocketController] savedMessage id=" + (savedMessage==null?"null":savedMessage.getId()));
+        ChatMessageDTO savedMessage = chatService.sendChatMessage(chatMessageDTO);
 
-    // 4. Notificar a la sala
-    messagingTemplate.convertAndSend("/topic/room/" + roomId, savedMessage);
+        // Notificar a todos los suscritos a la sala
+        messagingTemplate.convertAndSend("/topic/room/" + roomId, savedMessage);
     }
 
     @MessageExceptionHandler

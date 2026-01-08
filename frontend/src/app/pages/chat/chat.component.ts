@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs';
 import { ChatService, ChatMessage } from '../../services/chat.service';
 import { AccountService } from '../../services/account.service';
 import { AppNavbarComponent } from '../../components/app-navbar/app-navbar.component';
-import { trigger, style, animate, transition, query, stagger } from '@angular/animations';
+import { trigger, style, animate, transition } from '@angular/animations';
 
 interface UIConversation {
   roomId: string;
@@ -32,18 +32,14 @@ interface UIConversation {
   styleUrls: ['./chat.component.css'],
   animations: [
     trigger('messageAnimation', [
-      // Cuando un elemento entra en el DOM (:enter es alias de void => *)
       transition(':enter', [
-        // Estado inicial: Invisible y desplazado 20px hacia abajo
         style({ opacity: 0, transform: 'translateY(20px) scale(0.95)' }),
-        // Animación: 300ms de duración con curva suave
         animate('300ms cubic-bezier(0.25, 0.8, 0.25, 1)',
           style({ opacity: 1, transform: 'translateY(0) scale(1)' }))
       ])
     ])
   ]
 })
-
 export class ChatComponent implements OnInit, OnDestroy {
   @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
 
@@ -58,8 +54,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   searchQuery: string = '';
 
   isMobile: boolean = false;
-
   loadingConversations: boolean = true;
+
   private updatesSub: Subscription | null = null;
   private chatSub: Subscription | null = null;
   private activeRoomSub: Subscription | null = null;
@@ -73,60 +69,49 @@ export class ChatComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-  this.checkScreenSize();
-  window.addEventListener('resize', () => this.checkScreenSize());
+    this.checkScreenSize();
+    window.addEventListener('resize', () => this.checkScreenSize());
 
-  const userId = this.authService.getUserIdFromToken();
-  this.currentUserId = userId;
-  this.chatService.currentUserId = userId;
+    const userId = this.authService.getUserIdFromToken();
+    this.currentUserId = userId;
+    this.chatService.currentUserId = userId;
 
-  this.accountService.getProfileData().subscribe({
-    next: (account: any) => {
-      this.currentUserAvatar = account.profilePicture || 'assets/default-image.jpg';
+    this.accountService.getProfileData().subscribe({
+      next: (account: any) => {
+        this.currentUserAvatar = account.profilePicture || 'assets/default-image.jpg';
+        this.loadConversations();
 
-      // Carga inicial
-      this.loadConversations();
-
-      // --- CAMBIO IMPORTANTE: ACTIVAR NOTIFICACIONES PUSH ---
-      // Nos suscribimos a las alertas de "Refrescar Lista" que envía Java
-      this.updatesSub = this.chatService.subscribeToUserUpdates(userId).subscribe((msg) => {
-          console.log('🔔 Notificación recibida del servidor:', msg);
-          // Cuando Java avisa, recargamos la lista silenciosamente (sin spinner)
+        // Suscripción a actualizaciones globales (nuevos chats o avisos del servidor)
+        this.updatesSub = this.chatService.subscribeToUserUpdates(userId).subscribe(() => {
           this.loadConversations(false);
-      });
-      // -----------------------------------------------------
+        });
 
-      // Configuración de deep links (igual que tenías)
-      this.activeRoomSub = this.chatService.activeRoom$.subscribe(roomId => {
+        this.activeRoomSub = this.chatService.activeRoom$.subscribe(roomId => {
           if (roomId) this.handleDeepLink(roomId);
-      });
+        });
 
-      const urlRoomId = this.route.snapshot.queryParamMap.get('roomId');
-      if (urlRoomId) {
+        const urlRoomId = this.route.snapshot.queryParamMap.get('roomId');
+        if (urlRoomId) {
           this.chatService.setActiveRoom(urlRoomId);
           this.router.navigate([], {
-              relativeTo: this.route,
-              queryParams: { roomId: null },
-              queryParamsHandling: 'merge',
-              replaceUrl: true
+            relativeTo: this.route,
+            queryParams: { roomId: null },
+            queryParamsHandling: 'merge',
+            replaceUrl: true
           });
-      }
-    },
-    error: (err) => {
-      console.error('Error cargando perfil', err);
-      this.loadConversations();
-    },
-  });
-}
+        }
+      },
+      error: () => {
+        this.loadConversations();
+      },
+    });
+  }
 
-ngOnDestroy(): void {
-  // Limpiar suscripción nueva
-  if (this.updatesSub) this.updatesSub.unsubscribe();
-
-  // Limpiar las que ya tenías
-  if (this.chatSub) this.chatSub.unsubscribe();
-  if (this.activeRoomSub) this.activeRoomSub.unsubscribe();
-}
+  ngOnDestroy(): void {
+    if (this.updatesSub) this.updatesSub.unsubscribe();
+    if (this.chatSub) this.chatSub.unsubscribe();
+    if (this.activeRoomSub) this.activeRoomSub.unsubscribe();
+  }
 
   checkScreenSize() {
     this.isMobile = window.innerWidth <= 768;
@@ -188,9 +173,8 @@ ngOnDestroy(): void {
     const found = this.conversations.find((c) => c.roomId === roomId);
 
     if (found) {
-      this.selectConversation(found, false); // false = no setear estado de nuevo
+      this.selectConversation(found, false);
     } else {
-      //Objete temporal si no está en la lista
       const tempConv: UIConversation = {
         roomId: roomId,
         partnerUsername: 'Cargando...',
@@ -203,26 +187,23 @@ ngOnDestroy(): void {
     }
   }
 
-
   selectConversation(conv: UIConversation, updateService: boolean = true): void {
     if (this.selectedConversation?.roomId === conv.roomId && this.messages.length > 0) return;
 
     this.selectedConversation = conv;
     this.messages = [];
 
-    //CAMBIO: Actualizar servicio, NO URL
     if (updateService) {
-        this.chatService.setActiveRoom(conv.roomId);
-        // Al actualizar el servicio, se disparará activeRoomSub -> handleDeepLink
-        return;
+      this.chatService.setActiveRoom(conv.roomId);
+      return;
     }
 
     this.chatService.getHistory(conv.roomId).subscribe({
-        next: (msgs) => {
-            this.messages = msgs;
-            this.scrollToBottom();
-        },
-        error: (err) => console.error('Error historial', err)
+      next: (msgs) => {
+        this.messages = msgs;
+        this.scrollToBottom();
+      },
+      error: () => { /* Silenciar error en UI */ }
     });
 
     if (this.chatSub) this.chatSub.unsubscribe();
@@ -234,19 +215,19 @@ ngOnDestroy(): void {
         this.scrollToBottom();
 
         if (this.selectedConversation) {
-            this.selectedConversation.lastMessage = msg.content;
-            this.selectedConversation.lastMessageTime = new Date(msg.timestamp);
+          this.selectedConversation.lastMessage = msg.content;
+          this.selectedConversation.lastMessageTime = new Date(msg.timestamp);
 
-            const inList = this.conversations.find(c => c.roomId === conv.roomId);
-            if (inList) {
-                inList.lastMessage = msg.content;
-                inList.lastMessageTime = new Date(msg.timestamp);
-                this.conversations.sort((a, b) => {
-                      const tA = a.lastMessageTime?.getTime() || 0;
-                      const tB = b.lastMessageTime?.getTime() || 0;
-                      return tB - tA;
-                });
-            }
+          const inList = this.conversations.find(c => c.roomId === conv.roomId);
+          if (inList) {
+            inList.lastMessage = msg.content;
+            inList.lastMessageTime = new Date(msg.timestamp);
+            this.conversations.sort((a, b) => {
+              const tA = a.lastMessageTime?.getTime() || 0;
+              const tB = b.lastMessageTime?.getTime() || 0;
+              return tB - tA;
+            });
+          }
         }
       });
   }

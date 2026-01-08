@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpContext } from '@angular/common/http';
-import { Observable, Subject, BehaviorSubject } from 'rxjs'; // <--- Importamos BehaviorSubject
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { SKIP_LOADING } from '../interceptors/loading.interceptor';
 import { Client, Message as StompMessage } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
@@ -34,33 +34,28 @@ export class ChatService {
   private roomSubjects = new Map<string, Subject<ChatMessage>>();
   public currentUserId: string = '';
 
-  //GESTIÓN DE SALA ACTIVA (OCULTA EN URL)
   private activeRoomSource = new BehaviorSubject<string | null>(null);
   public activeRoom$ = this.activeRoomSource.asObservable();
   private _connectedPromise: Promise<void> | null = null;
 
   constructor(private http: HttpClient) {}
 
-  //Método para cambiar la sala activa desde cualquier componente, para elñ public profile
   public setActiveRoom(roomId: string | null) {
     this.activeRoomSource.next(roomId);
   }
 
-  //OBTENER ROOMS
   getRooms(): Observable<SendChatRoomsDTO> {
     return this.http.get<SendChatRoomsDTO>(`${this.base}/rooms`, {
       context: new HttpContext().set(SKIP_LOADING, true),
     });
   }
 
-  //obtener el historial
   getHistory(roomId: string): Observable<ChatMessage[]> {
-    // AÑADIMOS EL CONTEXTO PARA EVITAR EL SPINNER GLOBAL
     return this.http.get<ChatMessage[]>(`${this.base}/history/${roomId}`, {
       context: new HttpContext().set(SKIP_LOADING, true),
     });
   }
-  //CREAR UNA ROOM
+
   createRoomWithUsername(targetUsername: string): Observable<ChatRoomDTO> {
     return this.http.post<ChatRoomDTO>(
       `${this.base}/rooms/create/${targetUsername}`,
@@ -68,7 +63,6 @@ export class ChatService {
     );
   }
 
-  //logica WEBSOCKET API
   async connectIfNeeded(authToken?: string): Promise<void> {
     if (this.client && this.client.active) return;
     if (this._connectedPromise) return this._connectedPromise;
@@ -81,14 +75,11 @@ export class ChatService {
         connectHeaders: {
           Authorization: `Bearer ${authToken}`,
         },
-        debug: (str) => console.log('[STOMP]: ' + str),
         reconnectDelay: 5000,
         onConnect: () => {
-          console.log('STOMP Conectado');
           resolve();
         },
         onStompError: (frame) => {
-          console.error('STOMP Error', frame);
           reject(frame);
         },
       });
@@ -121,7 +112,7 @@ export class ChatService {
               };
               subj.next(chatMsg);
             } catch (e) {
-              console.error('Error parseando mensaje STOMP', e);
+              // Error de parseo silencioso
             }
           }
         );
@@ -131,10 +122,8 @@ export class ChatService {
   }
 
   sendWsMessage(roomId: string, text: string) {
-    if (!this.client || !this.client.active) {
-      console.warn('No hay conexión STOMP activa');
-      return;
-    }
+    if (!this.client || !this.client.active) return;
+
     const payload = { roomId, content: text, pageNumber: 0 };
     this.client.publish({
       destination: `/app/chat.send/${roomId}`,
@@ -146,20 +135,10 @@ export class ChatService {
     const subj = new Subject<string>();
     const destination = `/topic/user/${userId}/updates`;
 
-    console.log(
-      `🔌 [FRONTEND] Iniciando conexión WS... Buscando canal: ${destination}`
-    ); // <--- LOG 1
-
     this.connectIfNeeded(localStorage.getItem('authToken') || '').then(() => {
-      if (!this.client) {
-        console.error('❌ [FRONTEND] Client es null');
-        return;
-      }
-
-      console.log(`👂 [FRONTEND] Suscribiéndose a: ${destination}`); // <--- LOG 2
+      if (!this.client) return;
 
       this.client.subscribe(destination, (message: StompMessage) => {
-        console.log('📨 [FRONTEND] ¡MENSAJE RECIBIDO!', message.body); // <--- LOG 3
         subj.next(message.body);
       });
     });
