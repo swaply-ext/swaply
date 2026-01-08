@@ -1,7 +1,7 @@
 package com.swaply.backend.shared.token;
 
 import com.swaply.backend.config.security.CustomUserDetailsService;
-import com.swaply.backend.shared.chat.service.ChatService; // Necesario para validar sala
+import com.swaply.backend.shared.chat.service.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -14,9 +14,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
 @Component
 public class WebSocketAuthInterceptor implements ChannelInterceptor {
@@ -28,7 +25,7 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor {
     private CustomUserDetailsService customUserDetailsService;
     
     @Autowired
-    private ChatService chatService; // Inyectamos servicio para validar salas
+    private ChatService chatService;
 
     @Override
     public Message<?> preSend(Message<?> message, MessageChannel channel) {
@@ -37,97 +34,84 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor {
         if (accessor != null && accessor.getCommand() != null) {
             
             // ----------------------------------------------------------------
-            // FASE 1: AUTENTICACIÓN (Tu código original) -> Identidad Global
+            // FASE 1: AUTENTICACIÓN (CONNECT)
             // ----------------------------------------------------------------
             if (StompCommand.CONNECT.equals(accessor.getCommand())) {
                 String authHeader = accessor.getFirstNativeHeader("Authorization");
                 if (authHeader != null && authHeader.startsWith("Bearer ")) {
-                    String token = authHeader.replace("Bearer ", "");
+                    String token = authHeader.substring(7); // Mejor usar substring
                     try {
-                        String userId = jwtService.extractUserIdFromSessionToken(token);
-                        if (userId != null) {
-                            UserDetails userDetails = customUserDetailsService.loadUserByUsername(userId);
+                        String username = jwtService.extractUserIdFromSessionToken(token); // O extractUserIdFromSessionToken según tu implementación
+                        
+                        if (username != null) {
+                            UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
                             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                                     userDetails, null, userDetails.getAuthorities()
                             );
-                            accessor.setUser(authToken); // "Ata" el usuario al socket
-                        } else {
-                            throw new IllegalArgumentException("Token inválido");
+                            accessor.setUser(authToken); 
+                            // System.out.println("✅ WS Auth Exitosa para: " + username);
                         }
                     } catch (Exception e) {
-                        throw new IllegalArgumentException("Fallo auth socket", e);
+                        // System.err.println("❌ Error token WS: " + e.getMessage());
+                        return null; // Rechazar conexión silenciosamente o lanzar excepción
                     }
-                } else {
-                    throw new IllegalArgumentException("Token no proporcionado");
                 }
             }
 
             // ----------------------------------------------------------------
-            // FASE 2: AUTORIZACIÓN (La Optimización) -> Permisos de Sala
+            // FASE 2: AUTORIZACIÓN DE SUSCRIPCIÓN (SUBSCRIBE)
             // ----------------------------------------------------------------
-            
-            // CASO A: El usuario intenta entrar a una sala (SUBSCRIBE)
-            // Aquí gastamos 1 consulta a la DB (necesaria para seguridad)
             else if (StompCommand.SUBSCRIBE.equals(accessor.getCommand())) {
-                String roomId = extractRoomId(accessor.getDestination());
-                Authentication user = (Authentication) accessor.getUser(); // Recuperamos el usuario de Fase 1
+                String destination = accessor.getDestination();
+                Authentication user = (Authentication) accessor.getUser();
 
-                if (roomId != null && user != null) {
-                    // Validamos contra Cosmos DB una sola vez
-                    boolean hasAccess = chatService.isUserInRoom(roomId, user.getName());
+                if (user == null) {
+                    throw new AccessDeniedException("Usuario no autenticado");
+                }
+                
+                String currentUsername = user.getName();
+
+                // CASO A: Suscripción a una SALA DE CHAT (/topic/room/{roomId})
+                if (destination != null && destination.startsWith("/topic/room/")) {
+                    String roomId = destination.substring("/topic/room/".length());
                     
-                    if (!hasAccess) {
+                    // Validar si el usuario pertenece a esa sala
+                    boolean isMember = chatService.isUserInRoom(roomId, currentUsername);
+                    if (!isMember) {
+                        System.err.println("⛔ Acceso denegado a sala: " + roomId + " para usuario: " + currentUsername);
                         throw new AccessDeniedException("No perteneces a esta sala");
                     }
-                    
-                    // Si pasa, guardamos el "Sello de Aprobado" en RAM
-                    addRoomPermissionToSession(accessor, roomId);
                 }
-            }
-
-            // CASO B: El usuario intenta hablar (SEND)
-            // Aquí gastamos 0 consultas a la DB (Validación en RAM)
-            else if (StompCommand.SEND.equals(accessor.getCommand())) {
-                String roomId = extractRoomId(accessor.getDestination());
-                // Ojo: Si el destino no incluye ID, intenta sacarlo del header 'chat-id' si tu frontend lo envía
                 
-                if (roomId != null) {
-                    // Verificamos solo la RAM
-                    if (!hasPermissionInSession(accessor, roomId)) {
-                        throw new AccessDeniedException("No tienes permiso o no te has suscrito a esta sala");
+                // CASO B: Suscripción a NOTIFICACIONES PRIVADAS (/topic/user/{userId}/updates)
+                // ESTO ES LO QUE FALLABA ANTES
+                else if (destination != null && destination.startsWith("/topic/user/")) {
+                    // Formato esperado: /topic/user/{username}/updates
+                    // Extraemos el username que está entre "/topic/user/" y "/updates"
+                    String prefix = "/topic/user/";
+                    String suffix = "/updates";
+                    
+                    if (destination.endsWith(suffix)) {
+                        String targetUser = destination.substring(prefix.length(), destination.length() - suffix.length());
+                        
+                        // Validar que el usuario solo escuche SU PROPIO canal
+                        if (!targetUser.equals(currentUsername)) {
+                            System.err.println("⛔ Intento de espionaje. Usuario " + currentUsername + " intentó escuchar a " + targetUser);
+                            throw new AccessDeniedException("No puedes escuchar notificaciones de otro usuario");
+                        }
                     }
                 }
+            }
+            
+            // ----------------------------------------------------------------
+            // FASE 3: ENVÍO DE MENSAJES (SEND)
+            // ----------------------------------------------------------------
+            else if (StompCommand.SEND.equals(accessor.getCommand())) {
+                // Opcional: Validar que si envía a /app/chat.send/{roomId}, tenga permiso.
+                // Por ahora lo dejamos pasar porque el Controller también valida.
+                // Si quieres validarlo aquí, usa una lógica similar al CASO A de arriba.
             }
         }
         return message;
-    }
-
-    // --- Métodos Auxiliares ---
-    
-    private String extractRoomId(String destination) {
-        // Lógica simple: asume rutas tipo /topic/room/123 o /app/chat.send/123
-        if (destination == null) return null;
-        int lastSlash = destination.lastIndexOf('/');
-        return (lastSlash != -1) ? destination.substring(lastSlash + 1) : null;
-    }
-
-    @SuppressWarnings("unchecked")
-    private void addRoomPermissionToSession(StompHeaderAccessor accessor, String roomId) {
-        Map<String, Object> sessionAttributes = accessor.getSessionAttributes();
-        if (sessionAttributes != null) {
-            // Usamos un Set para guardar IDs de salas permitidas en esta sesión
-            Set<String> allowedRooms = (Set<String>) sessionAttributes.computeIfAbsent("ALLOWED_ROOMS", k -> new HashSet<>());
-            allowedRooms.add(roomId);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private boolean hasPermissionInSession(StompHeaderAccessor accessor, String roomId) {
-        Map<String, Object> sessionAttributes = accessor.getSessionAttributes();
-        if (sessionAttributes != null) {
-            Set<String> allowedRooms = (Set<String>) sessionAttributes.get("ALLOWED_ROOMS");
-            return allowedRooms != null && allowedRooms.contains(roomId);
-        }
-        return false;
     }
 }

@@ -49,7 +49,7 @@ export class ChatService {
   //OBTENER ROOMS
   getRooms(): Observable<SendChatRoomsDTO> {
     return this.http.get<SendChatRoomsDTO>(`${this.base}/rooms`, {
-      context: new HttpContext().set(SKIP_LOADING, true)
+      context: new HttpContext().set(SKIP_LOADING, true),
     });
   }
 
@@ -60,7 +60,10 @@ export class ChatService {
 
   //CREAR UNA ROOM
   createRoomWithUsername(targetUsername: string): Observable<ChatRoomDTO> {
-    return this.http.post<ChatRoomDTO>(`${this.base}/rooms/create/${targetUsername}`, {});
+    return this.http.post<ChatRoomDTO>(
+      `${this.base}/rooms/create/${targetUsername}`,
+      {}
+    );
   }
 
   //logica WEBSOCKET API
@@ -74,7 +77,7 @@ export class ChatService {
       this.client = new Client({
         webSocketFactory: factory,
         connectHeaders: {
-          Authorization: `Bearer ${authToken}`
+          Authorization: `Bearer ${authToken}`,
         },
         debug: (str) => console.log('[STOMP]: ' + str),
         reconnectDelay: 5000,
@@ -85,7 +88,7 @@ export class ChatService {
         onStompError: (frame) => {
           console.error('STOMP Error', frame);
           reject(frame);
-        }
+        },
       });
 
       this.client.activate();
@@ -102,21 +105,24 @@ export class ChatService {
       this.connectIfNeeded(localStorage.getItem('authToken') || '').then(() => {
         if (!this.client) return;
 
-        this.client.subscribe(`/topic/room/${roomId}`, (message: StompMessage) => {
-          try {
-            const body = JSON.parse(message.body);
-            const chatMsg: ChatMessage = {
-              id: body.id,
-              roomId: body.roomId,
-              senderId: body.senderId,
-              content: body.content || body.text,
-              timestamp: body.timestamp
-            };
-            subj.next(chatMsg);
-          } catch (e) {
-            console.error('Error parseando mensaje STOMP', e);
+        this.client.subscribe(
+          `/topic/room/${roomId}`,
+          (message: StompMessage) => {
+            try {
+              const body = JSON.parse(message.body);
+              const chatMsg: ChatMessage = {
+                id: body.id,
+                roomId: body.roomId,
+                senderId: body.senderId,
+                content: body.content || body.text,
+                timestamp: body.timestamp,
+              };
+              subj.next(chatMsg);
+            } catch (e) {
+              console.error('Error parseando mensaje STOMP', e);
+            }
           }
-        });
+        );
       });
     }
     return this.roomSubjects.get(roomId)!.asObservable();
@@ -130,7 +136,31 @@ export class ChatService {
     const payload = { roomId, content: text, pageNumber: 0 };
     this.client.publish({
       destination: `/app/chat.send/${roomId}`,
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
     });
   }
+
+
+subscribeToUserUpdates(userId: string): Observable<string> {
+    const subj = new Subject<string>();
+    const destination = `/topic/user/${userId}/updates`;
+
+    console.log(`🔌 [FRONTEND] Iniciando conexión WS... Buscando canal: ${destination}`); // <--- LOG 1
+
+    this.connectIfNeeded(localStorage.getItem('authToken') || '').then(() => {
+        if (!this.client) {
+             console.error('❌ [FRONTEND] Client es null');
+             return;
+        }
+
+        console.log(`👂 [FRONTEND] Suscribiéndose a: ${destination}`); // <--- LOG 2
+
+        this.client.subscribe(destination, (message: StompMessage) => {
+            console.log('📨 [FRONTEND] ¡MENSAJE RECIBIDO!', message.body); // <--- LOG 3
+            subj.next(message.body);
+        });
+    });
+
+    return subj.asObservable();
+}
 }

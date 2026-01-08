@@ -85,13 +85,13 @@
         </div>
         <div class="header-actions"></div>
       </header>
+
       <div class="messages-area" #scrollContainer>
         <div *ngFor="let msg of messages"
              class="message-row"
              [class.mine]="msg.senderId.toString() === currentUserId"
-             [class.theirs]="msg.senderId.toString() !== currentUserId">
-
-          <div class="message-bubble">
+             [class.theirs]="msg.senderId.toString() !== currentUserId"
+             [@messageAnimation]> <div class="message-bubble">
             <div class="msg-content">{{ msg.content }}</div>
             <span class="msg-time">{{ msg.timestamp | date:'HH:mm' }}</span>
           </div>

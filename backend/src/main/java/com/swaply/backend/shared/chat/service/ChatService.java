@@ -9,10 +9,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.data.domain.Pageable;
 
@@ -46,6 +48,9 @@ public class ChatService {
     private ChatMapper chatMapper;
     @Autowired
     private ChatRoomRepository chatRoomRepository;
+    @Autowired
+    @Lazy
+    private SimpMessagingTemplate messagingTemplate;
 
     // --- LEER HISTORIAL ---
     public List<ChatMessage> getChatHistoryByRoomId(String roomId, String userId, int pageNumber) {
@@ -65,49 +70,50 @@ public class ChatService {
 
         return page.getContent();
     }
-public SendChatRoomsDTO getChatRoomsByUserId(String userId) {
-    System.out.println("--- Iniciando getChatRoomsByUserId ---");
-    System.out.println("Buscando salas para el usuario ID: " + userId);
 
-    List<ChatRoom> rooms = chatRoomRepository.findRoomsByUserId(userId);
-    System.out.println("Salas encontradas: " + (rooms != null ? rooms.size() : 0));
+    public SendChatRoomsDTO getChatRoomsByUserId(String userId) {
+        System.out.println("--- Iniciando getChatRoomsByUserId ---");
+        System.out.println("Buscando salas para el usuario ID: " + userId);
 
-    List<String> otherUsernames = new ArrayList<>();
-    List<String> otherProfilePhotos = new ArrayList<>();
+        List<ChatRoom> rooms = chatRoomRepository.findRoomsByUserId(userId);
+        System.out.println("Salas encontradas: " + (rooms != null ? rooms.size() : 0));
 
-    for (ChatRoom room : rooms) {
-        System.out.println("\nProcesando Sala ID: " + room.getId()); // Asumiendo que tiene getId()
-        
-        // Buscamos el ID del otro participante
-        String otherUserId = room.getParticipants().stream()
-                .filter(id -> !id.equals(userId))
-                .findFirst()
-                .orElse(null);
+        List<String> otherUsernames = new ArrayList<>();
+        List<String> otherProfilePhotos = new ArrayList<>();
 
-        System.out.println("ID del otro participante encontrado: " + otherUserId);
+        for (ChatRoom room : rooms) {
+            System.out.println("\nProcesando Sala ID: " + room.getId()); // Asumiendo que tiene getId()
 
-        if (otherUserId != null) {
-            String otherUsername = userService.getUsernameById(otherUserId);
-            String otherProfilePhoto = userService.getProfilePhotoById(otherUserId);
-            System.out.println("Username obtenido de la DB: " + otherUsername);
+            // Buscamos el ID del otro participante
+            String otherUserId = room.getParticipants().stream()
+                    .filter(id -> !id.equals(userId))
+                    .findFirst()
+                    .orElse(null);
 
-            if (otherUsername != null) {
-                otherUsernames.add(otherUsername);
-                otherProfilePhotos.add(otherProfilePhoto);
-                System.out.println("Añadido con éxito: " + otherUsername);
+            System.out.println("ID del otro participante encontrado: " + otherUserId);
+
+            if (otherUserId != null) {
+                String otherUsername = userService.getUsernameById(otherUserId);
+                String otherProfilePhoto = userService.getProfilePhotoById(otherUserId);
+                System.out.println("Username obtenido de la DB: " + otherUsername);
+
+                if (otherUsername != null) {
+                    otherUsernames.add(otherUsername);
+                    otherProfilePhotos.add(otherProfilePhoto);
+                    System.out.println("Añadido con éxito: " + otherUsername);
+                } else {
+                    System.out.println("ADVERTENCIA: No se encontró username para el ID: " + otherUserId);
+                    otherUsernames.add("Usuario Desconocido");
+                }
             } else {
-                System.out.println("ADVERTENCIA: No se encontró username para el ID: " + otherUserId);
-                otherUsernames.add("Usuario Desconocido");
+                System.out.println("OJO: Sala vacía o sin otro participante aparte del usuario actual.");
             }
-        } else {
-            System.out.println("OJO: Sala vacía o sin otro participante aparte del usuario actual.");
         }
-    }
 
-    System.out.println("\n--- Resumen final ---");
-    System.out.println("Lista total de nombres generada: " + otherUsernames);
-    
-    // Aquí deberías retornar tu DTO (completando la lógica que falte)
+        System.out.println("\n--- Resumen final ---");
+        System.out.println("Lista total de nombres generada: " + otherUsernames);
+
+        // Aquí deberías retornar tu DTO (completando la lógica que falte)
 
         // 4. Construimos el objeto final
         return SendChatRoomsDTO.builder()
@@ -141,6 +147,7 @@ public SendChatRoomsDTO getChatRoomsByUserId(String userId) {
         if (room.getParticipants() != null) {
             for (String participantId : room.getParticipants()) {
                 if (!participantId.equals(senderId)) {
+                    notifyUserListUpdate(participantId);
                     // Ruta en el JSON: { "unreadCount": { "userId": 5 } }
                     // Cosmos Patch "increment" es atómico y thread-safe en el servidor.
                     // NOTA: Asegúrate de que 'unreadCount' esté inicializado como {} al crear la
@@ -149,14 +156,26 @@ public SendChatRoomsDTO getChatRoomsByUserId(String userId) {
                 }
             }
         }
+        try {
+            cosmosTemplate.patch(
+                    roomId,
+                    new PartitionKey(ChatRoomRepository.TYPE_CHATROOM), // Asegúrate de tener esta constante accesible
+                    ChatRoom.class,
+                    patchOps);
 
-        // 4. Ejecutamos el Patch contra la base de datos
-        // Usamos la constante del repositorio para la Partition Key
-        cosmosTemplate.patch(
-                roomId,
-                new PartitionKey(ChatRoomRepository.TYPE_CHATROOM),
-                ChatRoom.class,
-                patchOps);
+            System.out.println("[ChatService] Sala actualizada en DB correctamente.");
+        } catch (Exception e) {
+            System.err.println("[ChatService] Error actualizando sala: " + e.getMessage());
+            return; // Si falla la DB, no enviamos notificación
+        }
+
+        // 5. NOTIFICACIÓN WEBSOCKET (AHORA SÍ)
+        // Solo notificamos una vez que la DB ya tiene los datos nuevos
+        if (room.getParticipants() != null) {
+            for (String participantId : room.getParticipants()) {
+                notifyUserListUpdate(participantId);
+            }
+        }
     }
 
     public ChatMessageDTO sendChatMessage(ChatMessageDTO dto) {
@@ -183,14 +202,16 @@ public SendChatRoomsDTO getChatRoomsByUserId(String userId) {
     public ChatRoom createChatRoom(String user1, String user2) {
         // user1: current user id (from SecurityUser.getUsername())
         // user2: target username (from frontend)
-        if (user1 == null) throw new UserNotFoundException("Usuario remitente nulo");
+        if (user1 == null)
+            throw new UserNotFoundException("Usuario remitente nulo");
 
         UserDTO user = userService.getUserByUsername(user2);
         if (user == null) {
             throw new UserNotFoundException("El usuario objetivo no existe: " + user2);
         }
-    String UserId2 = user.getId();
-    System.out.println("[ChatService] createChatRoom user1(id)=" + user1 + " targetUsername=" + user2 + " targetId=" + UserId2);
+        String UserId2 = user.getId();
+        System.out.println("[ChatService] createChatRoom user1(id)=" + user1 + " targetUsername=" + user2 + " targetId="
+                + UserId2);
 
         String generatedId = (user1.compareTo(UserId2) < 0) ? user1 + "_" + UserId2 : UserId2 + "_" + user1;
 
@@ -204,7 +225,7 @@ public SendChatRoomsDTO getChatRoomsByUserId(String userId) {
         initialUnreadMap.put(user1, 0);
         initialUnreadMap.put(UserId2, 0);
 
-    ChatRoom newRoom = ChatRoom.builder()
+        ChatRoom newRoom = ChatRoom.builder()
                 .id(generatedId)
                 .type("chatRoom")
                 .participants(List.of(user1, UserId2))
@@ -213,9 +234,12 @@ public SendChatRoomsDTO getChatRoomsByUserId(String userId) {
                 .isActive(true)
                 .build();
 
-    ChatRoom saved = chatRoomRepository.save(newRoom);
-    System.out.println("[ChatService] created ChatRoom id=" + saved.getId());
-    return saved;
+        ChatRoom saved = chatRoomRepository.save(newRoom);
+        System.out.println("[ChatService] created ChatRoom id=" + saved.getId());
+
+        notifyUserListUpdate(user1);
+        notifyUserListUpdate(UserId2);
+        return saved;
     }
 
     public void readedMessage(String roomId, String userId) {
@@ -260,6 +284,17 @@ public SendChatRoomsDTO getChatRoomsByUserId(String userId) {
         }
 
         return false;
+    }
+
+    private void notifyUserListUpdate(String userId) {
+        String destination = "/topic/user/" + userId + "/updates";
+        System.out.println("🔍 [BACKEND] Intentando enviar WS a: " + destination); // <--- AGREGA ESTO
+        try {
+            messagingTemplate.convertAndSend(destination, "REFRESH_LIST");
+            System.out.println("✅ [BACKEND] Enviado correctamente.");
+        } catch (Exception e) {
+            System.err.println("❌ [BACKEND] Error enviando: " + e.getMessage());
+        }
     }
 
 }
