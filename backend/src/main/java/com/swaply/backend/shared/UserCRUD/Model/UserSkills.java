@@ -12,7 +12,4 @@ import lombok.AllArgsConstructor;
 public class UserSkills {
     String id;
     Integer level;
-    private String name;
-    private String category;
-    private String icon;
 }

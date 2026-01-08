@@ -18,6 +18,7 @@ public class UserSwapDTO {
     private String location;
 
     // Info de la Skill principal (Match)
+    private String SkillId;
     private String skillName;     
     private String skillIcon;     
     private Integer skillLevel;   

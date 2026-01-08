@@ -1,11 +1,13 @@
 package com.swaply.backend.application.home.service;
 
 import com.swaply.backend.application.search.dto.UserSwapDTO;
+import com.swaply.backend.shared.UserCRUD.Model.Skills;
 import com.swaply.backend.shared.UserCRUD.Model.User;
 import com.swaply.backend.shared.UserCRUD.Model.UserSkills;
 import com.swaply.backend.shared.UserCRUD.UserRepository;
 import org.springframework.stereotype.Service;
 import com.swaply.backend.shared.location.LocationService;
+import com.swaply.backend.application.skills.service.SkillsService;
 
 import java.text.Normalizer;
 import java.util.*;
@@ -18,10 +20,12 @@ public class HomeService {
 
     private final UserRepository userRepository;
     private final LocationService locationService;
+    private final SkillsService skillsService;
 
-    public HomeService(UserRepository userRepository, LocationService locationService) {
+    public HomeService(UserRepository userRepository, LocationService locationService, SkillsService skillsService) {
         this.userRepository = userRepository;
         this.locationService = locationService;
+        this.skillsService = skillsService;
     }
 
     public List<UserSwapDTO> getRecommendedMatches(String currentUserId) {
@@ -90,7 +94,8 @@ public class HomeService {
         return pattern.matcher(normalized).replaceAll("").toLowerCase().trim();
     }
 
-    private UserSwapDTO mapToCard(User user, UserSkills skill, boolean isMatch, String distance) {
+    private UserSwapDTO mapToCard(User user, UserSkills userSkill, boolean isMatch, String distance) {
+        Skills skill =  skillsService.getSkill(userSkill.getId());
         UserSwapDTO dto = new UserSwapDTO();
         dto.setUserId(user.getId());
         dto.setName(user.getName());
@@ -99,7 +104,7 @@ public class HomeService {
 
         dto.setSkillName("Clase de " + (skill.getName() != null ? skill.getName() : skill.getId()));
         dto.setSkillCategory(skill.getCategory());
-        dto.setSkillLevel(skill.getLevel());
+        dto.setSkillLevel(userSkill.getLevel());
         dto.setSkillIcon(skill.getIcon() != null ? skill.getIcon() : "🎓");
 
         dto.setDistance(distance != null ? String.valueOf(distance) : null);

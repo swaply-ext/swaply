@@ -2,10 +2,12 @@ package com.swaply.backend.application.search.service;
 
 import com.swaply.backend.application.search.dto.SkillItemDTO;
 import com.swaply.backend.application.search.dto.UserSwapDTO;
+import com.swaply.backend.shared.UserCRUD.Model.Skills;
 import com.swaply.backend.shared.UserCRUD.Model.User;
 import com.swaply.backend.shared.UserCRUD.Model.UserSkills;
 import com.swaply.backend.shared.UserCRUD.UserRepository;
 import org.springframework.stereotype.Service;
+import com.swaply.backend.application.skills.service.SkillsService;
 
 import java.text.Normalizer;
 import java.util.*;
@@ -16,9 +18,11 @@ import java.util.stream.Collectors;
 public class SearchService {
 
     private final UserRepository userRepository;
+    private final SkillsService skillsService;
 
-    public SearchService(UserRepository userRepository) {
+    public SearchService(UserRepository userRepository, SkillsService skillsService) {
         this.userRepository = userRepository;
+        this.skillsService = skillsService;
     }
 
     private static final Map<String, List<String>> SYNONYMS = new HashMap<>();
@@ -51,7 +55,8 @@ public class SearchService {
     }
 
     private static String normalizeKey(String input) {
-        if (input == null) return "";
+        if (input == null)
+            return "";
         String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
         return pattern.matcher(normalized).replaceAll("").trim().toLowerCase();
@@ -83,33 +88,41 @@ public class SearchService {
         User me = userRepository.findUserById(myUserId).orElse(null);
 
         String myLocation = (me != null && me.getLocation() != null)
-                ? normalizeKey(me.getLocation().getDisplayName()) : "";
+                ? normalizeKey(me.getLocation().getDisplayName())
+                : "";
 
         List<UserSwapDTO> results = new ArrayList<>();
 
         for (User candidate : candidates) {
-            if (candidate.getId().equals(myUserId)) continue;
-            if (candidate.getSkills() == null) continue;
+            if (candidate.getId().equals(myUserId))
+                continue;
+            if (candidate.getSkills() == null)
+                continue;
 
             boolean isClose = checkLocationMatch(candidate, myLocation);
             String distanceLabel = isClose ? "Cerca de ti" : "Lejos de ti";
 
             // Filtrar skills según intereses y nivel
             candidate.getSkills().stream()
-                    .filter(skill -> {
-                        if (me == null || me.getInterests() == null) return false;
+                    .filter(userSkill -> {
+                        if (me == null || me.getInterests() == null)
+                            return false;
+
+                        Skills skill = skillsService.getSkill(userSkill.getId());
 
                         String skillKey = normalizeKey(skill.getName() != null ? skill.getName() : skill.getId());
-                        Integer skillLevel = skill.getLevel() != null ? skill.getLevel() : 0;
+                        Integer skillLevel = userSkill.getLevel() != null ? userSkill.getLevel() : 0;
 
                         for (UserSkills myInterest : me.getInterests()) {
-                            String interestKey = normalizeKey(myInterest.getName() != null ? myInterest.getName() : myInterest.getId());
+                            String interestKey = normalizeKey(
+                                    myInterest.getId());
                             Integer interestLevel = myInterest.getLevel() != null ? myInterest.getLevel() : 0;
 
                             boolean sameSkill = skillKey.contains(interestKey) || interestKey.contains(skillKey);
                             boolean levelOk = skillLevel >= interestLevel;
 
-                            if (sameSkill && levelOk) return true;
+                            if (sameSkill && levelOk)
+                                return true;
                         }
 
                         return false;
@@ -121,11 +134,13 @@ public class SearchService {
 
         // Ordenamos primero por match, luego cercanía, luego rating
         results.sort((o1, o2) -> {
-            if (o1.isSwapMatch() != o2.isSwapMatch()) return o1.isSwapMatch() ? -1 : 1;
+            if (o1.isSwapMatch() != o2.isSwapMatch())
+                return o1.isSwapMatch() ? -1 : 1;
 
             boolean loc1 = "Cerca de ti".equals(o1.getDistance());
             boolean loc2 = "Cerca de ti".equals(o2.getDistance());
-            if (loc1 != loc2) return loc1 ? -1 : 1;
+            if (loc1 != loc2)
+                return loc1 ? -1 : 1;
 
             return Double.compare(o2.getRating(), o1.getRating());
         });
@@ -134,24 +149,25 @@ public class SearchService {
     }
 
     private boolean checkLocationMatch(User candidate, String myLocation) {
-        if (myLocation.isEmpty() || candidate.getLocation() == null) return false;
+        if (myLocation.isEmpty() || candidate.getLocation() == null)
+            return false;
         String candidateLoc = normalizeKey(candidate.getLocation().getDisplayName());
         return candidateLoc.contains(myLocation) || myLocation.contains(candidateLoc);
     }
 
-    private UserSwapDTO mapToUserSwapDTO(User user, UserSkills skill, boolean isMatch, String distanceLabel) {
+    private UserSwapDTO mapToUserSwapDTO(User user, UserSkills userSkill, boolean isMatch, String distanceLabel) {
         UserSwapDTO dto = new UserSwapDTO();
-
+        Skills skill = skillsService.getSkill(userSkill.getId());
         dto.setUserId(user.getId());
         dto.setName(user.getName());
         dto.setUsername(user.getUsername());
         dto.setProfilePhotoUrl(user.getProfilePhotoUrl());
-        
+
         // Manejo seguro de Location para evitar NullPointerException
         if (user.getLocation() != null) {
             dto.setLocation(user.getLocation().getDisplayName());
         }
-        
+
         dto.setRating(user.getRating() != null ? user.getRating() : 5.0);
         dto.setDistance(distanceLabel);
         dto.setSwapMatch(isMatch);
@@ -160,19 +176,21 @@ public class SearchService {
         dto.setSkillName("Clase de " + capitalize(rawName));
         dto.setSkillIcon(skill.getIcon() != null ? skill.getIcon() : "🎓");
         dto.setSkillCategory(skill.getCategory());
-        dto.setSkillLevel(skill.getLevel());
+        dto.setSkillLevel(userSkill.getLevel());
 
         return dto;
     }
 
     private String capitalize(String str) {
-        if (str == null || str.isEmpty()) return str;
+        if (str == null || str.isEmpty())
+            return str;
         return str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
     }
 
     public UserSwapDTO getUserByUsername(String username) {
         Optional<User> userOpt = userRepository.findUserByUsername(username);
-        if (userOpt.isEmpty()) return null;
+        if (userOpt.isEmpty())
+            return null;
 
         User user = userOpt.get();
         UserSwapDTO dto = new UserSwapDTO();
@@ -180,40 +198,46 @@ public class SearchService {
         dto.setName(user.getName());
         dto.setUsername(user.getUsername());
         dto.setProfilePhotoUrl(user.getProfilePhotoUrl());
-        
+
         if (user.getLocation() != null) {
             dto.setLocation(user.getLocation().getDisplayName());
         }
 
         if (user.getSkills() != null && !user.getSkills().isEmpty()) {
-            UserSkills s = user.getSkills().get(0);
-            dto.setSkillName(s.getName() != null ? s.getName() : s.getId());
-            dto.setSkillIcon(s.getIcon() != null ? s.getIcon() : "🎓");
-            dto.setSkillLevel(s.getLevel());
-            dto.setSkillCategory(s.getCategory());
+            UserSkills userSkill = user.getSkills().get(0);
+            Skills skill = skillsService.getSkill(userSkill.getId());
+
+            dto.setSkillName(skill.getName() != null ? skill.getName() : skill.getId());
+            dto.setSkillIcon(skill.getIcon() != null ? skill.getIcon() : "🎓");
+            dto.setSkillLevel(userSkill.getLevel());
+            dto.setSkillCategory(skill.getCategory());
 
             // CORREGIDO: Usamos SkillItemDTO en lugar de UserSwapDTO.SkillItem
             List<SkillItemDTO> allSkills = user.getSkills().stream()
-                    .map(skill -> new SkillItemDTO(
-                            skill.getName() != null ? skill.getName() : skill.getId(),
-                            skill.getCategory(),
-                            skill.getLevel()
-                    ))
+                    .map(userSkillMap -> {
+                        Skills skillMap = skillsService.getSkill(userSkill.getId());
+                        return new SkillItemDTO(
+                                skillMap.getName() != null ? skillMap.getName() : userSkillMap.getId(),
+                                skillMap.getCategory(),
+                                userSkillMap.getLevel());
+                    })
                     .collect(Collectors.toList());
 
             dto.setUserSkills(allSkills);
         }
-        
+
         // CORREGIDO: Mapeo de Interests usando SkillItemDTO
         if (user.getInterests() != null && !user.getInterests().isEmpty()) {
             List<SkillItemDTO> interestsDto = user.getInterests().stream()
-                .map(interest -> new SkillItemDTO(
-                    interest.getName() != null ? interest.getName() : interest.getId(),
-                    interest.getCategory(),
-                    interest.getLevel()
-                ))
-                .collect(Collectors.toList());
-            
+                    .map(userInterest -> {
+                        Skills interest = skillsService.getSkill(userInterest.getId());
+                        return new SkillItemDTO(
+                                interest.getName() != null ? interest.getName() : userInterest.getId(),
+                                interest.getCategory(),
+                                userInterest.getLevel());
+                    })
+                    .collect(Collectors.toList());
+
             dto.setInterests(interestsDto);
         }
 
