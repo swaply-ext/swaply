@@ -213,108 +213,58 @@ export class EditProfileComponent implements OnInit {
   }
 
   validate(): boolean {
-    // Validar campos obligatorios
-    if (!this.gender) this.errorMessages['gender'] = 'El género es obligatorio.';
+    this.errorMessages = {};
 
-    // Validar name y surname
+    // Validar name
     if (!this.name.trim()) {
-      this.errorMessages['name'] = 'El nombre completo es obligatorio.';
-    } else {
-      delete this.errorMessages['name'];
+      this.errorMessages['name'] = 'El nombre es obligatorio.';
+    } else if (!this.validateInputsService.isNameValid(this.name)) {
+      this.errorMessages['name'] = 'El nombre debe tener entre 3 y 30 caracteres y solo contener letras, espacios, apóstrofes o guiones.';
     }
+
+    // Validar surname
     if (!this.surname.trim()) {
       this.errorMessages['surname'] = 'El apellido es obligatorio.';
-    } else {
-      delete this.errorMessages['surname'];
+    } else if (!this.validateInputsService.isSurnameValid(this.surname)) {
+      this.errorMessages['surname'] = 'El apellido debe tener entre 3 y 30 caracteres y solo contener letras, espacios, apóstrofes o guiones.';
     }
 
     // Validar username
     if (!this.username.trim()) {
       this.errorMessages['username'] = 'El nombre de usuario es obligatorio.';
-    } else if (this.validateUsernameFormat(this.username)) {
+    } else if (!this.validateInputsService.isUsernameValid(this.username)) {
       this.errorMessages['username'] = 'El nombre de usuario debe tener entre 3 y 30 caracteres, solo letras minúsculas, números, guiones y guiones bajos.';
-    } else {
-      delete this.errorMessages['username'];
     }
+
     // Validar email
     if (!this.email.trim()) {
       this.errorMessages['email'] = 'El correo electrónico es obligatorio.';
-    } else if (!this.validateEmail(this.email)) {
-      this.errorMessages['email'] = 'El formato debe ser: "ejempplo@ejemplo.com"';
-    } else {
-      delete this.errorMessages['email'];
+    } else if (!this.validateInputsService.isEmailValid(this.email)) {
+      this.errorMessages['email'] = 'El formato debe ser: "ejemplo@ejemplo.com"';
     }
+
     // Validar location
-    if (!this.location) {
-      this.errorMessages['location'] = 'La ubicación es obligatoria.';
-    }  else {
-      delete this.errorMessages['location'];
+    if (!this.location.trim()) {
+        this.errorMessages['location'] = 'La ubicación es obligatoria.';
+    } else if (!this.validateInputsService.isLocationValid(this.location)) {
+        this.errorMessages['location'] = 'La ubicación contiene caracteres no válidos.';
     }
+
+    // Validar gender
+    if (!this.validateInputsService.isGenderValid(this.gender)) {
+      this.errorMessages['gender'] = 'El género es obligatorio.';
+    }
+
     // Validar birthDate
-    if (!this.birthDate) {
-      this.errorMessages['birthDate'] = 'La fecha de nacimiento es obligatoria.';
-    } else {
-      const date = new Date(this.birthDate);
-
-      if (this.isFutureDate(date) || this.isToday(date)) {
-        this.errorMessages['birthDate'] = 'La fecha de nacimiento no es válida.';
-      } else {
-        const age = this.calculateAge(date);
-        if (age < 18 || age > 120) {
-          this.errorMessages['birthDate'] = 'La edad debe estar entre 18 y 120 años.';
-        } else {
-          delete this.errorMessages['birthDate'];
-        }
-      }
+    const birthDateValidation = this.validateInputsService.validateBirthDate(this.birthDate);
+    if (!birthDateValidation.isValid) {
+      this.errorMessages['birthDate'] = birthDateValidation.message;
     }
 
-    //devolver si hay errores o no
-    if (Object.keys(this.errorMessages).length > 0) {
-      return false;
-    } else {
-      return true;
-    }
+    return Object.keys(this.errorMessages).length === 0;
   }
   private refreshPage() {
     window.location.reload();
-  }
-  private validateEmail(email: string): boolean {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-  }
-  private validateUsernameFormat(username: string): boolean {
-    const minLength = 3;
-    const maxLength = 30;
-    const requeriments = /^[a-z0-9_-]+$/
-
-    if (username.length < minLength) return true;
-    if (username.length > maxLength) return true;
-    if (!requeriments.test(username)) return true;
-    else return false;
-  }
-  
-  private isToday(date: Date): boolean {
-    const today = new Date();
-    return (
-      date.getDate() === today.getDate() &&
-      date.getMonth() === today.getMonth() &&
-      date.getFullYear() === today.getFullYear()
-    );
-  }
-
-  private isFutureDate(date: Date): boolean {
-    const today = new Date();
-    return date > today;
-  }
-
-  private calculateAge(birthDate: Date): number {
-    const today = new Date();
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
-    return age;
   }
 
   onLocationSelected(newLocation: UserLocation | null): void {

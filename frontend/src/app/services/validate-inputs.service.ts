@@ -89,4 +89,52 @@ export class ValidateInputsService {
     const maxSizeInBytes = maxSizeInMB * 1024 * 1024;
     return file.size <= maxSizeInBytes;
   }
+
+  public isGenderValid(gender: string): boolean {
+    return !!gender;
+  }
+
+  public validateBirthDate(birthDate: string): { isValid: boolean, message: string } {
+    if (!birthDate) {
+      return { isValid: false, message: 'La fecha de nacimiento es obligatoria.' };
+    }
+
+    const date = new Date(birthDate);
+
+    if (this.isFutureDate(date) || this.isToday(date)) {
+      return { isValid: false, message: 'La fecha de nacimiento no es válida.' };
+    }
+
+    const age = this.calculateAge(date);
+    if (age < 18 || age > 120) {
+      return { isValid: false, message: 'La edad debe estar entre 18 y 120 años.' };
+    }
+
+    return { isValid: true, message: '' };
+  }
+
+  private isToday(date: Date): boolean {
+    const today = new Date();
+    return (
+      date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear()
+    );
+  }
+
+  private isFutureDate(date: Date): boolean {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return date.getTime() > today.getTime();
+  }
+
+  private calculateAge(birthDate: Date): number {
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  }
 }
