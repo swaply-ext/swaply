@@ -5,7 +5,7 @@ import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.compo
 import { SkillSearchComponent } from '../../components/skill-search/skill-search.component';
 import { FilterSkillsComponent } from '../../components/filter-skills/filter-skills.component';
 import { SearchService} from '../../services/search.services';
-import { UserSwapDTO } from '../../models/UserSwapDTO.model';
+import { UserSwapDTO } from '../../models/userSwapDTO.model';
 import { RouterLink } from '@angular/router';
 import { AccountService } from '../../services/account.service';
 import { NextSwapComponent } from '../../components/next-swap/next-swap.component';

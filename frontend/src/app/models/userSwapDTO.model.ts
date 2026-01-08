@@ -19,4 +19,5 @@ export interface UserSwapDTO {
 
   // lista opcional de skills que viene del back
   userSkills?: userSkillDTO[];
+  interests?: userSkillDTO[];
 }
