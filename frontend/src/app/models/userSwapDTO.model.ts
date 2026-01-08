@@ -1,3 +1,4 @@
+import { interests } from "./interests.model";
 import { UserLocation } from "./user-location.model";
 import { userSkillDTO } from "./userSkillDTO.model";
 
@@ -19,4 +20,5 @@ export interface UserSwapDTO {
 
   // lista opcional de skills que viene del back
   userSkills?: userSkillDTO[];
+  interests?: interests[];
 }

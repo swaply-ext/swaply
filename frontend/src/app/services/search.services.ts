@@ -3,7 +3,7 @@ import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SKIP_LOADING } from '../interceptors/loading.interceptor';
 import { SwapDTO } from '../models/swapDTO.model';
-import { UserSwapDTO } from '../models/UserSwapDTO.model';
+import { UserSwapDTO } from '../models/userSwapDTO.model';
 
 
 

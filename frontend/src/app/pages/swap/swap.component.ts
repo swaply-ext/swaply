@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { AppNavbarComponent } from '../../components/app-navbar/app-navbar.component';
 import { AccountService } from '../../services/account.service';
 import { SearchService} from '../../services/search.services';
-import { UserSwapDTO } from '../../models/UserSwapDTO.model';
+import { UserSwapDTO } from '../../models/userSwapDTO.model';
 import { SwapDTO } from '../../models/swapDTO.model';
 import { SwapSkillsComponent } from "../../components/swap-skills/swap-skills.component";
 import { SwapInterestsComponent } from "../../components/swap-interests/swap-interests.component";
@@ -93,14 +93,14 @@ export class SwapComponent implements OnInit {
                   skillName: item.name,
                   skillIcon: (item as any).icon,
                   skillImage: item.image,
-                  location: target.location 
+                  location: target.location.displayName
                 });
               } else {
                 this.selectedTargetSkill.set({
                     skillName: target.name || target.username,
                     skillIcon: undefined,
                     skillImage: target.profilePhotoUrl || 'assets/default-avatar.png',
-                    location: target.location
+                    location: target.location.displayName
                 });
               }
               
@@ -148,7 +148,7 @@ export class SwapComponent implements OnInit {
       skillName: item.name,
       skillIcon: item.icon, 
       skillImage: safeImage,
-      location: currentUser?.location
+      location: currentUser?.location.displayName
     });
   }
 
