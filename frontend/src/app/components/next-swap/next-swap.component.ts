@@ -5,8 +5,8 @@ import { SwapService } from '../../services/swap.service';
 import { UsersService } from '../../services/users.service';
 import { RouterLink } from '@angular/router';
 import { Swap } from '../../models/swap.model';
-import { SwapProfileData } from '../../models/swap-profile-data';
-
+import { SwapProfileData} from '../../models/swap-profile-data';
+import { UserSkills } from '../../models/user-skills.model';
 @Component({
   selector: 'app-next-swap',
   standalone: true,
