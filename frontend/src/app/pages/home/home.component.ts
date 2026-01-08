@@ -10,6 +10,7 @@ import { RouterLink } from '@angular/router';
 import { AccountService } from '../../services/account.service';
 import { NextSwapComponent } from '../../components/next-swap/next-swap.component';
 import { NextSwap } from '../../models/next-swap.model';
+import { LocationService } from '../../services/location.service';
 
 
 @Component({
@@ -33,6 +34,7 @@ export class HomeComponent implements OnInit {
 
 
   private searchService = inject(SearchService);
+  private locationService = inject(LocationService);
   private router = inject(Router);
 
   private allCards: NextSwap[] = [];
