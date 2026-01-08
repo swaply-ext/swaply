@@ -1,0 +1,106 @@
+<app-app-navbar></app-app-navbar>
+
+<main class="page-container">
+  <div class="content-wrapper">
+
+    <div class="header-container">
+      <div class="title-group">
+        <span class="material-symbols-outlined header-icon">notifications_active</span>
+        <h2 class="page-title">Solicitudes</h2>
+      </div>
+
+      @if (!loading()) {
+        <span class="requests-count-badge">
+          {{ requests().length }} {{ requests().length === 1 ? 'nueva' : 'nuevas' }}
+        </span>
+      }
+    </div>
+
+    @if (loading()) {
+      <div class="loading-state">
+        <p>Cargando solicitudes...</p>
+      </div>
+    }
+
+    @if (!loading() && requests().length > 0) {
+      <div class="requests-list">
+
+        @for (req of requests(); track req.id) {
+          @let user = getProfile(req.requestedUserId);
+
+          <div class="request-card fade-in">
+
+            <div class="user-section"
+                 [routerLink]="['/user', user?.username]"
+                 title="Ver perfil">
+              <img [src]="user?.profilePhotoUrl || 'assets/default-avatar.png'"
+                   class="avatar"
+                   alt="Avatar">
+            </div>
+
+            <div class="info-section">
+
+              <div class="request-header">
+                <a class="username" [routerLink]="['/user', user?.username]">
+                  {{ user?.username || 'Usuario' }}
+                </a>
+                <span> solicita intercambio.</span>
+              </div>
+
+              <div class="exchange-details">
+
+                <div class="exchange-row">
+                  <span class="action-label">Enseña:</span>
+                  <span class="skill-badge teach">
+                    <span class="material-symbols-outlined badge-icon">school</span>
+                    {{ req.skill | titlecase }}
+                  </span>
+                </div>
+
+                <div class="exchange-row">
+                  <span class="action-label">Busca:</span>
+                  <span class="skill-badge learn">
+                    <span class="material-symbols-outlined badge-icon">search</span>
+                    {{ req.interest | titlecase }}
+                  </span>
+                </div>
+
+              </div>
+
+              @if (user?.location) {
+                <div class="location-badge">
+                  <span class="material-symbols-outlined icon-tiny">location_on</span>
+                  <span>{{ user?.location?.displayName }}</span>
+                </div>
+              }
+            </div>
+
+            <div class="actions-section">
+              <button class="btn-confirm" (click)="acceptRequest(req)">
+                <span class="material-symbols-outlined">check</span>
+                Aceptar
+              </button>
+
+              <button class="btn-delete" (click)="rejectRequest(req)">
+                <span class="material-symbols-outlined">close</span>
+                Rechazar
+              </button>
+            </div>
+
+          </div>
+        }
+      </div>
+    }
+
+    @if (!loading() && requests().length === 0) {
+      <div class="empty-state">
+        <div class="icon-circle">
+          <span class="material-symbols-outlined">mark_email_read</span>
+        </div>
+        <h3>Estás al día</h3>
+        <p>No tienes nuevas solicitudes de intercambio.</p>
+      </div>
+    }
+
+  </div>
+</main>

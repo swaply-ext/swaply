@@ -13,7 +13,7 @@ export class SkillCardComponent implements OnChanges {
   @Input() id: string = '';
   @Input() level: number = 0;
   @Input() editable: boolean = false;
-  
+
   // input para manejar la seleccion
   @Input() selected: boolean = false;
 
@@ -24,7 +24,7 @@ export class SkillCardComponent implements OnChanges {
   skill: SkillDisplay | null = null;
 
   ngOnChanges(changes: SimpleChanges): void {
-    
+
     if (changes['id'] && this.id) {
       this.loadSkillData();
     }
@@ -41,10 +41,18 @@ export class SkillCardComponent implements OnChanges {
       });
   }
 
-  changeLevel(clickedLevel: number) {
+  changeLevel(clickedLevel: number, event?: Event) {
+    if (event) {
+      event.stopPropagation();
+    }
+
     if (!this.editable || !this.skill) return;
 
-    if (this.skill.level === clickedLevel) {
+    if (this.skill.level === 0 && clickedLevel <= 1){
+      console.log(clickedLevel)
+      this.skill.level = 1;
+    }
+    else if (this.skill.level === clickedLevel) {
       this.skill.level = 0;
     } else {
       this.skill.level = clickedLevel;
@@ -52,5 +60,11 @@ export class SkillCardComponent implements OnChanges {
 
     // emitimos el evento por si el padre quiere guardar en bd
     this.levelChange.emit({ id: this.id, newLevel: this.skill.level });
+  }
+
+  toggleCardLevel() {
+    if (!this.editable || !this.skill) return;
+
+    this.changeLevel(this.skill.level);
   }
 }

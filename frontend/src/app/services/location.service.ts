@@ -10,7 +10,6 @@ export interface location {
   lon: number;
 }
 
-
 @Injectable({
   providedIn: 'root'
 })

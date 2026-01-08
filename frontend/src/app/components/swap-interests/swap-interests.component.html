@@ -8,13 +8,13 @@
 
   <div *ngIf="open" class="skills-grid">
     <app-skill-card
-      *ngFor="let item of InterestsInput"
+      *ngFor="let item of InterestsInput; trackBy: trackByInterest"
       [id]="item.id || item.name"
       [level]="item.level || 0"
       [selected]="item.selected || false"
       [editable]="editable"
       (click)="onCardClick(item)"
-      (levelChange)="handleLevelChange($event)">
+      (levelChange)="handleLevelChange($event, item)">
     </app-skill-card>
   </div>
 </div>

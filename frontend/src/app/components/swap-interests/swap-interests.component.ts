@@ -26,7 +26,7 @@ export class SwapInterestsComponent {
   @Input() InterestsInput: Interest[] = [];
   @Input() editable = false;
   @Input() targetUser: User | null = null;
-  @Output() skillSelected = new EventEmitter<any>();
+  @Output() skillSelected = new EventEmitter<{ skill: Interest }>();
 
   open = true;
 
@@ -34,11 +34,17 @@ export class SwapInterestsComponent {
     this.open = !this.open;
   }
 
-  handleLevelChange(event: any) {
-    console.log('Nivel cambiado:', event);
+  handleLevelChange(event: any, item: Interest) {
+    item.level = event;
+    console.log('Nivel cambiado:', item.name, item.level);
   }
 
-  onCardClick(item: any) {
-    this.skillSelected.emit(item);
+  onCardClick(item: Interest) {
+    this.skillSelected.emit({ skill: item });
   }
+
+  trackByInterest(index: number, interest: any) {
+  return interest.id || interest.name; 
+}
+
 }

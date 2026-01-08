@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 import { AccountService } from '../../services/account.service';
 import { AuthService } from '../../services/auth.service'; // Importamos AuthService
 
@@ -139,7 +140,7 @@ export class PrivacyAndSecurityComponent {
           this.message = 'Error cambiando la contraseña';
         }
       },
-      error: (err) => {
+      error: (err: HttpErrorResponse) => {
         console.error('Error al cambiar contraseña:', err);
         this.showError = true;
         

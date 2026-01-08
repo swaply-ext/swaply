@@ -2,10 +2,9 @@ import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { EmailInputComponent } from '../../components/email-input/email-input.component';
 import { PasswordInputComponent } from '../../components/password-input/password-input.component';
-import { TermsCheckboxComponent } from '../../components/terms-checkbox/terms-checkbox.component';
 import { LoginRegisterButtonsComponent } from '../../components/login-register-buttons/login-register-buttons.component';
 import { RouterLink } from '@angular/router';
-import { HttpClient, HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 
@@ -15,20 +14,19 @@ interface User {
 }
 
 @Component({
-  selector: 'login-form', // Nombre del componente en el HTML
+  selector: 'login-form',
   standalone: true,
-  imports: [              // Componentes y módulos que se usan en la plantilla
+  imports: [
     EmailInputComponent,
     PasswordInputComponent,
-    TermsCheckboxComponent,
     RouterLink,
     LoginRegisterButtonsComponent,
     CommonModule
   ],
-  templateUrl: './login-form.component.html', // Ruta al archivo HTML
-  styleUrls: ['./login-form.component.css']   // Ruta al archivo CSS
+  templateUrl: './login-form.component.html',
+  styleUrls: ['./login-form.component.css']
 })
-// Propiedades que almacenan el estado del formulario
+
 export class LoginFormComponent {
   email = '';
   password = '';
@@ -43,10 +41,7 @@ export class LoginFormComponent {
     this.showError = false;
     this.email = this.email.toLowerCase();
 
-    if (!this.accepted) {
-      this.showError = true;
-      return;
-    }
+
     if (!this.email || !this.password) {
       this.showError = true;
       return;
@@ -61,7 +56,7 @@ export class LoginFormComponent {
       next: () => {
         this.router.navigate(['/']);
       },
-      error: (err) => {
+      error: (err: HttpErrorResponse) => {
         if (err.status == 401) {
           this.router.navigate(['/error-auth']);
         } else {

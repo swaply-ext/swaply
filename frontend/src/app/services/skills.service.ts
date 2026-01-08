@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
 import {map} from 'rxjs/operators';
+import { SKIP_LOADING } from '../interceptors/loading.interceptor';
 
 export interface SkillInput {
   id: string;
@@ -29,13 +30,35 @@ export class SkillsService {
 
 
   getSkillDisplay(input: SkillInput): Observable<SkillDisplay> {
-    return this.http.get<SkillsModel>(`${this.apiUrl}/${input.id}`).pipe(
+    return this.http.get<SkillsModel>(`${this.apiUrl}/${input.id}`, {
+      context: new HttpContext().set(SKIP_LOADING, true)
+    }).pipe(
       map((skill: SkillsModel) => {
         return {
           ...skill,
           level: input.level
         } as SkillDisplay;
       })
+    );
+  }
+
+  getAllSkills(): Observable<SkillsModel[]> {
+    return this.http.get<SkillsModel[]>(this.apiUrl);
+  }
+
+  searchSkills(query: string): Observable<SkillsModel[]> {
+    if (!query || !query.trim()) {
+      return of([]);
+    }
+
+    const params = new HttpParams().set('query', query);
+
+    return this.http.get<SkillsModel[]>(
+      this.apiUrl,
+      {
+        params,
+        context: new HttpContext().set(SKIP_LOADING, true)
+      }
     );
   }
 }

@@ -27,7 +27,6 @@ public class UserDTO {
     private Integer code;
     private Integer ttl;
     private Location location;
-    private String postalCode;
     private String gender;
     private String phone;
     private List<UserSkills> skills;

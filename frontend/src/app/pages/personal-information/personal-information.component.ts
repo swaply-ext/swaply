@@ -5,6 +5,7 @@ import { NameInputComponent } from "../../components/name-input/name-input.compo
 import { SurnameInputComponent } from "../../components/surname-input/surname-input.component";
 import { BirthDateComponent } from "../../components/birth-date/birth-date.component";
 import { PhoneInputComponent } from "../../components/phone-input/phone-input.component";
+import { AccountService } from '../../services/account.service';
 import { RegisterDataService } from '../../services/register-data.service';
 import { GenderInputComponent } from '../../components/gender-input/gender-input.component';
 import { LocationSearchComponent } from '../../components/location-search/location-search.component';
@@ -50,6 +51,7 @@ export class PersonalInformationComponent {
 
   constructor(
     private router: Router,
+    private accountService: AccountService,
     private registerDataService: RegisterDataService
   ) { }
 
@@ -104,11 +106,22 @@ export class PersonalInformationComponent {
 
     const allUserData = { email, username, password, ...personalData };
 
+    this.accountService.personalInfo(allUserData)
+      .subscribe({
+        next: () => {
+          console.log('Registro completo:', allUserData);
+          this.router.navigate(['/']);
+        },
+        error: (err) => {
+          console.error('Error al añadir información personal:', err.message);
+          this.setError(err.message);
+        }
+    });
     this.registerDataService.personalInformation(allUserData).subscribe({
       next: (success) => {
         if (success) {
           console.log('Información personal añadida con éxito.');
-          this.router.navigate(['/']);
+          this.router.navigate(['/select-avatar']);
         }
       },
       error: (err) => {
@@ -117,6 +130,7 @@ export class PersonalInformationComponent {
       }
     })
   }
+
   private setError(msg: string) {
     this.showError = true;
     this.hasErrorAll = true;

@@ -19,26 +19,27 @@
   </div>
 
   <div class="nav-right">
-  <a routerLink="/chat" class="nav-icon-link"><span class="material-symbols-outlined nav-icon">chat_bubble</span></a>
-    <span class="material-symbols-outlined nav-icon">notifications</span>
+
+    <a routerLink="/chat" class="nav-icon-link"><span class="material-symbols-outlined nav-icon">chat_bubble</span></a>
+    <button class="menu-btn" (click)="goToNotifications()"> <span
+        class="material-symbols-outlined nav-icon">notifications</span> </button>
 
     <div class="profile-wrapper">
-      
+
       <span *ngIf="isLoggedIn" (click)="toggleDropdown(); $event.stopPropagation()">
-        <img [src]="(dropdownMenuData && dropdownMenuData.profilePhotoUrl) ? dropdownMenuData.profilePhotoUrl : 'assets/default-image.jpg'" 
-             alt="Foto de perfil" class="profile-pic">
+        <img
+          [src]="(dropdownMenuData && dropdownMenuData.profilePhotoUrl) ? dropdownMenuData.profilePhotoUrl : 'assets/default-image.jpg'"
+          alt="Foto de perfil" class="profile-pic">
       </span>
 
-      <span *ngIf="!isLoggedIn" class="material-symbols-outlined nav-icon profile-icon" 
-            (click)="toggleDropdown(); $event.stopPropagation()">
+      <span *ngIf="!isLoggedIn" class="material-symbols-outlined nav-icon profile-icon"
+        (click)="toggleDropdown(); $event.stopPropagation()">
         person
       </span>
 
       <div class="dropdown-overlay" *ngIf="showDropdown" [class.show]="showDropdown">
-        <app-dropdown-menu 
-            *ngIf="dropdownMenuData"
-            [dropdownMenuData]="dropdownMenuData" 
-            (closeMenu)="showDropdown = false">
+        <app-dropdown-menu *ngIf="dropdownMenuData" [dropdownMenuData]="dropdownMenuData"
+          (closeMenu)="showDropdown = false">
         </app-dropdown-menu>
       </div>
     </div>

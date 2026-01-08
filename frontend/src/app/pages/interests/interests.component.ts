@@ -1,9 +1,9 @@
-// Importaciones necesarias desde Angular
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { SkillsService, SkillsModel } from '../../services/skills.service';
+import { AccountService, Account } from '../../services/account.service';
 import { SkillCardComponent } from '../../components/skill-card/skill-card.component';
 
 interface SkillDTO {
@@ -27,9 +27,7 @@ interface Category {
   skills: SkillItem[];
 }
 
-interface Account {
-  interests: UserSkill[]
-}
+
 
 interface UserSkill {
   id: string;
@@ -53,29 +51,30 @@ export class InterestsComponent {
   editable: boolean = true;
 
   // Inyectar HttpClient para hacer peticiones HTTP
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(
+    private skillsService: SkillsService,
+    private accountService: AccountService,
+    private router: Router
+  ) { }
 
 
   ngOnInit(): void {
-    this.getAllSkills('http://localhost:8081/api/skills');
-
+    this.getAllSkills();
   }
 
-
-  getAllSkills(URI: string) {
-    this.http.get<SkillDTO[]>(URI)
+  getAllSkills() {
+    this.skillsService.getAllSkills()
       .subscribe({
         next: (response) => {
           this.organizeSkillsByCategory(response);
-          this.getMySkills('http://localhost:8081/api/account');
+          this.getMySkills();
         },
         error: (err) => console.error('Error obteniendo skills:', err)
       });
   }
 
-
-  getMySkills(URI: string) {
-    this.http.get<Account>(URI)
+  getMySkills() {
+    this.accountService.getAccount()
       .subscribe({
         next: (account) => {
           if (account.interests && account.interests.length > 0) {
@@ -84,7 +83,6 @@ export class InterestsComponent {
         },
         error: (err) => console.error('Error obteniendo account:', err)
       });
-
   }
 
   private setLevel(mySkills: UserSkill[]) {
@@ -109,9 +107,7 @@ export class InterestsComponent {
     });
   }
 
-
-
-  private organizeSkillsByCategory(skills: SkillDTO[]) {
+  private organizeSkillsByCategory(skills: SkillsModel[]) {
     const grouped: Category[] = [];
 
     skills.forEach(skill => {
@@ -131,7 +127,7 @@ export class InterestsComponent {
         name: skill.name,
         icon: skill.icon,
         id: skill.id,
-        level: skill.level
+        level: 0
       });
     });
     this.categories = grouped;
@@ -158,7 +154,7 @@ export class InterestsComponent {
         }))
     );
 
-    this.http.patch('http://localhost:8081/api/account/interests', { interests: selectedSkills })
+    this.accountService.updateInterests(selectedSkills)
       .subscribe({
         next: response => {
           console.log('Resputesta del backend:', response);

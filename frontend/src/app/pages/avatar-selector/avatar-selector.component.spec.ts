@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddressInputComponent } from './address-input.component';
+import { AvatarSelectorComponent } from './avatar-selector.component';
 
-describe('AddressInputComponent', () => {
-  let component: AddressInputComponent;
-  let fixture: ComponentFixture<AddressInputComponent>;
+describe('ProfileSelectorComponent', () => {
+  let component: AvatarSelectorComponent;
+  let fixture: ComponentFixture<AvatarSelectorComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AddressInputComponent]
+      imports: [AvatarSelectorComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AddressInputComponent);
+    fixture = TestBed.createComponent(AvatarSelectorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

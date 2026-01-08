@@ -9,25 +9,20 @@ import org.springframework.stereotype.Service;
 
 import com.swaply.backend.application.swap.SwapMapper;
 import com.swaply.backend.application.swap.dto.SwapDTO;
-import com.swaply.backend.shared.UserCRUD.UserRepository;
 import com.swaply.backend.shared.UserCRUD.UserService;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.shared.UserCRUD.Model.Swap;
-import com.swaply.backend.shared.UserCRUD.Model.User;
-import com.swaply.backend.shared.UserCRUD.exception.UserNotFoundException;
 import com.swaply.backend.shared.mail.MailService;
 
 @Service
 public class SwapService {
 
-    private final UserRepository repository;
     private final SwapMapper mapper;
     private final UserService userService;
     private final MailService mailService;
 
-    public SwapService(SwapMapper mapper, UserRepository repository, UserService userService, MailService mailService) {
+    public SwapService(SwapMapper mapper, UserService userService, MailService mailService) {
         this.mapper = mapper;
-        this.repository = repository;
         this.userService = userService;
         this.mailService = mailService;
     }
@@ -41,14 +36,13 @@ public class SwapService {
         sentSwap.setId(id);
         sentSwap.setRequestedUserId(userService.getUserByUsername(dto.getRequestedUsername()).getId());
 
-        User sender = repository.findUserById(sendingUser)
-                .orElseThrow(() -> new UserNotFoundException(sendingUser));
+        UserDTO sender = userService.getUserByID(sendingUser);
 
         if (sender.getSwaps() == null) {
             sender.setSwaps(new ArrayList<>());
         }
         sender.getSwaps().add(sentSwap);
-        repository.save(sender);
+        userService.updateUser(sender.getId(), sender);
 
         Swap receivedSwap = mapper.toEntity(invertSwap(dto));
         receivedSwap.setStatus(Swap.Status.STANDBY);
@@ -56,14 +50,12 @@ public class SwapService {
         receivedSwap.setId(id);
         receivedSwap.setRequestedUserId(sendingUser);
 
-        User receiver = repository.findUserById(sentSwap.getRequestedUserId())
-                .orElseThrow(() -> new UserNotFoundException(sentSwap.getRequestedUserId()));
-
+        UserDTO receiver = userService.getUserByID(sentSwap.getRequestedUserId());
         if (receiver.getSwaps() == null) {
             receiver.setSwaps(new ArrayList<>());
         }
         receiver.getSwaps().add(receivedSwap);
-        repository.save(receiver);
+        userService.updateUser(receiver.getId(), receiver);
 
         //Enviar email de notificación
                 try {

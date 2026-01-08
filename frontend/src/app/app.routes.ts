@@ -32,12 +32,15 @@ import { CodeSentConfirmationComponent } from './pages/code-sent-confirmation/co
 import { FilterSkillsComponent } from './components/filter-skills/filter-skills.component';
 import { PrivacyAndSecurityComponent } from './pages/privacy-and-security/privacy-and-security.component';
 import { EmailSentComponent } from './pages/email-sent/email-sent.component';
+import { MySwapsPageComponent } from './pages/my-swaps/my-swaps.component';
+import { SwapRequestsComponent } from './pages/swap-requests/swap-requests.component';
 import { SwapComponent } from './pages/swap/swap.component';
 import { SwapSkillsComponent } from './components/swap-skills/swap-skills.component';
 import { SwapInterestsComponent } from './components/swap-interests/swap-interests.component';
 import { DeleteAccountConfirmationComponent } from './pages/delete-account-confirmation/delete-account-confirmation.component';
 import { UserSearchComponent } from './components/user-search/user-search.component';
-
+import { getProfileDataResolver } from './resolver/get-profile-data.service';
+import { AvatarSelectorComponent } from './pages/avatar-selector/avatar-selector.component';
 
 // Creamos una ruta para la verificación de correo
 // Ahora usamos el componente real EmailVerificationComponent
@@ -63,23 +66,26 @@ export const appRoutes: Routes = [
   { path: 'interests-panel', component: InterestsPanelComponent }, // ruta para el panel de intereses
   { path: 'profile-info', component: ProfileInfoComponent }, // ruta para la información personal (temporal)
   { path: 'profile-edit', component: EditProfileComponent , canActivate: [AuthGuard] }, // ruta para el perfil de usuario
-  { path: 'public-profile/:username', loadComponent: () => import('./pages/public-profile/public-profile.component').then(m => m.PublicProfileComponent)}, //enlace a el perfil publico pero indicando el username del cual
+  { path: 'user/:username', loadComponent: () => import('./pages/public-profile/public-profile.component').then(m => m.PublicProfileComponent)}, //enlace a el perfil publico pero indicando el username del cual
   { path: 'recovery-email', component: RecoveryEmailComponent },
   { path: 'pass-verification', component: PassVerificationComponent },
   { path: 'side-menu', component: SideMenuComponent }, // ruta para el componente del menú lateral
   { path: 'exit', component: ExitComponent },
-  { path: 'myprofile', component: PrivateProfileComponent, canActivate: [AuthGuard] },
+  { path: 'myprofile', component: PrivateProfileComponent, canActivate: [AuthGuard], resolve: { profileData: getProfileDataResolver }}, //resolve:{nombre_del_objeto: tipo_del_objeto}. Esto le pasa al .ts un objeto llamado nombre_del_objeto del tipo indicado.
   { path: 'search-skills', component: SkillSearchComponent }, //barra de busqueda componente
   { path: 'filter-skills', component: FilterSkillsComponent },
-  {path: 'location-search', component: LocationSearchComponent },
+  { path: 'location-search', component: LocationSearchComponent },
   { path: 'swap-skills', component: SwapSkillsComponent },
+  { path: 'notifications', component: SwapRequestsComponent },
   { path: 'swap-interests', component: SwapInterestsComponent },
   { path: 'delete-account-confirmation', component: DeleteAccountConfirmationComponent },
   { path: '404', component: Error404Component },
+  { path: 'my-swaps', component: MySwapsPageComponent,},
   { path: 'privacy-and-security', component: PrivacyAndSecurityComponent, canActivate: [AuthGuard] },
   { path: 'user-search', component: UserSearchComponent },
   { path: 'chat', loadComponent: () => import('./pages/chat/chat.component').then(m => m.ChatComponent), canActivate: [AuthGuard] },
   { path: 'swap/:username', component: SwapComponent, canActivate: [AuthGuard] },
+  { path: 'select-avatar', component: AvatarSelectorComponent, canActivate: [AuthGuard]},
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
 
 ];

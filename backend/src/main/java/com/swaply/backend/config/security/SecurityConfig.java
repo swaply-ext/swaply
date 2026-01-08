@@ -27,6 +27,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/example/premium/**").hasRole("PREMIUM")
                         .requestMatchers("/ws-chat/**").permitAll()
+                        // .requestMatchers("/api/users/**").hasRole("MODERATOR")
                         .anyRequest().authenticated()
                 )
                 
