@@ -55,9 +55,11 @@ export class ChatService {
 
   //obtener el historial
   getHistory(roomId: string): Observable<ChatMessage[]> {
-    return this.http.get<ChatMessage[]>(`${this.base}/history/${roomId}`);
+    // AÑADIMOS EL CONTEXTO PARA EVITAR EL SPINNER GLOBAL
+    return this.http.get<ChatMessage[]>(`${this.base}/history/${roomId}`, {
+      context: new HttpContext().set(SKIP_LOADING, true),
+    });
   }
-
   //CREAR UNA ROOM
   createRoomWithUsername(targetUsername: string): Observable<ChatRoomDTO> {
     return this.http.post<ChatRoomDTO>(
@@ -140,27 +142,28 @@ export class ChatService {
     });
   }
 
-
-subscribeToUserUpdates(userId: string): Observable<string> {
+  subscribeToUserUpdates(userId: string): Observable<string> {
     const subj = new Subject<string>();
     const destination = `/topic/user/${userId}/updates`;
 
-    console.log(`🔌 [FRONTEND] Iniciando conexión WS... Buscando canal: ${destination}`); // <--- LOG 1
+    console.log(
+      `🔌 [FRONTEND] Iniciando conexión WS... Buscando canal: ${destination}`
+    ); // <--- LOG 1
 
     this.connectIfNeeded(localStorage.getItem('authToken') || '').then(() => {
-        if (!this.client) {
-             console.error('❌ [FRONTEND] Client es null');
-             return;
-        }
+      if (!this.client) {
+        console.error('❌ [FRONTEND] Client es null');
+        return;
+      }
 
-        console.log(`👂 [FRONTEND] Suscribiéndose a: ${destination}`); // <--- LOG 2
+      console.log(`👂 [FRONTEND] Suscribiéndose a: ${destination}`); // <--- LOG 2
 
-        this.client.subscribe(destination, (message: StompMessage) => {
-            console.log('📨 [FRONTEND] ¡MENSAJE RECIBIDO!', message.body); // <--- LOG 3
-            subj.next(message.body);
-        });
+      this.client.subscribe(destination, (message: StompMessage) => {
+        console.log('📨 [FRONTEND] ¡MENSAJE RECIBIDO!', message.body); // <--- LOG 3
+        subj.next(message.body);
+      });
     });
 
     return subj.asObservable();
-}
+  }
 }
