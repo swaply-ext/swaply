@@ -64,13 +64,13 @@ export class NextSwapComponent {
     const swap = this.nextSwap();
     if (!swap) return 'assets/photos_skills/default.jpg'; // Imagen por defecto si es null
     // Pasamos '' como categoría ya que no viene en el objeto swap, la función buscará por nombre
-    return this.assignImageToSkill('', swap.interest) || 'assets/photos_skills/default.jpg';
+    return this.assignImageToSkill('', swap.skill) || 'assets/photos_skills/default.jpg';
   });
 
   imageToTeach = computed(() => {
     const swap = this.nextSwap();
     if (!swap) return 'assets/photos_skills/default.jpg';
-    return this.assignImageToSkill('', swap.skill) || 'assets/photos_skills/default.jpg';
+    return this.assignImageToSkill('', swap.interest) || 'assets/photos_skills/default.jpg';
   });
 
   ngOnInit(): void {
@@ -237,8 +237,11 @@ export class NextSwapComponent {
 
   getSkillLevel(skills: UserSkills[], skillName: string): number {
     const normalizedName = this.normalizeString(skillName);
-    const skill = skills.find(s => this.normalizeString(s.id) === normalizedName);
-    console.log('skills:', skills, 'skillName:', skillName, 'normalized:', normalizedName, 'found skill:', skill, 'level:', skill?.level);
+    const skill = skills.find(s => { 
+      console.log('Comparing skill id:', this.normalizeString(s.id), 'with normalized name:', normalizedName);
+      return this.normalizeString(s.id) === normalizedName
+   });
+    console.log('skillName:', skillName, 'normalized:', normalizedName, 'found skill:', skill?.id, 'level:', skill?.level);
     return skill ? Number(skill.level) || 0 : 0 ;
     
   }
