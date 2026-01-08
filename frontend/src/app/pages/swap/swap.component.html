@@ -13,7 +13,7 @@
         />
 
         <div class="info">
-          <h3>{{ mySkill.name }}</h3>
+          <h3>{{ getTeachSkillName() }}</h3>
 
           <div class="location">
             <span class="material-symbols-outlined location-icon"
@@ -70,31 +70,50 @@
   </div>
 
   <div class="panel-actions">
+    
     <div class="panel skills-panel" *ngIf="myUser() as me">
-      <app-swap-skills
-        [SkillsInput]="mySkillsDisplay()"
-        [editable]="false"
-        (skillSelected)="selectMySkill($event)"
-      >
-      </app-swap-skills>
+      <ng-container *ngIf="mySkillsDisplay().length > 0; else noMySkills">
+        <app-swap-skills
+          [SkillsInput]="mySkillsDisplay()"
+          [editable]="false"
+          (skillSelected)="selectMySkill($event)">
+        </app-swap-skills>
+      </ng-container>
+
+      <ng-template #noMySkills>
+        <div class="empty-state">
+           <span class="material-symbols-outlined icon-empty">block</span>
+           <p>No tienes habilidades que coincidan con los intereses de {{ targetUser()?.username }}</p>
+        </div>
+      </ng-template>
+    </div>
+    
+    <div class="panel interests-panel" *ngIf="targetUserInterests() as interests">
+      <ng-container *ngIf="interests.length > 0; else noTargetSkills">
+        <app-swap-interests
+          [InterestsInput]="interests"
+          [editable]="false"
+          [targetUser]="targetUser()"
+          (skillSelected)="selectTargetInterest($event)">
+        </app-swap-interests>
+      </ng-container>
+
+      <ng-template #noTargetSkills>
+        <div class="empty-state">
+           <span class="material-symbols-outlined icon-empty">block</span>
+           <p>{{ targetUser()?.username }} no ofrece habilidades que coincidan con tus intereses.</p>
+        </div>
+      </ng-template>
     </div>
 
-    <div
-      class="panel interests-panel"
-      *ngIf="targetUserInterests() as interests"
-    >
-      <app-swap-interests
-        [InterestsInput]="interests"
-        [editable]="false"
-        [targetUser]="targetUser()"
-        (skillSelected)="selectTargetInterest($event)"
-      >
-      </app-swap-interests>
-    </div>
   </div>
 
   <div class="btn-container">
     <button class="btn-cancel" (click)="cancelSwap()">CANCEL</button>
-    <button class="btn-create" (click)="createSwap()">SWAP</button>
+    <button class="btn-create" 
+            (click)="createSwap()"
+            [disabled]="mySkillsDisplay().length === 0 || targetUserInterests().length === 0">
+      SWAP
+    </button>
   </div>
 </div>

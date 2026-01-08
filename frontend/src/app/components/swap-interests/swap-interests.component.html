@@ -14,7 +14,7 @@
       [selected]="item.selected || false"
       [editable]="editable"
       (click)="onCardClick(item)"
-      (levelChange)="handleLevelChange($event)">
+      (levelChange)="handleLevelChange($event, item)">
     </app-skill-card>
   </div>
 </div>
