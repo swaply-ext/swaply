@@ -121,7 +121,7 @@ export class PersonalInformationComponent {
       next: (success) => {
         if (success) {
           console.log('Información personal añadida con éxito.');
-          this.router.navigate(['/']);
+          this.router.navigate(['/select-avatar']);
         }
       },
       error: (err) => {
