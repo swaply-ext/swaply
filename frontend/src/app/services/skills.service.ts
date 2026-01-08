@@ -30,7 +30,9 @@ export class SkillsService {
 
 
   getSkillDisplay(input: SkillInput): Observable<SkillDisplay> {
-    return this.http.get<SkillsModel>(`${this.apiUrl}/${input.id}`).pipe(
+    return this.http.get<SkillsModel>(`${this.apiUrl}/${input.id}`, {
+      context: new HttpContext().set(SKIP_LOADING, true)
+    }).pipe(
       map((skill: SkillsModel) => {
         return {
           ...skill,

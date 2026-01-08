@@ -103,7 +103,7 @@ export class NextSwapComponent {
     this.swapService.updateSwapStatus(currentSwap.id, 'ACCEPTED').subscribe({
       next: async (response) => {
         this.isConfirmed.set(true);
-        await this.sleep(5000);
+        await this.sleep(2000);
         this.ngOnInit();
       },
       error: (err) => {
@@ -122,7 +122,7 @@ export class NextSwapComponent {
     this.swapService.updateSwapStatus(currentSwap.id, 'DENIED').subscribe({
       next: async () => {
         this.isDenied.set(true);
-        await this.sleep(5000);
+        await this.sleep(2000);
         this.ngOnInit();
       },
       error: (err) => {

@@ -8,7 +8,7 @@
 
   <div *ngIf="open" class="skills-grid">
     <app-skill-card
-      *ngFor="let item of InterestsInput"
+      *ngFor="let item of InterestsInput; trackBy: trackByInterest"
       [id]="item.id || item.name"
       [level]="item.level || 0"
       [selected]="item.selected || false"
