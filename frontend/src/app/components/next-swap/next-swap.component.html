@@ -6,23 +6,15 @@
           <h3 class="section-title">Tu próxima habilidad para aprender</h3>
 
           <div class="skill-card">
-            <img [src]="imageToLearn()" alt="{{ nextSwap()?.skill }}" class="activity-img">
-            
+            <img
+              [src]="imageToLearn()"
+              alt="{{ nextSwap()?.interest }}"
+              class="activity-img"
+            />
+
             <div class="card-details">
-              <h4>Clase de {{ nextSwap()?.skill }}</h4>
-              
-              <div class="level-container" [ngClass]="{
-                'mid-level': getSkillLevel(profileToLearn()?.skills || [], nextSwap()?.skill || '') === 2,
-                'high-level': getSkillLevel(profileToLearn()?.skills || [], nextSwap()?.skill || '') === 3
-              }">
-                <span class="level-text">{{ getLevelText(getSkillLevel(profileToLearn()?.skills || [], nextSwap()?.skill || '')) }}</span>
-                <div class="level-bar">
-                  <div class="level-block" [class.filled]="getSkillLevel(profileToLearn()?.skills || [], nextSwap()?.skill || '') >= 1"></div>
-                  <div class="level-block" [class.filled]="getSkillLevel(profileToLearn()?.skills || [], nextSwap()?.skill || '') >= 2"></div>
-                  <div class="level-block" [class.filled]="getSkillLevel(profileToLearn()?.skills || [], nextSwap()?.skill || '') >= 3"></div>
-                </div>
-              </div>
-              
+              <h4>Clase de {{ nextSwap()?.interest }}</h4>
+
               <div class="badges-group">
                 <div class="info-badge">
                   <span class="material-symbols-outlined badge-icon"
@@ -44,11 +36,9 @@
                       class="user-avatar"
                     />
                   </div>
-                  <span class="badge-text">{{ '@'+ profileToLearn()?.username }}</span>
-                  <span class="rating">
-                    <span class="material-symbols-outlined star-icon">{{ getStarIcon(profileToLearn()?.rating ?? 0) }}</span>
-                    <span class="rating-value">{{ profileToLearn()?.rating }}</span>
-                  </span>
+                  <span class="badge-text">{{
+                    "@" + profileToLearn()?.username
+                  }}</span>
                 </div>
               </div>
             </div>
@@ -63,10 +53,14 @@
           <h3 class="section-title">Tu próxima habilidad para enseñar</h3>
 
           <div class="skill-card">
-            <img [src]="imageToTeach()" alt="{{ nextSwap()?.interest }}" class="activity-img">
-            
+            <img
+              [src]="imageToTeach()"
+              alt="{{ nextSwap()?.skill }}"
+              class="activity-img"
+            />
+
             <div class="card-details">
-              <h4>Clase de {{ nextSwap()?.interest }}</h4>
+              <h4>Clase de {{ nextSwap()?.skill }}</h4>
 
               <div class="badges-group">
                 <div class="info-badge">
