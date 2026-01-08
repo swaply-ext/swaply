@@ -160,7 +160,3 @@ export class SwapListComponent implements OnInit {
   }
 }
 
-
-
-
-export type { Swap };
