@@ -23,4 +23,17 @@ export class LocationService {
     const params = new HttpParams().set('query', query);
     return this.http.get<location[]>(`${this.apiUrl}/autocomplete`, { params, context: new HttpContext().set(SKIP_LOADING, true) });
   }
+
+  
+  getDistance(user1_id: string, user2_username: string): Observable<string> {
+    const params = new HttpParams()
+      .set('user1_id', user1_id)
+      .set('user2_username', user2_username);
+
+    return this.http.post(`${this.apiUrl}/distance`, null, { 
+      params, 
+      responseType: 'text',
+      context: new HttpContext().set(SKIP_LOADING, true) 
+    });
+  }
 }

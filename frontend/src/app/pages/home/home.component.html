@@ -27,7 +27,7 @@
       <div class="card-grid" *ngIf="!isLoadingMatches()">
         <div class="skill-card" *ngFor="let card of cards()" (click)="goToSwap(card)">
 
-          <img *ngIf="card.skillImage" [src]="card.skillImage" [alt]="card.skillTitle" class="card-image"
+          <img *ngIf="card.skillImage" [src]="card.skillImage" [alt]="card.skillName" class="card-image"
             (error)="card.skillImage = undefined">
           <div *ngIf="!card.skillImage" class="card-image-placeholder">
             {{ card.skillIcon || '🎓' }}
@@ -37,7 +37,7 @@
 
 
             <div class="card-user-info">
-              <img [src]="card.userAvatar" [alt]="card.username" class="user-avatar"
+              <img [src]="card.profilePhotoUrl" [alt]="card.username" class="user-avatar"
                 [routerLink]="['/user', card.username]" (click)="$event.stopPropagation()"
                 style="cursor: pointer;">
 
@@ -47,15 +47,15 @@
               </span>
             </div>
 
-            <h3>{{ card.skillTitle }}</h3>
+            <h3>{{ card.skillName }}</h3>
 
             <ng-container *ngIf="hasSearched()">
-              <div *ngIf="card.isMatch" class="match-status is-match">
+              <div *ngIf="card.isSwapMatch" class="match-status is-match">
                 <span class="material-symbols-outlined">bolt</span>
                 ¡MATCH!
               </div>
 
-              <div *ngIf="!card.isMatch" class="match-status no-match">
+              <div *ngIf="!card.isSwapMatch" class="match-status no-match">
                 <span class="material-symbols-outlined">person</span>
                 No tiene interés en tus habilidades
               </div>
