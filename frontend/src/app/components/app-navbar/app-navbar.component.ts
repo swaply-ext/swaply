@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Router } from '@angular/router';
-import { DropdownMenuComponent, DropdownMenuData } from '../dropdown-menu/dropdown-menu.component';
+import { DropdownMenuComponent } from '../dropdown-menu/dropdown-menu.component';
 import { AccountService } from '../../services/account.service';
 import { AuthService } from '../../services/auth.service';
 import { UserSearchComponent } from '../user-search/user-search.component';
+import { DropdownMenuData } from '../../models/data.models';
 
 @Component({
   selector: 'app-app-navbar',

@@ -4,16 +4,9 @@ import { RouterLink } from '@angular/router';
 import { SwapService } from '../../services/swap.service';
 import { UsersService } from '../../services/users.service';
 import { AccountService } from '../../services/account.service';
-import { Swap } from '../../models/swap.model';
-import { UserLocation } from '../../models/user-location.model';
+import { Swap, SwapProfileData } from '../../models/swap.models';
+import { UserLocation } from '../../models/user.models';
 
-export interface Profile {
-  title?: string;
-  imgToTeach?: string;
-  profilePhotoUrl: string;
-  location: UserLocation;
-  username: string;
-}
 
 @Component({
   selector: 'app-swap-list',
@@ -38,8 +31,8 @@ export class SwapListComponent implements OnInit {
 
 
   swaps = signal<Swap[]>([]);
-  currentUser = signal<Profile | null>(null);
-  profilesMap = signal<Map<string, Profile>>(new Map());
+  currentUser = signal<SwapProfileData | null>(null);
+  profilesMap = signal<Map<string, SwapProfileData>>(new Map());
   loading = signal(true);
 
   ngOnInit(): void {
@@ -70,7 +63,7 @@ export class SwapListComponent implements OnInit {
   }
 
 
-  getOtherProfile(userId: string): Profile | undefined {
+  getOtherProfile(userId: string): SwapProfileData | undefined {
     return this.profilesMap().get(userId);
   }
 

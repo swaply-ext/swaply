@@ -1,19 +1,12 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SkillCardComponent } from '../skill-card/skill-card.component';
+import { Interest } from '../../models/skills.models';
+import { UserSwap } from '../../models/user.models';
 
-export interface Interest {
-  id?: string;
-  name: string;
-  selected?: boolean;
-  image?: string;
-  level?: number;
-}
 
-export interface User {
-  username: string;
-  skills?: Interest[];
-}
+
+
 
 @Component({
   selector: 'app-swap-interests',
@@ -25,7 +18,7 @@ export interface User {
 export class SwapInterestsComponent {
   @Input() InterestsInput: Interest[] = [];
   @Input() editable = false;
-  @Input() targetUser: User | null = null;
+  @Input() targetUser: UserSwap | null = null;
   @Output() skillSelected = new EventEmitter<{ skill: Interest }>();
 
   open = true;

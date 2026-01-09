@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { NextButtonComponent } from '../../components/next-button/next-button.component';
 import { AccountService } from '../../services/account.service';
 import { Router } from '@angular/router';
-import { AvatarOption } from '../../models/avatar-option.model';
 import { ValidateInputsService } from '../../services/validate-inputs.service';
+import { UserAvatarOption } from '../../models/user.models';
 
 @Component({
   selector: 'app-profile-selector',
@@ -25,7 +25,7 @@ export class AvatarSelectorComponent {
   selectedAvatarId = signal<number | string>(1);
   private readonly imgBaseUrl = 'https://swaplystorage.blob.core.windows.net/default-img/avatar-';
 
-  avatars: AvatarOption[] = [
+  avatars: UserAvatarOption[] = [
     { id: 1, type: 'image', imageUrl: `${this.imgBaseUrl}default.webp` },
     { id: 3, type: 'image', imageUrl: `${this.imgBaseUrl}img1.webp` },
     { id: 4, type: 'image', imageUrl: `${this.imgBaseUrl}img2.webp` },

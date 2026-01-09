@@ -4,8 +4,8 @@ import { AccountService } from '../../services/account.service';
 import { SwapService } from '../../services/swap.service';
 import { UsersService } from '../../services/users.service';
 import { RouterLink } from '@angular/router';
-import { Swap } from '../../models/swap.model';
-import { SwapProfileData } from '../../models/swap-profile-data';
+import { Swap } from '../../models/swap.models';
+import { SwapProfileData } from '../../models/swap.models';
 
 @Component({
   selector: 'app-next-swap',

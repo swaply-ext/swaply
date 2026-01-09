@@ -5,10 +5,9 @@ import { ProfileInfoComponent } from "../../components/profile-info/profile-info
 import { SkillsPanelComponent } from '../../components/skills-panel/skills-panel.component';
 import { InterestsPanelComponent } from '../../components/interests-panel/interests-panel.component';
 import { AccountService } from '../../services/account.service';
-import { ProfileDataDTO } from '../../models/profile-data-dto.model';
-import { PrivateProfileData } from '../../models/private-profile-data.model';
-import { UserSkills } from '../../models/user-skills.model';
 import { ActivatedRoute } from '@angular/router'; //Con este import se accede al resolver
+import { PrivateProfileData, ProfileDataDTO } from '../../models/data.models';
+import { UserSkills } from '../../models/skills.models';
 
 @Component({
   selector: 'app-private-profile',

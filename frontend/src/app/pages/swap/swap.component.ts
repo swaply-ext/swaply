@@ -4,12 +4,11 @@ import { CommonModule } from '@angular/common';
 import { AppNavbarComponent } from '../../components/app-navbar/app-navbar.component';
 import { AccountService } from '../../services/account.service';
 import { SearchService} from '../../services/search.services';
-import { UserSwapDTO } from '../../models/userSwapDTO.model';
-import { SwapDTO } from '../../models/swapDTO.model';
+import { UserSwapDTO, SwapDTO } from '../../models/swap.models';
 import { SwapSkillsComponent } from "../../components/swap-skills/swap-skills.component";
 import { SwapInterestsComponent } from "../../components/swap-interests/swap-interests.component";
-import { ProfileDataDTO } from '../../models/profile-data-dto.model';
 import { RouterLink } from '@angular/router';
+import { ProfileDataDTO } from '../../models/data.models';
 
 @Component({
   selector: 'app-swap',
