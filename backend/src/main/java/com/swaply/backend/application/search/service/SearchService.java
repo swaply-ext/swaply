@@ -1,7 +1,7 @@
 package com.swaply.backend.application.search.service;
 
-import com.swaply.backend.application.search.dto.SkillItemDTO;
 import com.swaply.backend.application.search.dto.UserSwapDTO;
+import com.swaply.backend.application.search.SearchMapper;
 import com.swaply.backend.shared.UserCRUD.Model.User;
 import com.swaply.backend.shared.UserCRUD.Model.UserSkills;
 import com.swaply.backend.shared.UserCRUD.UserRepository;
@@ -11,62 +11,38 @@ import org.springframework.stereotype.Service;
 import java.text.Normalizer;
 import java.util.*;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Service
 public class SearchService {
 
     private final UserRepository userRepository;
     private final LocationService locationService;
-
-    public SearchService(UserRepository userRepository, LocationService locationService) {
-        this.userRepository = userRepository;
-        this.locationService = locationService;
-    }
+    private final SearchMapper searchMapper;
 
     private static final Map<String, List<String>> SYNONYMS = new HashMap<>();
 
     static {
-        addSynonyms("football", "futbol", "fútbol", "soccer");
-        addSynonyms("basketball", "basquet", "básquet", "baloncesto", "basket");
-        addSynonyms("padel", "pádel", "paddle");
-        addSynonyms("volleyball", "voley", "vóley", "voleibol");
-        addSynonyms("boxing", "boxeo", "box");
-
-        addSynonyms("guitar", "guitarra");
-        addSynonyms("piano", "teclado");
-        addSynonyms("violin", "violín");
-        addSynonyms("drums", "bateria", "batería", "percusion");
-        addSynonyms("saxophone", "saxofon", "saxofón", "saxo");
-
-        addSynonyms("drawing", "dibujo", "pintura", "arte");
-        addSynonyms("cooking", "cocina", "gastronomia", "culinaria");
-        addSynonyms("dance", "baile", "danza", "dancing");
-        addSynonyms("crafts", "manualidades", "artesania", "bricolaje");
-        addSynonyms("digital", "ocio digital", "informatica", "gaming", "ordenador");
+        registerSynonyms("football", "futbol", "fútbol", "soccer");
+        registerSynonyms("basketball", "basquet", "básquet", "baloncesto", "basket");
+        registerSynonyms("padel", "pádel", "paddle");
+        registerSynonyms("volleyball", "voley", "vóley", "voleibol");
+        registerSynonyms("boxing", "boxeo", "box");
+        registerSynonyms("guitar", "guitarra");
+        registerSynonyms("piano", "teclado");
+        registerSynonyms("violin", "violín");
+        registerSynonyms("drums", "bateria", "batería", "percusion");
+        registerSynonyms("saxophone", "saxofon", "saxofón", "saxo");
+        registerSynonyms("drawing", "dibujo", "pintura", "arte");
+        registerSynonyms("cooking", "cocina", "gastronomia", "culinaria");
+        registerSynonyms("dance", "baile", "danza", "dancing");
+        registerSynonyms("crafts", "manualidades", "artesania", "bricolaje");
+        registerSynonyms("digital", "ocio digital", "informatica", "gaming", "ordenador");
     }
 
-    private static void addSynonyms(String... terms) {
-        List<String> list = Arrays.asList(terms);
-        for (String term : terms) {
-            SYNONYMS.put(normalizeKey(term), list);
-        }
-    }
-
-    private static String normalizeKey(String input) {
-        if (input == null) return "";
-        String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
-        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-        return pattern.matcher(normalized).replaceAll("").trim().toLowerCase();
-    }
-
-    private List<String> expandSearchTerm(String term) {
-        String key = normalizeKey(term);
-        List<String> variations = SYNONYMS.getOrDefault(key, new ArrayList<>());
-        if (variations.isEmpty()) {
-            return Collections.singletonList(key);
-        }
-        return variations;
+    public SearchService(UserRepository userRepository, LocationService locationService, SearchMapper searchMapper) {
+        this.userRepository = userRepository;
+        this.locationService = locationService;
+        this.searchMapper = searchMapper;
     }
 
     public List<UserSwapDTO> searchUsersWithMatch(String query, String myUserId) {
@@ -74,218 +50,180 @@ public class SearchService {
             return new ArrayList<>();
         }
 
-        Set<String> expandedSearchIds = new HashSet<>();
-        String[] rawTerms = query.split(",");
-        
-        for (String term : rawTerms) {
-            List<String> expansions = expandSearchTerm(term);
-            expansions.forEach(e -> expandedSearchIds.add(normalizeKey(e)));
-        }
+        Set<String> searchIds = expandQueryTerms(query);
 
-        List<User> candidates = userRepository.findUsersByMultipleSkillIds(new ArrayList<>(expandedSearchIds));
-        User me = userRepository.findUserById(myUserId).orElse(null);
-        
-        Set<String> myOfferingTokens = new HashSet<>();
-        Map<String, Integer> myInterestLevels = new HashMap<>();
+        List<User> candidates = userRepository.findUsersByMultipleSkillIds(new ArrayList<>(searchIds));
+        User currentUser = userRepository.findUserById(myUserId).orElse(null);
 
-        if (me != null) {
-            if (me.getSkills() != null) {
-                for (UserSkills s : me.getSkills()) {
-                    if (s.getId() != null) myOfferingTokens.add(normalizeKey(s.getId()));
-                    if (s.getName() != null) myOfferingTokens.add(normalizeKey(s.getName()));
-                }
-            }
-            if (me.getInterests() != null) {
-                for (UserSkills interest : me.getInterests()) {
-                    if (interest.getId() != null) myInterestLevels.put(normalizeKey(interest.getId()), interest.getLevel());
-                    if (interest.getName() != null) myInterestLevels.put(normalizeKey(interest.getName()), interest.getLevel());
-                }
-            }
-        }
-        
-        String myLocation = (me != null && me.getLocation() != null) 
-                ? normalizeKey(me.getLocation().getDisplayName()) : "";
+        Set<String> myOfferingTokens = extractMyOfferingTokens(currentUser);
+        Map<String, Integer> myInterestLevels = extractMyInterestLevels(currentUser);
 
-        List<UserSwapDTO> results = new ArrayList<>();
+        List<UserSwapDTO> searchResults = new ArrayList<>();
 
         for (User candidate : candidates) {
-            if (candidate.getId().equals(myUserId)) continue;
-            if (candidate.getSkills() == null) continue;
+            if (shouldSkipCandidate(candidate, myUserId)) continue;
 
-            boolean isMatch = false;
-            if (candidate.getInterests() != null && !myOfferingTokens.isEmpty()) {
-                isMatch = candidate.getInterests().stream().anyMatch(interest -> {
-                    String iId = normalizeKey(interest.getId());
-                    String iName = normalizeKey(interest.getName());
-                    for (String myToken : myOfferingTokens) {
-                        if (myToken.contains(iId) || iId.contains(myToken)) return true;
-                        if (!iName.isEmpty() && (myToken.contains(iName) || iName.contains(myToken))) return true;
-                        List<String> myTokenSynonyms = expandSearchTerm(myToken);
-                        if (myTokenSynonyms.contains(iId)) return true;
-                    }
-                    return false;
-                });
-            }
-            
-            String distanceStr = null;
-            try {
-                distanceStr = locationService.calculateDistance(myUserId, candidate.getUsername());
-            } catch (Exception e) {
-            }
-            
-            final boolean finalIsMatch = isMatch;
-            final String finalDistanceStr = distanceStr;
+            boolean isSwapMatch = calculateSwapMatch(candidate, myOfferingTokens);
+            String distanceString = calculateDistanceSafe(myUserId, candidate.getUsername());
 
             candidate.getSkills().stream()
-                .filter(skill -> {
-                    String sId = normalizeKey(skill.getId());
-                    String sName = normalizeKey(skill.getName());
-                    
-                    boolean idMatch = expandedSearchIds.stream().anyMatch(ex -> sId.equals(ex) || sId.contains(ex));
-                    boolean nameMatch = expandedSearchIds.stream().anyMatch(ex -> sName.contains(ex));
-                    
-                    if (!idMatch && !nameMatch) return false;
-
-                    int requiredLevel = myInterestLevels.getOrDefault(sId, 0);
-                    if (requiredLevel == 0 && !sName.isEmpty()) requiredLevel = myInterestLevels.getOrDefault(sName, 0);
-                    int teacherLevel = skill.getLevel() != null ? skill.getLevel() : 0;
-
-                    return teacherLevel >= requiredLevel;
-                })
+                .filter(skill -> isSkillRelevant(skill, searchIds, myInterestLevels))
                 .forEach(skill -> {
-                    results.add(mapToUserSwapDTO(candidate, skill, finalIsMatch, finalDistanceStr));
+                    searchResults.add(searchMapper.toDTO(candidate, skill, isSwapMatch, distanceString));
                 });
         }
 
-        results.sort((o1, o2) -> {
-            if (o1.isSwapMatch() && !o2.isSwapMatch()) return -1;
-            if (!o1.isSwapMatch() && o2.isSwapMatch()) return 1;
-            
-            double d1 = parseDistance(o1.getDistance());
-            double d2 = parseDistance(o2.getDistance());
-            
-            int distCompare = Double.compare(d1, d2);
-            if (distCompare != 0) return distCompare;
+        sortResults(searchResults);
 
-            double r1 = o1.getRating() != null ? o1.getRating() : 0.0;
-            double r2 = o2.getRating() != null ? o2.getRating() : 0.0;
-            return Double.compare(r2, r1);
-        });
-
-        return results;
+        return searchResults;
     }
 
-    private double parseDistance(String distStr) {
-        if (distStr == null || distStr.trim().isEmpty()) return Double.MAX_VALUE;
-        try {
+    public UserSwapDTO getUserByUsername(String username) {
+        return userRepository.findUserByUsername(username)
+                .map(searchMapper::toSingleProfileDTO)
+                .orElse(null);
+    }
 
-            String clean = distStr.replaceAll("[^0-9.,]", "").replace(",", ".");
-            if (clean.isEmpty()) return Double.MAX_VALUE;
-            return Double.parseDouble(clean);
+
+    private boolean shouldSkipCandidate(User candidate, String myUserId) {
+        return candidate.getId().equals(myUserId) || candidate.getSkills() == null;
+    }
+
+    private Set<String> expandQueryTerms(String query) {
+        Set<String> expandedTerms = new HashSet<>();
+        for (String term : query.split(",")) {
+            expandSearchTerm(term).forEach(termVariation -> expandedTerms.add(normalizeKey(termVariation)));
+        }
+        return expandedTerms;
+    }
+
+    private Set<String> extractMyOfferingTokens(User user) {
+        Set<String> tokens = new HashSet<>();
+        if (user != null && user.getSkills() != null) {
+            for (UserSkills skill : user.getSkills()) {
+                if (skill.getId() != null) tokens.add(normalizeKey(skill.getId()));
+                if (skill.getName() != null) tokens.add(normalizeKey(skill.getName()));
+            }
+        }
+        return tokens;
+    }
+
+    private Map<String, Integer> extractMyInterestLevels(User user) {
+        Map<String, Integer> levels = new HashMap<>();
+        if (user != null && user.getInterests() != null) {
+            for (UserSkills interest : user.getInterests()) {
+                if (interest.getId() != null) levels.put(normalizeKey(interest.getId()), interest.getLevel());
+                if (interest.getName() != null) levels.put(normalizeKey(interest.getName()), interest.getLevel());
+            }
+        }
+        return levels;
+    }
+
+
+    private boolean calculateSwapMatch(User candidate, Set<String> myOfferingTokens) {
+        if (candidate.getInterests() == null || myOfferingTokens.isEmpty()) {
+            return false;
+        }
+
+        return candidate.getInterests().stream().anyMatch(interest -> {
+            String candidateInterestId = normalizeKey(interest.getId());
+            String candidateInterestName = normalizeKey(interest.getName());
+
+            for (String myToken : myOfferingTokens) {
+                if (containsMatch(myToken, candidateInterestId) || 
+                   (!candidateInterestName.isEmpty() && containsMatch(myToken, candidateInterestName))) {
+                    return true;
+                }
+                
+                List<String> myTokenSynonyms = expandSearchTerm(myToken);
+                if (myTokenSynonyms.contains(candidateInterestId)) return true;
+            }
+            return false;
+        });
+    }
+
+    private boolean containsMatch(String valueA, String valueB) {
+        return valueA.contains(valueB) || valueB.contains(valueA);
+    }
+
+    private boolean isSkillRelevant(UserSkills candidateSkill, Set<String> searchIds, Map<String, Integer> myInterestLevels) {
+        String skillId = normalizeKey(candidateSkill.getId());
+        String skillName = normalizeKey(candidateSkill.getName());
+
+        boolean idMatch = searchIds.stream()
+                .anyMatch(searchTerm -> skillId.equals(searchTerm) || skillId.contains(searchTerm));
+        
+        boolean nameMatch = searchIds.stream()
+                .anyMatch(searchTerm -> skillName.contains(searchTerm));
+
+        if (!idMatch && !nameMatch) return false;
+
+        int requiredLevel = myInterestLevels.getOrDefault(skillId, 0);
+        if (requiredLevel == 0 && !skillName.isEmpty()) {
+            requiredLevel = myInterestLevels.getOrDefault(skillName, 0);
+        }
+        int teacherLevel = candidateSkill.getLevel() != null ? candidateSkill.getLevel() : 0;
+
+        return teacherLevel >= requiredLevel;
+    }
+
+    private String calculateDistanceSafe(String myUserId, String targetUsername) {
+        try {
+            return locationService.calculateDistance(myUserId, targetUsername);
+        } catch (Exception e) {
+            return null; 
+        }
+    }
+
+    private void sortResults(List<UserSwapDTO> results) {
+        results.sort((result1, result2) -> {
+            if (result1.isSwapMatch() && !result2.isSwapMatch()) return -1;
+            if (!result1.isSwapMatch() && result2.isSwapMatch()) return 1;
+
+            double distanceValue1 = parseDistance(result1.getDistance());
+            double distanceValue2 = parseDistance(result2.getDistance());
+            
+            int distanceComparison = Double.compare(distanceValue1, distanceValue2);
+            if (distanceComparison != 0) return distanceComparison;
+
+
+            double rating1 = result1.getRating() != null ? result1.getRating() : 0.0;
+            double rating2 = result2.getRating() != null ? result2.getRating() : 0.0;
+            
+            return Double.compare(rating2, rating1);
+        });
+    }
+
+    private double parseDistance(String distanceString) {
+        if (distanceString == null || distanceString.trim().isEmpty()) return Double.MAX_VALUE;
+        try {
+            String cleanDistance = distanceString.replaceAll("[^0-9.,]", "").replace(",", ".");
+            if (cleanDistance.isEmpty()) return Double.MAX_VALUE;
+            return Double.parseDouble(cleanDistance);
         } catch (NumberFormatException e) {
             return Double.MAX_VALUE;
         }
     }
 
-    private UserSwapDTO mapToUserSwapDTO(User user, UserSkills skill, boolean isMatch, String distance) {
-        UserSwapDTO dto = new UserSwapDTO();
-        
-        dto.setUserId(user.getId());
-        dto.setName(user.getName());
-        dto.setUsername(user.getUsername());
-        dto.setProfilePhotoUrl(user.getProfilePhotoUrl());
-        
-        if (user.getLocation() != null) {
-            dto.setLocation(user.getLocation().getDisplayName()); 
+
+
+    private static void registerSynonyms(String... terms) {
+        List<String> synonymList = Arrays.asList(terms);
+        for (String term : terms) {
+            SYNONYMS.put(normalizeKey(term), synonymList);
         }
-        
-        dto.setRating(user.getRating() != null ? user.getRating() : 5.0); 
-        dto.setDistance(distance); 
-        dto.setSwapMatch(isMatch);
-
-        String rawName = (skill.getName() != null && !skill.getName().isEmpty()) ? skill.getName() : skill.getId();
-        String displayName = capitalize(rawName);
-
-        dto.setSkillName("Clase de " + displayName); 
-        dto.setSkillIcon(skill.getIcon() != null ? skill.getIcon() : "🎓");
-        dto.setSkillCategory(skill.getCategory());
-        dto.setSkillLevel(skill.getLevel());
-
-        if (user.getSkills() != null) {
-            List<SkillItemDTO> allSkills = user.getSkills().stream()
-                .map(s -> new SkillItemDTO(
-                    s.getName() != null ? s.getName() : s.getId(),
-                    s.getCategory(),
-                    s.getLevel()
-                )).collect(Collectors.toList());
-            dto.setUserSkills(allSkills);
-        }
-        
-        if (user.getInterests() != null) {
-             List<SkillItemDTO> allInterests = user.getInterests().stream()
-                .map(i -> new SkillItemDTO(
-                    i.getName() != null ? i.getName() : i.getId(),
-                    i.getCategory(),
-                    i.getLevel()
-                )).collect(Collectors.toList());
-            dto.setInterests(allInterests);
-        }
-
-        return dto;
     }
 
-    private String capitalize(String str) {
-        if (str == null || str.isEmpty()) return str;
-        return str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
+    private List<String> expandSearchTerm(String term) {
+        String normalizedKey = normalizeKey(term);
+        List<String> variations = SYNONYMS.getOrDefault(normalizedKey, new ArrayList<>());
+        return variations.isEmpty() ? Collections.singletonList(normalizedKey) : variations;
     }
 
-    public UserSwapDTO getUserByUsername(String username) {
-        Optional<User> userOpt = userRepository.findUserByUsername(username);
-
-        if (userOpt.isEmpty()) {
-            return null;
-        }
-
-        User user = userOpt.get();
-
-        UserSwapDTO dto = new UserSwapDTO();
-        dto.setUserId(user.getId());
-        dto.setName(user.getName());
-        dto.setUsername(user.getUsername());
-        dto.setProfilePhotoUrl(user.getProfilePhotoUrl());
-        
-        if (user.getLocation() != null) dto.setLocation(user.getLocation().getDisplayName());
-
-        if (user.getSkills() != null && !user.getSkills().isEmpty()) {
-            UserSkills s = user.getSkills().get(0);
-            dto.setSkillName(s.getName() != null ? s.getName() : s.getId());
-            dto.setSkillIcon(s.getIcon() != null ? s.getIcon() : "🎓");
-            dto.setSkillLevel(s.getLevel());
-            dto.setSkillCategory(s.getCategory());
-
-            List<SkillItemDTO> allSkills = user.getSkills().stream()
-                    .map(skill -> new SkillItemDTO(
-                            skill.getName() != null ? skill.getName() : skill.getId(),
-                            skill.getCategory(),
-                            skill.getLevel()
-                    )).collect(Collectors.toList());
-            dto.setUserSkills(allSkills);
-        }
-        
-        if (user.getInterests() != null && !user.getInterests().isEmpty()) {
-            List<SkillItemDTO> allInterests = user.getInterests().stream()
-                    .map(interest -> new SkillItemDTO(
-                            interest.getName() != null ? interest.getName() : interest.getId(),
-                            interest.getCategory(),
-                            interest.getLevel()
-                    )).collect(Collectors.toList());
-            dto.setInterests(allInterests);
-        }
-
-        dto.setRating(4.8);
-        dto.setDistance("Cerca de ti");
-        dto.setSwapMatch(false);
-
-        return dto;
+    private static String normalizeKey(String input) {
+        if (input == null) return "";
+        String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
+        Pattern diacriticsPattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        return diacriticsPattern.matcher(normalized).replaceAll("").trim().toLowerCase();
     }
 }
