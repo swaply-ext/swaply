@@ -8,6 +8,7 @@ import { AccountService } from '../../services/account.service';
 import { ActivatedRoute } from '@angular/router'; //Con este import se accede al resolver
 import { PrivateProfileData, ProfileDataDTO } from '../../models/data.models';
 import { UserSkills } from '../../models/skills.models';
+import { RedirectionService } from '../../services/redirection.service';
 
 @Component({
   selector: 'app-private-profile',
@@ -28,12 +29,17 @@ export class PrivateProfileComponent implements OnInit {
   public skills: Array<UserSkills> = [];
   public profileViewData!: PrivateProfileData;
 
-  constructor(private accountService: AccountService, private resolver: ActivatedRoute) { } //declaramos el resolver
+  constructor(
+    private accountService: AccountService, 
+    private resolver: ActivatedRoute,
+    private redirectionService: RedirectionService
+  ) { } //declaramos el resolver
 
   ngOnInit(): void {
     //En lugar de llamar al servicio, llamamos al resolver
     const user = this.resolver.snapshot.data['profileData'];
     this.splitAndSendUser(user);
+    this.redirectionService.checkProfile().subscribe();
   }
 
   splitAndSendUser(user: ProfileDataDTO): void {
