@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { SKIP_LOADING } from '../interceptors/loading.interceptor';
 import { SwapDTO } from '../models/swapDTO.model';
 import { UserSwapDTO } from '../models/userSwapDTO.model';
@@ -23,8 +24,11 @@ export class SearchService {
 
   getRecommendations(): Observable<UserSwapDTO[]> {
     return this.http.get<UserSwapDTO[]>(`/home/recommendations`, {
-      context: new HttpContext().set(SKIP_LOADING, true)
-    });
+      context: new HttpContext().set(SKIP_LOADING, true),
+    })
+    .pipe(
+      tap(users => users.forEach(user => console.log(user)))
+    );
   }
 
   getUserByUsername(username: string): Observable<UserSwapDTO> {

@@ -2,7 +2,7 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { SkillCardComponent } from '../skill-card/skill-card.component';
-import { UserSkills } from '../../models/user-skills.model';
+import { UserSkills } from '../../models/skills.models';
 
 @Component({
   selector: 'app-interests-panel',

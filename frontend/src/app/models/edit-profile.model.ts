@@ -1,5 +1,5 @@
 import { UserLocation } from './user-location.model';
-import { UserSkills } from './user-skills.model';
+import { UserSkills } from './skills.models';
 
 export interface EditProfileData {
   name: string;

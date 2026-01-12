@@ -1,4 +1,4 @@
-import { SkillDisplay } from "./skills.models";
+import { SkillDisplay, UserSkills } from "./skills.models";
 import { UserLocation } from "./user-location.model";
 
 export interface UserSwapDTO {
@@ -15,6 +15,6 @@ export interface UserSwapDTO {
   distance: string;
 
   // lista opcional de skills que viene del back
-  userSkills?: SkillDisplay[];
-  interests?: SkillDisplay[];
+  userSkills?: UserSkills[];
+  interests?: UserSkills[];
 }

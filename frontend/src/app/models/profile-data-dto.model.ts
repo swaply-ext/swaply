@@ -1,4 +1,4 @@
-import { UserSkills } from './user-skills.model';
+import { UserSkills } from './skills.models';
 import { UserLocation } from './user-location.model';
 export interface ProfileDataDTO {
   name: string;

@@ -1,9 +1,7 @@
 <div class="page-container">
-
   <app-app-navbar></app-app-navbar>
 
   <main class="main-content">
-
     <section class="interchange-section">
       <h2 class="section-title">Próximo Intercambio</h2>
       <app-next-swap></app-next-swap>
@@ -13,41 +11,62 @@
       <div class="nearby-header">
         <h2 class="section-title">Intercambios Cerca de Ti</h2>
         <div class="nearby-actions">
-          <app-skill-search style="width: auto; display: block;"
-            (skillSelected)="performMatchSearch($event)"></app-skill-search>
-          <app-filter-skills (filterChange)="performMatchSearch($event)"></app-filter-skills>
+          <app-skill-search
+            style="width: auto; display: block"
+            (skillSelected)="performMatchSearch($event)"
+          ></app-skill-search>
+          <app-filter-skills
+            (filterChange)="performMatchSearch($event)"
+          ></app-filter-skills>
         </div>
       </div>
 
-      <div *ngIf="isLoadingMatches()" class = loading-matches-indicator>
-        <div class="spinner-mini"></div> Cargando
-        resultados...
+      <div *ngIf="isLoadingMatches()" class="loading-matches-indicator">
+        <div class="spinner-mini"></div>
+        Cargando resultados...
       </div>
 
       <div class="card-grid" *ngIf="!isLoadingMatches()">
-        <div class="skill-card" *ngFor="let card of cards()" (click)="goToSwap(card)">
-
-          <img *ngIf="card.skillImage" [src]="card.skillImage" [alt]="card.skillTitle" class="card-image"
-            (error)="card.skillImage = undefined">
+        <div
+          class="skill-card"
+          *ngFor="let card of cards()"
+          (click)="goToSwap(card)"
+        >
+          <img
+            *ngIf="card.skillImage"
+            [src]="card.skillImage"
+            [alt]="card.skillTitle"
+            class="card-image"
+            (error)="card.skillImage = undefined"
+          />
           <div *ngIf="!card.skillImage" class="card-image-placeholder">
-            {{ card.skillIcon || '🎓' }}
+            {{ card.skillIcon || "🎓" }}
           </div>
 
-          <div class="card-content clickable-user" [routerLink]="['/user', card.username]">
-
-
+          <div
+            class="card-content clickable-user"
+            [routerLink]="['/user', card.username]"
+          >
             <div class="card-user-info">
-              <img [src]="card.userAvatar" [alt]="card.username" class="user-avatar"
-                [routerLink]="['/user', card.username]" (click)="$event.stopPropagation()"
-                style="cursor: pointer;">
+              <img
+                [src]="card.userAvatar"
+                [alt]="card.username"
+                class="user-avatar"
+                [routerLink]="['/user', card.username]"
+                (click)="$event.stopPropagation()"
+                style="cursor: pointer"
+              />
 
-              <span [routerLink]="['/user', card.username]" (click)="$event.stopPropagation()"
-                style="cursor: pointer;">
+              <span
+                [routerLink]="['/user', card.username]"
+                (click)="$event.stopPropagation()"
+                style="cursor: pointer"
+              >
                 {{ card.username }}
               </span>
             </div>
 
-            <h3>{{ card.skillTitle }}</h3>
+            <h3>Clase de {{ card.skillTitle | titlecase }}</h3>
 
             <ng-container *ngIf="hasSearched()">
               <div *ngIf="card.isMatch" class="match-status is-match">
@@ -62,22 +81,40 @@
             </ng-container>
 
             <div class="card-footer">
-              <span class="location" [class.nearby]="card.distance === 'Cerca de ti'">
-                <span class="material-symbols-outlined card-icon">location_on</span> {{ card.distance }}km
+              <span
+                class="location"
+                [class.nearby]="card.distance === 'Cerca de ti'"
+              >
+                <span class="material-symbols-outlined card-icon"
+                  >location_on</span
+                >
+                {{ card.distance }}km
               </span>
-              <span class="rating"><span class="material-symbols-outlined card-icon">star</span> {{ card.rating
-                }}</span>
+              <span class="rating"
+                ><span class="material-symbols-outlined card-icon">star</span>
+                {{ card.rating }}</span
+              >
             </div>
           </div>
         </div>
       </div>
 
-      <div class="see-more-button" *ngIf="!isLoadingMatches() && cards().length === 0 && hasSearched()">
-        <p class="msg-no-results">No se encontraron usuarios con esa habilidad.</p>
+      <div
+        class="see-more-button"
+        *ngIf="!isLoadingMatches() && cards().length === 0 && hasSearched()"
+      >
+        <p class="msg-no-results">
+          No se encontraron usuarios con esa habilidad.
+        </p>
       </div>
 
-      <div class="see-more-button" *ngIf="!isLoadingMatches() && !hasSearched() && cards().length === 0">
-        <p class="msg-instruction">Añade intereses a tu perfil para ver recomendaciones.</p>
+      <div
+        class="see-more-button"
+        *ngIf="!isLoadingMatches() && !hasSearched() && cards().length === 0"
+      >
+        <p class="msg-instruction">
+          Añade intereses a tu perfil para ver recomendaciones.
+        </p>
       </div>
       <div class="see-more-button" *ngIf="canLoadMore() && !isLoadingMatches()">
         <button class="btn btn-primary" (click)="loadMore()">Ver Más</button>

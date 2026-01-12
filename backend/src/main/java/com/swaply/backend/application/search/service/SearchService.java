@@ -1,28 +1,32 @@
 package com.swaply.backend.application.search.service;
 
-import com.swaply.backend.application.search.dto.SkillItemDTO;
 import com.swaply.backend.application.search.dto.UserSwapDTO;
 import com.swaply.backend.shared.UserCRUD.Model.Skills;
 import com.swaply.backend.shared.UserCRUD.Model.User;
 import com.swaply.backend.shared.UserCRUD.Model.UserSkills;
 import com.swaply.backend.shared.UserCRUD.UserRepository;
+
 import org.springframework.stereotype.Service;
+
+import com.swaply.backend.application.skills.SkillDisplayDTO;
+import com.swaply.backend.application.skills.SkillsMapper;
 import com.swaply.backend.application.skills.service.SkillsService;
 
 import java.text.Normalizer;
 import java.util.*;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Service
 public class SearchService {
 
     private final UserRepository userRepository;
     private final SkillsService skillsService;
+    private final SkillsMapper skillsMapper;
 
-    public SearchService(UserRepository userRepository, SkillsService skillsService) {
+    public SearchService(UserRepository userRepository, SkillsService skillsService, SkillsMapper skillsMapper) {
         this.userRepository = userRepository;
         this.skillsService = skillsService;
+        this.skillsMapper = skillsMapper;
     }
 
     private static final Map<String, List<String>> SYNONYMS = new HashMap<>();
@@ -171,20 +175,10 @@ public class SearchService {
         dto.setRating(user.getRating() != null ? user.getRating() : 5.0);
         dto.setDistance(distanceLabel);
         dto.setSwapMatch(isMatch);
-
-        String rawName = (skill.getName() != null && !skill.getName().isEmpty()) ? skill.getName() : skill.getId();
-        dto.setSkillName("Clase de " + capitalize(rawName));
-        dto.setSkillIcon(skill.getIcon() != null ? skill.getIcon() : "🎓");
-        dto.setSkillCategory(skill.getCategory());
-        dto.setSkillLevel(userSkill.getLevel());
-
+        
+        SkillDisplayDTO skillDisplay = skillsMapper.toDisplayDTO(skill, userSkill);
+        dto.setSkill(skillDisplay);
         return dto;
-    }
-
-    private String capitalize(String str) {
-        if (str == null || str.isEmpty())
-            return str;
-        return str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
     }
 
     public UserSwapDTO getUserByUsername(String username) {
@@ -207,38 +201,14 @@ public class SearchService {
             UserSkills userSkill = user.getSkills().get(0);
             Skills skill = skillsService.getSkill(userSkill.getId());
 
-            dto.setSkillName(skill.getName() != null ? skill.getName() : skill.getId());
-            dto.setSkillIcon(skill.getIcon() != null ? skill.getIcon() : "🎓");
-            dto.setSkillLevel(userSkill.getLevel());
-            dto.setSkillCategory(skill.getCategory());
+            dto.setSkill(skillsMapper.toDisplayDTO(skill, userSkill));
 
-            // CORREGIDO: Usamos SkillItemDTO en lugar de UserSwapDTO.SkillItem
-            List<SkillItemDTO> allSkills = user.getSkills().stream()
-                    .map(userSkillMap -> {
-                        Skills skillMap = skillsService.getSkill(userSkill.getId());
-                        return new SkillItemDTO(
-                                skillMap.getName() != null ? skillMap.getName() : userSkillMap.getId(),
-                                skillMap.getCategory(),
-                                userSkillMap.getLevel());
-                    })
-                    .collect(Collectors.toList());
-
-            dto.setUserSkills(allSkills);
+            dto.setUserSkills(user.getSkills());
         }
 
-        // CORREGIDO: Mapeo de Interests usando SkillItemDTO
         if (user.getInterests() != null && !user.getInterests().isEmpty()) {
-            List<SkillItemDTO> interestsDto = user.getInterests().stream()
-                    .map(userInterest -> {
-                        Skills interest = skillsService.getSkill(userInterest.getId());
-                        return new SkillItemDTO(
-                                interest.getName() != null ? interest.getName() : userInterest.getId(),
-                                interest.getCategory(),
-                                userInterest.getLevel());
-                    })
-                    .collect(Collectors.toList());
 
-            dto.setInterests(interestsDto);
+            dto.setInterests(user.getInterests());
         }
 
         dto.setRating(4.8);

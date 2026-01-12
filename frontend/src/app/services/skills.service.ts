@@ -3,8 +3,7 @@ import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import {map} from 'rxjs/operators';
 import { SKIP_LOADING } from '../interceptors/loading.interceptor';
-import { UserSkills } from '../models/user-skills.model';
-import { SkillDisplay, SkillsModel } from '../models/skills.models';
+import { SkillDisplay, SkillsModel, UserSkills } from '../models/skills.models';
 
 
 

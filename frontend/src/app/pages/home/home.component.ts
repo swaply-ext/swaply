@@ -56,9 +56,7 @@ export class HomeComponent implements OnInit {
     this.hasSearched.set(false);
 
     this.searchService.getRecommendations().subscribe({
-      next: (matches) => {
-        console.log("--------------");
-        console.log(matches);
+      next: (matches: UserSwapDTO[]) => {
         this.processResults(matches);
       },
       error: (err) => {

@@ -54,21 +54,21 @@ export class SwapComponent implements OnInit {
               const mainSkill = {
                 id: target.skill.id,
                 name: target.skill.name,
-                category: target.skill.category || '',
+                category: target.skill.category,
                 level: target.skill.level,
-                icon: target.skill.icon || ''
+                icon: target.skill.icon
               };
 
               const secondarySkills = (target.userSkills || [])
-                .filter(s => s.name !== mainSkill.name)
+                .filter(s => s.id !== mainSkill.id)
                 .map(s => ({
-                  id: s.name, name: s.name, category: s.category || '', level: s.level,
-                  icon: (s as any).icon || ''
+                  id: s.id,
+                  level: s.level,
                 }));
 
               let allTargetSkills = [mainSkill, ...secondarySkills];
 
-              let filteredTargetSkills = this.filterMatch(allTargetSkills, me.interests || []);
+              let filteredTargetSkills = this.filterMatch(allTargetSkills as any[], (me.interests || []) as any[]);
 
               if (paramSkillName && filteredTargetSkills.length > 0) {
                 const searchName = paramSkillName.toLowerCase();
@@ -96,13 +96,15 @@ export class SwapComponent implements OnInit {
                 this.selectedTargetSkill.set({
                   skillName: target.name || target.username,
                   skillIcon: undefined,
-                  skillImage: target.profilePhotoUrl || 'assets/default-avatar.png'                });
+                  skillImage: target.profilePhotoUrl || 'assets/default-avatar.png'
+                });
               }
 
               const targetInterests = target.interests || [];
               const myRawSkills = me.skills || [];
 
-              const filteredMySkills = this.filterMatch(myRawSkills, targetInterests);
+              const filteredMySkills = this.filterMatch(myRawSkills as any[], (targetInterests || []) as any[]);
+
 
               const visualMySkills = this.processVisuals(filteredMySkills);
               this.mySkillsDisplay.set(visualMySkills);

@@ -7,7 +7,7 @@ import { InterestsPanelComponent } from '../../components/interests-panel/intere
 import { AccountService } from '../../services/account.service';
 import { ProfileDataDTO } from '../../models/profile-data-dto.model';
 import { PrivateProfileData } from '../../models/private-profile-data.model';
-import { UserSkills } from '../../models/user-skills.model';
+import { UserSkills } from '../../models/skills.models';
 import { ActivatedRoute } from '@angular/router'; //Con este import se accede al resolver
 
 @Component({

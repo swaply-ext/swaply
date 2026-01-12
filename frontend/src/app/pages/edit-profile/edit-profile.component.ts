@@ -10,7 +10,7 @@ import { SkillsPanelComponent } from '../../components/skills-panel/skills-panel
 import { InterestsPanelComponent } from '../../components/interests-panel/interests-panel.component';
 import { LocationSearchComponent } from '../../components/location-search/location-search.component';
 import { ValidateInputsService } from '../../services/validate-inputs.service';
-import { UserSkills } from '../../models/user-skills.model';
+import { UserSkills } from '../../models/skills.models';
 import { UserLocation } from '../../models/user-location.model';
 import { EditProfileData } from '../../models/edit-profile.model';
 
@@ -180,7 +180,7 @@ export class EditProfileComponent implements OnInit {
       email: this.email.toLowerCase(),
       profilePhotoUrl: this.profilePhotoUrl,
       interests: this.interests,
-      skills: this.skills      
+      skills: this.skills
     };
     console.log(updatedUser)
 

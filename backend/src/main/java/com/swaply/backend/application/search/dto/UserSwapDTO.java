@@ -1,6 +1,8 @@
 package com.swaply.backend.application.search.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.swaply.backend.application.skills.SkillDisplayDTO;
+import com.swaply.backend.shared.UserCRUD.Model.UserSkills;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,11 +20,7 @@ public class UserSwapDTO {
     private String location;
 
     // Info de la Skill principal (Match)
-    private String SkillId;
-    private String skillName;     
-    private String skillIcon;     
-    private Integer skillLevel;   
-    private String skillCategory;
+    private SkillDisplayDTO skill;
 
     // Info del Match
     @JsonProperty("isSwapMatch")
@@ -32,6 +30,6 @@ public class UserSwapDTO {
     private String distance;
 
     // Lista de todas las skills
-    private List<SkillItemDTO> userSkills;
-    private List<SkillItemDTO> interests;
+    private List<UserSkills> userSkills;
+    private List<UserSkills> interests;
 }

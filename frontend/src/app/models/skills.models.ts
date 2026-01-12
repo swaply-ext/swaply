@@ -1,4 +1,3 @@
-
 export interface SkillsModel {
   id: string;
   name: string;
