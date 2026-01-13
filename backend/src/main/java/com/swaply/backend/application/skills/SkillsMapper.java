@@ -1,5 +1,6 @@
 package com.swaply.backend.application.skills;
 
+import com.swaply.backend.application.skills.dto.SkillDisplayDTO;
 import com.swaply.backend.shared.UserCRUD.Model.Skills;
 import com.swaply.backend.shared.UserCRUD.Model.UserSkills;
 import org.mapstruct.*;

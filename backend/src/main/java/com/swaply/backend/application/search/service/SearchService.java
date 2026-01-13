@@ -8,8 +8,8 @@ import com.swaply.backend.shared.UserCRUD.UserRepository;
 
 import org.springframework.stereotype.Service;
 
-import com.swaply.backend.application.skills.SkillDisplayDTO;
 import com.swaply.backend.application.skills.SkillsMapper;
+import com.swaply.backend.application.skills.dto.SkillDisplayDTO;
 import com.swaply.backend.application.skills.service.SkillsService;
 
 import java.text.Normalizer;

@@ -1,7 +1,7 @@
 package com.swaply.backend.application.search.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.swaply.backend.application.skills.SkillDisplayDTO;
+import com.swaply.backend.application.skills.dto.SkillDisplayDTO;
 import com.swaply.backend.shared.UserCRUD.Model.UserSkills;
 
 import lombok.AllArgsConstructor;

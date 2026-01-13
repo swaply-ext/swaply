@@ -1,4 +1,4 @@
-package com.swaply.backend.application.skills;
+package com.swaply.backend.application.skills.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
