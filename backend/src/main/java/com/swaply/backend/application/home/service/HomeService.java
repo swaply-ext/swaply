@@ -6,7 +6,8 @@ import com.swaply.backend.application.skills.SkillsMapper;
 import com.swaply.backend.shared.UserCRUD.Model.Skills;
 import com.swaply.backend.shared.UserCRUD.Model.User;
 import com.swaply.backend.shared.UserCRUD.Model.UserSkills;
-import com.swaply.backend.shared.UserCRUD.UserRepository;
+import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
+import com.swaply.backend.shared.UserCRUD.UserService;
 
 import org.springframework.stereotype.Service;
 import com.swaply.backend.shared.location.LocationService;
@@ -21,25 +22,24 @@ import java.util.stream.Stream;
 @Service
 public class HomeService {
 
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final LocationService locationService;
     private final SkillsService skillsService;
     private final SkillsMapper skillsMapper;
 
-    public HomeService(UserRepository userRepository, LocationService locationService, SkillsService skillsService, SkillsMapper skillsMapper) {
-        this.userRepository = userRepository;
+    public HomeService(UserService userService, LocationService locationService, SkillsService skillsService, SkillsMapper skillsMapper) {
+        this.userService = userService;
         this.locationService = locationService;
         this.skillsService = skillsService;
         this.skillsMapper = skillsMapper;
     }
 
     // TO DO
-    // - UserRepository --> UserService
-            // No se pueden hacer llamadas a otros repository que no sea el tuyo si a otro service
 
     // Accelerar el metodo getRecommendedMatches()
         // La mitdad de los datos que se retornan no son necesarios.
         // Considerar llamar de 6 en 6 al darle a ver mas.
+        // DTO Home recommendation
     
     // Crear un mapper
         // Se puede hacer con mas de un archivo de entrada SkillMapper.java de ejemplo
@@ -48,7 +48,7 @@ public class HomeService {
 
 
     public List<UserSwapDTO> getRecommendedMatches(String currentUserId) {
-        User myUser = userRepository.findUserById(currentUserId).orElse(null);
+        UserDTO myUser = userService.getUserByID(currentUserId);
 
         if (myUser == null || myUser.getInterests() == null || myUser.getInterests().isEmpty()) {
             return List.of();
@@ -66,7 +66,7 @@ public class HomeService {
                 ? myUser.getSkills().stream().map(s -> normalizeString(s.getId())).collect(Collectors.toSet())
                 : Collections.emptySet();
 
-        List<User> candidates = userRepository.findUsersByMultipleSkillIds(myInterestIds);
+        List<UserDTO> candidates = userService.getFilterSkills(myInterestIds);
 
         return candidates.stream()
                 .filter(user -> !user.getId().equals(currentUserId))
@@ -83,7 +83,7 @@ public class HomeService {
                 .collect(Collectors.toList());
     }
 
-    private boolean isReciprocalMatch(User otherUser, Set<String> myOfferingIds) {
+    private boolean isReciprocalMatch(UserDTO otherUser, Set<String> myOfferingIds) {
         if (otherUser.getInterests() == null)
             return false;
         return otherUser.getInterests().stream()
@@ -91,7 +91,7 @@ public class HomeService {
                 .anyMatch(myOfferingIds::contains);
     }
 
-    private Stream<UserSwapDTO> extractMatchingSkills(User otherUser, Map<String, Integer> myInterestLevels,
+    private Stream<UserSwapDTO> extractMatchingSkills(UserDTO otherUser, Map<String, Integer> myInterestLevels,
             String currentUserId) {
         String distance = locationService.calculateDistance(currentUserId, otherUser.getUsername());
 
@@ -115,7 +115,7 @@ public class HomeService {
         return pattern.matcher(normalized).replaceAll("").toLowerCase().trim();
     }
 
-    private UserSwapDTO mapToCard(User user, UserSkills userSkill, boolean isMatch, String distance) {
+    private UserSwapDTO mapToCard(UserDTO user, UserSkills userSkill, boolean isMatch, String distance) {
         Skills skill = skillsService.getSkill(userSkill.getId());
         UserSwapDTO dto = new UserSwapDTO();
         dto.setUserId(user.getId());

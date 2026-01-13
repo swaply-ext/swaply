@@ -76,7 +76,7 @@ public class UserService {
     return pattern.matcher(normalized).replaceAll("").toLowerCase();
 }
 
-        public List<UserDTO> findUsersByUsernameContaining(String usernameFragment) {
+    public List<UserDTO> findUsersByUsernameContaining(String usernameFragment) {
     String normalized = normalizeString(usernameFragment);
     return repository.findUsersByUsernameContaining(normalized)
             .stream()
@@ -134,5 +134,11 @@ public class UserService {
 
     public boolean existsUserByLocation(String location) {
         return repository.existsUserByLocation(location);
+    }
+
+    public List<UserDTO> getFilterSkills(List<String> myInterestIds){
+        return repository.findUsersByMultipleSkillIds(myInterestIds).stream()
+            .map(mapper::entityToDTO)
+            .collect(Collectors.toList());
     }
 }
