@@ -11,7 +11,9 @@
 
     <section class="nearby-section">
       <div class="nearby-header">
-        <h2 class="section-title">Intercambios Cerca de Ti</h2>
+        <h2 class="section-title">
+          @if(hasSearched()) { Resultados de búsqueda } @else { Intercambios Cerca de Ti }
+        </h2>
         <div class="nearby-actions">
           <app-skill-search style="width: auto; display: block;"
             (skillSelected)="performMatchSearch($event)"></app-skill-search>
@@ -19,32 +21,41 @@
         </div>
       </div>
 
-      <div *ngIf="isLoadingMatches()" class = loading-matches-indicator>
-        <div class="spinner-mini"></div> Cargando
-        resultados...
+      <div *ngIf="isLoadingMatches()" class="loading-matches-indicator">
+        <div class="spinner-mini"></div>
+        <span>Cargando resultados...</span>
       </div>
 
       <div class="card-grid" *ngIf="!isLoadingMatches()">
         <div class="skill-card" *ngFor="let card of cards()" (click)="goToSwap(card)">
 
-          <img *ngIf="card.skillImage" [src]="card.skillImage" [alt]="card.skillName" class="card-image"
-            (error)="card.skillImage = undefined">
-          <div *ngIf="!card.skillImage" class="card-image-placeholder">
-            {{ card.skillIcon || '🎓' }}
+          <div class="card-image-wrapper">
+             <img *ngIf="card.skillImage" [src]="card.skillImage" [alt]="card.skillName" class="card-image"
+                (error)="card.skillImage = undefined">
+             
+             <div *ngIf="!card.skillImage" class="card-image-placeholder">
+               {{ card.skillIcon || '⚡' }}
+             </div>
           </div>
 
           <div class="card-content clickable-user" [routerLink]="['/user', card.username]">
 
+            <div class="card-header-row">
+                
+                <div class="card-user-info" (click)="$event.stopPropagation(); goToSwap(card)">
+                  <img [src]="card.profilePhotoUrl" [alt]="card.username" class="user-avatar">
+                  <span>{{ card.username }}</span>
+                </div>
 
-            <div class="card-user-info">
-              <img [src]="card.profilePhotoUrl" [alt]="card.username" class="user-avatar"
-                [routerLink]="['/user', card.username]" (click)="$event.stopPropagation()"
-                style="cursor: pointer;">
+                <div class="level-container" [ngClass]="getLevelClass(card.skillLevel)">
+                    <span class="level-text">{{ getLevelLabel(card.skillLevel) }}</span>
+                    <div class="level-bars">
+                      <div class="bar" [class.active]="(card.skillLevel || 1) >= 1"></div>
+                      <div class="bar" [class.active]="(card.skillLevel || 1) >= 2"></div>
+                      <div class="bar" [class.active]="(card.skillLevel || 1) >= 3"></div>
+                    </div>
+                </div>
 
-              <span [routerLink]="['/user', card.username]" (click)="$event.stopPropagation()"
-                style="cursor: pointer;">
-                {{ card.username }}
-              </span>
             </div>
 
             <h3>{{ card.skillName }}</h3>
@@ -65,8 +76,9 @@
               <span class="location" [class.nearby]="card.distance === 'Cerca de ti'">
                 <span class="material-symbols-outlined card-icon">location_on</span> {{ card.distance }}km
               </span>
-              <span class="rating"><span class="material-symbols-outlined card-icon">star</span> {{ card.rating
-                }}</span>
+              <span class="rating">
+                <span class="material-symbols-outlined card-icon">star</span> {{ card.rating }}
+              </span>
             </div>
           </div>
         </div>

@@ -212,11 +212,19 @@ img {
   overflow: hidden;
   cursor: pointer;
   transition: transform 0.3s, box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
 }
 
 .skill-card:hover {
   transform: scale(1.03);
   box-shadow: 0 0 0.9375rem 0 rgba(60, 181, 124, 0.4);
+}
+
+.card-image-wrapper {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.5rem 0.5rem 0 0;
 }
 
 .card-image {
@@ -230,11 +238,18 @@ img {
   text-align: left;
 }
 
+.card-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; 
+  margin-bottom: 0.5rem;
+}
+
 .card-user-info {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0; 
   width: fit-content;
   border-radius: 1rem;
   padding-right: 0.5rem;
@@ -257,12 +272,47 @@ img {
   background-color: var(--principal-color-2-hover);
 }
 
+.level-container {
+  display: flex;
+  flex-direction: row; 
+  align-items: center; 
+  gap: 0.4rem;
+}
+
+.level-text {
+  font-size: 0.75rem; 
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #9ca3af;
+}
+
+.level-bars {
+  display: flex;
+  gap: 0.2rem;
+}
+
+.bar {
+  width: 1rem;
+  height: 0.4rem; 
+  border-radius: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.15); 
+}
+
+.level-1 .level-text { color: var(--level-one-skill, #2ab57e); }
+.level-1 .bar.active { background-color: var(--level-one-skill, #2ab57e); }
+
+.level-2 .level-text { color: var(--level-two-skill, #ffa62f); }
+.level-2 .bar.active { background-color: var(--level-two-skill, #ffa62f); }
+
+.level-3 .level-text { color: var(--level-three-skill, #a05af3); }
+.level-3 .bar.active { background-color: var(--level-three-skill, #a05af3); }
+
 .card-content h3 {
   font-size: 1.125rem;
   font-weight: 600;
   color: #ffffff;
-  margin: 0 0 0.5rem 0;
-  /* Padding 0 absoluto */
+  margin: 0.25rem 0 0.5rem 0;
   padding: 0;
   white-space: nowrap;
   overflow: hidden;
@@ -392,8 +442,6 @@ img {
   .card-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-
-  /* Nota: Los estilos responsive para .interchange-populated se han movido a next-exchange.component.css */
 }
 
 @media (max-width: 48rem) {
