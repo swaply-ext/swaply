@@ -84,9 +84,9 @@ this.mapPrivateProfileData(user);
       };
     });
   }
-mapPrivateProfileData(user: any): void {
+mapPrivateProfileData(user: PrivateProfileData): void {
 this.privateProfileData = {
-fullName: user.fullName || `${user.name || ''} ${user.surname || ''}`.trim(),
+fullName: user.fullName,
 username: user.username,
 location: user.location,
 description: user.description || '',
