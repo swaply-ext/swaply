@@ -112,7 +112,7 @@ export class AvatarSelectorComponent {
       }
 
       // Validación de tamaño (2MB)
-      if (!this.validateInputsService.isImageSizeValid(file, 2)) {
+      if (!this.validateInputsService.isImageSizeValid(file, 1)) {
         this.errorMessages['profilePhoto'] = 'La imagen es demasiado grande. Máximo 2MB.';
         this.isReadingPhoto = false;
         return;

@@ -1,17 +1,3 @@
-/* Variables de Colores (según tu paleta Swaply) */
-:root {
-    --swaply-blue-dark: #023047;
-    --swaply-green-light: #3CB57C;
-    --swaply-blue-light: #5D94B5;
-    --text-light: #E0E0E0;
-    --text-dark: #333;
-    --card-background: #253347;
-    --swaply-blue-medium: #1F4688;
-    --swaply-blue-cyan: #3390A1;
-
-    /* Base para rem: 1rem = 10px (facilitando la conversión) */
-    font-size: 62.5%;
-}
 
 /* ===== AÑADIDO: Arreglo para que el header no tape los títulos al saltar ===== */
 html {
@@ -21,13 +7,37 @@ html {
     /* Espacio igual al alto del header */
 }
 
+:host {
+    --swaply-blue-dark: #023047;
+    --swaply-green-light: #3CB57C;
+    --swaply-blue-light: #5D94B5;
+    --text-light: #E0E0E0;          
+    --text-dark: #333;
+    --card-background: #253347;
+    font-size: 62.5%;
+    display: block;
+    width: 100%;
+    margin: 0;
+    font-size: 10px; 
+    font-family: Arial, sans-serif;
+    color: var(--text-light); 
+    overflow-x: hidden;
+    background-image: url('/assets/fotos/ada.png'); 
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-color: #0d1a29;
+    min-height: 100vh;
+}
+
 /* Estilos Generales */
 body {
     margin: 0;
     font-family: Arial, sans-serif;
     color: var(--text-light);
     overflow-x: hidden;
-    background-image: url('fotos/ada.png');
+    background-image: url('/assets/fotos/ada.png');
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
