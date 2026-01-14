@@ -86,8 +86,8 @@ export class SwapRequestsComponent implements OnInit {
   }
 
 
-  getProfile(userId: string): ProfileDataDTO | undefined {
-    return this.profilesMap().get(userId);
+  getProfile(userId: string): ProfileDataDTO {
+    return this.profilesMap().get(userId) as ProfileDataDTO;
   }
 
   getSkillImage(skillName: string): string {

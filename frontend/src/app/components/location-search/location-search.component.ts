@@ -45,7 +45,7 @@ export class LocationSearchComponent {
 
   @Input() placeholder: string = 'Buscar Ubicación...';
 
-  @Output() locationSelected = new EventEmitter<UserLocation | null>(); // <-- Este es el Output clave
+  @Output() locationSelected = new EventEmitter<UserLocation>(); // <-- Este es el Output clave
   private el = inject(ElementRef);
 
   searchTerm = '';

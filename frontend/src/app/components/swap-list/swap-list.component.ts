@@ -31,7 +31,7 @@ export class SwapListComponent implements OnInit {
 
 
   swaps = signal<Swap[]>([]);
-  currentUser = signal<SwapProfileData | null>(null);
+  currentUser = signal<SwapProfileData>({} as SwapProfileData);
   profilesMap = signal<Map<string, SwapProfileData>>(new Map());
   loading = signal(true);
 
@@ -63,8 +63,8 @@ export class SwapListComponent implements OnInit {
   }
 
 
-  getOtherProfile(userId: string): SwapProfileData | undefined {
-    return this.profilesMap().get(userId);
+  getOtherProfile(userId: string): SwapProfileData {
+    return this.profilesMap().get(userId) as SwapProfileData;
   }
 
   getImageToLearn(swap: Swap): string {
@@ -95,9 +95,10 @@ export class SwapListComponent implements OnInit {
     );
   }
 
-  private assignImageToSkill(category: string, skillName: string): string | undefined {
 
-    if (!skillName) return undefined;
+  private assignImageToSkill(category: string, skillName: string): string {
+
+    if (!skillName) return 'assets/photos_skills/default.jpg';
 
     const name = skillName.toLowerCase();
 
@@ -146,7 +147,7 @@ export class SwapListComponent implements OnInit {
       if (cat.includes('música') || cat.includes('musica')) folder = 'music';
     }
 
-    return undefined;
+    return 'assets/photos_skills/default.jpg';
   }
 
   private sleep(ms: number): Promise<void> {

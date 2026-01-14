@@ -117,7 +117,7 @@ export class HomeComponent implements OnInit {
   }
 
 
-  private assignImageToSkill(category: string, skillName: string): string | undefined {
+    private assignImageToSkill(category: string, skillName: string): string {
       const name = skillName ? skillName.toLowerCase() : '';
       let folder = 'leisure';
       if (category) {
@@ -141,7 +141,7 @@ export class HomeComponent implements OnInit {
       else if (name.includes('baile') || name.includes('dance')) { filename = 'dance.jpg'; folder = 'leisure'; }
       else if (name.includes('manualidades') || name.includes('craft')) { filename = 'crafts.jpg'; folder = 'leisure'; }
       else if (name.includes('digital')) { filename = 'digital_entertainment.jpg'; folder = 'leisure'; }
-      return filename ? `assets/photos_skills/${folder}/${filename}` : undefined;
+        return filename ? `assets/photos_skills/${folder}/${filename}` : 'assets/photos_skills/default.jpg';
   }
 
 

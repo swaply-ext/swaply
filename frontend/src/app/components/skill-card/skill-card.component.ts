@@ -21,7 +21,7 @@ export class SkillCardComponent implements OnChanges {
 
   private skillsService = inject(SkillsService);
 
-  skill: SkillDisplay | null = null;
+  skill: SkillDisplay = {} as SkillDisplay;
 
   ngOnChanges(changes: SimpleChanges): void {
 

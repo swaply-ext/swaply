@@ -36,7 +36,7 @@ export class PersonalInformationComponent {
   surname = '';
   birthDate!: Date;
   gender = '';
-  location: UserLocation | null = null;
+  location: UserLocation = {} as UserLocation;
   phone = 0;
 
   showError = false;
@@ -56,7 +56,7 @@ export class PersonalInformationComponent {
     this.surname = data.surname || '';
     this.birthDate = data.birthDate ? new Date(data.birthDate) : new Date();
     this.gender = data.gender || '';
-    this.location = data.location as UserLocation | null; // Lo casteamos para seguridad si viene del servicio.
+    this.location = data.location as UserLocation; // Lo casteamos para seguridad si viene del servicio.
     this.phone = data.phone || 0;
   }
 
@@ -172,7 +172,7 @@ export class PersonalInformationComponent {
     else return false;
   }
 
-  onLocationSelected(newLocation: UserLocation | null): void {
+  onLocationSelected(newLocation: UserLocation): void {
     this.location = newLocation;
     console.log('Ubicación seleccionada capturada:', this.location);
   }

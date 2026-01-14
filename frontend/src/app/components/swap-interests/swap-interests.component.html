@@ -3,7 +3,7 @@
     <button class="toggle-btn" (click)="togglePanel()">
       <span class="material-symbols-outlined">keyboard_arrow_down</span>
     </button>
-    <h1>Habilidades de {{ targetUser?.username }}</h1>
+    <h1>Habilidades de {{ targetUser.username }}</h1>
   </header>
 
   <div *ngIf="open" class="skills-grid">

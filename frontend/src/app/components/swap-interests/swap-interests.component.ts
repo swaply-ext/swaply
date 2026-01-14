@@ -18,7 +18,7 @@ import { UserSwap } from '../../models/user.models';
 export class SwapInterestsComponent {
   @Input() InterestsInput: Interest[] = [];
   @Input() editable = false;
-  @Input() targetUser: UserSwap | null = null;
+  @Input() targetUser!: UserSwap;
   @Output() skillSelected = new EventEmitter<{ skill: Interest }>();
 
   open = true;

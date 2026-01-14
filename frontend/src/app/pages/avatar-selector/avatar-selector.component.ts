@@ -14,11 +14,11 @@ import { UserAvatarOption } from '../../models/user.models';
   styleUrl: './avatar-selector.component.css',
 })
 export class AvatarSelectorComponent {
-  profilePhotoUrl: string | null = null;
+  profilePhotoUrl: string = '';
   isUploadingPhoto = false;
   isReadingPhoto = false;
   errorMessages: { [key: string]: string } = {};
-  selectedFile: File | null = null;
+  selectedFile: File = {} as File;
 
   // Signal para rastrear el ID del avatar seleccionado actualmente.
   // Inicializamos con el ID 1 (como en la segunda imagen de referencia).
@@ -46,14 +46,14 @@ export class AvatarSelectorComponent {
   selectAvatar(id: number | string): void {
     this.selectedAvatarId.set(id);
     if (id !== 'upload') {
-      this.selectedFile = null;
-      this.profilePhotoUrl = null;
+      this.selectedFile = {} as File;
+      this.profilePhotoUrl = '';
     }
   }
 
   onContinue(): void {
     const selectedId = this.selectedAvatarId();
-    if (selectedId === 'upload' && this.selectedFile) {
+    if (selectedId === 'upload' && this.selectedFile instanceof File) {
       this.isUploadingPhoto = true;
       this.accountService.uploadProfilePhoto(this.selectedFile).subscribe({
         next: (url) => {

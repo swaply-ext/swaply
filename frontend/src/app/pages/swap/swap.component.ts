@@ -19,10 +19,10 @@ import { ProfileDataDTO } from '../../models/data.models';
 })
 export class SwapComponent implements OnInit {
 
-  myUser = signal<ProfileDataDTO | null>(null);
-  targetUser = signal<UserSwapDTO | null>(null);
+  myUser = signal<ProfileDataDTO>({} as ProfileDataDTO);
+  targetUser = signal<UserSwapDTO>({} as UserSwapDTO);
 
-  selectedTeachSkill = signal<any>(null); 
+  selectedTeachSkill = signal<any>({} as any); 
   mySkillsDisplay = signal<any[]>([]); 
   
   selectedTargetSkill = signal<{
@@ -30,7 +30,12 @@ export class SwapComponent implements OnInit {
     skillIcon?: string;
     skillImage?: string;
     location?: string;
-  } | null>(null);
+  }>({} as {
+    skillName: string;
+    skillIcon?: string;
+    skillImage?: string;
+    location?: string;
+  });
   
   targetUserInterests = signal<any[]>([]); 
 
@@ -253,9 +258,9 @@ export class SwapComponent implements OnInit {
     });
   }
 
-  private assignImageToSkill(category: string, skillName: string): string | undefined {
-    if (!skillName) return undefined;
-    
+  private assignImageToSkill(category: string, skillName: string): string {
+    if (!skillName) return 'assets/photos_skills/default.jpg';
+
     const name = String(skillName).toLowerCase();
     
     const map: any = {
@@ -299,6 +304,6 @@ export class SwapComponent implements OnInit {
       if (catLower.includes('leisure')) return 'assets/photos_skills/leisure/crafts.jpg';
     }
 
-    return undefined;
+    return 'assets/photos_skills/default.jpg';
   }
 }

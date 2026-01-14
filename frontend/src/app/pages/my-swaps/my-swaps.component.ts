@@ -65,8 +65,8 @@ export class MySwapsPageComponent implements OnInit {
   }
 
 
-  getRequesterUser(swap: Swap): SwapProfileData | undefined {
-    return this.pendingProfiles.get(swap.requestedUserId);
+  getRequesterUser(swap: Swap): SwapProfileData {
+    return this.pendingProfiles.get(swap.requestedUserId) as SwapProfileData;
   }
 
 
