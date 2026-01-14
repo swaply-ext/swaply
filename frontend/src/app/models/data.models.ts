@@ -41,7 +41,7 @@ export interface DropdownMenuData {
     rating: number;
 }
 
-export interface AccountData {
+export interface SkillData {
     interests: { id: string, level: number }[];
     skills?: { id: string, level: number }[];
 }

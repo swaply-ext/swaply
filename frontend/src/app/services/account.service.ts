@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AccountData } from '../models/data.models';
+import { SkillData } from '../models/data.models';
 
 
 
@@ -55,8 +55,8 @@ export class AccountService {
     return this.http.delete(`${this.apiUrl}/deleteProfile`);
   }
 
-  getAccount(): Observable<AccountData> {
-    return this.http.get<AccountData>(this.apiUrl);
+  getAccount(): Observable<SkillData> {
+    return this.http.get<SkillData>(this.apiUrl);
   }
 
   updateInterests(interests: { id: string, level: number }[]): Observable<any> {
