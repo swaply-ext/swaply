@@ -1,5 +1,6 @@
 import { userSkillDTO } from "./userSkillDTO.model";
 import { UserLocation } from "./user.models";
+import { UserSkills } from "./skills.models";
 
 export interface Swap {
   id: string;
@@ -28,6 +29,8 @@ export interface SwapProfileData {
   profilePhotoUrl: string;
   location: UserLocation;
   username: string;
+  rating: number;
+  skills: UserSkills[];
 }
 
 export interface SwapDTO {
