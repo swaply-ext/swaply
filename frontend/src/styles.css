@@ -13,7 +13,7 @@
   --secundary-color-1: #fcfcfc; /* Blanc suau */
   --secundary-color-2: #bfbfbf; /* Gris clar */
   --secundary-color-3: #292929; /* Gris fosc */
-  
+
   /* --- TEXTOS --- */
   --text-white: #ffffff; /* Blanco puro - NUEVO */
   --text-gray-100: #e5e7eb; /* Gris muy claro (para h3) - NUEVO */
@@ -35,9 +35,9 @@
   --bg-card: #00414b;
   --bg-location: #00333c;
   --bg-input: rgba(255, 255, 255, 0.1);
-  
+
   /* Fondos específicos Intercambio - NUEVOS */
-  --bg-interchange: #143F4C; 
+  --bg-interchange: #143F4C;
   --bg-interchange-card: #1F4E5D;
   --bg-status: #0F2D37;
   --bg-disabled: #4b5563;
@@ -53,7 +53,7 @@
   --level-two-skill: #ffa62f;
   --level-three-skill: #a05af3;
   --star-color: #f1c40f;
-  
+
   /* --- SOMBRAS --- */
   --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   --shadow-large: 0 0.625rem 0.938rem -0.188rem rgba(0, 0, 0, 0.1); /* Sombra más grande - NUEVO */
@@ -64,7 +64,7 @@ body {
   background: linear-gradient(to bottom, #012534 0%, #00839e 100%);
   min-height: 100vh;
   margin: 0;
-  padding-top: 80px;
+  padding-top: 5rem;
 }
 
 h1, h2, h3 {
@@ -84,13 +84,13 @@ h1, h2, h3 {
 /* Contenidor per al text principal */
 .info-box {
   text-align: center;
-  max-width: 500px;
+  max-width: 31.25rem;
   width: 90%;
-  margin: 50px auto;
-  padding: 20px;
-  border: 1px solid #315465; /* Podrías querer cambiar esto por una variable también */
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin: 3.125rem auto;
+  padding: 1.25rem;
+  border: 0.0625rem solid #315465;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.1);
   background-color: #315465;
   color: var(--secundary-color-1);
   display: flex;
@@ -108,7 +108,7 @@ h1, h2, h3 {
   border: none;
   transition: background-color 0.3s ease;
   border-radius: 8%;
-  padding: 5px 10px;
+  padding: 0.3125rem 0.625rem;
   cursor: pointer;
   margin-top: 5%;
 }
@@ -125,11 +125,11 @@ h1, h2, h3 {
   color: var(--principal-color-1);
   font-family: var(--font-secondary);
   position: fixed;
-  bottom: 20px;
+  bottom: 1.25rem;
   left: 50%;
   transform: translateX(-50%);
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 0.9375rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
   z-index: 1000;
 }

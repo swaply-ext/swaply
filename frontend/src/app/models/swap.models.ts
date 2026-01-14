@@ -12,8 +12,7 @@ export interface Swap {
 }
 
 export interface NextSwap {
-  // userId?: string;
-  username?: string; //per la ruta /user/:username
+  username?: string; 
   userAvatar: string;
   skillTitle: string;
   skillImage?: string;
@@ -56,7 +55,6 @@ export interface UserSwapDTO {
   rating: number;
   distance: string;
 
-  // lista opcional de skills que viene del back
   userSkills?: userSkillDTO[];
   interests?: userSkillDTO[];
 }
