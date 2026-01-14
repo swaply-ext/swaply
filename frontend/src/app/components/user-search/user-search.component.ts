@@ -5,6 +5,7 @@ import {
   signal,
   ElementRef,
   HostListener,
+  OnInit
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -12,6 +13,7 @@ import { Subject, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, tap, filter, catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { UsersService } from '../../services/users.service';
+import { AccountService } from '../../services/account.service';
 
 export interface UserSearchItem {
   id: string;
@@ -33,7 +35,9 @@ export class UserSearchComponent {
 
   private router = inject(Router);
   private userSearchService = inject(UsersService);
+  private accountService = inject(AccountService);
   private el = inject(ElementRef);
+  private currentUsername: string | null = null; 
 
   searchTerm = '';
   results = signal<UserSearchItem[]>([]);
@@ -58,6 +62,17 @@ export class UserSearchComponent {
       this.showDropdown.set(results.length > 0);
     });
   }
+  ngOnInit(): void {
+      //funcion para obtener el username del logeado del accountService y evitar entrar al public-profile de uno mismo
+      this.accountService.getProfileData().subscribe({
+        next: (profile: any) => {
+          if (profile) {
+            this.currentUsername = profile.username;
+          }
+        },
+        error: () => {} 
+      });
+  }
 
   @HostListener('document:click', ['$event'])
   onClickOutside(event: Event) {
@@ -80,5 +95,10 @@ export class UserSearchComponent {
     this.searchTerm = user.username;
     this.results.set([]);
     this.showDropdown.set(false);
+    if (this.currentUsername && user.username === this.currentUsername) {
+      this.router.navigate(['/myprofile']);  
+    } else {
+      this.router.navigate(['/user', user.username]);
+    }
   }
 }
