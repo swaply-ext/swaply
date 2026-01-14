@@ -206,8 +206,8 @@ export class SwapComponent implements OnInit {
 
     const payload: SwapDTO = {
       requestedUsername: targetUser.username,
-      skill: myItem.name,
-      interest: targetItem.name
+      skill: targetItem.name,
+      interest: myItem.name
     };
 
     this.searchService.sendSwapRequest(payload).subscribe({

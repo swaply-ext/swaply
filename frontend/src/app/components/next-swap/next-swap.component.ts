@@ -6,7 +6,7 @@ import { UsersService } from '../../services/users.service';
 import { RouterLink } from '@angular/router';
 import { Swap } from '../../models/swap.models';
 import { SwapProfileData } from '../../models/swap.models';
-
+import { UserSkills } from '../../models/skills.models';
 @Component({
   selector: 'app-next-swap',
   standalone: true,
@@ -28,17 +28,23 @@ export class NextSwapComponent {
   isConfirmed = signal(false);
   isDenied = signal(false);
 
+  getStarIcon(rating: number): string {
+    const decimal = rating - Math.floor(rating);
+    if (decimal >= 0.5) return 'star_half';
+    return 'star';
+  }
+
   imageToLearn = computed(() => {
     const swap = this.nextSwap();
     if (!swap) return 'assets/photos_skills/default.jpg'; // Imagen por defecto si es null
     // Pasamos '' como categoría ya que no viene en el objeto swap, la función buscará por nombre
-    return this.assignImageToSkill('', swap.interest) || 'assets/photos_skills/default.jpg';
+    return this.assignImageToSkill('', swap.skill) || 'assets/photos_skills/default.jpg';
   });
 
   imageToTeach = computed(() => {
     const swap = this.nextSwap();
     if (!swap) return 'assets/photos_skills/default.jpg';
-    return this.assignImageToSkill('', swap.skill) || 'assets/photos_skills/default.jpg';
+    return this.assignImageToSkill('', swap.interest) || 'assets/photos_skills/default.jpg';
   });
 
   ngOnInit(): void {
@@ -74,7 +80,12 @@ export class NextSwapComponent {
   getUserTeach(): void {
     this.accountService.getProfileData().subscribe({
       next: (user) => {
-        this.profileToTeach.set(user);
+        this.profileToTeach.set({
+          ...user,
+          skills: user.skills || []
+        });
+
+        console.log('skills teach:', this.profileToTeach()?.skills);
       },
       error: (err) => {
         this.nextSwap.set(null);
@@ -86,7 +97,13 @@ export class NextSwapComponent {
   getUserLearn(userId: string): void {
     this.usersService.getUserById(userId).subscribe({
       next: (user) => {
-        this.profileToLearn.set(user);
+        // Add default rating if not provided by backend
+        this.profileToLearn.set({
+          ...user,
+          rating: user.rating ?? 3.8,
+          skills: user.skills || []
+        });
+         console.log('skills learn:', this.profileToLearn()?.skills);
       },
       error: (err) => {
       }
@@ -103,7 +120,7 @@ export class NextSwapComponent {
     this.swapService.updateSwapStatus(currentSwap.id, 'ACCEPTED').subscribe({
       next: async (response) => {
         this.isConfirmed.set(true);
-        await this.sleep(5000);
+        await this.sleep(1000);
         this.ngOnInit();
       },
       error: (err) => {
@@ -122,7 +139,7 @@ export class NextSwapComponent {
     this.swapService.updateSwapStatus(currentSwap.id, 'DENIED').subscribe({
       next: async () => {
         this.isDenied.set(true);
-        await this.sleep(5000);
+        await this.sleep(1000);
         this.ngOnInit();
       },
       error: (err) => {
@@ -142,6 +159,7 @@ export class NextSwapComponent {
       'futbol': { folder: 'sports', filename: 'football.jpg' },
       'pádel': { folder: 'sports', filename: 'padel.jpg' },
       'padel': { folder: 'sports', filename: 'padel.jpg' },
+      'básquet': { folder: 'sports', filename: 'basketball.jpg' },
       'basquet': { folder: 'sports', filename: 'basketball.jpg' },
       'baloncesto': { folder: 'sports', filename: 'basketball.jpg' },
       'basket': { folder: 'sports', filename: 'basketball.jpg' },
@@ -186,6 +204,31 @@ export class NextSwapComponent {
 
     return undefined;
   }
+
+  private normalizeString(str: string): string {
+    return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+
+  getSkillLevel(skills: UserSkills[], skillName: string): number {
+    const normalizedName = this.normalizeString(skillName);
+    const skill = skills.find(s => { 
+      console.log('Comparing skill id:', this.normalizeString(s.id), 'with normalized name:', normalizedName);
+      return this.normalizeString(s.id) === normalizedName
+   });
+    console.log('skillName:', skillName, 'normalized:', normalizedName, 'found skill:', skill?.id, 'level:', skill?.level);
+    return skill ? Number(skill.level) || 0 : 0 ;
+    
+  }
+
+  getLevelText(level: number): string {
+    switch (level) {
+      case 1: return 'Principiante';
+      case 2: return 'Intermedio';
+      case 3: return 'Experto';
+      default: return 'unknown';
+    }
+  }
+
 
   private sleep(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
