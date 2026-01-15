@@ -1,5 +1,5 @@
 package com.swaply.backend.application.account;
-
+import java.util.Collections;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -123,9 +123,11 @@ public class AccountController {
         PublicProfileDTO profile = service.getPublicProfileByUsername(username);
         return ResponseEntity.ok(profile);
     }
+
     @GetMapping("/username")
-    public ResponseEntity<UsernameDTO> getUsername(@AuthenticationPrincipal SecurityUser SecurityUser) {
-        UsernameDTO usernameDTO = service.getUsername(SecurityUser.getUsername());
-        return ResponseEntity.ok(usernameDTO);
-    }   
+    public ResponseEntity<Map<String, String>> getUsername(@AuthenticationPrincipal SecurityUser securityUser) {
+        String username = service.getUsernameOnly(securityUser.getUsername());
+        //AL SER UN SOLO STRING, NO HACEMOS DTO DTO, DEVOLVEMOS UN MAP
+        return ResponseEntity.ok(Collections.singletonMap("username", username));
+    }
 }

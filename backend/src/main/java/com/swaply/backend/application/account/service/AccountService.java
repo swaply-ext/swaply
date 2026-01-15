@@ -85,9 +85,9 @@ public class AccountService /* implements UserRepository */ {
     public void deleteUser(String userId) {
         userService.deleteUserById(userId);
     }
-    public UsernameDTO getUsername(String userId) {
-        UserDTO userDTO = userService.getUserByID(userId);
-        return new UsernameDTO(userDTO.getUsername());
-    
+
+    public String getUsernameOnly(String userId) {
+        UserDTO user = userService.getUserByID(userId);
+        return user.getUsername();
     }
 }
