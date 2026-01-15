@@ -14,7 +14,6 @@ import { debounceTime, distinctUntilChanged, switchMap, tap, filter, catchError 
 import { Router } from '@angular/router';
 import { UsersService } from '../../services/users.service';
 import { AccountService } from '../../services/account.service';
-
 export interface UserSearchItem {
   id: string;
   username: string;
@@ -35,9 +34,8 @@ export class UserSearchComponent {
 
   private router = inject(Router);
   private userSearchService = inject(UsersService);
-  private accountService = inject(AccountService);
   private el = inject(ElementRef);
-  private currentUsername: string | null = null; 
+  private currentUsername: string = '';
 
   searchTerm = '';
   results = signal<UserSearchItem[]>([]);
@@ -46,7 +44,9 @@ export class UserSearchComponent {
 
   private searchTermSubject = new Subject<string>();
 
-  constructor() {
+  constructor(
+      private accountService: AccountService,
+  ) {
     this.searchTermSubject.pipe(
       debounceTime(300),
       distinctUntilChanged(),
