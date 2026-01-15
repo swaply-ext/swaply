@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.component";
 import { SkillSearchComponent } from '../../components/skill-search/skill-search.component';
 import { FilterSkillsComponent } from '../../components/filter-skills/filter-skills.component';
-import { SearchService} from '../../services/search.services';
+import { SearchService} from '../../services/search.service';
 import { RouterLink } from '@angular/router';
 import { AccountService } from '../../services/account.service';
 import { NextSwapComponent } from '../../components/next-swap/next-swap.component';

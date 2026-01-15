@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AppNavbarComponent } from '../../components/app-navbar/app-navbar.component';
 import { AccountService } from '../../services/account.service';
-import { SearchService} from '../../services/search.services';
+import { SearchService} from '../../services/search.service';
 import { UserSwapDTO, SwapDTO } from '../../models/swap.models';
 import { SwapSkillsComponent } from "../../components/swap-skills/swap-skills.component";
 import { SwapInterestsComponent } from "../../components/swap-interests/swap-interests.component";
