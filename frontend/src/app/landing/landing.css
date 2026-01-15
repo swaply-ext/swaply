@@ -1,11 +1,6 @@
 
 /* ===== AÑADIDO: Arreglo para que el header no tape los títulos al saltar ===== */
-html {
-    scroll-behavior: smooth;
-    /* Para que el scroll sea suave */
-    scroll-padding-top: 8rem;
-    /* Espacio igual al alto del header */
-}
+
 
 :host {
     --swaply-blue-dark: #023047;
@@ -14,11 +9,9 @@ html {
     --text-light: #E0E0E0;          
     --text-dark: #333;
     --card-background: #253347;
-    font-size: 62.5%;
     display: block;
     width: 100%;
     margin: 0;
-    font-size: 10px; 
     font-family: Arial, sans-serif;
     color: var(--text-light); 
     overflow-x: hidden;
@@ -29,24 +22,9 @@ html {
     background-attachment: fixed;
     background-color: #0d1a29;
     min-height: 100vh;
+    font-size: 1rem;
 }
 
-/* Estilos Generales */
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    color: var(--text-light);
-    overflow-x: hidden;
-    background-image: url('/assets/fotos/ada.png');
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-color: #0d1a29;
-    min-height: 100vh;
-    /* Tamaño de fuente base para el body (equivalente a 16px) */
-    font-size: 1.6rem;
-}
 
 /* Sección Principal (Hero Section) */
 .hero-section {
@@ -58,7 +36,7 @@ body {
     flex-direction: column;
     align-items: center;
     /* --- CAMBIO --- */
-    padding-bottom: 20rem;
+    padding-bottom: 12.5rem;
     /* Se reduce el padding, ya no tiene que alojar el bloque absoluto */
     box-sizing: border-box;
 }
@@ -77,7 +55,7 @@ body {
     grid-template-columns: 1fr auto 1fr;
     /* <-- AÑADIDO */
     align-items: center;
-    padding: 1rem 1%;
+    padding: 0.625rem 1%;
     box-sizing: border-box;
     z-index: 1000;
 
@@ -87,7 +65,7 @@ body {
 }
 
 .logo {
-    height: 10rem;
+    height: 6.25rem;
 }
 
 /* ===== AÑADIDA NUEVA REGLA ===== */
@@ -108,9 +86,9 @@ body {
     background-color: var(--swaply-green-light);
     color: white;
     border: none;
-    padding: 1rem 2rem;
-    border-radius: 2.5rem;
-    font-size: 1.6rem;
+    padding: 0.625rem 1.25rem;
+    border-radius: 1.5625rem;
+    font-size: 1rem;
     cursor: pointer;
     font-weight: bold;
     transition: background-color 0.3s ease;
@@ -134,14 +112,14 @@ body {
     padding: 0;
     margin: 0;
     display: flex;
-    gap: 5rem;
+    gap: 3.125rem;
     /* Espacio entre enlaces */
 }
 
 .header-nav a {
     color: var(--text-light);
     text-decoration: none;
-    font-size: 1.6rem;
+    font-size: 1rem;
     font-weight: bold;
     transition: color 0.3s ease;
 }
@@ -160,42 +138,42 @@ body {
     justify-content: center;
     align-items: center;
     width: 100%;
-    max-width: 120rem;
+    max-width: 75rem;
     margin: 0 auto;
-    padding-top: 12rem;
-    padding-bottom: 5rem;
+    padding-top: 7.5rem;
+    padding-bottom: 3.125rem;
     box-sizing: border-box;
 }
 
 .text-content {
     flex: 1;
-    padding-left: 4rem;
+    padding-left: 2.5rem;
     text-align: left;
     max-width: 50%;
 }
 
 .text-content h1 {
-    font-size: clamp(3.2rem, 5vw, 4.8rem);
-    margin-bottom: 1.5rem;
+    font-size: clamp(2rem, 5vw, 4.8rem);
+    margin-bottom: 0.9375rem;
     line-height: 1.2;
     color: white;
 }
 
 .text-content p {
-    font-size: 1.8rem;
+    font-size: 1.125rem;
     line-height: 1.5;
-    margin-bottom: 3rem;
+    margin-bottom: 1.875rem;
     color: var(--text-light);
 }
 
 .app-buttons {
     display: flex;
-    gap: 1.5rem;
+    gap: 0.9375rem;
     align-items: center; 
 }
 
 .app-button {
-    height: 4.5rem;
+    height: 2.8125rem;
     cursor: pointer;
 }
 
@@ -216,15 +194,15 @@ body {
     background-color: var(--swaply-green-light);
     color: white;
     border: none;
-    font-size: 1.6rem;
+    font-size: 1rem;
     cursor: pointer;
     font-weight: bold;
     transition: background-color 0.3s ease, transform 0.2s ease; /* Añadida transición para transform */
     
     /* Forma rectangular como las imágenes */
-    height: 4.5rem;
-    padding: 1rem 2rem;
-    border-radius: 0.8rem; /* <-- Bordes LIGERAMENTE redondeados */
+    height: 2.8125rem;
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.5rem; /* <-- Bordes LIGERAMENTE redondeados */
     box-sizing: border-box; /* Asegura que la altura sea exacta */
 
     /* Centrado de texto */
@@ -244,12 +222,12 @@ body {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    padding-right: 4rem;
+    padding-right: 2.5rem;
 }
 
 .hero-illustration {
     max-width: 100%;
-    width: 60rem;
+    width: 37.5rem;
     height: auto;
     display: block;
 }
@@ -258,42 +236,42 @@ body {
 /* --- CAMBIO GRANDE --- */
 .bottom-rectangle {
     width: 90%;
-    max-width: 120rem;
+    max-width: 75rem;
     background-color: rgba(2, 48, 71, 0.85);
-    border-radius: 2rem;
-    padding: 4rem;
-    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.3);
+    border-radius: 1.25rem;
+    padding: 2.5rem;
+    box-shadow: 0 0.625rem 1.875rem rgba(0, 0, 0, 0.3);
     text-align: center;
     box-sizing: border-box;
 
     /* --- AÑADIDO --- */
-    margin: -18rem auto 0 auto;
+    margin: -11.25rem auto 0 auto;
 }
 
 .bottom-rectangle h2 {
-    font-size: clamp(2.4rem, 3vw, 3rem);
+    font-size: clamp(1.5rem, 3vw, 1.875rem);
     color: white;
-    margin-bottom: 4rem;
+    margin-bottom: 2.5rem;
     text-transform: uppercase;
 }
 
 /* ===== REGLA AÑADIDA para el nuevo botón ===== */
 #funcionamiento-btn {
-    margin-top: 6rem; 
+    margin-top: 3.75rem; 
 }
 
 .steps-container {
     display: flex;
     justify-content: space-around;
-    gap: 6rem;
+    gap: 3.75rem;
 }
 
 .step-card {
     background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 1.5rem;
-    padding: 2.5rem;
+    border-radius: 0.9375rem;
+    padding: 1.5625rem;
     flex: 1;
-    min-width: 25rem;
+    min-width: 15.625rem;
     text-align: left;
     position: relative;
     box-sizing: border-box;
@@ -306,29 +284,29 @@ body {
 }
 
 .step-icon {
-    height: 5rem;
-    margin-bottom: 1.5rem;
+    height: 3.125rem;
+    margin-bottom: 0.9375rem;
     display: block;
 }
 
 .step-card h3 {
-    font-size: 2.5rem;
+    font-size: 1.5625rem;
     color: var(--swaply-green-light);
-    margin-bottom: 1rem;
+    margin-bottom: 0.625rem;
 }
 
 .step-card p {
-    font-size: 2rem;
+    font-size: 1.25rem;
     line-height: 1.4;
     color: var(--text-light);
 }
 
 .arrow {
     position: absolute;
-    right: -4.4rem;
+    right: -2.75rem;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 3rem;
+    font-size: 1.875rem;
     color: var(--swaply-green-light);
     font-weight: bold;
 }
@@ -345,21 +323,21 @@ body {
     margin-right: auto;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
-    border-top-right-radius: 2rem;
-    border-bottom-right-radius: 2rem;
+    border-top-right-radius: 1.25rem;
+    border-bottom-right-radius: 1.25rem;
     max-width: none;
-    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.3);
-    padding: 4rem 3%;
+    box-shadow: 0 0.625rem 1.875rem rgba(0, 0, 0, 0.3);
+    padding: 2.5rem 3%;
     box-sizing: border-box;
     text-align: left;
-    margin-top: 10rem;
+    margin-top: 6.25rem;
     color: var(--text-light);
 }
 
 .about-us-container {
     display: flex;
     justify-content: space-between;
-    gap: 4rem;
+    gap: 2.5rem;
 }
 
 .about-text {
@@ -372,24 +350,24 @@ body {
 
 .about-text h2,
 .team-container h2 {
-    font-size: 2.8rem;
+    font-size: 1.75rem;
     color: white;
     margin-top: 0;
-    margin-bottom: 2.5rem;
+    margin-bottom: 1.5625rem;
     text-transform: uppercase;
 }
 
 .about-text p {
-    font-size: 1.8rem;
+    font-size: 1.125rem;
     line-height: 1.6;
-    margin-bottom: 2rem;
+    margin-bottom: 1.25rem;
 }
 
 .team-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     grid-template-rows: repeat(2, 1fr);
-    gap: 2rem;
+    gap: 1.25rem;
     text-align: center;
 }
 
@@ -406,37 +384,37 @@ body {
 }
 
 .team-member img {
-    width: 10rem;
-    height: 10rem;
+    width: 6.25rem;
+    height: 6.25rem;
     border-radius: 50%;
     object-fit: cover;
-    margin-bottom: 1rem;
-    border: 0.2rem solid var(--swaply-green-light);
+    margin-bottom: 0.625rem;
+    border: 0.125rem solid var(--swaply-green-light);
 }
 
 .team-member span {
-    font-size: 1.8rem;
+    font-size: 1.125rem;
     color: white;
 }
 
 /* ========= "NUESTROS PLANES" ========= */
 .plans-section {
     background-color: rgba(2, 48, 71, 0.85);
-    border-radius: 2rem;
+    border-radius: 1.25rem;
     width: 90%;
-    max-width: 85rem;
+    max-width: 53.125rem;
     margin-left: auto;
     margin-right: auto;
-    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.3);
-    padding: 4rem 3rem;
+    box-shadow: 0 0.625rem 1.875rem rgba(0, 0, 0, 0.3);
+    padding: 2.5rem 1.875rem;
     text-align: center;
-    margin-top: 10rem;
+    margin-top: 6.25rem;
 }
 
 .plans-section h2 {
-    font-size: 2.8rem;
+    font-size: 1.75rem;
     color: white;
-    margin-bottom: 3rem;
+    margin-bottom: 1.875rem;
     text-transform: uppercase;
 }
 
@@ -444,19 +422,19 @@ body {
     display: flex;
     justify-content: center;
     align-items: stretch;
-    gap: 2rem;
+    gap: 1.25rem;
     flex-wrap: wrap;
 }
 
 .plan-card {
     background-color: #efefef;
-    border-radius: 1.5rem;
-    padding: 2.5rem;
-    flex-basis: 35rem;
+    border-radius: 0.9375rem;
+    padding: 1.5625rem;
+    flex-basis: 21.875rem;
     flex-grow: 1;
-    max-width: 45rem;
+    max-width: 28.125rem;
     text-align: left;
-    box-shadow: 0 0.4rem 1.5rem rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0.25rem 0.9375rem rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
     color: #000000;
@@ -472,16 +450,16 @@ body {
     display: block;
     margin-left: auto;
     margin-right: auto;
-    height: 4rem;
+    height: 2.5rem;
     width: auto;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.9375rem;
 }
 
 .plan-card h3 {
-    font-size: 2.5rem;
+    font-size: 1.5625rem;
     color: var(--swaply-green-light);
     margin-top: 0;
-    margin-bottom: 1rem;
+    margin-bottom: 0.625rem;
 }
 
 .premium-plan h3 {
@@ -489,18 +467,18 @@ body {
 }
 
 .plan-card .price {
-    font-size: 1.8rem;
+    font-size: 1.125rem;
     font-weight: bold;
     color: rgb(0, 0, 0);
-    margin-bottom: 2rem;
+    margin-bottom: 1.25rem;
     display: block;
 }
 
 .plan-card .description {
-    font-size: 1.6rem;
+    font-size: 1rem;
     line-height: 1.5;
     color: #000000;
-    margin-bottom: 2.5rem;
+    margin-bottom: 1.5625rem;
     flex-grow: 1;
 }
 
@@ -512,23 +490,23 @@ body {
 }
 
 .features-list li {
-    font-size: 1.6rem;
-    margin-bottom: 1.2rem;
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
     line-height: 1.4;
     color: #000000;
 }
 
 .premium-plan {
-    border: 0.4rem solid #B89230;
+    border: 0.25rem solid #B89230;
 }
 
 .premium-button {
     background-color: #B89230;
     color: #FFFFFF;
     border: none;
-    padding: 1.5rem 2rem;
-    font-size: 1.6rem;
-    border-radius: 1rem;
+    padding: 0.9375rem 1.25rem;
+    font-size: 1rem;
+    border-radius: 0.625rem;
     cursor: pointer;
     font-weight: bold;
     transition: background-color 0.3s ease;
@@ -537,7 +515,7 @@ body {
     width: 50%;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 2rem;
+    margin-top: 1.25rem;
 }
 
 .premium-button:hover {
@@ -545,16 +523,16 @@ body {
 }
 
 .standard-plan {
-    border: 0.4rem solid var(--swaply-green-light);
+    border: 0.25rem solid var(--swaply-green-light);
 }
 
 .standard-button {
     background-color: var(--swaply-green-light);
     color: rgba(255, 255, 255, 0.865);
     border: none;
-    padding: 1.5rem 2rem;
-    font-size: 1.6rem;
-    border-radius: 1rem;
+    padding: 0.9375rem 1.25rem;
+    font-size: 1rem;
+    border-radius: 0.625rem;
     cursor: pointer;
     font-weight: bold;
     transition: background-color 0.3s ease;
@@ -563,7 +541,7 @@ body {
     width: 50%;
     margin-left: auto;
     margin-right: auto;
-    margin-top: 2rem;
+    margin-top: 1.25rem;
     text-decoration: none; 
 }
 
@@ -576,24 +554,24 @@ body {
     background-color: rgba(2, 48, 71, 0.85);
     width: 85%;
     max-width: none;
-    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.3);
-    padding: 4rem 3%;
+    box-shadow: 0 0.625rem 1.875rem rgba(0, 0, 0, 0.3);
+    padding: 2.5rem 3%;
     box-sizing: border-box;
     text-align: left;
     color: var(--text-light);
     margin-left: auto;
     margin-right: 0;
-    border-top-left-radius: 2rem;
-    border-bottom-left-radius: 2rem;
+    border-top-left-radius: 1.25rem;
+    border-bottom-left-radius: 1.25rem;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
-    margin-top: 10rem;
+    margin-top: 6.25rem;
 }
 
 .community-container {
     display: flex;
     justify-content: space-between;
-    gap: 4rem;
+    gap: 2.5rem;
     align-items: center;
 }
 
@@ -607,37 +585,37 @@ body {
 
 .community-visual .community-illustration {
     width: 100%;
-    max-width: 55rem;
+    max-width: 34.375rem;
     height: auto;
-    border-radius: 1.5rem;
+    border-radius: 0.9375rem;
     display: block;
     margin: 0 auto;
 }
 
 .community-text h2 {
-    font-size: 2.8rem;
+    font-size: 1.75rem;
     color: white;
     margin-top: 0;
-    margin-bottom: 2.5rem;
+    margin-bottom: 1.5625rem;
     text-transform: uppercase;
 }
 
 .community-text p {
-    font-size: 1.8rem;
+    font-size: 1.125rem;
     line-height: 1.6;
-    margin-bottom: 2rem;
+    margin-bottom: 1.25rem;
 }
 
 .community-text .register-button {
-    margin-top: 2rem;
+    margin-top: 1.25rem;
 }
 
 /* ========= FOOTER ========= */
 .site-footer {
     background-color: rgba(2, 48, 71, 0.95);
     color: var(--text-light);
-    padding: 5rem 5% 2rem 5%;
-    margin-top: 10rem;
+    padding: 3.125rem 5% 1.25rem 5%;
+    margin-top: 6.25rem;
     width: 100%;
     box-sizing: border-box;
 }
@@ -646,29 +624,29 @@ body {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 3rem;
-    max-width: 120rem;
+    gap: 1.875rem;
+    max-width: 75rem;
     margin: 0 auto;
-    padding-bottom: 3rem;
+    padding-bottom: 1.875rem;
 }
 
 .footer-column {
     flex: 1;
-    min-width: 22rem;
+    min-width: 13.75rem;
 }
 
 .logo-column {
     flex-basis: 30%;
-    min-width: 25rem;
+    min-width: 15.625rem;
 }
 
 .footer-logo {
-    height: 6rem;
-    margin-bottom: 1.5rem;
+    height: 3.75rem; 
+    margin-bottom: 0.9375rem;
 }
 
 .logo-column p {
-    font-size: 1.6rem;
+    font-size: 1rem;
     line-height: 1.5;
     color: var(--text-light);
     margin: 0;
@@ -676,10 +654,10 @@ body {
 
 .links-column h4,
 .social-column h4 {
-    font-size: 2rem;
+    font-size: 1.25rem; 
     color: white;
     margin-top: 0;
-    margin-bottom: 2rem;
+    margin-bottom: 1.25rem;
     text-transform: uppercase;
     font-weight: bold;
 }
@@ -691,13 +669,13 @@ body {
 }
 
 .links-column ul li {
-    margin-bottom: 1.2rem;
+    margin-bottom: 0.75rem;
 }
 
 .links-column ul a {
     color: var(--text-light);
     text-decoration: none;
-    font-size: 1.6rem;
+    font-size: 1rem;
     transition: color 0.3s ease;
 }
 
@@ -707,21 +685,21 @@ body {
 
 .social-icons {
     display: flex;
-    gap: 1.5rem;
+    gap: 0.9375rem;
 }
 
 .social-icon {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 4.5rem;
-    height: 4.5rem;
+    width: 2.8125rem; 
+    height: 2.8125rem;
     border-radius: 50%;
     background-color: rgba(255, 255, 255, 0.1);
     color: white;
     text-decoration: none;
     font-weight: bold;
-    font-size: 1.8rem;
+    font-size: 1.125rem;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -732,10 +710,10 @@ body {
 
 .footer-copyright {
     border-top: 1px solid rgba(255, 255, 255, 0.2);
-    padding-top: 2rem;
-    margin-top: 2rem;
+    padding-top: 1.25rem;
+    margin-top: 1.25rem;
     text-align: center;
-    font-size: 1.4rem;
+    font-size: 0.875rem; 
     color: var(--text-light);
 }
 
@@ -753,42 +731,41 @@ body {
     /* 1024px / 16px = 64em */
     .hero-content {
         flex-direction: column;
-        padding-top: 8rem;
+        padding-top: 5rem;
         max-width: 95%;
     }
 
     .text-content,
     .illustration-content {
-        padding: 0 2rem;
+        padding: 0 1.25rem;
         text-align: center;
         max-width: 100%;
     }
 
     .text-content {
-        padding-left: 2rem;
+        padding-left: 1.25rem;
     }
 
     .illustration-content {
         justify-content: center;
-        padding-right: 2rem;
-        margin-top: 3rem;
+        padding-right: 1.25rem;
+        margin-top: 1.875rem;
     }
 
     .hero-illustration {
         max-width: 80%;
     }
 
-    /* --- CAMBIO --- */
     .bottom-rectangle {
         width: 95%;
-        padding: 3rem;
-        margin-top: 8rem;
+        padding: 1.875rem;
+        margin-top: 5rem;
     }
 
     .steps-container {
         flex-direction: column;
         align-items: center;
-        gap: 5rem;
+        gap: 3.125rem;
     }
 
     .step-card {
@@ -799,7 +776,7 @@ body {
 
     .arrow {
         right: 50%;
-        bottom: -3.5rem;
+        bottom: -2.1875rem;
         top: unset;
         transform: translateX(50%) rotate(90deg);
     }
@@ -809,14 +786,14 @@ body {
     }
 
     .about-us-section {
-        margin-top: 10rem;
+        margin-top: 6.25rem;
         width: 100%;
         border-radius: 0;
-        padding: 4rem 5%;
+        padding: 2.5rem 5%;
     }
 
     .plans-section {
-        margin-top: 10rem;
+        margin-top: 6.25rem;
         width: 95%;
     }
 
@@ -830,10 +807,9 @@ body {
     }
 
     .team-container {
-        margin-top: 3rem;
+        margin-top: 1.875rem;
     }
 
-    /* --- AÑADIDO (para la sección Comunidad) --- */
     .community-container {
         flex-direction: column;
     }
@@ -844,23 +820,22 @@ body {
     }
 
     .community-text {
-        margin-top: 3rem;
+        margin-top: 1.875rem;
     }
 
     .community-section {
         width: 100%;
         border-radius: 0;
-        padding: 4rem 5%;
-        margin-top: 10rem;
+        padding: 2.5rem 5%;
+        margin-top: 6.25rem;
     }
 
-    /* ===== AÑADIDO: Ocultar nav en móvil y ajustar padding ===== */
     .header-nav {
         display: none;
     }
 
     .header-bar {
-        padding: 1rem 4%;
+        padding: 0.625rem 4%;
         display: flex;
         justify-content: space-between;
     }
@@ -870,10 +845,8 @@ body {
 /* Tablet Vertical / Móvil Grande (ej. 768px) */
 @media (max-width: 48em) {
 
-    /* 768px / 16px = 48em */
-    /* ===== REGLA MODIFICADA ===== */
     .header-bar {
-        padding: 1rem 2rem;
+        padding: 0.625rem 1.25rem;
         align-items: center;
     }
 
@@ -882,20 +855,20 @@ body {
     }
 
     .logo {
-        height: 4rem;
+        height: 2.5rem;
     }
 
     .register-button {
-        padding: 0.8rem 1.5rem;
-        font-size: 1.4rem;
+        padding: 0.5rem 0.9375rem;
+        font-size: 0.875rem;
     }
 
     .text-content h1 {
-        font-size: 3.6rem;
+        font-size: 2.25rem;
     }
 
     .text-content p {
-        font-size: 1.6rem;
+        font-size: 1rem;
     }
 
     .app-buttons {
@@ -903,60 +876,58 @@ body {
     }
 
     .app-button {
-        height: 4rem;
+        height: 2.5rem;
     }
 
     .bottom-rectangle h2 {
-        font-size: 2.4rem;
+        font-size: 1.5rem;
     }
 
     .about-us-section {
-        margin-top: 8rem;
-        padding: 3rem 4%;
+        margin-top: 5rem;
+        padding: 1.875rem 4%;
     }
 
-    /* --- AÑADIDO (para la sección Comunidad) --- */
     .community-section {
-        padding: 3rem 4%;
-        margin-top: 8rem;
+        padding: 1.875rem 4%;
+        margin-top: 5rem;
     }
 
     .plans-section {
-        margin-top: 10rem;
-        padding: 3rem 2rem;
+        margin-top: 6.25rem;
+        padding: 1.875rem 1.25rem;
     }
 
     .team-grid {
         grid-template-columns: repeat(3, 1fr);
-        gap: 2.5rem;
+        gap: 1.5625rem;
     }
 
     .team-member img {
-        width: 8rem;
-        height: 8rem;
+        width: 5rem;
+        height: 5rem;
     }
 
     .team-member span {
-        font-size: 1.4rem;
+        font-size: 0.875rem;
     }
 
     .standard-button,
     .premium-button {
         width: 80%;
-        padding: 1.2rem 1.5rem;
+        padding: 0.75rem 0.9375rem;
     }
 
-    /* Ajustes del Footer para móvil */
     .site-footer {
-        padding: 4rem 5%;
-        margin-top: 8rem;
+        padding: 2.5rem 5%;
+        margin-top: 5rem;
     }
 
     .footer-container {
         flex-direction: column;
         align-items: center;
         text-align: center;
-        gap: 4rem;
+        gap: 2.5rem;
     }
 
     .footer-column {
@@ -980,48 +951,45 @@ body {
 /* Móvil Pequeño (ej. 480px) */
 @media (max-width: 30em) {
 
-    /* 480px / 16px = 30em */
-    /* ===== REGLA MODIFICADA ===== */
     .header-bar {
-        padding: 1rem 1.5rem;
+        padding: 0.625rem 0.9375rem;
     }
 
     .hero-content {
-        padding-top: 6rem;
+        padding-top: 3.75rem;
     }
 
     .text-content {
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
+        padding-left: 0.9375rem;
+        padding-right: 0.9375rem;
     }
 
     .illustration-content {
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
+        padding-left: 0.9375rem;
+        padding-right: 0.9375rem;
     }
 
     .team-grid {
         grid-template-columns: repeat(2, 1fr);
-        gap: 2rem;
+        gap: 1.25rem;
     }
 
     .about-us-section {
-        margin-top: 8rem;
-        padding: 2rem 3%;
+        margin-top: 5rem;
+        padding: 1.25rem 3%;
     }
 
     .plans-section {
-        margin-top: 8rem;
-        padding: 2rem;
+        margin-top: 5rem;
+        padding: 1.25rem;
     }
 
     .step-card {
         width: 95%;
     }
 
-    /* --- CAMBIO --- */
     .bottom-rectangle {
-        padding: 2rem;
+        padding: 1.25rem;
     }
 }
 
@@ -1029,50 +997,48 @@ body {
 /* Móvil Extra Pequeño (ej. 320px) */
 @media (max-width: 20em) {
 
-    /* 320px / 16px = 20em */
     .text-content h1 {
-        font-size: clamp(2.8rem, 8vw, 3.2rem);
+        font-size: clamp(1.75rem, 8vw, 2rem);
     }
 
     .text-content p {
-        font-size: 1.5rem;
+        font-size: 0.9375rem;
     }
 
     .app-button {
-        height: 3.5rem;
+        height: 2.1875rem;
     }
 
-    /* --- CAMBIO --- */
     .bottom-rectangle {
-        padding: 1.5rem;
+        padding: 0.9375rem;
     }
 
     .bottom-rectangle h2 {
-        font-size: 2rem;
+        font-size: 1.25rem;
     }
 
     .step-card h3 {
-        font-size: 2rem;
+        font-size: 1.25rem;
     }
 
     .step-card p {
-        font-size: 1.5rem;
+        font-size: 0.9375rem;
     }
 
     .arrow {
-        font-size: 3rem;
+        font-size: 1.875rem;
     }
 
     .about-us-section {
-        margin-top: 8rem;
+        margin-top: 5rem;
     }
 
     .team-member img {
-        width: 7rem;
-        height: 7rem;
+        width: 4.375rem;
+        height: 4.375rem;
     }
 
     .team-member span {
-        font-size: 1.2rem;
+        font-size: 0.75rem;
     }
 }
