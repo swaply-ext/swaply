@@ -64,6 +64,9 @@ body {
   background: linear-gradient(to bottom, #012534 0%, #00839e 100%);
   min-height: 100vh;
   margin: 0;
+}
+
+body.with-navbar {
   padding-top: 5rem;
 }
 
