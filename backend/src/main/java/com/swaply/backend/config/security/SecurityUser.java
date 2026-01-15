@@ -34,6 +34,10 @@ public class SecurityUser implements UserDetails {
         return authorities;
     }
 
+    public String getId() { //no se si esto debería ir aquí
+        return user.getId();
+    }
+
     @Override
     public String getPassword() {
 

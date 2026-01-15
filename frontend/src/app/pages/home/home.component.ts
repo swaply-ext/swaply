@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.component";
 import { SkillSearchComponent } from '../../components/skill-search/skill-search.component';
 import { FilterSkillsComponent } from '../../components/filter-skills/filter-skills.component';
@@ -10,6 +10,7 @@ import { RouterLink } from '@angular/router';
 import { AccountService } from '../../services/account.service';
 import { NextSwapComponent } from '../../components/next-swap/next-swap.component';
 import { NextSwap } from '../../models/next-swap.model';
+import { PaymentService } from '../../services/payment.service';
 
 
 @Component({
@@ -29,11 +30,13 @@ import { NextSwap } from '../../models/next-swap.model';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private accountService: AccountService) { }
+  
 
 
   private searchService = inject(SearchService);
-  private router = inject(Router);
+  private paymentService = inject(PaymentService); 
+  private route = inject(ActivatedRoute);          //se inyecta ActivatedRoute para leer la URL
+  private router = inject(Router);                 //para limpiar la URL después 
 
   private allCards: NextSwap[] = [];
   cards = signal<NextSwap[]>([]);
@@ -48,6 +51,42 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.loadInitialRecommendations();
+    this.checkPaymentStatus(); //al entrar, revisa al momemnto si hay un pago pendiente de confirmar
+  }
+
+  checkPaymentStatus() {
+    this.route.queryParams.subscribe(params => {
+      const sessionId = params['session_id']; //busca si existe el parámetro que nos manda Stripe
+      if (sessionId) {
+        //si hay un id verifica el pago
+        this.verifyPayment(sessionId);
+      }
+    });
+  }
+
+  verifyPayment(sessionId: string) {
+    //Se mete el spinner mientras se verifica
+    this.isLoadingMatches.set(true);
+    //llama al backend para verificar si el sessionId es válido y activar el premium     //no se si esto se podria meter en el payment service
+    this.paymentService.confirmPaymentSuccess(sessionId).subscribe({
+      next: () => {
+        alert('¡Pago verificado y Premium activado!'); //quitar también
+        //se limpia la URL para quitar el session_id
+        this.router.navigate([], {
+          queryParams: { session_id: null },
+          queryParamsHandling: 'merge', //este mantiene otros parámetros que pueda haber
+          replaceUrl: true //reemplaza el historial para que si le das para atrás no vuelva al pago
+        });
+        this.isLoadingMatches.set(false); //spinner fuera
+        
+      },
+      error: (err) => {
+        // El ID era falso, expirado o hubo error de red
+        console.error('Error verificando pago:', err);
+        alert('Hubo un error verificando tu pago.'); //quitar también
+        this.isLoadingMatches.set(false);
+      }
+    });
   }
 
   loadInitialRecommendations() {

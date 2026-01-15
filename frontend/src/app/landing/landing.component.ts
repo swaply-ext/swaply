@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router'; 
 import { PaymentService } from '../services/payment.service';
 import { PaymentResponse } from '../models/payment.model';
@@ -13,7 +13,9 @@ import { AuthService } from '../services/auth.service';
 })
 export class LandingComponent {
 
-  constructor(private paymentService: PaymentService, private authService: AuthService, private router: Router) { }
+  private paymentService = inject(PaymentService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
   irAPagar() {
     //verificación de si está logueado, si no lo está te manda al login
