@@ -20,6 +20,10 @@ export class AccountService {
     return this.http.get<any>(`${this.apiUrl}/profileData`);
   }
 
+  getUsername(): Observable<{ username: string }> {
+    return this.http.get<{ username: string }>(`${this.apiUrl}/username`);
+  }
+
   updateProfileData(data: any): Observable<boolean> {
     return this.http.patch<boolean>(`${this.apiUrl}/changeData`, data);
   }

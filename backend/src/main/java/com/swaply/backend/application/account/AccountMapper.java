@@ -6,6 +6,7 @@ import com.swaply.backend.application.account.dto.SkillsDTO;
 import com.swaply.backend.application.account.dto.EditProfileDTO;
 import com.swaply.backend.application.account.dto.PersonalInfoDTO;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
+import com.swaply.backend.application.account.dto.UsernameDTO;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring",
@@ -40,4 +41,9 @@ public interface AccountMapper {
     @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE)
     @Mapping(target = "fullName", expression = "java(dto.getName() + \" \" + dto.getSurname())")
     PublicProfileDTO mapUserToPublicProfile(UserDTO dto);
+
+    @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE)
+    UsernameDTO mapUserToUsernameDTO(UserDTO dto);
 }
+
+

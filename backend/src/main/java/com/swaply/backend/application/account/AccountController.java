@@ -11,6 +11,7 @@ import com.swaply.backend.application.account.dto.PersonalInfoDTO;
 import com.swaply.backend.application.account.dto.ProfileDataDTO;
 import com.swaply.backend.application.account.dto.PublicProfileDTO;
 import com.swaply.backend.application.account.dto.SkillsDTO;
+import com.swaply.backend.application.account.dto.UsernameDTO;
 import com.swaply.backend.application.account.service.AccountService;
 import com.swaply.backend.config.security.SecurityUser;
 
@@ -120,4 +121,9 @@ public class AccountController {
         PublicProfileDTO profile = service.getPublicProfileByUsername(username);
         return ResponseEntity.ok(profile);
     }
+    @GetMapping("/username")
+    public ResponseEntity<UsernameDTO> getUsername(@AuthenticationPrincipal SecurityUser SecurityUser) {
+        UsernameDTO usernameDTO = service.getUsername(SecurityUser.getUsername());
+        return ResponseEntity.ok(usernameDTO);
+    }   
 }

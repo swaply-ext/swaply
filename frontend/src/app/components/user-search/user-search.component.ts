@@ -64,13 +64,14 @@ export class UserSearchComponent {
   }
   ngOnInit(): void {
       //funcion para obtener el username del logeado del accountService y evitar entrar al public-profile de uno mismo
-      this.accountService.getProfileData().subscribe({
-        next: (profile: any) => {
-          if (profile) {
-            this.currentUsername = profile.username;
+      this.accountService.getUsername().subscribe({
+        next: (data) => {
+          if (data && data.username) {
+            this.currentUsername = data.username;
           }
         },
-        error: () => {} 
+        error: () => console.error('Error al obtener el username'),
+        complete: () => {} 
       });
   }
 
@@ -95,7 +96,7 @@ export class UserSearchComponent {
     this.searchTerm = user.username;
     this.results.set([]);
     this.showDropdown.set(false);
-    if (this.currentUsername && user.username === this.currentUsername) {
+    if (user.username === this.currentUsername) {
       this.router.navigate(['/myprofile']);  
     } else {
       this.router.navigate(['/user', user.username]);
