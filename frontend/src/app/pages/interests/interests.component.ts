@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SkillsService, SkillsModel } from '../../services/skills.service';
-import { AccountService, Account } from '../../services/account.service';
+import { AccountService} from '../../services/account.service';
 import { SkillCardComponent } from '../../components/skill-card/skill-card.component';
 
 interface SkillDTO {

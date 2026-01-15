@@ -7,36 +7,11 @@ import { SkillsPanelComponent } from '../../components/skills-panel/skills-panel
 import { InterestsPanelComponent } from '../../components/interests-panel/interests-panel.component';
 
 import { AccountService } from '../../services/account.service';
+import { UserLocation } from '../../models/user.models';
+import { UserSkills } from '../../models/skills.models';
+import { PrivateProfileData } from '../../models/data.models';
 
-//STRICTA (El que necessitan los comps hijos <app-skills-panel>)
-interface PanelSkill {
-  id: string;   // Obligatori
-  level: number; // Obligatori
-}
 
-//FLEXIBLE sino no carga datos del backend
-interface BackendSkill {
-  id?: string;
-  name?: string;
-  skillName?: string;
-  level?: number;
-}
-
-interface Location {
-  placeId: string;
-  lat: number;
-  lon: number;
-  displayName: string;
-}
-
-interface ProfileData {
-  fullName: string;
-  username: string;
-  location: Location;
-  description: string;
-  profilePhotoUrl: string;
-  rating: number;
-}
 
 @Component({
 selector: 'app-public-profile',
@@ -53,9 +28,9 @@ styleUrls: ['./public-profile.component.css']
 })
 export class PublicProfileComponent implements OnInit {
 
-public interests: PanelSkill[] = [];
-  public skills: PanelSkill[] = [];
-public profileData: ProfileData = {} as ProfileData;
+public interests: UserSkills[] = [];
+  public skills: UserSkills[] = [];
+public privateProfileData: PrivateProfileData = {} as PrivateProfileData;
 public clasesImpartidas: any[] = [];
 public isHistoryOpen: boolean = true; 
 
@@ -88,16 +63,16 @@ ngOnInit(): void {
 splitAndSendUser(user: any): void {
 if (!user) return;
     // MAPPING SEGURO esto quita l'error "Type 'Skill[]' is not assignable..."
-    this.skills = this.mapToPanelSkill(user.skills);
-    this.interests = this.mapToPanelSkill(user.interests)
+    this.skills = this.mapToUserSkills(user.skills);
+    this.interests = this.mapToUserSkills(user.interests)
 
 this.generateClassesFromSkills(this.skills);
-this.mapProfileData(user);
+this.mapPrivateProfileData(user);
 }
 
 
 //normalitzar les skills
-    private mapToPanelSkill(list: any[]): PanelSkill[] {
+    private mapToUserSkills(list: any[]): UserSkills[] {
     if (!list || !Array.isArray(list)) return [];
 
     return list.map(item => {
@@ -109,9 +84,9 @@ this.mapProfileData(user);
       };
     });
   }
-mapProfileData(user: any): void {
-this.profileData = {
-fullName: user.fullName || `${user.name || ''} ${user.surname || ''}`.trim(),
+mapPrivateProfileData(user: PrivateProfileData): void {
+this.privateProfileData = {
+fullName: user.fullName,
 username: user.username,
 location: user.location,
 description: user.description || '',
@@ -120,7 +95,7 @@ rating: user.rating || 0,
 };
 }
 /// Esto es ESTATICO PARA LA DEMO YA NO LO UTILIZAMOS IGNORALO
-  generateClassesFromSkills(skills: PanelSkill[]): void {
+  generateClassesFromSkills(skills: UserSkills[]): void {
 this.clasesImpartidas = [];
 
 const fakeStudents = [
@@ -161,7 +136,7 @@ if (!skills) return;
 
 
 skills.forEach((skill, index) => {
-  // skill es de PanelSkill con id
+  // skill es de UserSkills con id
 const originalId = skill.id.toLowerCase().trim();
 
 if (originalId === 'unknown') return;

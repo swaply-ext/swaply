@@ -4,9 +4,9 @@ import { AccountService } from '../../services/account.service';
 import { SwapService } from '../../services/swap.service';
 import { UsersService } from '../../services/users.service';
 import { RouterLink } from '@angular/router';
-import { Swap } from '../../models/swap.model';
-import { SwapProfileData} from '../../models/swap-profile-data';
-import { UserSkills } from '../../models/user-skills.model';
+import { Swap } from '../../models/swap.models';
+import { SwapProfileData } from '../../models/swap.models';
+import { UserSkills } from '../../models/skills.models';
 @Component({
   selector: 'app-next-swap',
   standalone: true,
@@ -20,9 +20,9 @@ export class NextSwapComponent {
     private accountService: AccountService,
     private usersService: UsersService) { }
 
-  nextSwap = signal<Swap | null>(null);
-  profileToTeach = signal<SwapProfileData | null>(null);
-  profileToLearn = signal<SwapProfileData | null>(null);
+  nextSwap = signal<Swap>({} as Swap);
+  profileToTeach = signal<SwapProfileData>({} as SwapProfileData);
+  profileToLearn = signal<SwapProfileData>({} as SwapProfileData);
 
   hasIntercambio = signal(true);
   isConfirmed = signal(false);
@@ -71,7 +71,7 @@ export class NextSwapComponent {
         }
       },
       error: (err) => {
-        this.nextSwap.set(null);
+        this.nextSwap.set({} as Swap);
         this.hasIntercambio.set(false);
       }
     });
@@ -88,7 +88,7 @@ export class NextSwapComponent {
         console.log('skills teach:', this.profileToTeach()?.skills);
       },
       error: (err) => {
-        this.nextSwap.set(null);
+        this.nextSwap.set({} as Swap);
       }
     });
   }
@@ -147,8 +147,8 @@ export class NextSwapComponent {
     });
   }
 
-  private assignImageToSkill(category: string, skillName: string): string | undefined {
-    if (!skillName) return undefined;
+  private assignImageToSkill(category: string, skillName: string): string {
+    if (!skillName) return 'assets/photos_skills/default.jpg';
 
     const name = skillName.toLowerCase();
 
@@ -202,7 +202,7 @@ export class NextSwapComponent {
       if (cat.includes('música') || cat.includes('musica')) folder = 'music';
     }
 
-    return undefined;
+    return 'assets/photos_skills/default.jpg';
   }
 
   private normalizeString(str: string): string {

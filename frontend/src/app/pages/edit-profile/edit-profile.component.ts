@@ -10,9 +10,9 @@ import { SkillsPanelComponent } from '../../components/skills-panel/skills-panel
 import { InterestsPanelComponent } from '../../components/interests-panel/interests-panel.component';
 import { LocationSearchComponent } from '../../components/location-search/location-search.component';
 import { ValidateInputsService } from '../../services/validate-inputs.service';
-import { UserSkills } from '../../models/user-skills.model';
-import { UserLocation } from '../../models/user-location.model';
-import { EditProfileData } from '../../models/edit-profile.model';
+import { EditProfileData } from '../../models/data.models';
+import { UserLocation } from '../../models/user.models';
+import { UserSkills } from '../../models/skills.models';
 
 @Component({
   selector: 'app-profile',
@@ -35,7 +35,7 @@ export class EditProfileComponent implements OnInit {
   public interests: Array<UserSkills> = [];
   public skills: Array<UserSkills> = [];
   public profileData: EditProfileData = {} as EditProfileData;
-  private locationData: UserLocation | null = null;
+  private locationData: UserLocation = {} as UserLocation;
 
   isUploadingPhoto = false;
 
@@ -88,7 +88,7 @@ export class EditProfileComponent implements OnInit {
     if (user.location && typeof user.location === 'object' && user.location.displayName) {
       this.locationData = user.location;
     } else {
-      this.locationData = null;
+      this.locationData = {} as UserLocation;
     }
     this.profileData = {
       name: user.name,
@@ -267,17 +267,13 @@ export class EditProfileComponent implements OnInit {
     window.location.reload();
   }
 
-  onLocationSelected(newLocation: UserLocation | null): void {
+  onLocationSelected(newLocation: UserLocation): void {
     // 1. Guarda el objeto UserLocation completo para el envío al backend
-    this.locationData = newLocation; // locationData ahora es tipo location | null
+    this.locationData = newLocation;
 
-    if (newLocation) {
-      // 2. Actualiza la variable `location` (el string de display)
-      this.location = newLocation.displayName;
-    } else {
-      // Manejar la limpieza si el usuario borra la ubicación
-      this.location = '';
-    }
+    // 2. Actualiza la variable `location` (el string de display)
+    this.location = newLocation && newLocation.displayName ? newLocation.displayName : '';
+
     // Llamar a validate para mostrar errores si fuera necesario
     this.validate();
   }

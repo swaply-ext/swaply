@@ -2,11 +2,8 @@ import { Component, OnChanges, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { PrivateProfileData } from '../../models/private-profile-data.model';
-// import { UserLocation } from '../../models/user-location.model';
-import { UserSkills} from '../../models/user-skills.model';
-
-
+import { PrivateProfileData } from '../../models/data.models';
+import { UserSkills } from '../../models/skills.models';
 
 @Component({
   selector: 'app-profile-info',

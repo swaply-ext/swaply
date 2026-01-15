@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, Renderer2 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Router } from '@angular/router';
-import { DropdownMenuComponent, DropdownMenuData } from '../dropdown-menu/dropdown-menu.component';
+import { DropdownMenuComponent } from '../dropdown-menu/dropdown-menu.component';
 import { AccountService } from '../../services/account.service';
 import { AuthService } from '../../services/auth.service';
 import { UserSearchComponent } from '../user-search/user-search.component';
+import { DropdownMenuData } from '../../models/data.models';
 
 @Component({
   selector: 'app-app-navbar',
@@ -14,13 +15,19 @@ import { UserSearchComponent } from '../user-search/user-search.component';
   templateUrl: './app-navbar.component.html',
   styleUrls: ['./app-navbar.component.css']
 })
-export class AppNavbarComponent implements OnInit {
+export class AppNavbarComponent implements OnInit, OnDestroy {
   showDropdown = false;
   dropdownMenuData!: DropdownMenuData;
 
-  constructor(private router: Router, private accountService: AccountService, private authService: AuthService) {}
+  constructor(
+    private router: Router, 
+    private accountService: AccountService, 
+    private authService: AuthService,
+    private renderer: Renderer2
+  ) {}
 
   ngOnInit(): void {
+    this.renderer.addClass(document.body, 'with-navbar');
     this.accountService.getProfileData().subscribe({
       next: (user) => {
         this.dropdownMenuData = {
@@ -36,6 +43,10 @@ export class AppNavbarComponent implements OnInit {
         console.error('Error al obtener datos del perfil:', err);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.renderer.removeClass(document.body, 'with-navbar');
   }
 
   toggleDropdown() {

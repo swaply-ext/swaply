@@ -23,14 +23,7 @@ import {
   catchError
 } from 'rxjs/operators';
 import { LocationService } from '../../services/location.service';
-
-
-export interface location {
-  placeId: string;
-  displayName: string;
-  lat: number;
-  lon: number;
-}
+import { UserLocation } from '../../models/user.models';
 
 @Injectable({
   providedIn: 'root'
@@ -52,12 +45,12 @@ export class LocationSearchComponent {
 
   @Input() placeholder: string = 'Buscar Ubicación...';
 
-  @Output() locationSelected = new EventEmitter<location | null>(); // <-- Este es el Output clave
+  @Output() locationSelected = new EventEmitter<UserLocation>(); // <-- Este es el Output clave
   private el = inject(ElementRef);
 
   searchTerm = '';
   // el signal sirve para almacenar variables que cambian con el tiempo
-  results = signal<location[]>([]);
+  results = signal<UserLocation[]>([]);
   isLoading = signal(false);
   showDropdown = signal(false);
 
@@ -114,7 +107,7 @@ export class LocationSearchComponent {
     this.searchTermSubject.next(term);
   }
 
-  onSelectlocation(location: location): void {
+  onSelectlocation(location: UserLocation): void {
     console.log('location seleccionada:', location);
     this.searchTerm = location.displayName;
     this.results.set([]);

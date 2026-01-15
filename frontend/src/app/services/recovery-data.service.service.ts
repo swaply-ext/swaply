@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
-export interface RecoveryData {
-  id?: string;
-  code?: string;
-  email?: string;
-}
+import { RecoveryData } from '../models/data.models';
+
 
 @Injectable({
   providedIn: 'root'
