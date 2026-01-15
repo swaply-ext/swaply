@@ -45,7 +45,7 @@ export class UserSearchComponent {
       private accountService: AccountService,
       private router: Router,
       private userSearchService: UsersService,
-      private el: ElementRef
+      private element: ElementRef
 
   ) {
     this.searchTermSubject.pipe(
@@ -78,7 +78,7 @@ export class UserSearchComponent {
 
   @HostListener('document:click', ['$event'])
   onClickOutside(event: Event) {
-    if (!this.el.nativeElement.contains(event.target)) {
+    if (!this.element.nativeElement.contains(event.target)) {
       this.showDropdown.set(false);
     }
   }
