@@ -54,11 +54,11 @@ styleUrls: ['./public-profile.component.css']
 export class PublicProfileComponent implements OnInit {
 
 public interests: PanelSkill[] = [];
-  public skills: PanelSkill[] = [];
+public skills: PanelSkill[] = [];
 public profileData: ProfileData = {} as ProfileData;
 public clasesImpartidas: any[] = [];
 public isHistoryOpen: boolean = true; 
-
+private currentUsername: string = ''; 
   constructor(
     private accountService: AccountService,
     private route: ActivatedRoute,
@@ -66,6 +66,19 @@ public isHistoryOpen: boolean = true;
   ) { }
 
 ngOnInit(): void {
+    this.accountService.getUsername().subscribe({
+      next: (data: any) => {
+        this.currentUsername = data.username || data;
+        this.checkUrlParams();
+      },
+      error: () => {
+        console.error('Error al obtener el username actual (quizás no logueado)');
+        this.checkUrlParams();
+      }
+    });
+
+
+
     this.route.paramMap.subscribe(params => {
       const usernameFromUrl = params.get('username');
       if (usernameFromUrl) {
@@ -74,14 +87,38 @@ ngOnInit(): void {
     });
 }
 
+private checkUrlParams(): void {
+    this.route.paramMap.subscribe(params => {
+      const usernameFromUrl = params.get('username');
+      
+      if (!usernameFromUrl) {
+        this.router.navigate(['/error-404']);
+        return;
+      }
+      if (this.currentUsername && usernameFromUrl === this.currentUsername) {
+        this.router.navigate(['/error-404']); 
+      } else {
+        // Si no soy yo, cargar los datos públicos
+        this.getPublicProfileFromBackend(usernameFromUrl);
+      }
+    });
+  }
+
   getPublicProfileFromBackend(username: string): void {
     this.accountService.getPublicProfile(username).subscribe({
       next: (user: any) => {
         // Log vital para ver que datos llegan del backend
         console.log(' [PublicProfile] Datos del usuario publico recibidos del backend:', user);
+        if (!user) {
+           this.router.navigate(['/error-404']);
+           return;
+        }
         this.splitAndSendUser(user);
       },
-      error: (err: any) => console.error('Error cargando perfil:', err)
+      error: (err: any) => {
+        console.error('Error cargando perfil:', err);
+        this.router.navigate(['/error-404']);
+      }
     });
   }
 
