@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './phone-input.component.css'
 })
 export class PhoneInputComponent {
-  phone: number = 0;
+  phone: number = null!;
   @Input() hasError: boolean = false; 
   @Output() phoneChange = new EventEmitter<number>();
 }
