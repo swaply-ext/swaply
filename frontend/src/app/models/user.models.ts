@@ -1,4 +1,4 @@
-import { Interest } from "./skills.models";
+import { SkillDisplay } from "./skills.models";
 
 export interface UserLogin {
     email: string;
@@ -33,7 +33,7 @@ export interface UserAvatarOption {
 
 export interface UserSwap {
     username: string;
-    skills?: Interest[];
+    skills?: SkillDisplay[];
 }
 
 export interface UserSearchItem {

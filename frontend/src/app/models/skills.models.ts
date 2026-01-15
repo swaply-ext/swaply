@@ -6,18 +6,13 @@ export interface SkillsModel {
 }
 
 export interface SkillDisplay extends SkillsModel {
-    level: number;
+    level?: number;
+    selected?: boolean;
+    image?: string;
+
 }
 
 export interface UserSkills {
     id: string;
     level: number;
-}
-
-export interface Interest {
-    id?: string;
-    name: string;
-    selected?: boolean;
-    image?: string;
-    level?: number;
 }
