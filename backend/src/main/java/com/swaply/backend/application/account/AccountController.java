@@ -1,5 +1,7 @@
 package com.swaply.backend.application.account;
 
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -126,4 +128,11 @@ public class AccountController {
         UsernameDTO usernameDTO = service.getUsername(SecurityUser.getUsername());
         return ResponseEntity.ok(usernameDTO);
     }   
+    @GetMapping("/username")
+    public ResponseEntity<Map<String, String>> getUsername(@AuthenticationPrincipal SecurityUser securityUser) {
+        String username = service.getUsername(securityUser.getUsername());
+        
+        // Devolvemos un JSON simple sin crear una clase DTO
+        return ResponseEntity.ok(Collections.singletonMap("username", username));
+    }
 }

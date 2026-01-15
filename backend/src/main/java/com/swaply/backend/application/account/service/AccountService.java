@@ -87,6 +87,7 @@ public class AccountService /* implements UserRepository */ {
     }
     public UsernameDTO getUsername(String userId) {
         UserDTO userDTO = userService.getUserByID(userId);
-        return mapper.mapUserToUsernameDTO(userDTO);
+        return new UsernameDTO(userDTO.getUsername());
+    
     }
 }

@@ -32,9 +32,6 @@ export interface UserSearchItem {
 })
 export class UserSearchComponent {
 
-  private router = inject(Router);
-  private userSearchService = inject(UsersService);
-  private el = inject(ElementRef);
   private currentUsername: string = '';
 
   searchTerm = '';
@@ -46,6 +43,10 @@ export class UserSearchComponent {
 
   constructor(
       private accountService: AccountService,
+      private router: Router,
+      private userSearchService: UsersService,
+      private el: ElementRef
+
   ) {
     this.searchTermSubject.pipe(
       debounceTime(300),
