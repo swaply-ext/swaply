@@ -12,7 +12,7 @@
   box-sizing: border-box;
   overflow: hidden;
   opacity: 0;
-  transform: translateY(8px);
+  transform: translateY(0.5rem);
   pointer-events: none;
   transition: opacity 0.2s ease, transform 0.2s ease;
   z-index: 1000;
