@@ -70,11 +70,9 @@ ngOnInit(): void {
     this.userService.getUsername().subscribe({
       next: (data: string) => {
         this.currentUsername = data; 
-        console.log(' [PublicProfile] Username propio obtenido:', this.currentUsername);
         this.checkUrlParams();
       },
       error: () => {
-        console.warn('Usuario no logueado o error obteniendo username propio.');
         this.currentUsername = '';
         this.checkUrlParams();
       }
