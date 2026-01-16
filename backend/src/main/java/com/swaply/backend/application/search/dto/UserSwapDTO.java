@@ -13,7 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserSwapDTO {
-    private String userId;
     private String name;
     private String username;
     private String profilePhotoUrl;

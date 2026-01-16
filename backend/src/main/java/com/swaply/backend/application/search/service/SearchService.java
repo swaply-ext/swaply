@@ -162,7 +162,6 @@ public class SearchService {
     private UserSwapDTO mapToUserSwapDTO(User user, UserSkills userSkill, boolean isMatch, String distanceLabel) {
         UserSwapDTO dto = new UserSwapDTO();
         Skills skill = skillsService.getSkill(userSkill.getId());
-        dto.setUserId(user.getId());
         dto.setName(user.getName());
         dto.setUsername(user.getUsername());
         dto.setProfilePhotoUrl(user.getProfilePhotoUrl());
@@ -188,7 +187,6 @@ public class SearchService {
 
         User user = userOpt.get();
         UserSwapDTO dto = new UserSwapDTO();
-        dto.setUserId(user.getId());
         dto.setName(user.getName());
         dto.setUsername(user.getUsername());
         dto.setProfilePhotoUrl(user.getProfilePhotoUrl());
