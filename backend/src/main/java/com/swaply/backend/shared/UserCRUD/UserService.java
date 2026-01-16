@@ -1,7 +1,9 @@
 package com.swaply.backend.shared.UserCRUD;
 
 import java.text.Normalizer;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -136,9 +138,30 @@ public class UserService {
         return repository.existsUserByLocation(location);
     }
 
-    public List<UserDTO> getFilterSkills(List<String> myInterestIds){
+public List<UserDTO> getFilterSkills(List<String> myInterestIds) {
+    System.out.println("Entra en el service. Intereses: " + myInterestIds);
+
+    return myInterestIds.stream()
+        // 1. Por cada skillId, hacemos una llamada rápida al repo
+        .map(skillId -> repository.findFirstUserBySkillId(skillId))
+        
+        // 2. Quitamos los nulos (por si nadie enseña una skill concreta)
+        .filter(Objects::nonNull)
+        
+        // 3. Convertimos a DTO
+        .map(mapper::entityToDTO)
+        
+        // 4. OJO AQUÍ: Si NO quieres que el mismo usuario se repita en la lista final
+        // aunque enseñe varias cosas, dejas el .distinct().
+        // Si te da igual que el usuario aparezca repetido porque representa skills distintas, quita el .distinct().
+        .distinct() 
+        
+        .collect(Collectors.toList());
+}
+        /* 
         return repository.findUsersByMultipleSkillIds(myInterestIds).stream()
             .map(mapper::entityToDTO)
             .collect(Collectors.toList());
-    }
+            */
+    
 }
