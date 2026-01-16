@@ -13,7 +13,6 @@ import com.swaply.backend.application.account.dto.PersonalInfoDTO;
 import com.swaply.backend.application.account.dto.ProfileDataDTO;
 import com.swaply.backend.application.account.dto.PublicProfileDTO;
 import com.swaply.backend.application.account.dto.SkillsDTO;
-import com.swaply.backend.application.account.dto.UsernameDTO;
 import com.swaply.backend.application.account.service.AccountService;
 import com.swaply.backend.config.security.SecurityUser;
 
@@ -124,10 +123,4 @@ public class AccountController {
         return ResponseEntity.ok(profile);
     }
 
-    @GetMapping("/username")
-    public ResponseEntity<Map<String, String>> getUsername(@AuthenticationPrincipal SecurityUser securityUser) {
-        String username = service.getUsernameOnly(securityUser.getUsername());
-        //AL SER UN SOLO STRING, NO HACEMOS DTO DTO, DEVOLVEMOS UN MAP
-        return ResponseEntity.ok(Collections.singletonMap("username", username));
-    }
 }

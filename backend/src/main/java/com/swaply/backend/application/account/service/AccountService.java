@@ -5,7 +5,6 @@ import com.swaply.backend.application.account.dto.PersonalInfoDTO;
 import com.swaply.backend.application.account.dto.ProfileDataDTO;
 import com.swaply.backend.application.account.dto.PublicProfileDTO;
 import com.swaply.backend.application.account.dto.SkillsDTO;
-import com.swaply.backend.application.account.dto.UsernameDTO;
 import com.swaply.backend.application.auth.exception.UserAlreadyExistsException;
 import com.swaply.backend.shared.UserCRUD.UserService;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
@@ -84,10 +83,5 @@ public class AccountService /* implements UserRepository */ {
   
     public void deleteUser(String userId) {
         userService.deleteUserById(userId);
-    }
-
-    public String getUsernameOnly(String userId) {
-        UserDTO user = userService.getUserByID(userId);
-        return user.getUsername();
     }
 }

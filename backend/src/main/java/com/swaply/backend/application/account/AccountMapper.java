@@ -6,7 +6,6 @@ import com.swaply.backend.application.account.dto.SkillsDTO;
 import com.swaply.backend.application.account.dto.EditProfileDTO;
 import com.swaply.backend.application.account.dto.PersonalInfoDTO;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
-import com.swaply.backend.application.account.dto.UsernameDTO;
 import org.mapstruct.*;
 
 @Mapper(componentModel = "spring",

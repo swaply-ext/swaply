@@ -5,9 +5,9 @@ import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.compo
 import { ProfileInfoComponent } from "../../components/profile-info/profile-info.component";
 import { SkillsPanelComponent } from '../../components/skills-panel/skills-panel.component';
 import { InterestsPanelComponent } from '../../components/interests-panel/interests-panel.component';
-
 import { AccountService } from '../../services/account.service';
-
+import { UsersService } from '../../services/users.service';
+import id from '@angular/common/locales/extra/id';
 //STRICTA (El que necessitan los comps hijos <app-skills-panel>)
 interface PanelSkill {
   id: string;   // Obligatori
@@ -60,45 +60,38 @@ public clasesImpartidas: any[] = [];
 public isHistoryOpen: boolean = true; 
 private currentUsername: string = ''; 
   constructor(
+    private userService: UsersService,
     private accountService: AccountService,
     private route: ActivatedRoute,
     private router: Router
   ) { }
 
 ngOnInit(): void {
-    this.accountService.getUsername().subscribe({
-      next: (data: any) => {
-        this.currentUsername = data.username || data;
+    this.userService.getUsername().subscribe({
+      next: (data: string) => {
+        this.currentUsername = data; 
+        console.log(' [PublicProfile] Username propio obtenido:', this.currentUsername);
         this.checkUrlParams();
       },
       error: () => {
-        console.error('Error al obtener el username actual (quizás no logueado)');
+        console.warn('Usuario no logueado o error obteniendo username propio.');
+        this.currentUsername = '';
         this.checkUrlParams();
       }
     });
-
-
-
+  }
+  private checkUrlParams(): void {
     this.route.paramMap.subscribe(params => {
       const usernameFromUrl = params.get('username');
-      if (usernameFromUrl) {
-        this.getPublicProfileFromBackend(usernameFromUrl);
-      }
-    });
-}
 
-private checkUrlParams(): void {
-    this.route.paramMap.subscribe(params => {
-      const usernameFromUrl = params.get('username');
-      
       if (!usernameFromUrl) {
         this.router.navigate(['/error-404']);
         return;
       }
-      if (this.currentUsername && usernameFromUrl === this.currentUsername) {
-        this.router.navigate(['/error-404']); 
+
+      if (this.currentUsername === usernameFromUrl) {
+        this.router.navigate(['/myprofile']);
       } else {
-        // Si no soy yo, cargar los datos públicos
         this.getPublicProfileFromBackend(usernameFromUrl);
       }
     });
