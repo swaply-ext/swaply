@@ -2,7 +2,6 @@ import { SkillDisplay, UserSkills } from "./skills.models";
 import { UserLocation } from "./user-location.model";
 
 export interface UserSwapDTO {
-  userId: string;
   name: string;
   username: string;
   profilePhotoUrl: string;

@@ -89,8 +89,7 @@ export class HomeComponent implements OnInit {
 
   private processResults(matches: UserSwapDTO[]) {
     this.allCards = matches.map(m => ({
-      userId: m.userId,
-      username: (m as any).username || m.userId,
+      username: (m as any).username,
       userName: m.name,
       userAvatar: m.profilePhotoUrl || 'assets/default-image.jpg',
       skillTitle: m.skill.name,
