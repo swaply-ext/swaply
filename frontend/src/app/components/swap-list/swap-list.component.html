@@ -1,6 +1,5 @@
 <section class="interchanges-list-section">
 
-
   @if (loading()) {
     <div class="loading-state">Cargando intercambios...</div>
   }
@@ -11,6 +10,11 @@
       @for (swap of swaps(); track swap.id) {
 
         <div class="interchange-box">
+          
+          <div style="text-align: right; padding: 1rem 1.5rem 0; color: #888; font-size: 0.85rem;">
+             <span class="material-symbols-outlined" style="font-size: 1rem; vertical-align: text-bottom; margin-right: 4px;">calendar_today</span>
+             Solicitado el: {{ swap.createdAt | date:'dd/MM/yyyy' }}
+          </div>
           <div class="interchange-content">
 
             <div class="interchange-card-wrapper">
