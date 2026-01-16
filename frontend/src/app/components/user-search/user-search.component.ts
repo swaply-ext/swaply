@@ -14,11 +14,9 @@ import { debounceTime, distinctUntilChanged, switchMap, tap, filter, catchError 
 import { Router } from '@angular/router';
 import { UsersService } from '../../services/users.service';
 import { AccountService } from '../../services/account.service';
-export interface UserSearchItem {
-  id: string;
-  username: string;
-  profilePhotoUrl?: string;
-}
+import { UserSearchItem } from '../../models/user.models';
+
+
 
 
 

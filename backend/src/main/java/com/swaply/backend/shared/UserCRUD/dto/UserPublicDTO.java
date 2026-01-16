@@ -16,18 +16,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO {
+public class UserPublicDTO {
     private String id;
     private String username;
     private String name;
     private String surname;
-    private String email;
-    private String password;
-    private Integer code;
-    private Integer ttl;
     private Location location;
     private String gender;
-    private String phone;
     private List<UserSkills> skills;
     private List<UserSkills> interests;
     @JsonFormat(pattern="dd/MM/yyyy")
@@ -38,5 +33,4 @@ public class UserDTO {
     private boolean isPremium;
     private boolean isModerator;
     private List<Swap> swaps;
-    private Double rating;
 }

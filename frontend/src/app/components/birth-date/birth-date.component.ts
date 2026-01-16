@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './birth-date.component.css'
 })
 export class BirthDateComponent {
-  birthDate = null;
+  birthDate: Date = new Date();
   @Input() hasError: boolean = false;
   @Output() birthDateChange = new EventEmitter<Date>();
 }

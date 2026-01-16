@@ -10,13 +10,7 @@ import { RegisterDataService } from '../../services/register-data.service';
 import { GenderInputComponent } from '../../components/gender-input/gender-input.component';
 import { LocationSearchComponent } from '../../components/location-search/location-search.component';
 import { NgIf } from '@angular/common';
-
-interface Location {
-  placeId: string;
-  lat: number;
-  lon: number;
-  displayName: string;
-}
+import { UserLocation } from '../../models/user.models';
 
 
 @Component({
@@ -42,7 +36,7 @@ export class PersonalInformationComponent {
   surname = '';
   birthDate!: Date;
   gender = '';
-  location: Location | null = null;
+  location: UserLocation = {} as UserLocation;
   phone = 0;
 
   showError = false;
@@ -62,7 +56,7 @@ export class PersonalInformationComponent {
     this.surname = data.surname || '';
     this.birthDate = data.birthDate ? new Date(data.birthDate) : new Date();
     this.gender = data.gender || '';
-    this.location = data.location as Location | null; // Lo casteamos para seguridad si viene del servicio.
+    this.location = data.location as UserLocation; // Lo casteamos para seguridad si viene del servicio.
     this.phone = data.phone || 0;
   }
 
@@ -110,7 +104,7 @@ export class PersonalInformationComponent {
       .subscribe({
         next: () => {
           console.log('Registro completo:', allUserData);
-          this.router.navigate(['/']);
+          this.router.navigate(['/select-avatar']);
         },
         error: (err) => {
           console.error('Error al añadir información personal:', err.message);
@@ -178,7 +172,7 @@ export class PersonalInformationComponent {
     else return false;
   }
 
-  onLocationSelected(newLocation: Location | null): void {
+  onLocationSelected(newLocation: UserLocation): void {
     this.location = newLocation;
     console.log('Ubicación seleccionada capturada:', this.location);
   }
