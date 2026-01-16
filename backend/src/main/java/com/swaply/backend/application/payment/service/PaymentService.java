@@ -21,7 +21,7 @@ public class PaymentService {
     private final UserService userService;
     private final UserRepository userRepository;
 
-    //esto es para crear la sesión y vincularla al ID del usuario
+    // esto es para crear la sesión y vincularla al ID del usuario
     public String createPremiumCheckoutSession(String userId) {
 
         User user = userRepository.findById(userId)
@@ -33,11 +33,11 @@ public class PaymentService {
         Stripe.apiKey = stripeKey;
         SessionCreateParams params = SessionCreateParams.builder()
                 .setMode(SessionCreateParams.Mode.PAYMENT)
-                //si va bien redirige a home con el id de la sesión
+                // si va bien redirige a home con el id de la sesión
                 .setSuccessUrl("http://localhost:4200/home?session_id={CHECKOUT_SESSION_ID}")
-                //redirige a la landing si se cancela el pago 
+                // redirige a la landing si se cancela el pago
                 .setCancelUrl("http://localhost:4200/landing")
-                //se vincula la sesión al ID del usuario 
+                // se vincula la sesión al ID del usuario
                 .setClientReferenceId(userId)
                 .addLineItem(SessionCreateParams.LineItem.builder()
                         .setQuantity(1L)
@@ -59,25 +59,32 @@ public class PaymentService {
         }
     }
 
-    //este metodo es para confirmar el pago y activar el premium
+    // este metodo es para confirmar el pago y activar el premium
     public void confirmPremiumPayment(String sessionId, String currentUserId) {
-        Stripe.apiKey = stripeKey;
 
+        // verifica si ya es premium para evitar procesamiento innecesario
+        User user = userRepository.findById(currentUserId)
+                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado"));
+
+        if (user.isPremium()) {
+            return; //o lanza excepcion
+        }
+        Stripe.apiKey = stripeKey;
         try {
-            //recupera la sesión de Stripe
+            // recupera la sesión de Stripe
             Session session = Session.retrieve(sessionId);
 
-            //verifica que el pago está completado
+            // verifica que el pago está completado
             if (!"paid".equals(session.getPaymentStatus())) {
                 throw new RuntimeException("El pago no se ha completado o es inválido.");
             }
 
-            //verifica que el usuario que paga es el mismo que inició la sesión
+            // verifica que el usuario que paga es el mismo que inició la sesión
             if (!currentUserId.equals(session.getClientReferenceId())) {
                 throw new SecurityException("Intento de fraude: La sesión de pago no pertenece a este usuario.");
             }
 
-            //si todo va bien, se activa el premium
+            // si todo va bien, se activa el premium
             userService.activatePremium(currentUserId);
 
         } catch (Exception e) {
