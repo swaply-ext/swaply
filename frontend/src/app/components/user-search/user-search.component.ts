@@ -63,18 +63,6 @@ export class UserSearchComponent {
       this.showDropdown.set(results.length > 0);
     });
   }
-  ngOnInit(): void {
-      //funcion para obtener el username del logeado del accountService y evitar entrar al public-profile de uno mismo
-      this.accountService.getUsername().subscribe({
-        next: (data) => {
-          if (data && data.username) {
-            this.currentUsername = data.username;
-          }
-        },
-        error: () => console.error('Error al obtener el username'),
-        complete: () => {} 
-      });
-  }
 
   @HostListener('document:click', ['$event'])
   onClickOutside(event: Event) {
