@@ -120,4 +120,5 @@ public class AccountController {
         PublicProfileDTO profile = service.getPublicProfileByUsername(username);
         return ResponseEntity.ok(profile);
     }
+
 }
