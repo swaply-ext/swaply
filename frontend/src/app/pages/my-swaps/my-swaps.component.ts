@@ -2,10 +2,10 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.component";
-import { SwapListComponent, Profile } from '../../components/swap-list/swap-list.component';
+import { SwapListComponent} from '../../components/swap-list/swap-list.component';
 import { SwapService } from '../../services/swap.service';
 import { UsersService } from '../../services/users.service';
-import { Swap } from '../../models/swap.model';
+import { Swap, SwapProfileData } from '../../models/swap.models';
 
 @Component({
   selector: 'app-my-swaps-page',
@@ -24,7 +24,7 @@ export class MySwapsPageComponent implements OnInit {
   pendingSwaps: Swap[] = [];
 
 
-  pendingProfiles = new Map<string, Profile>();
+  pendingProfiles = new Map<string, SwapProfileData>();
 
 
   isLoading = true;
@@ -65,8 +65,8 @@ export class MySwapsPageComponent implements OnInit {
   }
 
 
-  getRequesterUser(swap: Swap): Profile | undefined {
-    return this.pendingProfiles.get(swap.requestedUserId);
+  getRequesterUser(swap: Swap): SwapProfileData {
+    return this.pendingProfiles.get(swap.requestedUserId) as SwapProfileData;
   }
 
 

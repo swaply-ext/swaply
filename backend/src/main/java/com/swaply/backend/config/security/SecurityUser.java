@@ -34,6 +34,12 @@ public class SecurityUser implements UserDetails {
         return authorities;
     }
 
+    public boolean isModerator(){
+        return user.isModerator();
+    }
+
+    public boolean isPremium(){
+        return user.isPremium();
     public String getId() { //no se si esto debería ir aquí
         return user.getId();
     }

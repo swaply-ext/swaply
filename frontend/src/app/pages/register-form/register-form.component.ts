@@ -10,13 +10,7 @@ import { TermsCheckboxComponent } from '../../components/terms-checkbox/terms-ch
 import { ActionButtonsComponent } from '../../components/action-buttons/action-buttons.component';
 import { UsernameInputComponent } from "../../components/username-input/username-input.component";
 import { RegisterDataService } from '../../services/register-data.service';
-
-interface User {
-  username: string;
-  email: string;
-  password: string;
-  acceptedTerms: boolean;
-}
+import { UserRegister } from '../../models/user.models';
 
 @Component({
   selector: 'app-register-form',
@@ -100,9 +94,16 @@ export class RegisterFormComponent {
       return;
     }
 
+    const newUser: UserRegister = {
+      username: this.username,
+      email: this.email,
+      password: this.password,
+      acceptedTerms: this.accepted
+    };
+
     // 🔹 Registro inicial (verifica email y username en backend)
-    const newUser = { username: this.username, email: this.email, password: this.password };
-    this.registerDataService.initialRegister(newUser).subscribe({
+    const registerDTO = { username: newUser.username, email: newUser.email, password: newUser.password };
+    this.registerDataService.initialRegister(registerDTO).subscribe({
       next: () => {
         // Guardamos datos y vamos a la siguiente pantalla
         this.registerDataService.setRegisterData(newUser);

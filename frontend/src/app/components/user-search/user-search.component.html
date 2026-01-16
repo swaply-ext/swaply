@@ -1,9 +1,12 @@
 <div class="nearby-search">
-  <input type="text" placeholder="Buscar usuario..." [ngModel]="searchTerm"
-    (ngModelChange)="onSearchTermChanged($event)"
-    (focus)="onInputFocus()" 
-    (click)="onInputFocus()"
-  />
+  <form autocomplete="off">
+    <input type="text" name="search" placeholder="Buscar usuario..." [ngModel]="searchTerm"
+      (ngModelChange)="onSearchTermChanged($event)"
+      (focus)="onInputFocus()"
+      (click)="onInputFocus()"
+      autocomplete="off"
+    />
+  </form>
 
   <span class="material-symbols-outlined search-icon" *ngIf="!isLoading()">search</span>
   <div class="spinner-mini" *ngIf="isLoading()"></div>
