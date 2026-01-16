@@ -34,6 +34,14 @@ public class SecurityUser implements UserDetails {
         return authorities;
     }
 
+    public boolean isModerator(){
+        return user.isModerator();
+    }
+
+    public boolean isPremium(){
+        return user.isPremium();
+    }
+
     @Override
     public String getPassword() {
 
