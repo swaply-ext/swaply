@@ -4,12 +4,12 @@ import { Router } from '@angular/router';
 import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.component";
 import { SkillSearchComponent } from '../../components/skill-search/skill-search.component';
 import { FilterSkillsComponent } from '../../components/filter-skills/filter-skills.component';
-import { SearchService} from '../../services/search.service';
+import { SearchService} from '../../services/search.services';
+import { UserSwapDTO } from '../../models/userSwapDTO.model';
 import { RouterLink } from '@angular/router';
 import { AccountService } from '../../services/account.service';
 import { NextSwapComponent } from '../../components/next-swap/next-swap.component';
-import { NextSwap, UserSwapDTO } from '../../models/swap.models';
-import { RedirectionService } from '../../services/redirection.service';
+import { NextSwap } from '../../models/next-swap.model';
 
 
 @Component({
@@ -29,12 +29,11 @@ import { RedirectionService } from '../../services/redirection.service';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(
-    private accountService: AccountService,
-    private searchService: SearchService,
-    private router: Router,
-    private redirectionService: RedirectionService
-  ) { }
+  constructor(private accountService: AccountService) { }
+
+
+  private searchService = inject(SearchService);
+  private router = inject(Router);
 
   private allCards: NextSwap[] = [];
   cards = signal<NextSwap[]>([]);
@@ -49,8 +48,6 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.loadInitialRecommendations();
-    // Comprobar perfil y redirigir si es necesario
-    this.redirectionService.checkProfile().subscribe();
   }
 
   loadInitialRecommendations() {
@@ -117,7 +114,7 @@ export class HomeComponent implements OnInit {
   }
 
 
-    private assignImageToSkill(category: string, skillName: string): string {
+  private assignImageToSkill(category: string, skillName: string): string | undefined {
       const name = skillName ? skillName.toLowerCase() : '';
       let folder = 'leisure';
       if (category) {
@@ -141,7 +138,7 @@ export class HomeComponent implements OnInit {
       else if (name.includes('baile') || name.includes('dance')) { filename = 'dance.jpg'; folder = 'leisure'; }
       else if (name.includes('manualidades') || name.includes('craft')) { filename = 'crafts.jpg'; folder = 'leisure'; }
       else if (name.includes('digital')) { filename = 'digital_entertainment.jpg'; folder = 'leisure'; }
-        return filename ? `assets/photos_skills/${folder}/${filename}` : 'assets/photos_skills/default.jpg';
+      return filename ? `assets/photos_skills/${folder}/${filename}` : undefined;
   }
 
 

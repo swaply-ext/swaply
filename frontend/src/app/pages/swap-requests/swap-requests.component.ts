@@ -4,8 +4,9 @@ import { RouterLink } from '@angular/router';
 import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.component";
 import { SwapService } from '../../services/swap.service';
 import { UsersService } from '../../services/users.service';
-import { Swap } from '../../models/swap.models';
-import { ProfileDataDTO } from '../../models/data.models';
+import { AccountService } from '../../services/account.service';
+import { Swap } from '../../models/swap.model';
+import { ProfileDataDTO } from '../../models/profile-data-dto.model';
 
 
 
@@ -86,8 +87,8 @@ export class SwapRequestsComponent implements OnInit {
   }
 
 
-  getProfile(userId: string): ProfileDataDTO {
-    return this.profilesMap().get(userId) as ProfileDataDTO;
+  getProfile(userId: string): ProfileDataDTO | undefined {
+    return this.profilesMap().get(userId);
   }
 
   getSkillImage(skillName: string): string {

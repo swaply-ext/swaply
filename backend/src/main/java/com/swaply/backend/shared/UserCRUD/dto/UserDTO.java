@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserDTO {
     private String id;
+    private String type;
     private String username;
     private String name;
     private String surname;
@@ -38,5 +39,4 @@ public class UserDTO {
     private boolean isPremium;
     private boolean isModerator;
     private List<Swap> swaps;
-    private Double rating;
 }

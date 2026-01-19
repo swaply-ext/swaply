@@ -2,9 +2,13 @@ import { Component, Input, Output, EventEmitter, ElementRef, HostListener, injec
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { DropdownMenuData } from '../../models/data.models';
 
-
+export interface DropdownMenuData {
+  fullName: string;
+  username: string;
+  profilePhotoUrl: string;
+  rating: number;
+}
 
 @Component({
   selector: 'app-dropdown-menu',

@@ -2,10 +2,28 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { UserRegisterDTO } from '../models/user.models';
-import { AllUserData } from '../models/data.models';
 
+interface RegisterUserDTO {
+  username: string;
+  email: string;
+  password: string;
+}
 
+interface Location {
+  placeId: string;
+  lat: number;
+  lon: number;
+  displayName: string;
+}
+
+interface AllUserData {
+  name: string;
+  surname: string;
+  birthDate: Date;
+  gender: string;
+  location: Location;
+  phone: number;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +46,7 @@ export class RegisterDataService {
   }
 
   //  Llama al backend para registrar inicialmente (verifica email y username)
-  initialRegister(data: UserRegisterDTO): Observable<any> {
+  initialRegister(data: RegisterUserDTO): Observable<any> {
     return this.http.post(`/auth/register`, data, {
       responseType: 'text',
       observe: 'response'

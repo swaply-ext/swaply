@@ -5,7 +5,6 @@ import {
   signal,
   ElementRef,
   HostListener,
-  OnInit
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -13,10 +12,12 @@ import { Subject, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, tap, filter, catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { UsersService } from '../../services/users.service';
-import { AccountService } from '../../services/account.service';
-import { UserSearchItem } from '../../models/user.models';
 
-
+export interface UserSearchItem {
+  id: string;
+  username: string;
+  profilePhotoUrl?: string;
+}
 
 
 
@@ -30,7 +31,9 @@ import { UserSearchItem } from '../../models/user.models';
 })
 export class UserSearchComponent {
 
-  private currentUsername: string = '';
+  private router = inject(Router);
+  private userSearchService = inject(UsersService);
+  private el = inject(ElementRef);
 
   searchTerm = '';
   results = signal<UserSearchItem[]>([]);
@@ -39,13 +42,7 @@ export class UserSearchComponent {
 
   private searchTermSubject = new Subject<string>();
 
-  constructor(
-      private accountService: AccountService,
-      private router: Router,
-      private userSearchService: UsersService,
-      private element: ElementRef
-
-  ) {
+  constructor() {
     this.searchTermSubject.pipe(
       debounceTime(300),
       distinctUntilChanged(),
@@ -64,7 +61,7 @@ export class UserSearchComponent {
 
   @HostListener('document:click', ['$event'])
   onClickOutside(event: Event) {
-    if (!this.element.nativeElement.contains(event.target)) {
+    if (!this.el.nativeElement.contains(event.target)) {
       this.showDropdown.set(false);
     }
   }
@@ -83,10 +80,5 @@ export class UserSearchComponent {
     this.searchTerm = user.username;
     this.results.set([]);
     this.showDropdown.set(false);
-    if (user.username === this.currentUsername) {
-      this.router.navigate(['/myprofile']);  
-    } else {
-      this.router.navigate(['/user', user.username]);
-    }
   }
 }

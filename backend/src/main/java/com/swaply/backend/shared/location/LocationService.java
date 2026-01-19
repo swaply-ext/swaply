@@ -11,7 +11,6 @@ import org.springframework.web.client.RestClient;
 
 import com.swaply.backend.shared.UserCRUD.Model.Location;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
-import com.swaply.backend.config.security.SecurityUser;
 import com.swaply.backend.shared.UserCRUD.UserService;
 import com.swaply.backend.shared.location.dto.LocationResponseDTO;
 

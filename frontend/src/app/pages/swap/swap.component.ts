@@ -3,12 +3,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AppNavbarComponent } from '../../components/app-navbar/app-navbar.component';
 import { AccountService } from '../../services/account.service';
-import { SearchService} from '../../services/search.service';
-import { UserSwapDTO, SwapDTO } from '../../models/swap.models';
+import { SearchService} from '../../services/search.services';
+import { UserSwapDTO } from '../../models/userSwapDTO.model';
+import { SwapDTO } from '../../models/swapDTO.model';
 import { SwapSkillsComponent } from "../../components/swap-skills/swap-skills.component";
 import { SwapInterestsComponent } from "../../components/swap-interests/swap-interests.component";
+import { ProfileDataDTO } from '../../models/profile-data-dto.model';
 import { RouterLink } from '@angular/router';
-import { ProfileDataDTO } from '../../models/data.models';
 
 @Component({
   selector: 'app-swap',
@@ -19,10 +20,10 @@ import { ProfileDataDTO } from '../../models/data.models';
 })
 export class SwapComponent implements OnInit {
 
-  myUser = signal<ProfileDataDTO>({} as ProfileDataDTO);
-  targetUser = signal<UserSwapDTO>({} as UserSwapDTO);
+  myUser = signal<ProfileDataDTO | null>(null);
+  targetUser = signal<UserSwapDTO | null>(null);
 
-  selectedTeachSkill = signal<any>({} as any); 
+  selectedTeachSkill = signal<any>(null); 
   mySkillsDisplay = signal<any[]>([]); 
   
   selectedTargetSkill = signal<{
@@ -30,12 +31,7 @@ export class SwapComponent implements OnInit {
     skillIcon?: string;
     skillImage?: string;
     location?: string;
-  }>({} as {
-    skillName: string;
-    skillIcon?: string;
-    skillImage?: string;
-    location?: string;
-  });
+  } | null>(null);
   
   targetUserInterests = signal<any[]>([]); 
 
@@ -258,9 +254,9 @@ export class SwapComponent implements OnInit {
     });
   }
 
-  private assignImageToSkill(category: string, skillName: string): string {
-    if (!skillName) return 'assets/photos_skills/default.jpg';
-
+  private assignImageToSkill(category: string, skillName: string): string | undefined {
+    if (!skillName) return undefined;
+    
     const name = String(skillName).toLowerCase();
     
     const map: any = {
@@ -304,6 +300,6 @@ export class SwapComponent implements OnInit {
       if (catLower.includes('leisure')) return 'assets/photos_skills/leisure/crafts.jpg';
     }
 
-    return 'assets/photos_skills/default.jpg';
+    return undefined;
   }
 }

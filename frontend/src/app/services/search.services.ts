@@ -2,7 +2,8 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SKIP_LOADING } from '../interceptors/loading.interceptor';
-import { SwapDTO, UserSwapDTO } from '../models/swap.models';
+import { SwapDTO } from '../models/swapDTO.model';
+import { UserSwapDTO } from '../models/userSwapDTO.model';
 
 
 

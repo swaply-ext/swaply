@@ -3,7 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { AccountService } from '../../services/account.service';
+
+interface User {
+  email: string;
+}
 
 @Component({
   selector: 'app-recovery-email',

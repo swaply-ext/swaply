@@ -1,13 +1,10 @@
 package com.swaply.backend.shared.UserCRUD;
 
-import com.swaply.backend.config.security.SecurityUser;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import java.util.List;
 
@@ -23,7 +20,6 @@ public class UserController {
 
 
     @GetMapping
-    @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<List<UserDTO>> getAll(@RequestParam(required = false) String contains) {
         if (contains != null){
             contains = contains.replace(" " , "");
@@ -33,35 +29,22 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> getUserById(@AuthenticationPrincipal SecurityUser securityUser, @PathVariable String id) {
+    public ResponseEntity<UserDTO> getUserById(@PathVariable String id) {
         return ResponseEntity.ok(service.getUserByID(id));
     }
 
-    @GetMapping("/username")
-    public ResponseEntity<String> getUsername(
-            @RequestParam(required = false) String id,
-            @AuthenticationPrincipal SecurityUser principal) {
-        //cuando buscamos el username de un id concreto
-        if (id != null && !id.trim().isEmpty()) {
-            return ResponseEntity.ok(service.getUsernameById(id));
-        }
-        //cuando buscamos nuestro propio username (id del token)
-        if (principal != null) {
-            return ResponseEntity.ok(service.getUsernameById(principal.getUsername()));
-        }
-
-        return ResponseEntity.status(400).body("Debes proporcionar un 'id' o estar logueado.");
+    @GetMapping("/{id}/username")
+    public ResponseEntity<String> getUsernameById(@PathVariable String id) {
+        return ResponseEntity.ok(service.getUsernameById(id));
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('MODERATOR') or #id == authentication.principal.username")
     public ResponseEntity<Void> deleteUserById(@PathVariable String id) {
         service.deleteUserById(id);
         return ResponseEntity.noContent().build();
     }
 
     @PatchMapping("/{id}")
-    @PreAuthorize("hasRole('MODERATOR') or #id == authentication.principal.username")
     public ResponseEntity<UserDTO> updatedUser(@PathVariable String id, @RequestBody UserDTO user) {
         UserDTO updatedUser = service.updateUser(id, user);
         return ResponseEntity.ok(updatedUser);
@@ -73,11 +56,11 @@ public class UserController {
     //     return ResponseEntity.ok(service.getUserByEmail(email));
     // }
 
-    // // obtener usuarios por ubicación
-    // @GetMapping("/location/{location}")
-    // public List<UserDTO> getUsersByLocation(@PathVariable String location) {
-    //     return service.getUsersByLocation(location);
-    // }
-}
+    // obtener usuarios por ubicación
+    @GetMapping("/location/{location}")
+    public List<UserDTO> getUsersByLocation(@PathVariable String location) {
+        return service.getUsersByLocation(location);
+    }
 
-    
+}
+//GetMapping de datos profile
