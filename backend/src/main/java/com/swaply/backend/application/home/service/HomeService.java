@@ -38,12 +38,8 @@ public class HomeService {
     // TO DO
 
     // Accelerar el metodo getRecommendedMatches()
-    // La mitdad de los datos que se retornan no son necesarios.
+    // La mitad de los datos que se retornan no son necesarios.
     // Considerar llamar de 6 en 6 al darle a ver mas.
-    // DTO Home recommendation
-
-    // Crear un mapper
-    // Se puede hacer con mas de un archivo de entrada SkillMapper.java de ejemplo
 
     public List<RecommendationDTO> getRecommendedMatches(String currentUserId) {
         UserDTO myUser = userService.getUserByID(currentUserId);
@@ -71,7 +67,7 @@ public class HomeService {
                 .map(s -> s.getId())
                 .collect(Collectors.toList()));
         
-                // Devolver usuarios tras aplicar varios filtros
+        // Devolver usuarios tras aplicar varios filtros
         return candidates.stream()
                 .filter(user -> !user.getId().equals(currentUserId))
                 .filter(user -> user.getSkills() != null)
@@ -113,7 +109,7 @@ public class HomeService {
                 .map(skill -> mapToCard(otherUser, skill, distance));
     }
 
-    // Mapea UserDTO y UserSkills a UserSwapDTO (pasar a mapper????)
+    // Mapea UserDTO y UserSkills a RecommendationDTO
     private RecommendationDTO mapToCard(UserDTO user, UserSkills userSkill, String distance) {
         Skills skill = skillsService.getSkill(userSkill.getId());
         SkillDisplayDTO skillDisplay = skillsMapper.toDisplayDTO(skill, userSkill);
