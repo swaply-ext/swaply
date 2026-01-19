@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Router } from '@angular/router';
@@ -18,9 +18,15 @@ export class AppNavbarComponent implements OnInit {
   showDropdown = false;
   dropdownMenuData!: DropdownMenuData;
 
-  constructor(private router: Router, private accountService: AccountService, private authService: AuthService) {}
+  constructor(
+    private router: Router,
+    private accountService: AccountService, 
+    private authService: AuthService,
+    private renderer: Renderer2
+  ) {}
 
   ngOnInit(): void {
+    this.renderer.addClass(document.body, 'with-navbar');
     this.accountService.getProfileData().subscribe({
       next: (user) => {
         this.dropdownMenuData = {

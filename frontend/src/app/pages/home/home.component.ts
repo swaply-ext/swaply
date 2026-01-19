@@ -10,6 +10,7 @@ import { RouterLink } from '@angular/router';
 import { AccountService } from '../../services/account.service';
 import { NextSwapComponent } from '../../components/next-swap/next-swap.component';
 import { NextSwap } from '../../models/next-swap.model';
+import { RedirectionService } from '../../services/redirection.service';
 
 
 @Component({
@@ -29,11 +30,12 @@ import { NextSwap } from '../../models/next-swap.model';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private accountService: AccountService) { }
-
-
-  private searchService = inject(SearchService);
-  private router = inject(Router);
+  constructor(
+    private redirectionService: RedirectionService,
+    private accountService: AccountService,
+    private router: Router,
+    private searchService: SearchService
+  ) { }
 
   private allCards: NextSwap[] = [];
   cards = signal<NextSwap[]>([]);
@@ -47,6 +49,7 @@ export class HomeComponent implements OnInit {
   canLoadMore = computed(() => this.cards().length < this.allCards.length);
 
   ngOnInit() {
+    this.redirectionService.checkProfile().subscribe();
     this.loadInitialRecommendations();
   }
 

@@ -43,7 +43,7 @@
 
               <span [routerLink]="['/user', card.username]" (click)="$event.stopPropagation()"
                 style="cursor: pointer;">
-                {{ card.username }}
+                {{"@" + card.username }}
               </span>
             </div>
 

@@ -238,6 +238,7 @@ img {
   width: fit-content;
   border-radius: 1rem;
   padding-right: 0.5rem;
+  transition: background-color 0.3s;
 }
 
 .user-avatar {
