@@ -1,7 +1,7 @@
 package com.swaply.backend.application.home;
 
+import com.swaply.backend.application.home.dto.RecommendationDTO;
 import com.swaply.backend.application.home.service.HomeService;
-import com.swaply.backend.application.search.dto.UserSwapDTO;
 import com.swaply.backend.config.security.SecurityUser;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,8 +22,8 @@ public class HomeController {
     }
 
     @GetMapping("/recommendations")
-    public ResponseEntity<List<UserSwapDTO>> getRecommendations(@AuthenticationPrincipal SecurityUser user) {
-        List<UserSwapDTO> matches = homeService.getRecommendedMatches(user.getUsername());
+    public ResponseEntity<List<RecommendationDTO>> getRecommendations(@AuthenticationPrincipal SecurityUser user) {
+        List<RecommendationDTO> matches = homeService.getRecommendedMatches(user.getUsername());
         return ResponseEntity.ok(matches);
     }
 }

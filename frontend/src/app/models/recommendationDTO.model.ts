@@ -1,7 +1,6 @@
-import { SkillDisplay, UserSkills } from "./skills.models";
-import { UserLocation } from "./user-location.model";
+import { SkillDisplay } from "./skills.models";
 
-export interface UserSwapDTO {
+export interface RecommendationDTO {
   username: string;
   profilePhotoUrl: string;
 

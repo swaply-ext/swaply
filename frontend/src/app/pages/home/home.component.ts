@@ -5,11 +5,11 @@ import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.compo
 import { SkillSearchComponent } from '../../components/skill-search/skill-search.component';
 import { FilterSkillsComponent } from '../../components/filter-skills/filter-skills.component';
 import { SearchService } from '../../services/search.services';
-import { UserSwapDTO } from '../../models/userSwapDTO.model';
 import { RouterLink } from '@angular/router';
 import { AccountService } from '../../services/account.service';
 import { NextSwapComponent } from '../../components/next-swap/next-swap.component';
 import { NextSwap } from '../../models/next-swap.model';
+import { RecommendationDTO } from '../../models/recommendationDTO.model';
 
 
 @Component({
@@ -56,7 +56,7 @@ export class HomeComponent implements OnInit {
     this.hasSearched.set(false);
 
     this.searchService.getRecommendations().subscribe({
-      next: (matches: UserSwapDTO[]) => {
+      next: (matches: RecommendationDTO[]) => {
         this.processResults(matches);
       },
       error: (err) => {
@@ -87,10 +87,9 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  private processResults(matches: UserSwapDTO[]) {
+  private processResults(matches: RecommendationDTO[]) {
     this.allCards = matches.map(m => ({
       username: (m as any).username,
-      userName: m.name,
       userAvatar: m.profilePhotoUrl || 'assets/default-image.jpg',
       skillTitle: m.skill.name,
       skillIcon: m.skill.icon,

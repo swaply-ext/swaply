@@ -1,8 +1,8 @@
 package com.swaply.backend.application.home;
 
-import com.swaply.backend.shared.UserCRUD.Model.UserSkills;
-
-import java.util.List;
+import com.swaply.backend.application.home.dto.RecommendationDTO;
+import com.swaply.backend.application.skills.dto.SkillDisplayDTO;
+import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 
 import org.mapstruct.*;
 
@@ -11,6 +11,5 @@ import org.mapstruct.*;
                 nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 
 public interface HomeMapper {
-
-        
+        RecommendationDTO toRecommendationDTO(UserDTO user, SkillDisplayDTO skill, String distance, Double rating, Boolean swapMatch);
 }

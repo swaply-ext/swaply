@@ -1,7 +1,7 @@
 package com.swaply.backend.application.home.service;
 
 import com.swaply.backend.application.home.HomeMapper;
-import com.swaply.backend.application.search.dto.UserSwapDTO;
+import com.swaply.backend.application.home.dto.RecommendationDTO;
 import com.swaply.backend.application.skills.dto.SkillDisplayDTO;
 import com.swaply.backend.application.skills.SkillsMapper;
 import com.swaply.backend.shared.UserCRUD.Model.Skills;
@@ -45,7 +45,7 @@ public class HomeService {
     // Crear un mapper
     // Se puede hacer con mas de un archivo de entrada SkillMapper.java de ejemplo
 
-    public List<UserSwapDTO> getRecommendedMatches(String currentUserId) {
+    public List<RecommendationDTO> getRecommendedMatches(String currentUserId) {
         UserDTO myUser = userService.getUserByID(currentUserId);
 
         if (myUser == null || myUser.getInterests() == null || myUser.getInterests().isEmpty()) {
@@ -87,7 +87,7 @@ public class HomeService {
                 .collect(Collectors.toList());
     }
 
-    // Comprueba si hay match (todo bien hecho)
+    // Comprueba si el usuario actual tiene skills que coinciden con los intereses del otro (bien en principio)
     private boolean isReciprocalMatch(UserDTO otherUser, List<String> myOfferingIds) {
         if (otherUser.getInterests() == null)
             return false;
@@ -97,7 +97,7 @@ public class HomeService {
     }
 
     // Filtra por coincidencias de skill y de nivel
-    private Stream<UserSwapDTO> extractMatchingSkills(UserDTO otherUser, Map<String, Integer> myInterestLevels,
+    private Stream<RecommendationDTO> extractMatchingSkills(UserDTO otherUser, Map<String, Integer> myInterestLevels,
             String currentUserId) {
         String distance = locationService.calculateDistance(currentUserId, otherUser.getUsername());
 
@@ -114,23 +114,10 @@ public class HomeService {
     }
 
     // Mapea UserDTO y UserSkills a UserSwapDTO (pasar a mapper????)
-    private UserSwapDTO mapToCard(UserDTO user, UserSkills userSkill, String distance) {
+    private RecommendationDTO mapToCard(UserDTO user, UserSkills userSkill, String distance) {
         Skills skill = skillsService.getSkill(userSkill.getId());
-        UserSwapDTO dto = new UserSwapDTO();
-        dto.setUserId(user.getId());
-        dto.setName(user.getName());
-        dto.setUsername(user.getUsername());
-        dto.setProfilePhotoUrl(user.getProfilePhotoUrl());
-
         SkillDisplayDTO skillDisplay = skillsMapper.toDisplayDTO(skill, userSkill);
-        dto.setSkill(skillDisplay);
-
-        dto.setUserSkills(user.getSkills());
-        dto.setInterests(user.getInterests());
-
-        dto.setDistance(distance != null ? String.valueOf(distance) : null);
-        dto.setRating(5.0);
-        dto.setSwapMatch(true);
+        RecommendationDTO dto = homeMapper.toRecommendationDTO(user, skillDisplay, distance, 5.0, true);
 
         return dto;
     }
