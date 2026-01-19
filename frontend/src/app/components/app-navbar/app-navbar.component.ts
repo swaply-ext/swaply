@@ -22,7 +22,7 @@ export class AppNavbarComponent implements OnInit {
     private router: Router,
     private accountService: AccountService, 
     private authService: AuthService,
-    private renderer: Renderer2
+    private renderer: Renderer2 //autodetecta si el navbar está presente para añadir padding al body
   ) {}
 
   ngOnInit(): void {
