@@ -31,16 +31,16 @@ export class PrivateProfileComponent implements OnInit {
   public profileViewData!: PrivateProfileData;
 
   constructor(
-    private accountService: AccountService, 
+    private accountService: AccountService,
     private resolver: ActivatedRoute,
     private redirectionService: RedirectionService
-    ) { } //declaramos el resolver
+  ) { } //declaramos el resolver
 
   ngOnInit(): void {
     //En lugar de llamar al servicio, llamamos al resolver
     const user = this.resolver.snapshot.data['profileData'];
     this.splitAndSendUser(user);
-    this.redirectionService.checkProfile().subscribe();
+    this.redirectionService.checkSkillsInterests(user.skills, user.interests);
   }
 
   splitAndSendUser(user: ProfileDataDTO): void {

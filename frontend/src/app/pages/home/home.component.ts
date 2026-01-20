@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.component";
 import { SkillSearchComponent } from '../../components/skill-search/skill-search.component';
 import { FilterSkillsComponent } from '../../components/filter-skills/filter-skills.component';
-import { SearchService} from '../../services/search.services';
+import { SearchService } from '../../services/search.services';
 import { UserSwapDTO } from '../../models/userSwapDTO.model';
 import { RouterLink } from '@angular/router';
 import { AccountService } from '../../services/account.service';
@@ -38,6 +38,7 @@ export class HomeComponent implements OnInit {
   ) { }
 
   private allCards: NextSwap[] = [];
+
   cards = signal<NextSwap[]>([]);
 
   isLoadingMatches = signal(false);
@@ -49,7 +50,9 @@ export class HomeComponent implements OnInit {
   canLoadMore = computed(() => this.cards().length < this.allCards.length);
 
   ngOnInit() {
-    this.redirectionService.checkProfile().subscribe();
+    this.accountService.getAccount().subscribe(user => {
+      this.redirectionService.checkSkillsInterests(user.skills, user.interests);
+    });
     this.loadInitialRecommendations();
   }
 
@@ -69,8 +72,8 @@ export class HomeComponent implements OnInit {
 
   performMatchSearch(skillQuery: string) {
     if (!skillQuery || skillQuery.trim() === '') {
-        this.loadInitialRecommendations();
-        return;
+      this.loadInitialRecommendations();
+      return;
     }
 
     this.isLoadingMatches.set(true);
@@ -118,30 +121,30 @@ export class HomeComponent implements OnInit {
 
 
   private assignImageToSkill(category: string, skillName: string): string | undefined {
-      const name = skillName ? skillName.toLowerCase() : '';
-      let folder = 'leisure';
-      if (category) {
-          const cat = category.toLowerCase();
-          if (cat.includes('deporte') || cat.includes('sports')) folder = 'sports';
-          else if (cat.includes('música') || cat.includes('musica')) folder = 'music';
-      }
-      let filename = '';
-      if (name.includes('fútbol') || name.includes('futbol') || name.includes('football')) { filename = 'football.jpg'; folder = 'sports'; }
-      else if (name.includes('pádel') || name.includes('padel')) { filename = 'padel.jpg'; folder = 'sports'; }
-      else if (name.includes('básquet') || name.includes('basquet') || name.includes('baloncesto') || name.includes('basket')) { filename = 'basketball.jpg'; folder = 'sports'; }
-      else if (name.includes('vóley') || name.includes('voley') || name.includes('volley') || name.includes('voleibol')) { filename = 'voleyball.jpg'; folder = 'sports'; }
-      else if (name.includes('boxeo') || name.includes('boxing')) { filename = 'boxing.jpg'; folder = 'sports'; }
-      else if (name.includes('guitarra') || name.includes('guitar')) { filename = 'guitar.jpg'; folder = 'music'; }
-      else if (name.includes('piano')) { filename = 'piano.jpg'; folder = 'music'; }
-      else if (name.includes('violín') || name.includes('violin')) { filename = 'violin.jpg'; folder = 'music'; }
-      else if (name.includes('batería') || name.includes('bateria') || name.includes('drum')) { filename = 'drums.jpg'; folder = 'music'; }
-      else if (name.includes('saxofón') || name.includes('saxofon') || name.includes('sax')) { filename = 'saxophone.jpg'; folder = 'music'; }
-      else if (name.includes('dibujo')) { filename = 'draw.jpg'; folder = 'leisure'; }
-      else if (name.includes('cocina')) { filename = 'cook.jpg'; folder = 'leisure'; }
-      else if (name.includes('baile') || name.includes('dance')) { filename = 'dance.jpg'; folder = 'leisure'; }
-      else if (name.includes('manualidades') || name.includes('craft')) { filename = 'crafts.jpg'; folder = 'leisure'; }
-      else if (name.includes('digital')) { filename = 'digital_entertainment.jpg'; folder = 'leisure'; }
-      return filename ? `assets/photos_skills/${folder}/${filename}` : undefined;
+    const name = skillName ? skillName.toLowerCase() : '';
+    let folder = 'leisure';
+    if (category) {
+      const cat = category.toLowerCase();
+      if (cat.includes('deporte') || cat.includes('sports')) folder = 'sports';
+      else if (cat.includes('música') || cat.includes('musica')) folder = 'music';
+    }
+    let filename = '';
+    if (name.includes('fútbol') || name.includes('futbol') || name.includes('football')) { filename = 'football.jpg'; folder = 'sports'; }
+    else if (name.includes('pádel') || name.includes('padel')) { filename = 'padel.jpg'; folder = 'sports'; }
+    else if (name.includes('básquet') || name.includes('basquet') || name.includes('baloncesto') || name.includes('basket')) { filename = 'basketball.jpg'; folder = 'sports'; }
+    else if (name.includes('vóley') || name.includes('voley') || name.includes('volley') || name.includes('voleibol')) { filename = 'voleyball.jpg'; folder = 'sports'; }
+    else if (name.includes('boxeo') || name.includes('boxing')) { filename = 'boxing.jpg'; folder = 'sports'; }
+    else if (name.includes('guitarra') || name.includes('guitar')) { filename = 'guitar.jpg'; folder = 'music'; }
+    else if (name.includes('piano')) { filename = 'piano.jpg'; folder = 'music'; }
+    else if (name.includes('violín') || name.includes('violin')) { filename = 'violin.jpg'; folder = 'music'; }
+    else if (name.includes('batería') || name.includes('bateria') || name.includes('drum')) { filename = 'drums.jpg'; folder = 'music'; }
+    else if (name.includes('saxofón') || name.includes('saxofon') || name.includes('sax')) { filename = 'saxophone.jpg'; folder = 'music'; }
+    else if (name.includes('dibujo')) { filename = 'draw.jpg'; folder = 'leisure'; }
+    else if (name.includes('cocina')) { filename = 'cook.jpg'; folder = 'leisure'; }
+    else if (name.includes('baile') || name.includes('dance')) { filename = 'dance.jpg'; folder = 'leisure'; }
+    else if (name.includes('manualidades') || name.includes('craft')) { filename = 'crafts.jpg'; folder = 'leisure'; }
+    else if (name.includes('digital')) { filename = 'digital_entertainment.jpg'; folder = 'leisure'; }
+    return filename ? `assets/photos_skills/${folder}/${filename}` : undefined;
   }
 
 
