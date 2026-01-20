@@ -4,12 +4,10 @@ import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.compo
 import { ProfileInfoComponent } from "../../components/profile-info/profile-info.component";
 import { SkillsPanelComponent } from '../../components/skills-panel/skills-panel.component';
 import { InterestsPanelComponent } from '../../components/interests-panel/interests-panel.component';
-import { AccountService } from '../../services/account.service';
 import { ProfileDataDTO } from '../../models/profile-data-dto.model';
 import { PrivateProfileData } from '../../models/private-profile-data.model';
 import { UserSkills } from '../../models/user-skills.model';
 import { ActivatedRoute } from '@angular/router'; //Con este import se accede al resolver
-import { RedirectionService } from '../../services/redirection.service';
 
 @Component({
   selector: 'app-private-profile',
@@ -31,16 +29,13 @@ export class PrivateProfileComponent implements OnInit {
   public profileViewData!: PrivateProfileData;
 
   constructor(
-    private accountService: AccountService,
-    private resolver: ActivatedRoute,
-    private redirectionService: RedirectionService
+    private resolver: ActivatedRoute
   ) { } //declaramos el resolver
 
   ngOnInit(): void {
     //En lugar de llamar al servicio, llamamos al resolver
     const user = this.resolver.snapshot.data['profileData'];
     this.splitAndSendUser(user);
-    this.redirectionService.checkSkillsInterests(user.skills, user.interests);
   }
 
   splitAndSendUser(user: ProfileDataDTO): void {

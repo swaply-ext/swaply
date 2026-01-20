@@ -7,10 +7,8 @@ import { FilterSkillsComponent } from '../../components/filter-skills/filter-ski
 import { SearchService } from '../../services/search.services';
 import { UserSwapDTO } from '../../models/userSwapDTO.model';
 import { RouterLink } from '@angular/router';
-import { AccountService } from '../../services/account.service';
 import { NextSwapComponent } from '../../components/next-swap/next-swap.component';
 import { NextSwap } from '../../models/next-swap.model';
-import { RedirectionService } from '../../services/redirection.service';
 
 
 @Component({
@@ -31,8 +29,6 @@ import { RedirectionService } from '../../services/redirection.service';
 export class HomeComponent implements OnInit {
 
   constructor(
-    private redirectionService: RedirectionService,
-    private accountService: AccountService,
     private router: Router,
     private searchService: SearchService
   ) { }
@@ -50,9 +46,6 @@ export class HomeComponent implements OnInit {
   canLoadMore = computed(() => this.cards().length < this.allCards.length);
 
   ngOnInit() {
-    this.accountService.getAccount().subscribe(user => {
-      this.redirectionService.checkSkillsInterests(user.skills, user.interests);
-    });
     this.loadInitialRecommendations();
   }
 
