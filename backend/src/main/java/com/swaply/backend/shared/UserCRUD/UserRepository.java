@@ -49,19 +49,12 @@ public interface UserRepository extends CosmosRepository<User, String> {
 
     Optional<User> findUserByTypeAndUsername(String type, String username);
 
-    @Query(value = "SELECT TOP 1 * FROM c WHERE c.type = 'user' AND EXISTS(SELECT VALUE s FROM s IN c.skills WHERE s.id = :skillId)")
-    User findFirstUserBySkillId(@Param("skillId") String skillId);
-
-    // Busqueda por 1 skill
-    @Query(value = "SELECT TOP 1 * FROM c WHERE c.type = 'user' AND EXISTS(SELECT VALUE s FROM s IN c.skills WHERE CONTAINS(s.id, @skillId, true))")
-    User findUserBySingleSkillId(@Param("skillId") String skillId);
-    
     // Busqueda de varios usuarios por 1 skill "la del buscador"
     @Query(value = "SELECT * FROM c WHERE c.type = 'user' AND EXISTS(SELECT VALUE s FROM s IN c.skills WHERE CONTAINS(s.id, @skillId, true))")
     List<User> findUsersBySingleSkillId(@Param("skillId") String skillId);
 
     // Busqueda por multiples skills "esta es para el filtro"
-    @Query(value = "SELECT * FROM c WHERE c.type = 'user' AND EXISTS(SELECT VALUE s FROM s IN c.skills WHERE ARRAY_CONTAINS(@skillIds, s.id))")
+    @Query(value = "SELECT TOP 6 * FROM c WHERE c.type = 'user' AND EXISTS(SELECT VALUE s FROM s IN c.skills WHERE ARRAY_CONTAINS(@skillIds, s.id))")
     List<User> findUsersByMultipleSkillIds(@Param("skillIds") List<String> skillIds);
 
     // Se obtiene unicamente el nombre de usuario a partir de una ID
