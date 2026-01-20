@@ -99,7 +99,6 @@ button {
   flex-shrink: 0;
 }
 
-/* DETALLES (TEXTOS) */
 .card-details {
   display: flex;
   flex-direction: column;
@@ -243,7 +242,7 @@ button {
   transform: translateY(-0.0625rem);
 }
 
-/* RESPONSIVE */
+
 @media (max-width: 56.25rem) {
   .interchange-content {
     flex-direction: column;
@@ -277,9 +276,6 @@ button {
   }
 }
 
-/* --- TOOLTIP PERSONALIZADO --- */
-
-/* Crea el cuadro del tooltip usando el atributo data-tooltip */
 [data-tooltip]:hover::after {
   content: attr(data-tooltip);
   position: absolute;
@@ -287,7 +283,7 @@ button {
   left: 50%;
   transform: translateX(-50%);
   
-  background-color: rgba(40, 40, 40, 0.95); /* Fondo oscuro */
+  background-color: rgba(40, 40, 40, 0.95);
   color: var(--text-white);
   padding: 0.5rem 0.8rem;
   border-radius: 0.5rem;
@@ -298,13 +294,10 @@ button {
   border: 1px solid rgba(255, 255, 255, 0.1);
   z-index: 1000;
   pointer-events: none;
-  
-  /* Animación */
   opacity: 0;
   animation: fadeIn 0.2s forwards;
 }
 
-/* Flechita del tooltip */
 [data-tooltip]:hover::before {
   content: '';
   position: absolute;
