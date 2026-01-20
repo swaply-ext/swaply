@@ -6,5 +6,5 @@ export interface Swap {
   interest: string;
   status: 'ACCEPTED' | 'STANDBY' | 'DENIED';
   isRequester: boolean;
-  createdAt?: string
+  createdAt: Date;
 }
