@@ -71,6 +71,7 @@ public class UserService {
 
     private String normalizeString(String input) {
     if (input == null) return "";
+    input = input.replace(" ", "");
     String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
     Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
     return pattern.matcher(normalized).replaceAll("").toLowerCase();
