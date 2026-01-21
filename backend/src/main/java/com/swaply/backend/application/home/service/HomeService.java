@@ -35,12 +35,6 @@ public class HomeService {
         this.homeMapper = homeMapper;
     }
 
-    // TO DO
-
-    // Accelerar el metodo getRecommendedMatches()
-    // La mitad de los datos que se retornan no son necesarios.
-    // Considerar llamar de 6 en 6 al darle a ver mas.
-
     public List<RecommendationDTO> getRecommendedMatches(String currentUserId) {
         UserDTO myUser = userService.getUserByID(currentUserId);
 
