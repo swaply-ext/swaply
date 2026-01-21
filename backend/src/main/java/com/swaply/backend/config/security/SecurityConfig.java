@@ -30,7 +30,7 @@ public class SecurityConfig {
                         .requestMatchers("/ws-chat/**").permitAll()
                         // .requestMatchers("/api/users/**").hasRole("MODERATOR")
                         .anyRequest().authenticated()
-                )
+                
                 
                         .anyRequest().authenticated())
 
