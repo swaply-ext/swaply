@@ -68,8 +68,8 @@ export class ValidateInputsService {
 
   public isLocationValid(location: string): boolean {
     const minLength = 3;
-    const maxLength = 50;
-    const requirements = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñçÇïÏ0-9\s,'ºª-]+$/;
+    const maxLength = 200;
+    const requirements = /^[A-Za-zÀÈÌÒÙàèìòùÁÉÍÓÚÜÑáéíóúüñçÇïÏ0-9\s,'ºª-]+$/;
     return location.length >= minLength && location.length <= maxLength && requirements.test(location);
   }
 
