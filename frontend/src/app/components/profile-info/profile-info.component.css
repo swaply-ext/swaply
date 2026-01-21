@@ -128,13 +128,13 @@ body {
   transition: all 0.2s ease;
   
   background-color: transparent; 
-  border: 0.125rem solid var(--principal-color-2); /* Borde Menta */
-  color: var(--principal-color-2); /* Texto Menta */
+  border: 0.125rem solid var(--principal-color-2);
+  color: var(--principal-color-2);
 }
 
 .btn-message:hover {
-  background-color: var(--principal-color-2); /* Fondo Menta al hover */
-  color: var(--bg-panel); /* Texto oscuro al hover */
+  background-color: var(--principal-color-2); 
+  color: var(--bg-panel); /* Texto oscuro al hover 
   transform: scale(1.05);
 }
 
@@ -150,7 +150,7 @@ body {
   padding: 0.4rem 1rem;
   font-size: 0.9rem;
   font-weight: 600;
-  background-color: #50e3a3; /* Menta sólido */
+  background-color: #50e3a3;
   color: #121212;
   border: none;
   border-radius: 1.25rem;

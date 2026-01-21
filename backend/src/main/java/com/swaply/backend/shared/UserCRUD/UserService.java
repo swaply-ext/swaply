@@ -5,10 +5,13 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.swaply.backend.application.auth.service.PasswordService;
+import com.swaply.backend.config.security.SecurityUser;
 import com.swaply.backend.shared.UserCRUD.Model.User;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.shared.UserCRUD.exception.UserNotFoundException;
@@ -41,7 +44,7 @@ public class UserService {
 
     public UserDTO getUserByUsername(String username) {
         User user = repository.findUserByUsername(username)
-            .orElseThrow(() -> new UserNotFoundException("User not found with username: " + username));
+                .orElseThrow(() -> new UserNotFoundException("User not found with username: " + username));
         return mapper.entityToDTO(user);
     }
 
@@ -54,7 +57,14 @@ public class UserService {
     public UserDTO getUserByID(String id) {
         User user = repository.findUserById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
-        return mapper.entityToDTO(user);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.getPrincipal() instanceof SecurityUser principal) {
+            if (principal.isModerator() || principal.getUsername().equals(id)) {
+                return mapper.entityToDTO(user);
+            }
+        }
+
+        return mapper.publicDTOToUserDTO(mapper.entityToPublicDTO(user));
     }
 
     public String getUsernameById(String id) {
@@ -76,19 +86,22 @@ public class UserService {
     }
 
     private String normalizeString(String input) {
-    if (input == null) return "";
-    String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
-    Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-    return pattern.matcher(normalized).replaceAll("").toLowerCase();
-}
+        if (input == null)
+            return "";
+        input = input.replace(" ", "");
+        String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        return pattern.matcher(normalized).replaceAll("").toLowerCase();
+    }
 
-        public List<UserDTO> findUsersByUsernameContaining(String usernameFragment) {
-    String normalized = normalizeString(usernameFragment);
-    return repository.findUsersByUsernameContaining(normalized)
-            .stream()
-            .map(mapper::entityToDTO)
-            .collect(Collectors.toList());
-}
+    public List<UserDTO> findUsersByUsernameContaining(String usernameFragment) {
+        String normalized = normalizeString(usernameFragment);
+
+        return repository.findUsersByUsernameContaining(normalized)
+                .stream()
+                .map(mapper::entityToDTO)
+                .collect(Collectors.toList());
+    }
 
     public void deleteUserById(String id) {
         if (!repository.existsUserById(id)) {
@@ -96,20 +109,20 @@ public class UserService {
         }
         repository.deleteUserById(id);
     }
-    
-        @Transactional
-        public UserDTO createUser(UserDTO dto) {
-            User newUser = mapper.dtoToEntity(dto);
-    
-            newUser.setId(UUID.randomUUID().toString());
-    
-            String passwordHash = passwordService.hash(dto.getPassword());
-            newUser.setPassword(passwordHash);
-    
-            User savedUser = repository.save(newUser);
-    
-            return mapper.entityToDTO(savedUser);
-        }
+
+    @Transactional
+    public UserDTO createUser(UserDTO dto) {
+        User newUser = mapper.dtoToEntity(dto);
+
+        newUser.setId(UUID.randomUUID().toString());
+
+        String passwordHash = passwordService.hash(dto.getPassword());
+        newUser.setPassword(passwordHash);
+
+        User savedUser = repository.save(newUser);
+
+        return mapper.entityToDTO(savedUser);
+    }
 
     @Transactional
     public UserDTO updateUser(String id, UserDTO dto) {
@@ -129,7 +142,6 @@ public class UserService {
 
         repository.save(user);
     }
-
 
     public List<UserDTO> getUsersByLocation(String location) {
         return repository.findUserByLocation(location)
