@@ -120,6 +120,25 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  getLevelLabel(level: number): string {
+    switch(level) {
+      case 1: return 'Principiante';
+      case 2: return 'Intermedio';
+      case 3: return 'Experto';
+      default: return 'Nivel ' + level;
+    }
+  }
+
+  getLevelClass(level: number | undefined): string {
+    if (!level) return 'level-default';
+    switch(level) {
+        case 1: return 'level-1';
+        case 2: return 'level-2';
+        case 3: return 'level-3';
+        default: return 'level-default';
+    }
+  }
+
   private calculateDistancesForCards() {
     this.allCards.forEach(card => {
       if (card.userId === this.myUserId) return;
