@@ -108,8 +108,8 @@ body {
 
 .actions {
   display: flex;
-  gap: 1rem; 
-  margin-top: auto; 
+  gap: 1rem;
+  margin-top: auto;
   margin-bottom: 0.5rem;
   align-self: flex-start;
 }
@@ -126,16 +126,15 @@ body {
   cursor: pointer;
   border-radius: 1.25rem;
   transition: all 0.2s ease;
-  
-  background-color: transparent; 
+
+  background-color: transparent;
   border: 0.125rem solid var(--principal-color-2);
   color: var(--principal-color-2);
 }
 
 .btn-message:hover {
-  background-color: var(--principal-color-2); 
-  color: var(--bg-panel); /* Texto oscuro al hover 
-  transform: scale(1.05);
+  background-color: var(--principal-color-2);
+  color: var(--bg-panel);
 }
 
 .btn-message .material-icons {
@@ -157,7 +156,7 @@ body {
   font-family: inherit;
   cursor: pointer;
   transition: transform 0.2s, background-color 0.2s;
-  margin: 0; 
+  margin: 0;
   align-self: auto;
 }
 
@@ -207,7 +206,7 @@ body {
     top: 0.8rem;
     right: 0.8rem;
   }
-  
+
   .actions {
     align-self: center;
     margin-top: 1rem;
