@@ -23,38 +23,22 @@ import java.util.Map;
 public class ChatRoom {
 
     @Id
-    private String id; // Recomendado: "room_" + UUID o un hash de los participantes
+    private String id; 
 
     @PartitionKey
-    private String type = "chatRoom"; // Discriminador constante para el contenedor compartido
+    private String type = "chatRoom"; 
 
-    /**
-     * Lista de IDs de los usuarios que participan.
-     * Es vital para buscar: "Dame todos los chats donde esté el usuario X"
-     */
     private List<String> participants;
 
-    /**
-     * Denormalización: Guardamos el último mensaje aquí para que la lista 
-     * de chats del usuario se cargue sin tener que buscar en la tabla de mensajes.
-     */
     private String lastMessagePreview;
-    @JsonFormat(shape = JsonFormat.Shape.STRING) // No hace falta patrón, el defecto es ISO con Z
+    @JsonFormat(shape = JsonFormat.Shape.STRING) 
     private Instant lastMessageTime;
     private String lastMessageSenderId;
 
-    /**
-     * Opcional: Para mostrar un contador de mensajes no leídos por usuario.
-     * Ejemplo: {"user123": 5, "user456": 0}
-     */
     private Map<String, Integer> unreadCount;
 
-    /**
-     * Metadatos adicionales
-     */
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    
-    // Indica si la sala está activa (por si alguien bloquea o sale del chat)
-    private boolean isActive = true; //MIRARRR
+
+    private boolean isActive = true; 
 }

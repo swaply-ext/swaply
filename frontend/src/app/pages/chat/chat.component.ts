@@ -74,7 +74,6 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     const userId = this.authService.getUserIdFromToken();
     this.currentUserId = userId;
-    // IMPORTANTE: Sincronizar el ID en el servicio para los mensajes salientes
     this.chatService.currentUserId = userId;
 
     this.accountService.getProfileData().subscribe({
@@ -82,12 +81,10 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.currentUserAvatar = account.profilePicture || 'assets/default-image.jpg';
         this.loadConversations();
 
-        // Suscripción a actualizaciones globales (lista de contactos)
         this.updatesSub = this.chatService.subscribeToUserUpdates(userId).subscribe(() => {
           this.loadConversations(false);
         });
 
-        // Manejo de deep linking (si se pasa roomId por servicio o URL)
         this.activeRoomSub = this.chatService.activeRoom$.subscribe(roomId => {
           if (roomId) this.handleDeepLink(roomId);
         });
@@ -95,7 +92,6 @@ export class ChatComponent implements OnInit, OnDestroy {
         const urlRoomId = this.route.snapshot.queryParamMap.get('roomId');
         if (urlRoomId) {
           this.chatService.setActiveRoom(urlRoomId);
-          // Limpiar la URL para que no recargue la misma sala al refrescar
           this.router.navigate([], {
             relativeTo: this.route,
             queryParams: { roomId: null },
@@ -146,16 +142,14 @@ export class ChatComponent implements OnInit, OnDestroy {
             partnerAvatar: partnerPhoto,
             lastMessage: room.lastMessagePreview || 'Nueva conversación',
             lastMessageTime: room.lastMessageTime ? new Date(room.lastMessageTime) : null,
-            unreadCount: 0, // Aquí podrías mapear room.unreadCounts si el backend lo envía
+            unreadCount: 0,
           };
         });
 
-        // Ordenar conversaciones: las más recientes primero
         this.sortConversations(mapped);
         this.conversations = mapped;
         this.loadingConversations = false;
 
-        // Actualizar referencia si la sala seleccionada cambió sus datos
         if (this.selectedConversation) {
           const updatedConversation = this.conversations.find(
             (c) => c.roomId === this.selectedConversation?.roomId
@@ -175,7 +169,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     if (found) {
       this.selectConversation(found, false);
     } else {
-      // Crear objeto temporal mientras carga la lista real
       const tempConv: UIConversation = {
         roomId: roomId,
         partnerUsername: 'Cargando...',
@@ -189,43 +182,33 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   selectConversation(conv: UIConversation, updateService: boolean = true): void {
-    // Si ya estamos en esta sala, no hacer nada (evita parpadeos)
     if (this.selectedConversation?.roomId === conv.roomId && this.messages.length > 0) return;
 
     this.selectedConversation = conv;
-    this.messages = []; // Limpiar mensajes anteriores visualmente
+    this.messages = [];
 
     if (updateService) {
       this.chatService.setActiveRoom(conv.roomId);
-      // El setActiveRoom disparará el activeRoom$ que llamará a handleDeepLink,
-      // pero como ya tenemos la sala, entraremos aquí con updateService=false
       return;
     }
 
-    // 1. Cargar Historial
     this.chatService.getHistory(conv.roomId).subscribe({
       next: (msgs) => {
-        // CORRECCIÓN CRÍTICA: Ordenar siempre cronológicamente (Antiguo -> Nuevo)
-        // Esto arregla el desorden visual inicial
         this.messages = (msgs || []).sort((a, b) =>
           new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
         );
         this.scrollToBottom();
       },
-      error: () => { /* Manejo silencioso o mostrar toast */ }
+      error: () => { }
     });
 
-    // 2. Suscribirse a mensajes nuevos (WebSocket)
     if (this.chatSub) this.chatSub.unsubscribe();
 
     this.chatSub = this.chatService
       .subscribeToRoom(conv.roomId)
       .subscribe((msg) => {
-        // Agregar mensaje nuevo al final
         this.messages.push(msg);
         this.scrollToBottom();
-
-        // Actualizar la vista previa de la conversación en la lista lateral
         this.updateConversationListOnNewMessage(conv.roomId, msg);
       });
   }
@@ -236,7 +219,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     const text = this.newMessage;
     const roomId = this.selectedConversation.roomId;
 
-    // Enviamos por WS (la respuesta vendrá por la suscripción subscribeToRoom)
     this.chatService.sendWsMessage(roomId, text);
     this.newMessage = '';
   }
@@ -248,13 +230,11 @@ export class ChatComponent implements OnInit, OnDestroy {
     );
   }
 
-  // --- Helpers Privados ---
-
   private sortConversations(list: UIConversation[]) {
     list.sort((a, b) => {
       const timeA = a.lastMessageTime ? a.lastMessageTime.getTime() : 0;
       const timeB = b.lastMessageTime ? b.lastMessageTime.getTime() : 0;
-      return timeB - timeA; // Descendente (más nuevo arriba)
+      return timeB - timeA;
     });
   }
 
@@ -266,12 +246,10 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     const inListIndex = this.conversations.findIndex(c => c.roomId === roomId);
     if (inListIndex > -1) {
-      // Actualizar datos
       const conversation = this.conversations[inListIndex];
       conversation.lastMessage = msg.content;
       conversation.lastMessageTime = new Date(msg.timestamp);
 
-      // Mover esta conversación al inicio de la lista (Feedback visual inmediato)
       this.conversations.splice(inListIndex, 1);
       this.conversations.unshift(conversation);
     }

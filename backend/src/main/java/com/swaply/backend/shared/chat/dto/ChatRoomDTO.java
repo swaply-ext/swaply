@@ -20,18 +20,15 @@ public class ChatRoomDTO {
     
     private String id;
     
-    // IDs de los usuarios para saber con quién se está hablando
     private List<String> participants;
     
-    // Información del último mensaje para la lista de chats
     private String lastMessagePreview;
-    @JsonFormat(shape = JsonFormat.Shape.STRING) // No hace falta patrón, el defecto es ISO con Z
+    @JsonFormat(shape = JsonFormat.Shape.STRING) 
     private Instant lastMessageTime;
     private String lastMessageSenderId;
 
-    // Para mostrar el globito de notificaciones (ej: "tienes 3 mensajes")
+
     private Map<String, Integer> unreadCount;
 
-    // Estado de la sala
-    private boolean isActive; //MIRAR PARA QUE SIRVE
+    private boolean isActive; 
 }

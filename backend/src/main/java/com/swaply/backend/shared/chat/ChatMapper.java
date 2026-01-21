@@ -19,7 +19,6 @@ public interface ChatMapper {
 
     // 2. Entidad a DTO
     @Mappings({
-        // CORRECCIÓN: Ignorar pageNumber porque la entidad no lo tiene, es solo para requests
         @Mapping(target = "pageNumber", ignore = true) 
     })
     ChatMessageDTO chatMessageEntityToDTO(ChatMessage chatMessage);

@@ -31,6 +31,5 @@ public class ChatMessage {
     @JsonFormat(shape = JsonFormat.Shape.STRING) // No hace falta patrón, el defecto es ISO con Z
     private Instant timestamp;
 
-    // Constructor útil para crear mensajes nuevos
 
 }

@@ -90,11 +90,9 @@ export class ChatService {
     return this._connectedPromise;
   }
 
-  // Reemplaza el método subscribeToRoom por este:
 
   subscribeToRoom(roomId: string): Observable<ChatMessage> {
     return new Observable<ChatMessage>((observer) => {
-      // 1. Asegurar conexión
       this.connectIfNeeded(localStorage.getItem('authToken') || '')
         .then(() => {
           if (!this.client || !this.client.active) {
@@ -102,18 +100,16 @@ export class ChatService {
             return;
           }
 
-          // 2. Suscribirse al canal específico de STOMP
           const subscription = this.client.subscribe(
             `/topic/room/${roomId}`,
             (message: StompMessage) => {
               try {
                 const body = JSON.parse(message.body);
-                // Aseguramos que el timestamp sea compatible
                 const chatMsg: ChatMessage = {
                   id: body.id,
                   roomId: body.roomId,
                   senderId: body.senderId,
-                  content: body.content || body.text, // Manejo de fallback
+                  content: body.content || body.text,
                   timestamp: body.timestamp,
                 };
                 observer.next(chatMsg);
@@ -122,10 +118,6 @@ export class ChatService {
               }
             }
           );
-
-          // 3. Lógica de limpieza (Teardown logic)
-          // Esto se ejecuta automáticamente cuando el componente Angular se destruye
-          // o llamas a .unsubscribe()
           return () => {
             if (subscription) {
               subscription.unsubscribe();
@@ -152,23 +144,19 @@ export class ChatService {
   }
 
   sendWsMessage(roomId: string, content: string): void {
-    // 1. Verificación de seguridad
     if (!this.client || !this.client.active) {
       console.warn('⚠️ No se puede enviar: WebSocket desconectado.');
       return;
     }
 
-    // 2. Construcción del payload
-    // Es importante enviar el senderId si tu backend no lo extrae automáticamente del token
     const payload = {
       roomId: roomId,
       content: content,
-      senderId: this.currentUserId, // Asegúrate de que esta variable tenga valor al hacer login
+      senderId: this.currentUserId,
       timestamp: new Date().toISOString()
     };
 
-    // 3. Envío al Backend
-    // Esto debe coincidir con el @MessageMapping("/chat.send/{roomId}") de tu Controller Java
+
     this.client.publish({
       destination: `/app/chat.send/${roomId}`,
       body: JSON.stringify(payload),

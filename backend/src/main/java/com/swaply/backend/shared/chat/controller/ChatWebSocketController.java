@@ -19,8 +19,6 @@ public class ChatWebSocketController {
     @Autowired
     private ChatService chatService;
 
-    // ELIMINADO: private SimpMessagingTemplate messagingTemplate; 
-    // Ya no se necesita aquí porque el ChatService se encarga de enviar el mensaje.
 
     @MessageMapping("/chat.send/{roomId}")
     public void processMessage(
@@ -31,13 +29,10 @@ public class ChatWebSocketController {
         Authentication auth = (Authentication) principal;
         SecurityUser user = (SecurityUser) auth.getPrincipal();
 
-        // Seguridad: Forzar roomId de la URL y remitente autenticado
         chatMessageDTO.setRoomId(roomId); 
         chatMessageDTO.setSenderId(user.getUsername()); 
 
-        // LLAMADA AL SERVICIO:
-        // El servicio guarda en BD Y envía el mensaje por WebSocket internamente.
-        // No necesitamos hacer nada más aquí.
+
         chatService.sendChatMessage(chatMessageDTO);
     }
 

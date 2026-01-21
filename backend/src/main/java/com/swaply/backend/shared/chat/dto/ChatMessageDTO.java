@@ -20,6 +20,6 @@ public class ChatMessageDTO {
     private String senderId;
     private String content;
     private int pageNumber;
-    @JsonFormat(shape = JsonFormat.Shape.STRING) // No hace falta patrón, el defecto es ISO con Z
+    @JsonFormat(shape = JsonFormat.Shape.STRING) 
     private Instant timestamp;
 }

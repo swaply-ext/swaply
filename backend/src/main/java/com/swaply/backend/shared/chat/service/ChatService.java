@@ -39,6 +39,8 @@ import com.swaply.backend.shared.chat.repository.ChatMessageRepository;
 public class ChatService {
 
     @Autowired
+    private EncryptionService encryptionService;
+    @Autowired
     private ChatMessageRepository chatRepository;
     @Autowired
     private CosmosTemplate cosmosTemplate;
@@ -63,15 +65,29 @@ public class ChatService {
         Pageable pageRequest = PageRequest.of(pageNumber, 20, Sort.by("timestamp").descending());
         Page<ChatMessage> page = chatRepository.findByRoomIdAndType(roomId, "message", pageRequest);
 
-        return page.getContent();
+        List<ChatMessage> messages = page.getContent();
+
+        messages.forEach(msg -> {
+            if (msg.getContent() != null) {
+                msg.setContent(encryptionService.decrypt(msg.getContent()));
+            }
+        });
+
+        return messages;
     }
 
-    public SendChatRoomsDTO getChatRoomsByUserId(String userId) {
+public SendChatRoomsDTO getChatRoomsByUserId(String userId) {
         List<ChatRoom> rooms = chatRoomRepository.findRoomsByUserId(userId);
         List<String> otherUsernames = new ArrayList<>();
         List<String> otherProfilePhotos = new ArrayList<>();
 
         for (ChatRoom room : rooms) {
+            
+            if (room.getLastMessagePreview() != null) {
+                String decryptedPreview = encryptionService.decrypt(room.getLastMessagePreview());
+                room.setLastMessagePreview(decryptedPreview);
+            }
+
             String otherUserId = room.getParticipants().stream()
                     .filter(id -> !id.equals(userId))
                     .findFirst()
@@ -96,7 +112,6 @@ public class ChatService {
                 .partnerAvatar(otherProfilePhotos)
                 .build();
     }
-
     @Async
     public void updateRoomMetadataAsync(String roomId, ChatMessage message) {
         ChatRoom room = chatRoomRepository.findRoomById(roomId).orElse(null);
@@ -114,7 +129,6 @@ public class ChatService {
         if (room.getParticipants() != null) {
             for (String participantId : room.getParticipants()) {
                 if (!participantId.equals(senderId)) {
-                    // Incremento atómico del contador de no leídos
                     patchOps.increment("/unreadCount/" + participantId, 1);
                 }
             }
@@ -138,22 +152,27 @@ public class ChatService {
     }
 
     public ChatMessageDTO sendChatMessage(ChatMessageDTO dto) {
+
+        String rawContent = dto.getContent();
+
         ChatMessage newChatMessage = chatMapper.chatMessageDtoToEntity(dto);
         newChatMessage.setId(UUID.randomUUID().toString());
         newChatMessage.setType("message");
         newChatMessage.setTimestamp(Instant.now());
+
+        String encryptedContent = encryptionService.encrypt(rawContent);
+        newChatMessage.setContent(encryptedContent);
+
         ChatMessage savedMessage = chatRepository.save(newChatMessage);
 
-        // Actualización asíncrona de metadatos de la sala
         updateRoomMetadataAsync(savedMessage.getRoomId(), savedMessage);
 
-        // 1. Convertimos la entidad guardada a DTO aquí para tener el objeto listo
         ChatMessageDTO responseDto = chatMapper.chatMessageEntityToDTO(savedMessage);
 
-        // 2. Ahora sí existe 'responseDto' y lo enviamos al WebSocket
+        responseDto.setContent(rawContent);
+
         messagingTemplate.convertAndSend("/topic/room/" + savedMessage.getRoomId(), responseDto);
 
-        // 3. Retornamos ese mismo DTO a la respuesta HTTP
         return responseDto;
     }
 
@@ -168,7 +187,6 @@ public class ChatService {
 
         String UserId2 = user.getId();
 
-        // Generar ID único determinista basado en el orden de los IDs
         String generatedId = (user1.compareTo(UserId2) < 0) ? user1 + "_" + UserId2 : UserId2 + "_" + user1;
 
         Optional<ChatRoom> existing = chatRoomRepository.findRoomById(generatedId);
@@ -230,7 +248,6 @@ public class ChatService {
         try {
             messagingTemplate.convertAndSend(destination, "REFRESH_LIST");
         } catch (Exception e) {
-            // Error en el envío de notificación WebSocket
         }
     }
 }
