@@ -2,35 +2,40 @@ package com.swaply.backend.shared.chat.service;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+// Imports estándar de Spring Data
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.data.domain.Pageable;
 
+// Imports de Azure Cosmos
+import com.azure.spring.data.cosmos.core.query.CosmosPageRequest;
 import com.azure.cosmos.models.CosmosPatchOperations;
-import com.swaply.backend.shared.chat.repository.ChatRoomRepository;
 import com.azure.cosmos.models.PartitionKey;
 import com.azure.spring.data.cosmos.core.CosmosTemplate;
+
 import com.swaply.backend.shared.UserCRUD.UserService;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.shared.UserCRUD.exception.UserNotFoundException;
 import com.swaply.backend.shared.chat.ChatMapper;
 import com.swaply.backend.shared.chat.dto.ChatMessageDTO;
 import com.swaply.backend.shared.chat.dto.SendChatRoomsDTO;
+import com.swaply.backend.shared.chat.repository.ChatRoomRepository;
 import com.swaply.backend.shared.chat.exception.RoomNotFoundException;
 import com.swaply.backend.shared.chat.exception.UserNotInThisRoomException;
+import com.swaply.backend.shared.chat.model.ChatHistoryResponse;
 import com.swaply.backend.shared.chat.model.ChatMessage;
 import com.swaply.backend.shared.chat.model.ChatRoom;
 import com.swaply.backend.shared.chat.repository.ChatMessageRepository;
@@ -54,7 +59,8 @@ public class ChatService {
     @Lazy
     private SimpMessagingTemplate messagingTemplate;
 
-    public List<ChatMessage> getChatHistoryByRoomId(String roomId, String userId, int pageNumber) {
+    public ChatHistoryResponse getChatHistoryByRoomId(String roomId, String userId, int pageSize, String continuationToken) {
+        // 1. Validaciones
         ChatRoom room = chatRoomRepository.findRoomById(roomId)
                 .orElseThrow(() -> new RoomNotFoundException("La sala no existe"));
 
@@ -62,27 +68,55 @@ public class ChatService {
             throw new UserNotInThisRoomException("Este usuario no pertenece a esta sala");
         }
 
-        Pageable pageRequest = PageRequest.of(pageNumber, 20, Sort.by("timestamp").descending());
+        // 2. Configurar Paginación Cosmos
+        Pageable pageRequest;
+        if (continuationToken == null || continuationToken.isEmpty()) {
+            pageRequest = new CosmosPageRequest(0, pageSize, null, Sort.by("timestamp").descending());
+        } else {
+            pageRequest = new CosmosPageRequest(0, pageSize, continuationToken, Sort.by("timestamp").descending());
+        }
+
+        // 3. Ejecutar Query
         Page<ChatMessage> page = chatRepository.findByRoomIdAndType(roomId, "message", pageRequest);
 
-        List<ChatMessage> messages = page.getContent();
-
+        // 4. Procesar lista (Mutable)
+        List<ChatMessage> messages = new ArrayList<>(page.getContent());
+        
+        // Desencriptar
         messages.forEach(msg -> {
             if (msg.getContent() != null) {
                 msg.setContent(encryptionService.decrypt(msg.getContent()));
             }
         });
 
-        return messages;
+        // Invertir orden para visualización (A->Z)
+        Collections.reverse(messages);
+
+        // 5. Obtener Token de Continuación (CORREGIDO)
+        String nextToken = null;
+        
+        // Verificamos si existe una página siguiente
+        if (page.hasNext()) {
+            // Obtenemos la definición de la siguiente página
+            Pageable nextPage = page.nextPageable();
+            
+            // Si la definición es de tipo CosmosPageRequest, extraemos el token de ahí
+            if (nextPage instanceof CosmosPageRequest) {
+                nextToken = ((CosmosPageRequest) nextPage).getRequestContinuation();
+            }
+        }
+
+        return new ChatHistoryResponse(messages, nextToken);
     }
 
-public SendChatRoomsDTO getChatRoomsByUserId(String userId) {
+
+    public SendChatRoomsDTO getChatRoomsByUserId(String userId) {
         List<ChatRoom> rooms = chatRoomRepository.findRoomsByUserId(userId);
         List<String> otherUsernames = new ArrayList<>();
         List<String> otherProfilePhotos = new ArrayList<>();
 
         for (ChatRoom room : rooms) {
-            
+
             if (room.getLastMessagePreview() != null) {
                 String decryptedPreview = encryptionService.decrypt(room.getLastMessagePreview());
                 room.setLastMessagePreview(decryptedPreview);
@@ -112,6 +146,7 @@ public SendChatRoomsDTO getChatRoomsByUserId(String userId) {
                 .partnerAvatar(otherProfilePhotos)
                 .build();
     }
+
     @Async
     public void updateRoomMetadataAsync(String roomId, ChatMessage message) {
         ChatRoom room = chatRoomRepository.findRoomById(roomId).orElse(null);

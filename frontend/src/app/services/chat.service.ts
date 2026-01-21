@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpContext } from '@angular/common/http';
+import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { SKIP_LOADING } from '../interceptors/loading.interceptor';
 import { Client, Message as StompMessage } from '@stomp/stompjs';
@@ -11,6 +11,11 @@ export interface ChatRoomDTO {
   lastMessagePreview?: string;
   lastMessageTime?: string;
   unreadCounts?: Record<string, number>;
+}
+
+export interface ChatHistoryResponse {
+  messages: ChatMessage[];
+  continuationToken: string | null;
 }
 
 export interface SendChatRoomsDTO {
@@ -50,16 +55,32 @@ export class ChatService {
     });
   }
 
-  getHistory(roomId: string): Observable<ChatMessage[]> {
-    return this.http.get<ChatMessage[]>(`${this.base}/history/${roomId}`, {
-      context: new HttpContext().set(SKIP_LOADING, true),
-    });
+  getHistory(
+    roomId: string,
+    continuationToken: string | null = null,
+    size: number = 20,
+  ): Observable<ChatHistoryResponse> {
+    let params = new HttpParams().set('size', size.toString());
+
+    // Solo añadimos el token si existe (no es la primera pagina)
+    if (continuationToken) {
+      params = params.set('continuationToken', continuationToken);
+    }
+
+    // Nota el cambio de tipo de retorno: ChatHistoryResponse
+    return this.http.get<ChatHistoryResponse>(
+      `${this.base}/history/${roomId}`,
+      {
+        params: params,
+        context: new HttpContext().set(SKIP_LOADING, true),
+      },
+    );
   }
 
   createRoomWithUsername(targetUsername: string): Observable<ChatRoomDTO> {
     return this.http.post<ChatRoomDTO>(
       `${this.base}/rooms/create/${targetUsername}`,
-      {}
+      {},
     );
   }
 
@@ -90,7 +111,6 @@ export class ChatService {
     return this._connectedPromise;
   }
 
-
   subscribeToRoom(roomId: string): Observable<ChatMessage> {
     return new Observable<ChatMessage>((observer) => {
       this.connectIfNeeded(localStorage.getItem('authToken') || '')
@@ -116,7 +136,7 @@ export class ChatService {
               } catch (e) {
                 console.error('Error parseando mensaje', e);
               }
-            }
+            },
           );
           return () => {
             if (subscription) {
@@ -153,9 +173,8 @@ export class ChatService {
       roomId: roomId,
       content: content,
       senderId: this.currentUserId,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
-
 
     this.client.publish({
       destination: `/app/chat.send/${roomId}`,

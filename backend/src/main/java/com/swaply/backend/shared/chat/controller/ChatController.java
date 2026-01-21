@@ -1,6 +1,7 @@
 package com.swaply.backend.shared.chat.controller;
 
 import com.swaply.backend.shared.chat.dto.SendChatRoomsDTO;
+import com.swaply.backend.shared.chat.model.ChatHistoryResponse;
 import com.swaply.backend.shared.chat.model.ChatMessage;
 import com.swaply.backend.shared.chat.model.ChatRoom;
 import com.swaply.backend.shared.chat.service.ChatService;
@@ -14,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/chat")
-@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true") 
+@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 public class ChatController {
 
     @Autowired
@@ -23,7 +24,8 @@ public class ChatController {
     // Obtener todas las salas del usuario logueado
     @GetMapping("/rooms")
     public ResponseEntity<SendChatRoomsDTO> getMyRooms(@AuthenticationPrincipal SecurityUser user) {
-        System.out.println("[ChatController] getMyRooms called for user=" + (user==null?"null":user.getUsername()));
+        System.out
+                .println("[ChatController] getMyRooms called for user=" + (user == null ? "null" : user.getUsername()));
         if (user == null) {
             System.out.println("[ChatController] Unauthorized request to /rooms - missing principal");
             return ResponseEntity.status(401).build();
@@ -39,14 +41,16 @@ public class ChatController {
 
     // Obtener historial de una sala específica
     @GetMapping("/history/{roomId}")
-    public ResponseEntity<List<ChatMessage>> getHistory(
+    public ResponseEntity<ChatHistoryResponse> getHistory(
             @AuthenticationPrincipal SecurityUser user,
             @PathVariable String roomId,
-            @RequestParam(defaultValue = "0") int page) {
+            @RequestParam(required = false) String continuationToken, // <--- Ahora recibimos String token
+            @RequestParam(defaultValue = "20") int size) {
 
-        if (user == null) return ResponseEntity.status(401).build();
+        if (user == null)
+            return ResponseEntity.status(401).build();
         try {
-            return ResponseEntity.ok(chatService.getChatHistoryByRoomId(roomId, user.getUsername(), page));
+            return ResponseEntity.ok(chatService.getChatHistoryByRoomId(roomId, user.getUsername(), size, continuationToken));
         } catch (Exception e) {
             System.out.println("[ChatController] error in getHistory: " + e.getMessage());
             e.printStackTrace();
@@ -59,7 +63,8 @@ public class ChatController {
     public ResponseEntity<ChatRoom> createRoom(
             @AuthenticationPrincipal SecurityUser user,
             @PathVariable String targetUserId) {
-        if (user == null) return ResponseEntity.status(401).build();
+        if (user == null)
+            return ResponseEntity.status(401).build();
         try {
             ChatRoom room = chatService.createChatRoom(user.getUsername(), targetUserId);
             System.out.println("[ChatController] created/fetched room id=" + room.getId());
@@ -75,7 +80,8 @@ public class ChatController {
     public ResponseEntity<Boolean> readedMessage(
             @AuthenticationPrincipal SecurityUser user,
             @PathVariable String roomId) {
-        if (user == null) return ResponseEntity.status(401).build();
+        if (user == null)
+            return ResponseEntity.status(401).build();
         try {
             chatService.readedMessage(roomId, user.getUsername());
             return ResponseEntity.ok(true);
@@ -85,6 +91,5 @@ public class ChatController {
             return ResponseEntity.status(500).build();
         }
     }
-
 
 }

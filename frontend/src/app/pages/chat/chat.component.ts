@@ -34,11 +34,13 @@ interface UIConversation {
     trigger('messageAnimation', [
       transition(':enter', [
         style({ opacity: 0, transform: 'translateY(20px) scale(0.95)' }),
-        animate('300ms cubic-bezier(0.25, 0.8, 0.25, 1)',
-          style({ opacity: 1, transform: 'translateY(0) scale(1)' }))
-      ])
-    ])
-  ]
+        animate(
+          '300ms cubic-bezier(0.25, 0.8, 0.25, 1)',
+          style({ opacity: 1, transform: 'translateY(0) scale(1)' }),
+        ),
+      ]),
+    ]),
+  ],
 })
 export class ChatComponent implements OnInit, OnDestroy {
   @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
@@ -56,6 +58,11 @@ export class ChatComponent implements OnInit, OnDestroy {
   isMobile: boolean = false;
   loadingConversations: boolean = true;
 
+  // Variables para la paginación
+  nextContinuationToken: string | null = null;
+  isLastPage: boolean = false;
+  isLoadingHistory: boolean = false;
+
   private updatesSub: Subscription | null = null;
   private chatSub: Subscription | null = null;
   private activeRoomSub: Subscription | null = null;
@@ -65,7 +72,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     private accountService: AccountService,
     private route: ActivatedRoute,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {
@@ -78,16 +85,21 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     this.accountService.getProfileData().subscribe({
       next: (account: any) => {
-        this.currentUserAvatar = account.profilePicture || 'assets/default-image.jpg';
+        this.currentUserAvatar =
+          account.profilePicture || 'assets/default-image.jpg';
         this.loadConversations();
 
-        this.updatesSub = this.chatService.subscribeToUserUpdates(userId).subscribe(() => {
-          this.loadConversations(false);
-        });
+        this.updatesSub = this.chatService
+          .subscribeToUserUpdates(userId)
+          .subscribe(() => {
+            this.loadConversations(false);
+          });
 
-        this.activeRoomSub = this.chatService.activeRoom$.subscribe(roomId => {
-          if (roomId) this.handleDeepLink(roomId);
-        });
+        this.activeRoomSub = this.chatService.activeRoom$.subscribe(
+          (roomId) => {
+            if (roomId) this.handleDeepLink(roomId);
+          },
+        );
 
         const urlRoomId = this.route.snapshot.queryParamMap.get('roomId');
         if (urlRoomId) {
@@ -96,7 +108,7 @@ export class ChatComponent implements OnInit, OnDestroy {
             relativeTo: this.route,
             queryParams: { roomId: null },
             queryParamsHandling: 'merge',
-            replaceUrl: true
+            replaceUrl: true,
           });
         }
       },
@@ -128,20 +140,24 @@ export class ChatComponent implements OnInit, OnDestroy {
         }
 
         const mapped: UIConversation[] = dto.chatRooms.map((room, index) => {
-          const partnerName = (dto.username && dto.username[index])
-            ? dto.username[index]
-            : 'Usuario desconocido';
+          const partnerName =
+            dto.username && dto.username[index]
+              ? dto.username[index]
+              : 'Usuario desconocido';
 
-          const partnerPhoto = (dto.partnerAvatar && dto.partnerAvatar[index])
-            ? dto.partnerAvatar[index]
-            : 'assets/default-image.jpg';
+          const partnerPhoto =
+            dto.partnerAvatar && dto.partnerAvatar[index]
+              ? dto.partnerAvatar[index]
+              : 'assets/default-image.jpg';
 
           return {
             roomId: room.id,
             partnerUsername: partnerName,
             partnerAvatar: partnerPhoto,
             lastMessage: room.lastMessagePreview || 'Nueva conversación',
-            lastMessageTime: room.lastMessageTime ? new Date(room.lastMessageTime) : null,
+            lastMessageTime: room.lastMessageTime
+              ? new Date(room.lastMessageTime)
+              : null,
             unreadCount: 0,
           };
         });
@@ -152,7 +168,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
         if (this.selectedConversation) {
           const updatedConversation = this.conversations.find(
-            (c) => c.roomId === this.selectedConversation?.roomId
+            (c) => c.roomId === this.selectedConversation?.roomId,
           );
           if (updatedConversation) {
             this.selectedConversation = updatedConversation;
@@ -181,25 +197,54 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
   }
 
-  selectConversation(conv: UIConversation, updateService: boolean = true): void {
-    if (this.selectedConversation?.roomId === conv.roomId && this.messages.length > 0) return;
+  selectConversation(
+    conv: UIConversation,
+    updateService: boolean = true,
+  ): void {
+    if (
+      this.selectedConversation?.roomId === conv.roomId &&
+      this.messages.length > 0
+    )
+      return;
 
     this.selectedConversation = conv;
     this.messages = [];
+
+    // RESETEAR TOKEN
+    this.nextContinuationToken = null;
+    this.isLastPage = false;
+    this.isLoadingHistory = false;
 
     if (updateService) {
       this.chatService.setActiveRoom(conv.roomId);
       return;
     }
 
-    this.chatService.getHistory(conv.roomId).subscribe({
-      next: (msgs) => {
-        this.messages = (msgs || []).sort((a, b) =>
-          new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+    this.isLoadingHistory = true;
+
+    // Primera llamada: Token es null
+    this.chatService.getHistory(conv.roomId, null).subscribe({
+      next: (response) => {
+        // Ordenar y asignar mensajes
+        this.messages = (response.messages || []).sort(
+          (a, b) =>
+            new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
         );
+
+        // GUARDAR EL TOKEN PARA LA SIGUIENTE VEZ
+        this.nextContinuationToken = response.continuationToken;
+
+        // Si no hay token, es la última página
+        if (!this.nextContinuationToken || response.messages.length === 0) {
+          this.isLastPage = true;
+        }
+
+        this.isLoadingHistory = false;
         this.scrollToBottom();
       },
-      error: () => { }
+      error: () => {
+        this.isLoadingHistory = false;
+      },
     });
 
     if (this.chatSub) this.chatSub.unsubscribe();
@@ -212,6 +257,63 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.updateConversationListOnNewMessage(conv.roomId, msg);
       });
   }
+
+  // --- NUEVA LÓGICA DE SCROLL ---
+  onScroll(): void {
+    if (this.isLoadingHistory || this.isLastPage || !this.selectedConversation)
+      return;
+
+    const element = this.scrollContainer.nativeElement;
+
+    // Si el usuario llega al tope (scrollTop == 0) cargamos más
+    if (element.scrollTop === 0) {
+      this.loadMoreMessages();
+    }
+  }
+
+  loadMoreMessages(): void {
+    if (!this.selectedConversation || this.isLastPage || !this.nextContinuationToken) return;
+
+    this.isLoadingHistory = true;
+    const currentRoomId = this.selectedConversation.roomId;
+
+    // USAR EL TOKEN GUARDADO
+    this.chatService.getHistory(currentRoomId, this.nextContinuationToken).subscribe({
+      next: (response) => {
+        const oldMessages = response.messages;
+
+        if (!oldMessages || oldMessages.length === 0) {
+          this.isLastPage = true;
+          this.isLoadingHistory = false;
+          return;
+        }
+
+        // Actualizar el token con el nuevo que nos dio el backend
+        this.nextContinuationToken = response.continuationToken;
+        if (!this.nextContinuationToken) {
+           this.isLastPage = true;
+        }
+
+        oldMessages.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+
+        const element = this.scrollContainer.nativeElement;
+        const oldScrollHeight = element.scrollHeight;
+
+        this.messages = [...oldMessages, ...this.messages];
+
+        setTimeout(() => {
+          const newScrollHeight = element.scrollHeight;
+          element.scrollTop = newScrollHeight - oldScrollHeight;
+          this.isLoadingHistory = false;
+        }, 0);
+      },
+      error: () => {
+        this.isLoadingHistory = false;
+        // No borramos el token si falla, para que el usuario pueda reintentar
+      }
+    });
+  }
+  // ------------------------------
 
   sendMessage(): void {
     if (!this.newMessage.trim() || !this.selectedConversation) return;
@@ -226,7 +328,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   get filteredConversations(): UIConversation[] {
     if (!this.searchQuery) return this.conversations;
     return this.conversations.filter((c) =>
-      c.partnerUsername.toLowerCase().includes(this.searchQuery.toLowerCase())
+      c.partnerUsername.toLowerCase().includes(this.searchQuery.toLowerCase()),
     );
   }
 
@@ -239,12 +341,17 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   private updateConversationListOnNewMessage(roomId: string, msg: ChatMessage) {
-    if (this.selectedConversation && this.selectedConversation.roomId === roomId) {
+    if (
+      this.selectedConversation &&
+      this.selectedConversation.roomId === roomId
+    ) {
       this.selectedConversation.lastMessage = msg.content;
       this.selectedConversation.lastMessageTime = new Date(msg.timestamp);
     }
 
-    const inListIndex = this.conversations.findIndex(c => c.roomId === roomId);
+    const inListIndex = this.conversations.findIndex(
+      (c) => c.roomId === roomId,
+    );
     if (inListIndex > -1) {
       const conversation = this.conversations[inListIndex];
       conversation.lastMessage = msg.content;
