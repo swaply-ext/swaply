@@ -11,9 +11,8 @@
 
     <div class="interchange-box">
 
-      <div style="text-align: right; padding: 1rem 1.5rem 0; color: #888; font-size: 0.85rem;">
-        <span class="material-symbols-outlined"
-          style="font-size: 1rem; vertical-align: text-bottom; margin-right: 4px;">calendar_today</span>
+      <div class="swap-date-header">
+        <span class="material-symbols-outlined date-icon">calendar_today</span>
         Solicitado el: {{ swap.createdAt | date:'dd/MM/yyyy' }}
       </div>
 
@@ -26,19 +25,19 @@
             <img [src]="getImageToLearn(swap)" [alt]="swap.interest" class="activity-img">
 
             <div class="card-details">
-              <h4 [attr.data-tooltip]="'Clase de ' + swap.interest">Clase de {{ swap.interest }}</h4>
+              <h4>Clase de {{ swap.interest }}</h4>
 
               @let otherUser = getOtherProfile(swap.requestedUserId);
 
               <div class="badges-group">
-                <div class="info-badge" [attr.data-tooltip]="otherUser?.location?.displayName">
+                <div class="info-badge">
                   <span class="material-symbols-outlined badge-icon">location_on</span>
                   <span class="badge-text">{{ otherUser?.location?.displayName }}</span>
                 </div>
 
                 @if (otherUser) {
                 <div class="info-badge user-link-container" [routerLink]="['/user', otherUser.username]"
-                  style="cursor: pointer;" [attr.data-tooltip]="'@' + otherUser.username">
+                  style="cursor: pointer;">
                   <div class="avatar-wrapper">
                     <img [src]="otherUser.profilePhotoUrl" alt="Avatar" class="user-avatar">
                   </div>
@@ -61,16 +60,16 @@
             <img [src]="getImageToTeach(swap)" [alt]="swap.skill" class="activity-img">
 
             <div class="card-details">
-              <h4 [attr.data-tooltip]="'Clase de ' + swap.skill">Clase de {{ swap.skill }}</h4>
+              <h4>Clase de {{ swap.skill }}</h4>
 
               <div class="badges-group">
-                <div class="info-badge" [attr.data-tooltip]="currentUser()?.location?.displayName">
+                <div class="info-badge">
                   <span class="material-symbols-outlined badge-icon">location_on</span>
                   <span class="badge-text">{{ currentUser()?.location?.displayName }}</span>
                 </div>
                 
                 <div class="info-badge user-link-container" [routerLink]="['/user', currentUser()?.username]"
-                  style="cursor: pointer;" [attr.data-tooltip]="'@' + currentUser()?.username">
+                  style="cursor: pointer;">
                   <div class="avatar-wrapper">
                     <img [src]="currentUser()?.profilePhotoUrl" alt="Avatar" class="user-avatar">
                   </div>
