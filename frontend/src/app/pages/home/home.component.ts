@@ -30,11 +30,9 @@ import { PaymentService } from '../../services/payment.service';
 })
 export class HomeComponent implements OnInit {
 
-  
-  private accountService = inject(AccountService);
+  private paymentService = inject(PaymentService);
   private redirectionService = inject(RedirectionService);
   private searchService = inject(SearchService);
-  private paymentService = inject(PaymentService); 
   private route = inject(ActivatedRoute);          //se inyecta ActivatedRoute para leer la URL
   private router = inject(Router);                 //para limpiar la URL después 
 
@@ -53,43 +51,11 @@ export class HomeComponent implements OnInit {
     this.loadInitialRecommendations();
     // Comprobar perfil y redirigir si es necesario
     this.redirectionService.checkProfile().subscribe();
-    this.checkPaymentStatus(); //al entrar, revisa al momemnto si hay un pago pendiente de confirmar
-  }
-
-  checkPaymentStatus() {
-    this.route.queryParams.subscribe(params => {
-      const sessionId = params['session_id']; //busca si existe el parámetro que nos manda Stripe
-      if (sessionId) {
-        //si hay un id verifica el pago
-        this.verifyPayment(sessionId);
-      }
+    this.paymentService.checkPaymentStatus((isLoading) => {
+      this.isLoadingMatches.set(isLoading);
     });
   }
-
-  verifyPayment(sessionId: string) {
-    //Se mete el spinner mientras se verifica
-    this.isLoadingMatches.set(true);
-    //llama al backend para verificar si el sessionId es válido y activar el premium     //no se si esto se podria meter en el payment service
-    this.paymentService.confirmPaymentSuccess(sessionId).subscribe({
-      next: () => {
-        alert('¡Pago verificado y Premium activado!'); //quitar también
-        //se limpia la URL para quitar el session_id
-        this.router.navigate([], {
-          queryParams: { session_id: null },
-          queryParamsHandling: 'merge', //este mantiene otros parámetros que pueda haber
-          replaceUrl: true //reemplaza el historial para que si le das para atrás no vuelva al pago
-        });
-        this.isLoadingMatches.set(false); //spinner fuera
-        
-      },
-      error: (err) => {
-        // El ID era falso, expirado o hubo error de red
-        console.error('Error verificando pago:', err);
-        alert('Hubo un error verificando tu pago.'); //quitar también
-        this.isLoadingMatches.set(false);
-      }
-    });
-  }
+//al entrar, revisa al momemnto si hay un pago pendiente de confirmar
 
   loadInitialRecommendations() {
     this.isLoadingMatches.set(true);

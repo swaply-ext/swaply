@@ -41,10 +41,6 @@ public class SecurityUser implements UserDetails {
     public boolean isPremium(){
         return user.isPremium();
     }
-    
-    public String getId() { //no se si esto debería ir aquí
-        return user.getId();
-    }
 
     @Override
     public String getPassword() {
