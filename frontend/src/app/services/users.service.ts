@@ -26,4 +26,17 @@ export class UsersService {
       context: new HttpContext().set(SKIP_LOADING, true)
     });
   }
+  getUsername(id?: string): Observable<string> {
+    let params = new HttpParams();
+    
+    //condicion en el enpoint del backend, si hay id, se lo pasa /username/?id=... o si es null pilla la del token.
+    //poder buscar username por id de otros, o sin id y pillar el propio.
+    if (id) {
+      params = params.set('id', id);
+    }
+    return this.http.get(`${this.apiUrl}/username`, { 
+      params: params,
+      responseType: 'text' 
+    });
+  }
 }
