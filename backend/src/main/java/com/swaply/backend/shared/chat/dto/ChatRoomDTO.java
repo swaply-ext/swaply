@@ -5,9 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Data
 @NoArgsConstructor
@@ -22,7 +25,8 @@ public class ChatRoomDTO {
     
     // Información del último mensaje para la lista de chats
     private String lastMessagePreview;
-    private LocalDateTime lastMessageTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING) // No hace falta patrón, el defecto es ISO con Z
+    private Instant lastMessageTime;
     private String lastMessageSenderId;
 
     // Para mostrar el globito de notificaciones (ej: "tienes 3 mensajes")

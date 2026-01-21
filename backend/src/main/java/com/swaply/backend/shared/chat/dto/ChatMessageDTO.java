@@ -5,7 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Data
 @NoArgsConstructor
@@ -16,6 +19,7 @@ public class ChatMessageDTO {
     private String roomId;
     private String senderId;
     private String content;
-    private int pageNumber;  
-    private LocalDateTime timestamp;
+    private int pageNumber;
+    @JsonFormat(shape = JsonFormat.Shape.STRING) // No hace falta patrón, el defecto es ISO con Z
+    private Instant timestamp;
 }

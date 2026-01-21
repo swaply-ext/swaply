@@ -2,10 +2,13 @@ package com.swaply.backend.shared.chat.model;
 
 import com.azure.spring.data.cosmos.core.mapping.Container;
 import com.azure.spring.data.cosmos.core.mapping.PartitionKey;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.Id;
@@ -25,7 +28,8 @@ public class ChatMessage {
     private String roomId;
     private String content;
     private String senderId;
-    private LocalDateTime timestamp;
+    @JsonFormat(shape = JsonFormat.Shape.STRING) // No hace falta patrón, el defecto es ISO con Z
+    private Instant timestamp;
 
     // Constructor útil para crear mensajes nuevos
 

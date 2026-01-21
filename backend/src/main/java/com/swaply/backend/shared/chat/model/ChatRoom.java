@@ -2,12 +2,15 @@ package com.swaply.backend.shared.chat.model;
 
 import com.azure.spring.data.cosmos.core.mapping.Container;
 import com.azure.spring.data.cosmos.core.mapping.PartitionKey;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +39,8 @@ public class ChatRoom {
      * de chats del usuario se cargue sin tener que buscar en la tabla de mensajes.
      */
     private String lastMessagePreview;
-    private LocalDateTime lastMessageTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING) // No hace falta patrón, el defecto es ISO con Z
+    private Instant lastMessageTime;
     private String lastMessageSenderId;
 
     /**

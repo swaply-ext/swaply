@@ -8,7 +8,6 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -20,8 +19,8 @@ public class ChatWebSocketController {
     @Autowired
     private ChatService chatService;
 
-    @Autowired
-    private SimpMessagingTemplate messagingTemplate;
+    // ELIMINADO: private SimpMessagingTemplate messagingTemplate; 
+    // Ya no se necesita aquí porque el ChatService se encarga de enviar el mensaje.
 
     @MessageMapping("/chat.send/{roomId}")
     public void processMessage(
@@ -32,14 +31,14 @@ public class ChatWebSocketController {
         Authentication auth = (Authentication) principal;
         SecurityUser user = (SecurityUser) auth.getPrincipal();
 
-        // Seguridad: Forzar roomId de la URL y remitente autenticado para evitar suplantación
+        // Seguridad: Forzar roomId de la URL y remitente autenticado
         chatMessageDTO.setRoomId(roomId); 
         chatMessageDTO.setSenderId(user.getUsername()); 
 
-        ChatMessageDTO savedMessage = chatService.sendChatMessage(chatMessageDTO);
-
-        // Notificar a todos los suscritos a la sala
-        messagingTemplate.convertAndSend("/topic/room/" + roomId, savedMessage);
+        // LLAMADA AL SERVICIO:
+        // El servicio guarda en BD Y envía el mensaje por WebSocket internamente.
+        // No necesitamos hacer nada más aquí.
+        chatService.sendChatMessage(chatMessageDTO);
     }
 
     @MessageExceptionHandler

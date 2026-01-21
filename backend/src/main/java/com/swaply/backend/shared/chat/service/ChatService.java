@@ -1,5 +1,6 @@
 package com.swaply.backend.shared.chat.service;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -100,7 +101,8 @@ public class ChatService {
     public void updateRoomMetadataAsync(String roomId, ChatMessage message) {
         ChatRoom room = chatRoomRepository.findRoomById(roomId).orElse(null);
 
-        if (room == null) return;
+        if (room == null)
+            return;
 
         CosmosPatchOperations patchOps = CosmosPatchOperations.create()
                 .set("/lastMessagePreview", message.getContent())
@@ -139,31 +141,39 @@ public class ChatService {
         ChatMessage newChatMessage = chatMapper.chatMessageDtoToEntity(dto);
         newChatMessage.setId(UUID.randomUUID().toString());
         newChatMessage.setType("message");
-        newChatMessage.setTimestamp(LocalDateTime.now(ZoneOffset.UTC));
-
+        newChatMessage.setTimestamp(Instant.now());
         ChatMessage savedMessage = chatRepository.save(newChatMessage);
 
         // Actualización asíncrona de metadatos de la sala
         updateRoomMetadataAsync(savedMessage.getRoomId(), savedMessage);
 
-        return chatMapper.chatMessageEntityToDTO(savedMessage);
+        // 1. Convertimos la entidad guardada a DTO aquí para tener el objeto listo
+        ChatMessageDTO responseDto = chatMapper.chatMessageEntityToDTO(savedMessage);
+
+        // 2. Ahora sí existe 'responseDto' y lo enviamos al WebSocket
+        messagingTemplate.convertAndSend("/topic/room/" + savedMessage.getRoomId(), responseDto);
+
+        // 3. Retornamos ese mismo DTO a la respuesta HTTP
+        return responseDto;
     }
 
     public ChatRoom createChatRoom(String user1, String user2) {
-        if (user1 == null) throw new UserNotFoundException("Usuario remitente nulo");
+        if (user1 == null)
+            throw new UserNotFoundException("Usuario remitente nulo");
 
         UserDTO user = userService.getUserByUsername(user2);
         if (user == null) {
             throw new UserNotFoundException("El usuario objetivo no existe: " + user2);
         }
-        
+
         String UserId2 = user.getId();
-        
+
         // Generar ID único determinista basado en el orden de los IDs
         String generatedId = (user1.compareTo(UserId2) < 0) ? user1 + "_" + UserId2 : UserId2 + "_" + user1;
 
         Optional<ChatRoom> existing = chatRoomRepository.findRoomById(generatedId);
-        if (existing.isPresent()) return existing.get();
+        if (existing.isPresent())
+            return existing.get();
 
         Map<String, Integer> initialUnreadMap = new HashMap<>();
         initialUnreadMap.put(user1, 0);
@@ -197,14 +207,14 @@ public class ChatService {
                 roomId,
                 new PartitionKey(ChatRoomRepository.TYPE_CHATROOM),
                 ChatRoom.class,
-                patchOps
-        );
+                patchOps);
     }
 
     public boolean isUserInRoom(String roomId, String username) {
         Optional<ChatRoom> chatRoomOpt = chatRoomRepository.findById(roomId);
 
-        if (chatRoomOpt.isEmpty()) return false;
+        if (chatRoomOpt.isEmpty())
+            return false;
 
         ChatRoom room = chatRoomOpt.get();
 

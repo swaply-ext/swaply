@@ -90,44 +90,49 @@ export class ChatService {
     return this._connectedPromise;
   }
 
+  // Reemplaza el método subscribeToRoom por este:
+
   subscribeToRoom(roomId: string): Observable<ChatMessage> {
-    if (!this.roomSubjects.has(roomId)) {
-      const subj = new Subject<ChatMessage>();
-      this.roomSubjects.set(roomId, subj);
-
-      this.connectIfNeeded(localStorage.getItem('authToken') || '').then(() => {
-        if (!this.client) return;
-
-        this.client.subscribe(
-          `/topic/room/${roomId}`,
-          (message: StompMessage) => {
-            try {
-              const body = JSON.parse(message.body);
-              const chatMsg: ChatMessage = {
-                id: body.id,
-                roomId: body.roomId,
-                senderId: body.senderId,
-                content: body.content || body.text,
-                timestamp: body.timestamp,
-              };
-              subj.next(chatMsg);
-            } catch (e) {
-              // Error de parseo silencioso
-            }
+    return new Observable<ChatMessage>((observer) => {
+      // 1. Asegurar conexión
+      this.connectIfNeeded(localStorage.getItem('authToken') || '')
+        .then(() => {
+          if (!this.client || !this.client.active) {
+            observer.error('No se pudo conectar al WebSocket');
+            return;
           }
-        );
-      });
-    }
-    return this.roomSubjects.get(roomId)!.asObservable();
-  }
 
-  sendWsMessage(roomId: string, text: string) {
-    if (!this.client || !this.client.active) return;
+          // 2. Suscribirse al canal específico de STOMP
+          const subscription = this.client.subscribe(
+            `/topic/room/${roomId}`,
+            (message: StompMessage) => {
+              try {
+                const body = JSON.parse(message.body);
+                // Aseguramos que el timestamp sea compatible
+                const chatMsg: ChatMessage = {
+                  id: body.id,
+                  roomId: body.roomId,
+                  senderId: body.senderId,
+                  content: body.content || body.text, // Manejo de fallback
+                  timestamp: body.timestamp,
+                };
+                observer.next(chatMsg);
+              } catch (e) {
+                console.error('Error parseando mensaje', e);
+              }
+            }
+          );
 
-    const payload = { roomId, content: text, pageNumber: 0 };
-    this.client.publish({
-      destination: `/app/chat.send/${roomId}`,
-      body: JSON.stringify(payload),
+          // 3. Lógica de limpieza (Teardown logic)
+          // Esto se ejecuta automáticamente cuando el componente Angular se destruye
+          // o llamas a .unsubscribe()
+          return () => {
+            if (subscription) {
+              subscription.unsubscribe();
+            }
+          };
+        })
+        .catch((err) => observer.error(err));
     });
   }
 
@@ -144,5 +149,29 @@ export class ChatService {
     });
 
     return subj.asObservable();
+  }
+
+  sendWsMessage(roomId: string, content: string): void {
+    // 1. Verificación de seguridad
+    if (!this.client || !this.client.active) {
+      console.warn('⚠️ No se puede enviar: WebSocket desconectado.');
+      return;
+    }
+
+    // 2. Construcción del payload
+    // Es importante enviar el senderId si tu backend no lo extrae automáticamente del token
+    const payload = {
+      roomId: roomId,
+      content: content,
+      senderId: this.currentUserId, // Asegúrate de que esta variable tenga valor al hacer login
+      timestamp: new Date().toISOString()
+    };
+
+    // 3. Envío al Backend
+    // Esto debe coincidir con el @MessageMapping("/chat.send/{roomId}") de tu Controller Java
+    this.client.publish({
+      destination: `/app/chat.send/${roomId}`,
+      body: JSON.stringify(payload),
+    });
   }
 }
