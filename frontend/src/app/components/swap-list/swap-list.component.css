@@ -43,7 +43,19 @@ button {
   border: 0.0625rem solid var(--divider-color);
 }
 
-/* CONTENEDOR PRINCIPAL */
+.swap-date-header {
+  text-align: right;
+  padding: 1rem 1.5rem 0;
+  color: #888;
+  font-size: 0.85rem;
+}
+
+.date-icon {
+  font-size: 1rem;
+  vertical-align: text-bottom;
+  margin-right: 0.25rem;
+}
+
 .interchange-content {
   display: flex;
   align-items: flex-start;
@@ -65,7 +77,6 @@ button {
   text-align: left;
 }
 
-/* FLECHA CENTRAL */
 .arrow-container {
   display: flex;
   align-items: center;
@@ -82,7 +93,6 @@ button {
   user-select: none;
 }
 
-/* TARJETA DE HABILIDAD */
 .skill-card {
   display: flex;
   flex-direction: row;
@@ -121,10 +131,16 @@ button {
   overflow: hidden;
   text-overflow: ellipsis;
   width: 100%;
-  position: relative; /* IMPORTANTE: Para el tooltip */
+  transition: background-color 0.2s ease;
+  border-radius: 0.25rem;
 }
 
-/* BADGES (UBICACIÓN Y USUARIO) */
+.card-details h4:hover {
+  white-space: normal;
+  overflow: visible;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
 .badges-group {
   display: flex;
   flex-direction: column;
@@ -145,7 +161,13 @@ button {
   max-width: 100%;
   border: 0.0625rem solid rgba(255, 255, 255, 0.05);
   box-sizing: border-box;
-  position: relative; /* IMPORTANTE: Para el tooltip */
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.info-badge:hover {
+  background-color: rgba(0, 0, 0, 0.6);
+  border-color: rgba(255, 255, 255, 0.2);
+  z-index: 5;
 }
 
 .badge-icon {
@@ -165,6 +187,12 @@ button {
   min-width: 0;
 }
 
+.info-badge:hover .badge-text {
+  white-space: normal;
+  overflow: visible;
+  word-break: break-word;
+}
+
 .avatar-wrapper {
   display: flex;
   align-items: center;
@@ -178,7 +206,6 @@ button {
   object-fit: cover;
 }
 
-/* BOTONES DE ACCIÓN */
 .actions-area {
   display: flex;
   justify-content: flex-end;
@@ -242,7 +269,6 @@ button {
   transform: translateY(-0.0625rem);
 }
 
-
 @media (max-width: 56.25rem) {
   .interchange-content {
     flex-direction: column;
@@ -274,44 +300,4 @@ button {
   .btn-action {
     width: 100%;
   }
-}
-
-[data-tooltip]:hover::after {
-  content: attr(data-tooltip);
-  position: absolute;
-  bottom: 125%; /* Aparece encima */
-  left: 50%;
-  transform: translateX(-50%);
-  
-  background-color: rgba(40, 40, 40, 0.95);
-  color: var(--text-white);
-  padding: 0.5rem 0.8rem;
-  border-radius: 0.5rem;
-  font-size: 0.8rem;
-  font-weight: 500;
-  white-space: nowrap;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  z-index: 1000;
-  pointer-events: none;
-  opacity: 0;
-  animation: fadeIn 0.2s forwards;
-}
-
-[data-tooltip]:hover::before {
-  content: '';
-  position: absolute;
-  bottom: 115%;
-  left: 50%;
-  transform: translateX(-50%);
-  border: 6px solid transparent;
-  border-top-color: rgba(40, 40, 40, 0.95);
-  z-index: 1000;
-  
-  opacity: 0;
-  animation: fadeIn 0.2s forwards;
-}
-
-@keyframes fadeIn {
-  to { opacity: 1; transform: translateX(-50%) translateY(-5px); }
 }
