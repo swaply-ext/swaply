@@ -27,7 +27,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/example/premium/**").hasRole("PREMIUM")
-                        .anyRequest().authenticated())
+                        .requestMatchers("/ws-chat/**").permitAll()
+                        // .requestMatchers("/api/users/**").hasRole("MODERATOR")
+                        .anyRequest().authenticated()
+                )
 
                 .sessionManagement(sess -> sess
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

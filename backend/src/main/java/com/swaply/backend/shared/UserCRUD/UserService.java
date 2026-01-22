@@ -72,6 +72,12 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
     }
 
+        public String getProfilePhotoById(String id) {
+        return repository.findprofilePhotoUrlById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+    }
+
+
     public List<UserDTO> getAllUsers() {
         return repository.findAllUsers()
                 .stream()

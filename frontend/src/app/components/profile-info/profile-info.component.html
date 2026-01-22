@@ -26,10 +26,17 @@
     </div>
   </div>
 
-  <button *ngIf="isPublic" class="btn-swap-internal" (click)="goToSwap()">
-    <span class="material-icons">swap_horiz</span>
-    SWAP
-  </button>
+  <div class="actions" *ngIf="isPublic">
+    <button class="btn-message" (click)="contactUser()">
+      <span class="material-icons">chat_bubble_outline</span>
+      Mensaje
+    </button>
+
+    <button class="btn-swap-internal" (click)="goToSwap()">
+      <span class="material-icons">swap_horiz</span>
+      SWAP
+    </button>
+  </div>
 
   <div class="description">
     {{ profileData.description }}
