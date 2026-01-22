@@ -33,4 +33,5 @@ public class UserPublicDTO {
     private boolean isPremium;
     private boolean isModerator;
     private List<Swap> swaps;
+    private Double rating;
 }

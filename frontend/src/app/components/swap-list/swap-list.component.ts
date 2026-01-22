@@ -4,9 +4,16 @@ import { RouterLink } from '@angular/router';
 import { SwapService } from '../../services/swap.service';
 import { UsersService } from '../../services/users.service';
 import { AccountService } from '../../services/account.service';
-import { Swap, SwapProfileData } from '../../models/swap.models';
-import { UserLocation } from '../../models/user.models';
+import { Swap } from '../../models/swap.model';
+import { UserLocation } from '../../models/user-location.model';
 
+export interface Profile {
+  title?: string;
+  imgToTeach?: string;
+  profilePhotoUrl: string;
+  location: UserLocation;
+  username: string;
+}
 
 @Component({
   selector: 'app-swap-list',
@@ -31,8 +38,8 @@ export class SwapListComponent implements OnInit {
 
 
   swaps = signal<Swap[]>([]);
-  currentUser = signal<SwapProfileData>({} as SwapProfileData);
-  profilesMap = signal<Map<string, SwapProfileData>>(new Map());
+  currentUser = signal<Profile | null>(null);
+  profilesMap = signal<Map<string, Profile>>(new Map());
   loading = signal(true);
 
   ngOnInit(): void {
@@ -63,8 +70,8 @@ export class SwapListComponent implements OnInit {
   }
 
 
-  getOtherProfile(userId: string): SwapProfileData {
-    return this.profilesMap().get(userId) as SwapProfileData;
+  getOtherProfile(userId: string): Profile | undefined {
+    return this.profilesMap().get(userId);
   }
 
   getImageToLearn(swap: Swap): string {
@@ -95,10 +102,9 @@ export class SwapListComponent implements OnInit {
     );
   }
 
+  private assignImageToSkill(category: string, skillName: string): string | undefined {
 
-  private assignImageToSkill(category: string, skillName: string): string {
-
-    if (!skillName) return 'assets/photos_skills/default.jpg';
+    if (!skillName) return undefined;
 
     const name = skillName.toLowerCase();
 
@@ -147,7 +153,7 @@ export class SwapListComponent implements OnInit {
       if (cat.includes('música') || cat.includes('musica')) folder = 'music';
     }
 
-    return 'assets/photos_skills/default.jpg';
+    return undefined;
   }
 
   private sleep(ms: number): Promise<void> {

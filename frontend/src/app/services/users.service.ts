@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpContext, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { SKIP_LOADING } from '../interceptors/loading.interceptor';
-import { UserSearchItem } from '../models/user.models';
+import { UserSearchItem } from '../components/user-search/user-search.component';
 
 @Injectable({
   providedIn: 'root'

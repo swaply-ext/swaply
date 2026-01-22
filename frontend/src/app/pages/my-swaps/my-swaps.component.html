@@ -37,7 +37,7 @@
         
         <div class="avatars-preview">
             @for (swap of pendingSwaps.slice(0, 3); track swap.id; let i = $index) {
-                <img [src]="getRequesterUser(swap).profilePhotoUrl || 'assets/default-avatar.png'" 
+                <img [src]="getRequesterUser(swap)?.profilePhotoUrl || 'assets/default-avatar.png'" 
                      class="mini-avatar" 
                      [style.zIndex]="3 - i"
                      alt="avatar">

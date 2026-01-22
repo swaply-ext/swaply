@@ -16,12 +16,14 @@ import { FormsModule } from '@angular/forms';
 import { authInterceptor } from './interceptors/auth.interceptor';
 import { loadingInterceptor } from './interceptors/loading.interceptor';
 import { apiUrlInterceptor } from './interceptors/api-url.interceptor'
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 export const appConfig = {
   providers: [
     importProvidersFrom(FormsModule),
     provideRouter(appRoutes, withInMemoryScrolling({       
         anchorScrolling: 'enabled',
+        provideAnimations(),
         scrollPositionRestoration: 'enabled' 
       })),
     provideHttpClient(withInterceptors([authInterceptor, loadingInterceptor, apiUrlInterceptor])),

@@ -21,19 +21,20 @@ public class UserController {
         this.service = service;
     }
 
-
     @GetMapping
     @PreAuthorize("hasRole('MODERATOR')")
-    public ResponseEntity<List<UserDTO>> getAll(@RequestParam(required = false) String contains) {
-        if (contains != null){
-            contains = contains.replace(" " , "");
-            return ResponseEntity.ok(service.findUsersByUsernameContaining(contains));
-        }
+    public ResponseEntity<List<UserDTO>> getAll() {
         return ResponseEntity.ok(service.getAllUsers());
     }
 
+    @GetMapping(params = "contains")
+    public ResponseEntity<List<UserDTO>> searchUsers(@RequestParam String contains) {
+        return ResponseEntity.ok(service.findUsersByUsernameContaining(contains));
+    }
+
     @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> getUserById(@AuthenticationPrincipal SecurityUser securityUser, @PathVariable String id) {
+    public ResponseEntity<UserDTO> getUserById(@AuthenticationPrincipal SecurityUser securityUser,
+            @PathVariable String id) {
         return ResponseEntity.ok(service.getUserByID(id));
     }
 
@@ -59,14 +60,14 @@ public class UserController {
     // La petició se hace a: http://localhost:8081/api/users?email=test@example.com
     // @GetMapping(params = "email")
     // public ResponseEntity<UserDTO> getByEmail(@RequestParam String email) {
-    //     return ResponseEntity.ok(service.getUserByEmail(email));
+    // return ResponseEntity.ok(service.getUserByEmail(email));
     // }
 
     // // obtener usuarios por ubicación
     // @GetMapping("/location/{location}")
     // public List<UserDTO> getUsersByLocation(@PathVariable String location) {
-    //     return service.getUsersByLocation(location);
+    // return service.getUsersByLocation(location);
     // }
 
 }
-//GetMapping de datos profile
+// GetMapping de datos profile

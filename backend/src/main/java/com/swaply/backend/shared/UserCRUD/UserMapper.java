@@ -30,6 +30,7 @@ public interface UserMapper {
     })
     UserDTO publicDTOToUserDTO(UserPublicDTO dto);
 
+
     @Mappings({
             @Mapping(target = "id", ignore = true),
             @Mapping(target = "type", ignore = true),

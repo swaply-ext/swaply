@@ -1,163 +1,183 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.component";
 import { ProfileInfoComponent } from "../../components/profile-info/profile-info.component";
 import { SkillsPanelComponent } from '../../components/skills-panel/skills-panel.component';
 import { InterestsPanelComponent } from '../../components/interests-panel/interests-panel.component';
-
 import { AccountService } from '../../services/account.service';
-import { UserLocation } from '../../models/user.models';
-import { UserSkills } from '../../models/skills.models';
-import { PrivateProfileData } from '../../models/data.models';
+import { ChatService } from '../../services/chat.service';
 
+interface PanelSkill {
+  id: string;
+  level: number;
+}
 
+interface BackendSkill {
+  id?: string;
+  name?: string;
+  skillName?: string;
+  level?: number;
+}
+
+interface Location {
+  placeId: string;
+  lat: number;
+  lon: number;
+  displayName: string;
+}
+
+interface ProfileData {
+  fullName: string;
+  username: string;
+  location: Location;
+  description: string;
+  profilePhotoUrl: string;
+  rating: number;
+}
 
 @Component({
-selector: 'app-public-profile',
-standalone: true,
-imports: [
-CommonModule,
-AppNavbarComponent,
-ProfileInfoComponent,
-SkillsPanelComponent,
-InterestsPanelComponent
-],
-templateUrl: './public-profile.component.html',
-styleUrls: ['./public-profile.component.css']
+  selector: 'app-public-profile',
+  standalone: true,
+  imports: [
+    CommonModule,
+    AppNavbarComponent,
+    ProfileInfoComponent,
+    SkillsPanelComponent,
+    InterestsPanelComponent,
+  ],
+  templateUrl: './public-profile.component.html',
+  styleUrls: ['./public-profile.component.css']
 })
 export class PublicProfileComponent implements OnInit {
 
-public interests: UserSkills[] = [];
-  public skills: UserSkills[] = [];
-public privateProfileData: PrivateProfileData = {} as PrivateProfileData;
-public clasesImpartidas: any[] = [];
-public isHistoryOpen: boolean = true; 
+  public interests: PanelSkill[] = [];
+  public skills: PanelSkill[] = [];
+  public profileData: ProfileData = {} as ProfileData;
+  public clasesImpartidas: any[] = [];
+  public isHistoryOpen: boolean = true; 
 
   constructor(
     private accountService: AccountService,
     private route: ActivatedRoute,
+    private chatService: ChatService,
     private router: Router
   ) { }
 
-ngOnInit(): void {
+  contactUser() {
+    const target = this.profileData?.username;
+    if (!target) return;
+    this.chatService.createRoomWithUsername(target).subscribe({
+      next: (room: any) => {
+        //Guardamos la ID en el servicio (estado oculto)
+        this.chatService.setActiveRoom(room.id);
+        //Navegamos al chat limpio
+        this.router.navigate(['/chat']);
+      },
+      error: (err: any) => {
+        console.error('Error creando sala', err);
+        //Fallback
+        this.router.navigate(['/chat']);
+      }
+    });
+  }
+
+  ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       const usernameFromUrl = params.get('username');
       if (usernameFromUrl) {
         this.getPublicProfileFromBackend(usernameFromUrl);
       }
     });
-}
+  }
 
   getPublicProfileFromBackend(username: string): void {
     this.accountService.getPublicProfile(username).subscribe({
       next: (user: any) => {
-        // Log vital para ver que datos llegan del backend
-        console.log(' [PublicProfile] Datos del usuario publico recibidos del backend:', user);
+        console.log(' [PublicProfile] Datos recibidos:', user);
         this.splitAndSendUser(user);
       },
       error: (err: any) => console.error('Error cargando perfil:', err)
     });
   }
 
-splitAndSendUser(user: any): void {
-if (!user) return;
-    // MAPPING SEGURO esto quita l'error "Type 'Skill[]' is not assignable..."
-    this.skills = this.mapToUserSkills(user.skills);
-    this.interests = this.mapToUserSkills(user.interests)
+  splitAndSendUser(user: any): void {
+    if (!user) return;
+    this.skills = this.mapToPanelSkill(user.skills);
+    this.interests = this.mapToPanelSkill(user.interests);
 
-this.generateClassesFromSkills(this.skills);
-this.mapPrivateProfileData(user);
-}
+    this.generateClassesFromSkills(this.skills);
+    this.mapProfileData(user);
+  }
 
-
-//normalitzar les skills
-    private mapToUserSkills(list: any[]): UserSkills[] {
+  private mapToPanelSkill(list: any[]): PanelSkill[] {
     if (!list || !Array.isArray(list)) return [];
 
     return list.map(item => {
       const rawId = item.id || item.skillName || item.name || 'unknown';
-      
       return {
         id: rawId.toString(), 
         level: item.level || 0 
       };
     });
   }
-mapPrivateProfileData(user: PrivateProfileData): void {
-this.privateProfileData = {
-fullName: user.fullName,
-username: user.username,
-location: user.location,
-description: user.description || '',
-profilePhotoUrl: user.profilePhotoUrl || 'assets/people_demo/user_placeholder.png',
-rating: user.rating || 0, 
-};
-}
-/// Esto es ESTATICO PARA LA DEMO YA NO LO UTILIZAMOS IGNORALO
-  generateClassesFromSkills(skills: UserSkills[]): void {
-this.clasesImpartidas = [];
 
-const fakeStudents = [
-{ name: 'Marta Díaz', img: 'assets/people_demo/marina_garcia.jpg' },
-{ name: 'Juan Pérez', img: 'assets/people_demo/juan_perez.png' },
-{ name: 'Carlos R.', img: 'assets/people_demo/carlos_rodriguez.jpg' },
-{ name: 'Ana López', img: 'assets/people_demo/ana_lopez.jpg' },
-{ name: 'Luis Martín', img: 'assets/people_demo/luis_martin.jpg' }
-];
+  mapProfileData(user: any): void {
+    this.profileData = {
+      fullName: user.fullName || `${user.name || ''} ${user.surname || ''}`.trim(),
+      username: user.username,
+      location: user.location,
+      description: user.description || '',
+      profilePhotoUrl: user.profilePhotoUrl || 'assets/people_demo/user_placeholder.png',
+      rating: user.rating || 0, 
+    };
+  }
 
-const fileMapper: { [key: string]: string } = {
+  generateClassesFromSkills(skills: PanelSkill[]): void {
+    this.clasesImpartidas = [];
 
-'futbol': 'football',
-'basquet': 'basketball',
-'boxeo': 'boxing',
-'padel': 'padel',
-'voley': 'voleyball', 
-'tenis': 'tennis',    
+    const fakeStudents = [
+      { name: 'Marta Díaz', img: 'assets/people_demo/marina_garcia.jpg' },
+      { name: 'Juan Pérez', img: 'assets/people_demo/juan_perez.png' },
+      { name: 'Carlos R.', img: 'assets/people_demo/carlos_rodriguez.jpg' },
+      { name: 'Ana López', img: 'assets/people_demo/ana_lopez.jpg' },
+      { name: 'Luis Martín', img: 'assets/people_demo/luis_martin.jpg' }
+    ];
 
+    const fileMapper: { [key: string]: string } = {
+      'futbol': 'football', 'basquet': 'basketball', 'boxeo': 'boxing',
+      'padel': 'padel', 'voley': 'voleyball', 'tenis': 'tennis',
+      'guitarra': 'guitar', 'piano': 'piano', 'violin': 'violin',
+      'bateria': 'drums', 'saxofon': 'saxophone', 'cocina': 'cook',
+      'manualidades': 'crafts', 'baile': 'dance', 'ocio digital': 'digital_entertainment',
+      'dibujo': 'draw'
+    };
 
-'guitarra': 'guitar',
-'piano': 'piano',
-'violin': 'violin',
-'bateria': 'drums',
-'saxofon': 'saxophone',
+    const sportsList = ['football', 'basketball', 'boxing', 'padel', 'voleyball' ];
+    const musicList = ['guitar', 'piano', 'violin', 'drums', 'saxophone'];
 
-'cocina': 'cook',
-'manualidades': 'crafts',
-'baile': 'dance',
-'ocio digital': 'digital_entertainment',
-'dibujo': 'draw'
-};
+    if (!skills) return;
 
-const sportsList = ['football', 'basketball', 'boxing', 'padel', 'voleyball' ];
-const musicList = ['guitar', 'piano', 'violin', 'drums', 'saxophone'];
+    skills.forEach((skill, index) => {
+      const originalId = skill.id.toLowerCase().trim();
+      if (originalId === 'unknown') return;
+      const fileName = fileMapper[originalId] || originalId;
 
-if (!skills) return;
-
-
-skills.forEach((skill, index) => {
-  // skill es de UserSkills con id
-const originalId = skill.id.toLowerCase().trim();
-
-if (originalId === 'unknown') return;
-const fileName = fileMapper[originalId] || originalId;
-
-
-let category = 'leisure'; 
-if (sportsList.includes(fileName)) category = 'sports';
+      let category = 'leisure'; 
+      if (sportsList.includes(fileName)) category = 'sports';
       else if (musicList.includes(fileName)) category = 'music';
 
-this.clasesImpartidas.push({
-user: fakeStudents[index % fakeStudents.length].name,
-userImg: fakeStudents[index % fakeStudents.length].img,
-img: `assets/photos_skills/${category}/${fileName}.jpg`,
-titulo: `Clase de ${originalId.charAt(0).toUpperCase() + originalId.slice(1)}`, 
+      this.clasesImpartidas.push({
+        user: fakeStudents[index % fakeStudents.length].name,
+        userImg: fakeStudents[index % fakeStudents.length].img,
+        img: `assets/photos_skills/${category}/${fileName}.jpg`,
+        titulo: `Clase de ${originalId.charAt(0).toUpperCase() + originalId.slice(1)}`, 
         rating: (4.0 + Math.random()).toFixed(1)
-});
-});
-}
+      });
+    });
+  }
 
-toggleHistory(): void {
-this.isHistoryOpen = !this.isHistoryOpen;
-}
+  toggleHistory(): void {
+    this.isHistoryOpen = !this.isHistoryOpen;
+  }
 }

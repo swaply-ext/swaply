@@ -84,6 +84,7 @@ export const appRoutes: Routes = [
   { path: 'my-swaps', component: MySwapsPageComponent,},
   { path: 'privacy-and-security', component: PrivacyAndSecurityComponent, canActivate: [AuthGuard] },
   { path: 'user-search', component: UserSearchComponent },
+  { path: 'chat', loadComponent: () => import('./pages/chat/chat.component').then(m => m.ChatComponent), canActivate: [AuthGuard] },
   { path: 'swap/:username', component: SwapComponent, canActivate: [AuthGuard] },
   { path: 'landing', component: LandingComponent },
   { path: 'select-avatar', component: AvatarSelectorComponent, canActivate: [AuthGuard]},

@@ -57,7 +57,6 @@ public class UserService {
     public UserDTO getUserByID(String id) {
         User user = repository.findUserById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
-
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.getPrincipal() instanceof SecurityUser principal) {
             if (principal.isModerator() || principal.getUsername().equals(id)) {
@@ -73,6 +72,12 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
     }
 
+        public String getProfilePhotoById(String id) {
+        return repository.findprofilePhotoUrlById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+    }
+
+
     public List<UserDTO> getAllUsers() {
         return repository.findAllUsers()
                 .stream()
@@ -83,6 +88,7 @@ public class UserService {
     private String normalizeString(String input) {
         if (input == null)
             return "";
+        input = input.replace(" ", "");
         String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
         return pattern.matcher(normalized).replaceAll("").toLowerCase();
@@ -90,6 +96,7 @@ public class UserService {
 
     public List<UserDTO> findUsersByUsernameContaining(String usernameFragment) {
         String normalized = normalizeString(usernameFragment);
+
         return repository.findUsersByUsernameContaining(normalized)
                 .stream()
                 .map(mapper::entityToDTO)

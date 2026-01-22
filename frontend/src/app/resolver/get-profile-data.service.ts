@@ -3,7 +3,8 @@ import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/r
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AccountService } from '../services/account.service';
-import { ProfileDataDTO } from '../models/data.models';
+import { ProfileDataDTO } from '../models/profile-data-dto.model';
+import { UserLocation } from '../models/user-location.model';
 
 @Injectable({
   providedIn: 'root'

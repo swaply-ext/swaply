@@ -7,7 +7,11 @@ import { RouterLink } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
-import { UserLogin } from '../../models/user.models';
+
+interface User {
+  email: string;
+  password: string;
+}
 
 @Component({
   selector: 'login-form',
@@ -43,7 +47,7 @@ export class LoginFormComponent {
       return;
     }
 
-    const newUser: UserLogin = {
+    const newUser: User = {
       email: this.email,
       password: this.password
     };

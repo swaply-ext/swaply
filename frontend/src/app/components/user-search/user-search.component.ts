@@ -12,9 +12,12 @@ import { Subject, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, tap, filter, catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { UsersService } from '../../services/users.service';
-import { UserSearchItem } from '../../models/user.models';
 
-
+export interface UserSearchItem {
+  id: string;
+  username: string;
+  profilePhotoUrl?: string;
+}
 
 
 
