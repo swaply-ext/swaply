@@ -38,9 +38,20 @@ public class UserController {
         return ResponseEntity.ok(service.getUserByID(id));
     }
 
-    @GetMapping("/{id}/username")
-    public ResponseEntity<String> getUsernameById(@PathVariable String id) {
-        return ResponseEntity.ok(service.getUsernameById(id));
+    @GetMapping("/username")
+    public ResponseEntity<String> getUsername(
+            @RequestParam(required = false) String id,
+            @AuthenticationPrincipal SecurityUser principal) {
+        // cuando buscamos el username de un id concreto
+        if (id != null && !id.trim().isEmpty()) {
+            return ResponseEntity.ok(service.getUsernameById(id));
+        }
+        // cuando buscamos nuestro propio username (id del token)
+        if (principal != null) {
+            return ResponseEntity.ok(service.getUsernameById(principal.getUsername()));
+        }
+
+        return ResponseEntity.status(400).body("Debes proporcionar un 'id' o estar logueado.");
     }
 
     @DeleteMapping("/{id}")

@@ -7,6 +7,11 @@ import { SkillsPanelComponent } from '../../components/skills-panel/skills-panel
 import { InterestsPanelComponent } from '../../components/interests-panel/interests-panel.component';
 import { AccountService } from '../../services/account.service';
 import { ChatService } from '../../services/chat.service';
+import { UsersService } from '../../services/users.service';
+import id from '@angular/common/locales/extra/id';
+import { UserLocation } from '../../models/user-location.model';
+import { UserSkills } from '../../models/user-skills.model';
+import { PrivateProfileData } from '../../models/private-profile-data.model';
 
 interface PanelSkill {
   id: string;
@@ -44,7 +49,7 @@ interface ProfileData {
     AppNavbarComponent,
     ProfileInfoComponent,
     SkillsPanelComponent,
-    InterestsPanelComponent,
+    InterestsPanelComponent
   ],
   templateUrl: './public-profile.component.html',
   styleUrls: ['./public-profile.component.css']
@@ -56,9 +61,13 @@ export class PublicProfileComponent implements OnInit {
   public profileData: ProfileData = {} as ProfileData;
   public clasesImpartidas: any[] = [];
   public isHistoryOpen: boolean = true; 
+  public privateProfileData: PrivateProfileData = {} as PrivateProfileData;
+  private currentUsername: string = '';
+
 
   constructor(
     private accountService: AccountService,
+    private userService: UsersService,
     private route: ActivatedRoute,
     private chatService: ChatService,
     private router: Router
@@ -83,6 +92,17 @@ export class PublicProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.userService.getUsername().subscribe({
+      next: (data: string) => {
+        this.currentUsername = data;
+        this.checkUrlParams();
+      },
+      error: () => {
+        this.currentUsername = '';
+        this.checkUrlParams();
+      }
+    });
+
     this.route.paramMap.subscribe(params => {
       const usernameFromUrl = params.get('username');
       if (usernameFromUrl) {
@@ -91,13 +111,38 @@ export class PublicProfileComponent implements OnInit {
     });
   }
 
+  private checkUrlParams(): void {
+    this.route.paramMap.subscribe(params => {
+      const usernameFromUrl = params.get('username');
+
+      if (!usernameFromUrl) {
+        this.router.navigate(['/error-404']);
+        return;
+      }
+
+      if (this.currentUsername === usernameFromUrl) {
+        this.router.navigate(['/myprofile']);
+      } else {
+        this.getPublicProfileFromBackend(usernameFromUrl);
+      }
+    });
+  }
+
   getPublicProfileFromBackend(username: string): void {
     this.accountService.getPublicProfile(username).subscribe({
       next: (user: any) => {
-        console.log(' [PublicProfile] Datos recibidos:', user);
+        // Log vital para ver que datos llegan del backend
+        console.log(' [PublicProfile] Datos del usuario publico recibidos del backend:', user);
+        if (!user) {
+          this.router.navigate(['/error-404']);
+          return;
+        }
         this.splitAndSendUser(user);
       },
-      error: (err: any) => console.error('Error cargando perfil:', err)
+      error: (err: any) => {
+        console.error('Error cargando perfil:', err);
+        this.router.navigate(['/error-404']);
+      }
     });
   }
 
