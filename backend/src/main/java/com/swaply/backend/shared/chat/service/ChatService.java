@@ -238,7 +238,7 @@ public class ChatService {
         return saved;
     }
 
-    public void readedMessage(String roomId, String userId) {
+    public void readMessage(String roomId, String userId) {
         if (!chatRoomRepository.existsById(roomId)) {
             throw new RoomNotFoundException("La sala no existe");
         }

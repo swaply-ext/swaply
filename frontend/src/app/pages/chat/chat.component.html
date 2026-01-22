@@ -48,7 +48,7 @@
             </span>
           </div>
           <div class="info-bottom">
-            <p class="last-message">
+            <p class="last-message" [class.unread-text]="conv.unreadCount > 0">
               {{ (conv.lastMessage || 'Nuevo chat') | slice:0:35 }}
               {{ (conv.lastMessage?.length || 0) > 35 ? '...' : '' }}
             </p>

@@ -19,7 +19,7 @@ interface UIConversation {
   roomId: string;
   partnerUsername: string;
   partnerAvatar: string;
-  lastMessage: string;
+  lastMessage?: string;
   lastMessageTime: Date | null;
   unreadCount: number;
 }
@@ -58,7 +58,6 @@ export class ChatComponent implements OnInit, OnDestroy {
   isMobile: boolean = false;
   loadingConversations: boolean = true;
 
-  // Variables para la paginación
   nextContinuationToken: string | null = null;
   isLastPage: boolean = false;
   isLoadingHistory: boolean = false;
@@ -150,6 +149,15 @@ export class ChatComponent implements OnInit, OnDestroy {
               ? dto.partnerAvatar[index]
               : 'assets/default-image.jpg';
 
+          const isCurrentRoom = this.selectedConversation?.roomId === room.id;
+
+          let myUnreadCount = 0;
+          const unreadObj = (room as any).unreadCount;
+
+          if (unreadObj && this.currentUserId) {
+            myUnreadCount = unreadObj[this.currentUserId] || 0;
+          }
+
           return {
             roomId: room.id,
             partnerUsername: partnerName,
@@ -158,7 +166,7 @@ export class ChatComponent implements OnInit, OnDestroy {
             lastMessageTime: room.lastMessageTime
               ? new Date(room.lastMessageTime)
               : null,
-            unreadCount: 0,
+            unreadCount: isCurrentRoom ? 0 : myUnreadCount,
           };
         });
 
@@ -207,6 +215,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     )
       return;
 
+    conv.unreadCount = 0;
     this.selectedConversation = conv;
     this.messages = [];
 

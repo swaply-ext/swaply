@@ -48,6 +48,7 @@ public class ChatController {
         if (user == null)
             return ResponseEntity.status(401).build();
         try {
+            chatService.readMessage(roomId, user.getUsername());
             return ResponseEntity.ok(chatService.getChatHistoryByRoomId(roomId, user.getUsername(), size, continuationToken));
         } catch (Exception e) {
             System.out.println("[ChatController] error in getHistory: " + e.getMessage());
@@ -80,7 +81,7 @@ public class ChatController {
         if (user == null)
             return ResponseEntity.status(401).build();
         try {
-            chatService.readedMessage(roomId, user.getUsername());
+            chatService.readMessage(roomId, user.getUsername());
             return ResponseEntity.ok(true);
         } catch (Exception e) {
             System.out.println("[ChatController] error in readedMessage: " + e.getMessage());

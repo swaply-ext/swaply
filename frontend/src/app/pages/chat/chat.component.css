@@ -14,6 +14,11 @@
   backdrop-filter: blur(1.25rem);
 }
 
+.unread-text {
+  font-weight: bold !important;
+  color: #ffffff !important;
+}
+
 .chat-sidebar {
   width: 22.5rem;
   background-color: rgba(0, 0, 0, 0.2);
