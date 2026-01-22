@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.Id;
 
-@Container(containerName = "swaply-container") // Nombre de la colección en Cosmos
+@Container(containerName = "swaply-container") 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,12 +23,12 @@ public class ChatMessage {
     private String id;
 
     @PartitionKey
-    private String type = "message"; // Clave de partición para búsquedas rápidas
+    private String type = "message"; 
 
     private String roomId;
     private String content;
     private String senderId;
-    @JsonFormat(shape = JsonFormat.Shape.STRING) // No hace falta patrón, el defecto es ISO con Z
+    @JsonFormat(shape = JsonFormat.Shape.STRING) 
     private Instant timestamp;
 
 

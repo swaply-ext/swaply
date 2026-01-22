@@ -21,7 +21,6 @@ public class ChatController {
     @Autowired
     private ChatService chatService;
 
-    // Obtener todas las salas del usuario logueado
     @GetMapping("/rooms")
     public ResponseEntity<SendChatRoomsDTO> getMyRooms(@AuthenticationPrincipal SecurityUser user) {
         System.out
@@ -39,7 +38,6 @@ public class ChatController {
         }
     }
 
-    // Obtener historial de una sala específica
     @GetMapping("/history/{roomId}")
     public ResponseEntity<ChatHistoryResponse> getHistory(
             @AuthenticationPrincipal SecurityUser user,
@@ -58,7 +56,6 @@ public class ChatController {
         }
     }
 
-    // Crear una sala (ej: cuando un usuario pulsa "Contactar" en un producto)
     @PostMapping("/rooms/create/{targetUserId}")
     public ResponseEntity<ChatRoom> createRoom(
             @AuthenticationPrincipal SecurityUser user,

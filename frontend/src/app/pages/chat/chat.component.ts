@@ -210,7 +210,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.selectedConversation = conv;
     this.messages = [];
 
-    // RESETEAR TOKEN
     this.nextContinuationToken = null;
     this.isLastPage = false;
     this.isLoadingHistory = false;
@@ -222,19 +221,15 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     this.isLoadingHistory = true;
 
-    // Primera llamada: Token es null
     this.chatService.getHistory(conv.roomId, null).subscribe({
       next: (response) => {
-        // Ordenar y asignar mensajes
         this.messages = (response.messages || []).sort(
           (a, b) =>
             new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
         );
 
-        // GUARDAR EL TOKEN PARA LA SIGUIENTE VEZ
         this.nextContinuationToken = response.continuationToken;
 
-        // Si no hay token, es la última página
         if (!this.nextContinuationToken || response.messages.length === 0) {
           this.isLastPage = true;
         }
@@ -258,14 +253,12 @@ export class ChatComponent implements OnInit, OnDestroy {
       });
   }
 
-  // --- NUEVA LÓGICA DE SCROLL ---
   onScroll(): void {
     if (this.isLoadingHistory || this.isLastPage || !this.selectedConversation)
       return;
 
     const element = this.scrollContainer.nativeElement;
 
-    // Si el usuario llega al tope (scrollTop == 0) cargamos más
     if (element.scrollTop === 0) {
       this.loadMoreMessages();
     }
@@ -277,7 +270,6 @@ export class ChatComponent implements OnInit, OnDestroy {
     this.isLoadingHistory = true;
     const currentRoomId = this.selectedConversation.roomId;
 
-    // USAR EL TOKEN GUARDADO
     this.chatService.getHistory(currentRoomId, this.nextContinuationToken).subscribe({
       next: (response) => {
         const oldMessages = response.messages;
@@ -288,7 +280,6 @@ export class ChatComponent implements OnInit, OnDestroy {
           return;
         }
 
-        // Actualizar el token con el nuevo que nos dio el backend
         this.nextContinuationToken = response.continuationToken;
         if (!this.nextContinuationToken) {
            this.isLastPage = true;
@@ -309,11 +300,9 @@ export class ChatComponent implements OnInit, OnDestroy {
       },
       error: () => {
         this.isLoadingHistory = false;
-        // No borramos el token si falla, para que el usuario pueda reintentar
       }
     });
   }
-  // ------------------------------
 
   sendMessage(): void {
     if (!this.newMessage.trim() || !this.selectedConversation) return;

@@ -60,7 +60,6 @@ public class ChatService {
     private SimpMessagingTemplate messagingTemplate;
 
     public ChatHistoryResponse getChatHistoryByRoomId(String roomId, String userId, int pageSize, String continuationToken) {
-        // 1. Validaciones
         ChatRoom room = chatRoomRepository.findRoomById(roomId)
                 .orElseThrow(() -> new RoomNotFoundException("La sala no existe"));
 
@@ -68,7 +67,6 @@ public class ChatService {
             throw new UserNotInThisRoomException("Este usuario no pertenece a esta sala");
         }
 
-        // 2. Configurar Paginación Cosmos
         Pageable pageRequest;
         if (continuationToken == null || continuationToken.isEmpty()) {
             pageRequest = new CosmosPageRequest(0, pageSize, null, Sort.by("timestamp").descending());
@@ -76,31 +74,23 @@ public class ChatService {
             pageRequest = new CosmosPageRequest(0, pageSize, continuationToken, Sort.by("timestamp").descending());
         }
 
-        // 3. Ejecutar Query
         Page<ChatMessage> page = chatRepository.findByRoomIdAndType(roomId, "message", pageRequest);
 
-        // 4. Procesar lista (Mutable)
         List<ChatMessage> messages = new ArrayList<>(page.getContent());
         
-        // Desencriptar
         messages.forEach(msg -> {
             if (msg.getContent() != null) {
                 msg.setContent(encryptionService.decrypt(msg.getContent()));
             }
         });
 
-        // Invertir orden para visualización (A->Z)
         Collections.reverse(messages);
 
-        // 5. Obtener Token de Continuación (CORREGIDO)
         String nextToken = null;
         
-        // Verificamos si existe una página siguiente
         if (page.hasNext()) {
-            // Obtenemos la definición de la siguiente página
             Pageable nextPage = page.nextPageable();
             
-            // Si la definición es de tipo CosmosPageRequest, extraemos el token de ahí
             if (nextPage instanceof CosmosPageRequest) {
                 nextToken = ((CosmosPageRequest) nextPage).getRequestContinuation();
             }

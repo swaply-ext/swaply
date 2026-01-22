@@ -62,12 +62,10 @@ export class ChatService {
   ): Observable<ChatHistoryResponse> {
     let params = new HttpParams().set('size', size.toString());
 
-    // Solo añadimos el token si existe (no es la primera pagina)
     if (continuationToken) {
       params = params.set('continuationToken', continuationToken);
     }
 
-    // Nota el cambio de tipo de retorno: ChatHistoryResponse
     return this.http.get<ChatHistoryResponse>(
       `${this.base}/history/${roomId}`,
       {

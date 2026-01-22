@@ -1,4 +1,4 @@
-package com.swaply.backend.shared.chat.model; // Ajusta el paquete
+package com.swaply.backend.shared.chat.model; 
 
 import com.swaply.backend.shared.chat.model.ChatMessage;
 import java.util.List;
@@ -12,7 +12,6 @@ public class ChatHistoryResponse {
         this.continuationToken = continuationToken;
     }
 
-    // Getters y Setters
     public List<ChatMessage> getMessages() { return messages; }
     public String getContinuationToken() { return continuationToken; }
 }

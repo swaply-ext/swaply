@@ -10,20 +10,17 @@ import com.swaply.backend.shared.chat.model.ChatRoom;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface ChatMapper {
 
-    // 1. DTO a Entidad
     @Mappings({
         @Mapping(target = "id", ignore = true),
         @Mapping(target = "timestamp", ignore = true) // Ignoramos porque lo generas con Instant.now() en el servicio
     })
     ChatMessage chatMessageDtoToEntity(ChatMessageDTO chatMessageDTO);
 
-    // 2. Entidad a DTO
     @Mappings({
         @Mapping(target = "pageNumber", ignore = true) 
     })
     ChatMessageDTO chatMessageEntityToDTO(ChatMessage chatMessage);
 
-    // 3. Room DTO a Entidad
     @Mappings({
         @Mapping(target = "id", ignore = true),
     })
