@@ -40,6 +40,8 @@ public class SwapService {
         sentSwap.setCreatedAt(now);
 
         UserDTO sender = userService.getUserByID(sendingUser);
+        UserDTO Reciever = userService.getUserByUsername(dto.getRequestedUsername());
+        String RecieverId = Reciever.getId();
 
         if (sender.getSwaps() == null) {
             sender.setSwaps(new ArrayList<>());
@@ -59,7 +61,7 @@ public class SwapService {
             receiver.setSwaps(new ArrayList<>());
         }
         receiver.getSwaps().add(receivedSwap);
-        userService.updateUser(receiver.getId(), receiver);
+        userService.updateUser(RecieverId, receiver);
 
         // Enviar email de notificación
         try {
