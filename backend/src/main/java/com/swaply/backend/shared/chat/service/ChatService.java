@@ -1,10 +1,14 @@
 package com.swaply.backend.shared.chat.service;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HexFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -59,7 +63,8 @@ public class ChatService {
     @Lazy
     private SimpMessagingTemplate messagingTemplate;
 
-    public ChatHistoryResponse getChatHistoryByRoomId(String roomId, String userId, int pageSize, String continuationToken) {
+    public ChatHistoryResponse getChatHistoryByRoomId(String roomId, String userId, int pageSize,
+            String continuationToken) {
         ChatRoom room = chatRoomRepository.findRoomById(roomId)
                 .orElseThrow(() -> new RoomNotFoundException("La sala no existe"));
 
@@ -77,7 +82,7 @@ public class ChatService {
         Page<ChatMessage> page = chatRepository.findByRoomIdAndType(roomId, "message", pageRequest);
 
         List<ChatMessage> messages = new ArrayList<>(page.getContent());
-        
+
         messages.forEach(msg -> {
             if (msg.getContent() != null) {
                 msg.setContent(encryptionService.decrypt(msg.getContent()));
@@ -87,10 +92,10 @@ public class ChatService {
         Collections.reverse(messages);
 
         String nextToken = null;
-        
+
         if (page.hasNext()) {
             Pageable nextPage = page.nextPageable();
-            
+
             if (nextPage instanceof CosmosPageRequest) {
                 nextToken = ((CosmosPageRequest) nextPage).getRequestContinuation();
             }
@@ -98,7 +103,6 @@ public class ChatService {
 
         return new ChatHistoryResponse(messages, nextToken);
     }
-
 
     public SendChatRoomsDTO getChatRoomsByUserId(String userId) {
         List<ChatRoom> rooms = chatRoomRepository.findRoomsByUserId(userId);
@@ -212,8 +216,7 @@ public class ChatService {
 
         String UserId2 = user.getId();
 
-        String generatedId = (user1.compareTo(UserId2) < 0) ? user1 + "_" + UserId2 : UserId2 + "_" + user1;
-
+        String generatedId = generateSecureRoomId(user1, UserId2);
         Optional<ChatRoom> existing = chatRoomRepository.findRoomById(generatedId);
         if (existing.isPresent())
             return existing.get();
@@ -273,6 +276,29 @@ public class ChatService {
         try {
             messagingTemplate.convertAndSend(destination, "REFRESH_LIST");
         } catch (Exception e) {
+        }
+    }
+
+    private String generateSecureRoomId(String idA, String idB) {
+        try {
+            String p1 = (idA.compareTo(idB) < 0) ? idA : idB;
+            String p2 = (idA.compareTo(idB) < 0) ? idB : idA;
+            String rawString = p1 + "###CHAT###" + p2;
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] encodedHash = digest.digest(rawString.getBytes(StandardCharsets.UTF_8));
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : encodedHash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
+                hexString.append(hex);
+            }
+
+            return hexString.toString();
+
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Error fatal: No se encontró el algoritmo SHA-256", e);
         }
     }
 }
