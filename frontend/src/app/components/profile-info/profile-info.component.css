@@ -106,13 +106,46 @@ body {
   font-weight: bold;
 }
 
+.actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: auto;
+  margin-bottom: 0.5rem;
+  align-self: flex-start;
+}
+
+.btn-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.4rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  border-radius: 1.25rem;
+  transition: all 0.2s ease;
+
+  background-color: transparent;
+  border: 0.125rem solid var(--principal-color-2);
+  color: var(--principal-color-2);
+}
+
+.btn-message:hover {
+  background-color: var(--principal-color-2);
+  color: var(--bg-panel);
+}
+
+.btn-message .material-icons {
+  font-size: 1.1rem;
+}
+
 .btn-swap-internal {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.4rem;
-  margin-top: auto;
-  margin-bottom: 0.5rem;
   padding: 0.4rem 1rem;
   font-size: 0.9rem;
   font-weight: 600;
@@ -123,7 +156,8 @@ body {
   font-family: inherit;
   cursor: pointer;
   transition: transform 0.2s, background-color 0.2s;
-  align-self: flex-start;
+  margin: 0;
+  align-self: auto;
 }
 
 .btn-swap-internal:hover {
@@ -172,9 +206,11 @@ body {
     top: 0.8rem;
     right: 0.8rem;
   }
-  
-  .btn-swap-internal {
+
+  .actions {
     align-self: center;
     margin-top: 1rem;
+    width: 100%;
+    justify-content: center;
   }
 }
