@@ -21,10 +21,11 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 export const appConfig = {
   providers: [
     importProvidersFrom(FormsModule),
-    provideRouter(appRoutes, withInMemoryScrolling({       
+    provideAnimations(),
+    provideRouter(appRoutes, withInMemoryScrolling({
         anchorScrolling: 'enabled',
-        provideAnimations(),
-        scrollPositionRestoration: 'enabled' 
+
+        scrollPositionRestoration: 'enabled'
       })),
     provideHttpClient(withInterceptors([authInterceptor, loadingInterceptor, apiUrlInterceptor])),
   ]
