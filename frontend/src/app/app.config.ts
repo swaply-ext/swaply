@@ -8,7 +8,7 @@ export const appConfig: ApplicationConfig = {
   providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(Routes)]
 };*/
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { appRoutes } from './app.routes';
 import { importProvidersFrom } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -21,8 +21,11 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 export const appConfig = {
   providers: [
     importProvidersFrom(FormsModule),
-    provideRouter(appRoutes),
-    provideAnimations(),
+    provideRouter(appRoutes, withInMemoryScrolling({       
+        anchorScrolling: 'enabled',
+        provideAnimations(),
+        scrollPositionRestoration: 'enabled' 
+      })),
     provideHttpClient(withInterceptors([authInterceptor, loadingInterceptor, apiUrlInterceptor])),
   ]
 };

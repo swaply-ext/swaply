@@ -33,7 +33,9 @@ public interface UserMapper {
 
     @Mappings({
             @Mapping(target = "id", ignore = true),
-            @Mapping(target = "type", ignore = true)
+            @Mapping(target = "type", ignore = true),
+            @Mapping(target = "premium", ignore = true),//no se si hace falta esto, no cabe duda
+            @Mapping(target = "moderator", ignore = true)
     })
     // Actualiza uno ya existente (usa la lógica de mapeo que tiene justo encima)
     @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE)

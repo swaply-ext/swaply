@@ -38,3 +38,6 @@ azure:
 logging:
   level:
     com.azure.identity: INFO
+
+stripe:
+  key: ${stripe-key}

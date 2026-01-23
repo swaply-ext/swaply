@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink} from '@angular/router';
 import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.component";
 import { SkillSearchComponent } from '../../components/skill-search/skill-search.component'; 
 import { FilterSkillsComponent } from '../../components/filter-skills/filter-skills.component';
@@ -8,8 +8,9 @@ import { AccountService } from '../../services/account.service';
 import { LocationService } from '../../services/location.service';
 import { SearchService } from '../../services/search.services';
 import { NextSwapComponent } from '../../components/next-swap/next-swap.component';
-import { NextSwap } from '../../models/next-swap.model';
-import { UserSwapDTO } from '../../models/userSwapDTO.model'; 
+import { NextSwap, UserSwapDTO } from '../../models/swap.models';
+import { RedirectionService } from '../../services/redirection.service';
+import { PaymentService } from '../../services/payment.service';
 
 
 export type HomeCard = UserSwapDTO & { skillImage?: string };
@@ -31,7 +32,12 @@ export type HomeCard = UserSwapDTO & { skillImage?: string };
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private accountService: AccountService) { }
+  private paymentService = inject(PaymentService);
+  private accountService = inject(AccountService);
+  private redirectionService = inject(RedirectionService);
+  private searchService = inject(SearchService);
+  private route = inject(ActivatedRoute);          //se inyecta ActivatedRoute para leer la URL
+  private router = inject(Router);                 //para limpiar la URL después 
 
   private searchService = inject(SearchService);
   private locationService = inject(LocationService);
@@ -49,7 +55,10 @@ export class HomeComponent implements OnInit {
   canLoadMore = computed(() => this.cards().length < this.allCards.length);
 
   ngOnInit() {
-    this.accountService.getProfileData().subscribe({
+  this.redirectionService.checkProfile().subscribe();
+  this.paymentService.checkPaymentStatus((isLoading) => {
+  this.isLoadingMatches.set(isLoading);  
+  this.accountService.getProfileData().subscribe({
       next: (profile: any) => {
         const myUsername = profile.username;
         if (myUsername) {
@@ -67,6 +76,7 @@ export class HomeComponent implements OnInit {
       error: () => this.loadInitialRecommendations()
     });
   }
+//al entrar, revisa al momemnto si hay un pago pendiente de confirmar
 
   loadInitialRecommendations() {
     this.isLoadingMatches.set(true); 
