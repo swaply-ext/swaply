@@ -38,11 +38,14 @@
              </div>
           </div>
 
-          <div class="card-content clickable-user" [routerLink]="['/user', card.username]">
+          <div class="card-content clickable-user">
 
             <div class="card-header-row">
                 
-                <div class="card-user-info" (click)="$event.stopPropagation(); goToSwap(card)">
+                <div class="card-user-info" 
+                     [routerLink]="['/user', card.username]"
+                     (click)="$event.stopPropagation()"
+                     style="cursor: pointer;">
                   <img [src]="card.profilePhotoUrl" [alt]="card.username" class="user-avatar">
                   <span>{{ card.username }}</span>
                 </div>
