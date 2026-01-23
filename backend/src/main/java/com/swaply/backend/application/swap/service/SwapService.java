@@ -145,6 +145,6 @@ public class SwapService {
         receiverSwap.setStatus(newStatus);
         // Save to database
         userService.updateUser(currentUserId, sender);
-        userService.updateUser(receiver.getId(), receiver);
+        userService.updateUser(senderSwap.getRequestedUserId(), receiver);
     }
 }
