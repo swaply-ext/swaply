@@ -110,7 +110,7 @@ export class PersonalInformationComponent {
       .subscribe({
         next: () => {
           console.log('Registro completo:', allUserData);
-          this.router.navigate(['/']);
+          this.router.navigate(['/select-avatar']);
         },
         error: (err) => {
           console.error('Error al añadir información personal:', err.message);

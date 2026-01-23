@@ -28,7 +28,7 @@
               [src]="me.profilePhotoUrl || 'assets/default-avatar.png'"
               alt="Avatar"
             />
-            {{ me.username }}
+            {{"@" + me.username }}
           </div>
         </div>
       </div>
@@ -62,7 +62,7 @@
               "
               alt="Avatar"
             />
-            {{ targetUser()?.username }}
+            {{"@" + targetUser()?.username }}
           </div>
         </div>
       </div>
@@ -83,7 +83,7 @@
       <ng-template #noMySkills>
         <div class="empty-state">
            <span class="material-symbols-outlined icon-empty">block</span>
-           <p>No tienes habilidades que coincidan con los intereses de {{ targetUser()?.username }}</p>
+           <p>No tienes habilidades que coincidan con los intereses de {{ "@" + targetUser()?.username }}</p>
         </div>
       </ng-template>
     </div>
@@ -101,7 +101,7 @@
       <ng-template #noTargetSkills>
         <div class="empty-state">
            <span class="material-symbols-outlined icon-empty">block</span>
-           <p>{{ targetUser()?.username }} no ofrece habilidades que coincidan con tus intereses.</p>
+           <p>{{"@" + targetUser()?.username }} no ofrece habilidades que coincidan con tus intereses.</p>
         </div>
       </ng-template>
     </div>

@@ -83,8 +83,8 @@ export class HomeComponent implements OnInit {
 
   performMatchSearch(skillQuery: string) {
     if (!skillQuery || skillQuery.trim() === '') {
-        this.loadInitialRecommendations();
-        return;
+      this.loadInitialRecommendations();
+      return;
     }
 
     this.isLoadingMatches.set(true);

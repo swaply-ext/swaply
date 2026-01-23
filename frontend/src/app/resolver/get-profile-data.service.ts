@@ -1,10 +1,11 @@
 import { Injectable, signal } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { AccountService } from '../services/account.service';
 import { ProfileDataDTO } from '../models/profile-data-dto.model';
 import { UserLocation } from '../models/user-location.model';
+import { RedirectionService } from '../services/redirection.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,11 +14,17 @@ import { UserLocation } from '../models/user-location.model';
 //Le indicamos el tipo de dato que debe de devolver, en este caso es un ProfileDataDTO
 export class getProfileDataResolver implements Resolve<ProfileDataDTO> { 
   //Importamos el servicio que se necesite
-  constructor(private accountService: AccountService) {} 
+  constructor(
+    private accountService: AccountService,
+    private redirectionService: RedirectionService
+    ) {} 
 
   //Debe devolver un objeto Observable del tipo ProfileDataDTO
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<ProfileDataDTO> { 
     return this.accountService.getProfileData().pipe(
+      tap(user => {
+        this.redirectionService.checkSkillsInterests(user.skills, user.interests);
+      }),
       catchError(error => {
         console.error('Error obteniendo el profile data', error);
         // Devuelve un Observable con un objeto ProfileDataDTO con campos vacíos para que la app no pete

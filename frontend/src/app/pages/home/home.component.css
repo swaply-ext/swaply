@@ -100,7 +100,7 @@ img {
 .btn-primary {
   background-color: #3cb57c;
   color: #ffffff;
-  border: 2px solid #3cb57c;
+  border: 0.125rem solid #3cb57c;
 }
 
 .btn-primary:hover {
@@ -110,7 +110,7 @@ img {
 .btn-secondary {
   background-color: transparent;
   color: #ffffff;
-  border: 2px solid #3cb57c;
+  border: 0.125rem solid #3cb57c;
 }
 
 .btn-secondary:hover {
@@ -253,6 +253,7 @@ img {
   width: fit-content;
   border-radius: 1rem;
   padding-right: 0.5rem;
+  transition: background-color 0.3s;
 }
 
 .user-avatar {
