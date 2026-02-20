@@ -1,18 +1,28 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+
+// Componentes
 import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.component";
-import { SkillSearchComponent } from '../../components/skill-search/skill-search.component'; 
+import { SkillSearchComponent } from '../../components/skill-search/skill-search.component';
 import { FilterSkillsComponent } from '../../components/filter-skills/filter-skills.component';
+import { NextSwapComponent } from '../../components/next-swap/next-swap.component';
+
+// Servicios
 import { AccountService } from '../../services/account.service';
 import { LocationService } from '../../services/location.service';
 import { SearchService } from '../../services/search.services';
-import { NextSwapComponent } from '../../components/next-swap/next-swap.component';
-import { NextSwap } from '../../models/next-swap.model';
-import { UserSwapDTO } from '../../models/userSwapDTO.model'; 
+import { RedirectionService } from '../../services/redirection.service';
+import { PaymentService } from '../../services/payment.service';
 
+// Modelos
+import { UserSwapDTO } from '../../models/userSwapDTO.model';
 
-export type HomeCard = UserSwapDTO & { skillImage?: string };
+// Tipo extendido para la vista
+export type HomeCard = UserSwapDTO & {
+  skillImage?: string;
+  distance?: string;
+};
 
 @Component({
   selector: 'app-home',
@@ -31,45 +41,74 @@ export type HomeCard = UserSwapDTO & { skillImage?: string };
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private accountService: AccountService) { }
-
+  // --- Inyección de Dependencias ---
+  private paymentService = inject(PaymentService);
+  private accountService = inject(AccountService);
+  private redirectionService = inject(RedirectionService);
   private searchService = inject(SearchService);
   private locationService = inject(LocationService);
+  private route = inject(ActivatedRoute);
   private router = inject(Router);
 
+  // --- Estado y Señales ---
   private myUserId: string = '';
 
-  private allCards: HomeCard[] = []; 
-  cards = signal<HomeCard[]>([]);
+  // Datos principales
+  private allCards: HomeCard[] = []; // Fuente de verdad completa
+  cards = signal<HomeCard[]>([]);    // Lo que se muestra en pantalla (reactivo)
 
+  // Flags de carga y estado
   isLoadingMatches = signal(false);
-  hasSearched = signal(false); 
-  
+  hasSearched = signal(false);
+
+  // Paginación / Scroll infinito
   itemsToShow = signal(6);
   canLoadMore = computed(() => this.cards().length < this.allCards.length);
 
+  // --- Mock Data para UI (Demo) ---
+  hasIntercambio = signal(true);
+  isConfirmed = signal(false);
+
   ngOnInit() {
+    // 1. Verificación de perfil y pagos (Fire & Forget - Segundo plano)
+    // Esto asegura que la lógica de negocio se ejecute sin bloquear la carga visual de usuarios
+    this.redirectionService.checkProfile().subscribe();
+
+    this.paymentService.checkPaymentStatus((isLoading: boolean) => {
+      // Opcional: Si quieres que el spinner dependa del pago, descomenta esto,
+      // pero para que funcione como el V2, mejor controlamos el loading en la carga de datos.
+      // this.isLoadingMatches.set(isLoading);
+    });
+
+    // 2. CARGA PRINCIPAL DE DATOS (Igual que en la versión que funciona)
+    // Se ejecuta inmediatamente al iniciar.
+    this.loadUserProfileAndRecommendations();
+  }
+
+  private loadUserProfileAndRecommendations() {
     this.accountService.getProfileData().subscribe({
       next: (profile: any) => {
-        const myUsername = profile.username;
+        const myUsername = profile?.username;
         if (myUsername) {
-            this.searchService.getUserByUsername(myUsername).subscribe({
-                next: (userDto) => {
-                    this.myUserId = userDto.userId;
-                    this.loadInitialRecommendations();
-                },
-                error: () => this.loadInitialRecommendations()
-            });
+          this.searchService.getUserByUsername(myUsername).subscribe({
+            next: (userDto) => {
+              this.myUserId = userDto.userId;
+              this.loadInitialRecommendations();
+            },
+            error: () => this.loadInitialRecommendations() // Fallback
+          });
         } else {
-            this.loadInitialRecommendations();
+          this.loadInitialRecommendations();
         }
       },
-      error: () => this.loadInitialRecommendations()
+      error: () => this.loadInitialRecommendations() // Fallback
     });
   }
 
+  // --- Lógica de Búsqueda y Recomendaciones ---
+
   loadInitialRecommendations() {
-    this.isLoadingMatches.set(true); 
+    this.isLoadingMatches.set(true);
     this.hasSearched.set(false);
 
     this.searchService.getRecommendations().subscribe({
@@ -100,25 +139,55 @@ export class HomeComponent implements OnInit {
       }
     });
   }
-  
+
   private processResults(matches: UserSwapDTO[], calculateDistance: boolean) {
     this.allCards = matches.map(m => ({
-      ...m, 
-      
+      ...m,
       skillImage: this.assignImageToSkill(m.skillCategory, m.skillName),
-      
       profilePhotoUrl: m.profilePhotoUrl || 'assets/default-image.jpg',
       distance: m.distance || 'Cerca'
     }));
 
-    this.itemsToShow.set(6);
-    this.updateView(); 
+    this.itemsToShow.set(6); // Resetear paginación
+    this.updateView();
     this.isLoadingMatches.set(false);
 
     if (calculateDistance && this.myUserId) {
-        this.calculateDistancesForCards();
+      this.calculateDistancesForCards();
     }
   }
+
+  private updateView() {
+    // Actualizamos la señal con una copia del array para disparar la detección de cambios
+    this.cards.set([...this.allCards.slice(0, this.itemsToShow())]);
+  }
+
+  loadMore() {
+    this.itemsToShow.update(val => val + 6);
+    this.updateView();
+  }
+
+  // --- Cálculo de Distancias ---
+
+  private calculateDistancesForCards() {
+    this.allCards.forEach(card => {
+      // No calcular distancia con uno mismo
+      if (card.userId === this.myUserId) return;
+
+      if (card.username) {
+        this.locationService.getDistance(this.myUserId, card.username).subscribe({
+          next: (distString) => {
+            card.distance = distString;
+            // Importante: Actualizar la vista después de recibir el dato asíncrono
+            this.updateView();
+          },
+          error: (e) => console.error(`Error distancia con ${card.username}`, e)
+        });
+      }
+    });
+  }
+
+  // --- Helpers UI / Estilos ---
 
   getLevelLabel(level: number): string {
     switch(level) {
@@ -139,35 +208,29 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  private calculateDistancesForCards() {
-    this.allCards.forEach(card => {
-      if (card.userId === this.myUserId) return;
-
-      if (card.username) {
-          this.locationService.getDistance(this.myUserId, card.username).subscribe({
-            next: (distString) => {
-              card.distance = distString; 
-              this.updateView(); 
-            },
-            error: (e) => console.error(`Error distancia con ${card.username}`, e)
-          });
-      }
+  goToSwap(card: HomeCard) {
+    if (!card.username) return;
+    this.router.navigate(['/swap', card.username], {
+      queryParams: { skillName: card.skillName }
     });
   }
 
-  private updateView() {
-    this.cards.set([...this.allCards.slice(0, this.itemsToShow())]);
+  toggleIntercambio() {
+    this.hasIntercambio.update(v => !v);
+    this.isConfirmed.set(false);
   }
 
-  loadMore() {
-    this.itemsToShow.update(val => val + 6); 
-    this.updateView(); 
+  toggleConfirmation() {
+    this.isConfirmed.update(v => !v);
   }
 
-  // --- IMÁGENES ---
+  // --- Lógica de Imágenes ---
+
   private assignImageToSkill(category: string, skillName: string): string | undefined {
     const name = skillName ? skillName.toLowerCase() : '';
     let folder = 'leisure';
+
+    // Determinar carpeta base por categoría
     if (category) {
         const cat = category.toLowerCase();
         if (cat.includes('deporte') || cat.includes('sports')) folder = 'sports';
@@ -175,6 +238,7 @@ export class HomeComponent implements OnInit {
     }
 
     let filename = '';
+
     // Deportes
     if (name.includes('fútbol') || name.includes('futbol') || name.includes('football')) { filename = 'football.jpg'; folder = 'sports'; }
     else if (name.includes('pádel') || name.includes('padel')) { filename = 'padel.jpg'; folder = 'sports'; }
@@ -196,19 +260,4 @@ export class HomeComponent implements OnInit {
 
     return filename ? `assets/photos_skills/${folder}/${filename}` : undefined;
   }
-  
-  goToSwap(card: HomeCard) { 
-    if (!card.username) return;
-    this.router.navigate(['/swap', card.username], {
-      queryParams: { skillName: card.skillName }
-    });
-  }
-
-  hasIntercambio = signal(true);
-  isConfirmed = signal(false);
-  skillToLearn = signal({ titulo: 'Clase de Guitarra Acústica', img: 'assets/photos_skills/music/guitar.jpg', hora: 'Hoy, 18:00h', via: 'Vía Napoli 5' });
-  skillToTeach = signal({ titulo: 'Taller de Manualidades', img: 'assets/photos_skills/leisure/crafts.jpg', hora: 'Hoy, 18:00h', via: 'Vía Napoli 5' });
-
-  toggleIntercambio() { this.hasIntercambio.update(v => !v); this.isConfirmed.set(false); }
-  toggleConfirmation() { this.isConfirmed.update(v => !v); }
 }

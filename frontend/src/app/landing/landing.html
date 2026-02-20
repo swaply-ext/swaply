@@ -1,223 +1,212 @@
-<!DOCTYPE html>
-<html lang="es">
+<section class="hero-section">
+    <div class="header-bar">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Swaply - Uniendo Personas. Creando Habilidades.</title>
-    <link rel="stylesheet" href="landign.css">
-</head>
-
-<body>
-
-    <section class="hero-section">
-        <div class="header-bar">
-
-            <div class="logo-area">
-                <img src="fotos/SWAPLY_NEGATIVO.png" alt="Swaply Logo" class="logo">
-            </div>
-
-            <nav class="header-nav">
-                <ul>
-                    <li><a href="#funcionamiento">FUNCIONAMIENTO</a></li>
-                    <li><a href="#quienes-somos">¿QUIENES SOMOS?</a></li>
-                    <li><a href="#comunidad">COMUNIDAD</a></li>
-                    <li><a href="#planes">PLANES</a></li>
-                </ul>
-            </nav>
-
-            <div class="nav-area">
-                <a href="http://localhost:4200/register" class="register-button">Regístrate</a>
-            </div>
-
+        <div class="logo-area">
+            <img src="/assets/fotos/SWAPLY_NEGATIVO.png" alt="Swaply Logo" class="logo">
         </div>
-        <div class="hero-content">
-            <div class="text-content">
-                <h1>Uniendo Personas.<br>Creando Habilidades.</h1>
-                <p>Descubre un mundo donde compartir lo que sabes y aprender lo que deseas es fácil,
-                    gratuito y lleno de buenas vibras.</p>
-                <div class="app-buttons">
-                    <img src="fotos/GOOGLE.png" alt="Descargar en Google Play" class="app-button interactive-app-button">
-                    <img src="fotos/APPSTORE.png" alt="Descargar en App Store" class="app-button interactive-app-button">
-                    
-                    <button class="app-download-btn">Descarga App</button>
-                    
-                </div>
-            </div>
-            <div class="illustration-content">
-                <img src="fotos/landifngimagewhite.png" alt="Personas Intercambiando Habilidades"
-                    class="hero-illustration">
-            </div>
-        </div>
-    </section>
 
-    <div class="bottom-rectangle" id="funcionamiento">
-        <h2>FUNCIONAMIENTO</h2>
-        <div class="steps-container">
-            <div class="step-card">
-                <img src="fotos/manage_accounts_100dp_3CB57C_FILL0_wght400_GRAD0_opsz48.png" alt="Icono Perfil"
-                    class="step-icon">
-                <h3>1. CREA TU PERFIL</h3>
-                <p>Dinos qué habilidades quieres aprender y cuáles puedes enseñar.</p>
-                <span class="arrow right-arrow">→</span>
-            </div>
-            <div class="step-card">
-                <img src="fotos/partner_exchange_100dp_3CB57C_FILL0_wght400_GRAD0_opsz48.png" alt="Icono Swap"
-                    class="step-icon">
-                <h3>2. HAZ "SWAP"</h3>
-                <p>Nuestro algoritmo te muestra perfiles compatibles. ¡Descubre tu match
-                    perfecto!</p>
-                <span class="arrow right-arrow">→</span>
-            </div>
-            <div class="step-card">
-                <img src="fotos/social_distance_100dp_3CB57C_FILL0_wght400_GRAD0_opsz48.png" alt="Icono Conecta"
-                    class="step-icon">
-                <h3>3. CONECTA Y APRENDE</h3>
-                <p>Usa nuestro chat seguro para organizar el intercambio. ¡Una hora de tu tiempo
-                    por una hora del tuyo!</p>
-            </div>
+        <nav class="header-nav">
+            <ul>
+                <li><a href="#funcionamiento">FUNCIONAMIENTO</a></li>
+                <li><a href="#quienes-somos">¿QUIENES SOMOS?</a></li>
+                <li><a href="#comunidad">COMUNIDAD</a></li>
+                <li><a href="#planes">PLANES</a></li>
+            </ul>
+        </nav>
+
+        <div class="nav-area">
+            <a routerLink="/register" class="register-button">Regístrate</a>
         </div>
-        
-        <a href="http://localhost:4200/register" class="register-button" id="funcionamiento-btn">¡Comienza Ya!</a>
 
     </div>
-
-    <section class="about-us-section" id="quienes-somos">
-        <div class="about-us-container">
-            <div class="about-text">
-                <h2>QUIENES SOMOS?</h2>
-                <p>Somos un grupo de estudiantes unidos por una misma pasión: nos encanta aprender y mejorar
-                    constantemente.</p>
-                <p>Creemos que el conocimiento es más valioso cuando se comparte, y por eso decidimos crear esta app.
-                </p>
-                <p>Nuestro objetivo principal es construir una comunidad donde cualquier persona pueda compartir sus
-                    habilidades y aprender otras nuevas de forma totalmente gratuita.</p>
-                <p>¡Queremos que el talento fluya libremente!</p>
+    <div class="hero-content">
+        <div class="text-content">
+            <h1>Uniendo Personas.<br>Creando Habilidades.</h1>
+            <p>Descubre un mundo donde compartir lo que sabes y aprender lo que deseas es fácil,
+                gratuito y lleno de buenas vibras.</p>
+            <div class="app-buttons">
+                <img src="/assets/fotos/GOOGLE.png" alt="Descargar en Google Play" class="app-button interactive-app-button">
+                <img src="/assets/fotos/APPSTORE.png" alt="Descargar en App Store" class="app-button interactive-app-button">
+                
+                <button class="app-download-btn">Descarga App</button>
+                
             </div>
+        </div>
+        <div class="illustration-content">
+            <img src="/assets/fotos/landifngimagewhite.png" alt="Personas Intercambiando Habilidades"
+                class="hero-illustration">
+        </div>
+    </div>
+</section>
 
-            <div class="team-container">
-                <h2>EQUIPO DE TRABAJO</h2>
-                <div class="team-grid">
-                    <div class="team-member">
-                        <img src="fotos/personas/mario.png" alt="Mario León">
-                        <span>Mario León</span>
-                    </div>
-                    <div class="team-member">
-                        <img src="fotos/personas/lucas.png" alt="Lucas Aiguadé">
-                        <span>Lucas Aiguadé</span>
-                    </div>
-                    <div class="team-member">
-                        <img src="fotos/personas/VIKKTOR.png" alt="Victor Camón">
-                        <span>Victor Camón</span>
-                    </div>
-                    <div class="team-member">
-                        <img src="fotos/personas/pablo.png" alt="Pablo Medina">
-                        <span>Pablo Medina</span>
-                    </div>
-                    <div class="team-member">
-                        <img src="fotos/personas/lara.png" alt="Laraib Sohail">
-                        <span>Laraib Sohail</span>
-                    </div>
-                    <div class="team-member">
-                        <img src="fotos/personas/marc.png" alt="Marc Ferré">
-                        <span>Marc Ferré</span>
-                    </div>
-                    <div class="team-member">
-                        <img src="fotos/personas/arnau g.png" alt="Arnau Gonzalez">
-                        <span>Arnau Gonzalez</span>
-                    </div>
-                    <div class="team-member">
-                        <img src="fotos/personas/eloi.png" alt="Eloi Daza">
-                        <span>Eloi Daza</span>
-                    </div>
-                    <div class="team-member">
-                        <img src="fotos/personas/arnau f.png" alt="Arnau Figueres">
-                        <span>Arnau Figueres</span>
-                    </div>
-                    <div class="team-member">
-                        <img src="fotos/personas/aleix.png" alt="Aleix Margalef">
-                        <span>Aleix Margalef</span>
-                    </div>
+<div class="bottom-rectangle" id="funcionamiento">
+    <h2>FUNCIONAMIENTO</h2>
+    <div class="steps-container">
+        <div class="step-card">
+            <img src="/assets/fotos/manage_accounts_100dp_3CB57C_FILL0_wght400_GRAD0_opsz48.png" alt="Icono Perfil"
+                class="step-icon">
+            <h3>1. CREA TU PERFIL</h3>
+            <p>Dinos qué habilidades quieres aprender y cuáles puedes enseñar.</p>
+            <span class="arrow right-arrow">→</span>
+        </div>
+        <div class="step-card">
+            <img src="/assets/fotos/partner_exchange_100dp_3CB57C_FILL0_wght400_GRAD0_opsz48.png" alt="Icono Swap"
+                class="step-icon">
+            <h3>2. HAZ "SWAP"</h3>
+            <p>Nuestro algoritmo te muestra perfiles compatibles. ¡Descubre tu match
+                perfecto!</p>
+            <span class="arrow right-arrow">→</span>
+        </div>
+        <div class="step-card">
+            <img src="/assets/fotos/social_distance_100dp_3CB57C_FILL0_wght400_GRAD0_opsz48.png" alt="Icono Conecta"
+                class="step-icon">
+            <h3>3. CONECTA Y APRENDE</h3>
+            <p>Usa nuestro chat seguro para organizar el intercambio. ¡Una hora de tu tiempo
+                por una hora del tuyo!</p>
+        </div>
+    </div>
+    
+    <a routerLink="/register" class="register-button" id="funcionamiento-btn">¡Comienza Ya!</a>
+
+</div>
+
+<section class="about-us-section" id="quienes-somos">
+    <div class="about-us-container">
+        <div class="about-text">
+            <h2>QUIENES SOMOS?</h2>
+            <p>Somos un grupo de estudiantes unidos por una misma pasión: nos encanta aprender y mejorar
+                constantemente.</p>
+            <p>Creemos que el conocimiento es más valioso cuando se comparte, y por eso decidimos crear esta app.
+            </p>
+            <p>Nuestro objetivo principal es construir una comunidad donde cualquier persona pueda compartir sus
+                habilidades y aprender otras nuevas de forma totalmente gratuita.</p>
+            <p>¡Queremos que el talento fluya libremente!</p>
+        </div>
+
+        <div class="team-container">
+            <h2>EQUIPO DE TRABAJO</h2>
+            <div class="team-grid">
+                <div class="team-member">
+                    <img src="/assets/fotos/personas/mario.png" alt="Mario León">
+                    <span>Mario León</span>
+                </div>
+                <div class="team-member">
+                    <img src="/assets/fotos/personas/lucas.png" alt="Lucas Aiguadé">
+                    <span>Lucas Aiguadé</span>
+                </div>
+                <div class="team-member">
+                    <img src="/assets/fotos/personas/VIKKTOR.png" alt="Victor Camón">
+                    <span>Victor Camón</span>
+                </div>
+                <div class="team-member">
+                    <img src="/assets/fotos/personas/pablo.png" alt="Pablo Medina">
+                    <span>Pablo Medina</span>
+                </div>
+                <div class="team-member">
+                    <img src="/assets/fotos/personas/lara.png" alt="Laraib Sohail">
+                    <span>Laraib Sohail</span>
+                </div>
+                <div class="team-member">
+                    <img src="/assets/fotos/personas/marc.png" alt="Marc Ferré">
+                    <span>Marc Ferré</span>
+                </div>
+                <div class="team-member">
+                    <img src="/assets/fotos/personas/arnau g.png" alt="Arnau González">
+                    <span>Arnau González</span>
+                </div>
+                <div class="team-member">
+                    <img src="/assets/fotos/personas/eloi.png" alt="Eloi Daza">
+                    <span>Eloi Daza</span>
+                </div>
+                <div class="team-member">
+                    <img src="/assets/fotos/personas/arnau f.png" alt="Arnau Figueres">
+                    <span>Arnau Figueres</span>
+                </div>
+                <div class="team-member">
+                    <img src="/assets/fotos/personas/aleix.png" alt="Aleix Margalef">
+                    <span>Aleix Margalef</span>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <section class="community-section" id="comunidad">
-        <div class="community-container">
+<section class="community-section" id="comunidad">
+    <div class="community-container">
 
-            <div class="community-visual">
-                <img src="fotos/zzz.png" alt="Ilustración de la comunidad Swaply" class="community-illustration">
-            </div>
-
-            <div class="community-text">
-                <h2>ÚNETE A LA COMUNIDAD</h2>
-                <p>Swaply es más que una app, es un movimiento. Conéctate con miles de personas dispuestas a compartir
-                    su pasión y conocimiento.</p>
-                <p>Participa en eventos, únete a grupos de estudio o simplemente encuentra a alguien con quien practicar
-                    eso que tanto te gusta.</p>
-                <p>¡Tu próxima gran habilidad o tu próximo gran amigo te están esperando!</p>
-                <button class="register-button">Explorar Comunidad</button>
-            </div>
-
+        <div class="community-visual">
+            <img src="/assets/fotos/zzz.png" alt="Ilustración de la comunidad Swaply" class="community-illustration">
         </div>
-    </section>
 
-    <section class="plans-section" id="planes">
-        <h2>Nuestros Planes</h2>
-        <div class="plans-container">
-
-            <div class="plan-card standard-plan">
-                <img src="fotos/flechas.png" alt="Icono Plan Standard" class="plan-icon">
-                <h3>Plan Gratuito</h3>
-                <span class="price">Gratis</span>
-                <p class="description">Creemos que el conocimiento debe fluir libremente. Este plan es el corazón de
-                    Swaply y siempre será gratuito.</p>
-                <ul class="features-list">
-                    <li>✓ Intercambios de habilidades ilimitados</li>
-                    <li>✓ Acceso completo a la comunidad y al chat</li>
-                    <li>✓ Crear y unirse a eventos de la comunidad</li>
-                    <li>✓ Perfil de usuario estándar</li>
-                </ul>
-                <a href="http://localhost:4200/register" class="standard-button">¡Comienza Ya!</a>
-            </div>
-
-            <div class="plan-card premium-plan">
-                <img src="fotos/crown_70dp_B89230_FILL0_wght400_GRAD0_opsz48.png" alt="Icono Plan Premium"
-                    class="plan-icon">
-                <h3>Plan Premium</h3>
-                <span class="price">€4.99 / mes</span>
-                <p class="description">Para aquellos que quieren llevar su aprendizaje al siguiente nivel y apoyar
-                    nuestra misión.</p>
-                <ul class="features-list">
-                    <li>✓ Todo lo incluido en el Plan Gratuito, y además:</li>
-                    <li>★ Perfil Destacado</li>
-                    <li>★ Soporte Prioritario</li>
-                    <li>★ Acceso a Talleres Exclusivos</li>
-                    <li>★ Sin Anuncios</li>
-                </ul>
-                <button class="premium-button">Hazte Premium</button>
-            </div>
-
+        <div class="community-text">
+            <h2>ÚNETE A LA COMUNIDAD</h2>
+            <p>Swaply es más que una app, es un movimiento. Conéctate con miles de personas dispuestas a compartir
+                su pasión y conocimiento.</p>
+            <p>Participa en eventos, únete a grupos de estudio o simplemente encuentra a alguien con quien practicar
+                eso que tanto te gusta.</p>
+            <p>¡Tu próxima gran habilidad o tu próximo gran amigo te están esperando!</p>
+            <button class="register-button">Explorar Comunidad</button>
         </div>
-    </section>
-</body>
+
+    </div>
+</section>
+
+<section class="plans-section" id="planes">
+    <h2>Nuestros Planes</h2>
+    <div class="plans-container">
+
+        <div class="plan-card standard-plan">
+            <img src="/assets/fotos/flechas.png" alt="Icono Plan Standard" class="plan-icon">
+            <h3>Plan Gratuito</h3>
+            <span class="price">Gratis</span>
+            <p class="description">Creemos que el conocimiento debe fluir libremente. Este plan es el corazón de
+                Swaply y siempre será gratuito.</p>
+            <ul class="features-list">
+                <li>✓ Intercambios de habilidades ilimitados</li>
+                <li>✓ Acceso completo a la comunidad y al chat</li>
+                <li>✓ Crear y unirse a eventos de la comunidad</li>
+                <li>✓ Perfil de usuario estándar</li>
+            </ul>
+            <a routerLink="/register" class="standard-button">¡Comienza Ya!</a>
+        </div>
+
+        <div class="plan-card premium-plan">
+            <img src="/assets/fotos/crown_70dp_B89230_FILL0_wght400_GRAD0_opsz48.png" alt="Icono Plan Premium"
+                class="plan-icon">
+            <h3>Plan Premium</h3>
+            <span class="price">€4.99 / mes</span>
+            <p class="description">Para aquellos que quieren llevar su aprendizaje al siguiente nivel y apoyar
+                nuestra misión.</p>
+            <ul class="features-list">
+                <li>✓ Todo lo incluido en el Plan Gratuito, y además:</li>
+                <li>★ Perfil Destacado</li>
+                <li>★ Soporte Prioritario</li>
+                <li>★ Acceso a Talleres Exclusivos</li>
+                <li>★ Sin Anuncios</li>
+            </ul>
+            
+            <button class="premium-button" (click)="irAPagar()">Hazte Premium</button>
+            
+        </div>
+
+    </div>
+</section>
 
 <footer class="site-footer">
     <div class="footer-container">
 
         <div class="footer-column logo-column">
-            <img src="fotos/SWAPLY_NEGATIVO.png" alt="Swaply Logo" class="footer-logo">
+            <img src="/assets/fotos/SWAPLY_NEGATIVO.png" alt="Swaply Logo" class="footer-logo">
             <p>Uniendo Personas. Creando Habilidades.</p>
         </div>
 
         <div class="footer-column links-column">
             <h4>Navegación</h4>
             <ul>
-                <li><a href="#">Quiénes Somos</a></li>
-                <li><a href="#">Funcionamiento</a></li>
-                <li><a href="#">Planes</a></li>
-                <li><a href="#">Comunidad</a></li>
+                <li><a href="#quienes-somos">Quiénes Somos</a></li>
+                <li><a href="#funcionamiento">Funcionamiento</a></li>
+                <li><a href="#planes">Planes</a></li>
+                <li><a href="#comunidad">Comunidad</a></li>
             </ul>
         </div>
 
@@ -242,8 +231,6 @@
     </div>
 
     <div class="footer-copyright">
-        <p>&copy; 2025 Swaply. Todos los derechos reservados.</p>
+        <p>&copy; 2026 Swaply. Todos los derechos reservados.</p>
     </div>
 </footer>
-
-</html>
