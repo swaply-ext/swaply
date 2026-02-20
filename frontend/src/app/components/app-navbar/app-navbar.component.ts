@@ -6,6 +6,7 @@ import { DropdownMenuComponent, DropdownMenuData } from '../dropdown-menu/dropdo
 import { AccountService } from '../../services/account.service';
 import { AuthService } from '../../services/auth.service';
 import { UserSearchComponent } from '../user-search/user-search.component';
+import { ComingSoonComponent } from '../../pages/coming-soon/coming-soon.component';
 
 @Component({
   selector: 'app-app-navbar',

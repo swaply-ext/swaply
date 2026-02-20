@@ -9,10 +9,10 @@
 
   <div class="nav-menu" [class.open]="isMobileMenuOpen">
     <div class="nav-links">
-      <a href="#" (click)="closeMobileMenu()">Para Ti</a>
-      <a href="#" (click)="closeMobileMenu()">Comunidad</a>
-      <a href="#" (click)="closeMobileMenu()">Eventos</a>
-      <a [routerLink]="['/landing']" fragment="planes" class="nav-premium" (click)="closeMobileMenu()">
+      <a routerLink="/home" (click)="closeMobileMenu()">Para Ti</a> <a routerLink="/coming-soon" (click)="closeMobileMenu()">Comunidad</a>
+      <a routerLink="/coming-soon" (click)="closeMobileMenu()">Eventos</a>
+      
+      <a [routerLink]="['/landing']" fragment="planes" class="nav-premium">
         <span class="material-symbols-outlined premium-icon">crown</span>
         Premium
       </a>
