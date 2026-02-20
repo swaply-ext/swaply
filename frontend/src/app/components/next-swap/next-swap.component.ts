@@ -97,10 +97,8 @@ export class NextSwapComponent {
   getUserLearn(userId: string): void {
     this.usersService.getUserById(userId).subscribe({
       next: (user) => {
-        // Add default rating if not provided by backend
         this.profileToLearn.set({
           ...user,
-          rating: user.rating ?? 3.8,
           skills: user.skills || []
         });
          console.log('skills learn:', this.profileToLearn()?.skills);

@@ -193,25 +193,6 @@ button {
     object-fit: cover;
 }
 
-.rating {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  margin-left: 0.2rem;
-}
-
-.rating-value {
-  font-size: 0.85rem;
-  color: var(--text-gray-100);
-  line-height: 1;
-}
-
-.star-icon {
-  font-size: 1.2rem;
-  line-height: 1;
-  color: var(--star-color);
-}
-
 /* --- ÁREA DE ACCIONES (Botones) --- */
 .actions-area {
     display: flex;
