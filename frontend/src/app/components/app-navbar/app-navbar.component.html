@@ -4,9 +4,9 @@
       <img src="assets/logo_swp_invert.png" alt="Swaply Logo" class="nav-logo-img">
     </a>
     <div class="nav-links">
-      <a href="#">Para Ti</a>
-      <a href="#">Comunidad</a>
-      <a href="#">Eventos</a>
+      <a routerLink="/home">Para Ti</a> <a routerLink="/coming-soon">Comunidad</a>
+      <a routerLink="/coming-soon">Eventos</a>
+      
       <a href="#" class="nav-premium">
         <span class="material-symbols-outlined premium-icon">crown</span>
         Premium
@@ -19,20 +19,22 @@
   </div>
 
   <div class="nav-right">
-
-    <a routerLink="/chat" class="nav-icon-link"><span class="material-symbols-outlined nav-icon">chat_bubble</span></a>
-    <button class="menu-btn" (click)="goToNotifications()"> <span
-        class="material-symbols-outlined nav-icon">notifications</span> </button>
+    <a routerLink="/chat" class="nav-icon-link">
+      <span class="material-symbols-outlined nav-icon">chat_bubble</span>
+    </a>
+    
+    <button class="menu-btn" (click)="goToNotifications()"> 
+      <span class="material-symbols-outlined nav-icon">notifications</span> 
+    </button>
 
     <div class="profile-wrapper">
-
-      <span *ngIf="isLoggedIn" (click)="toggleDropdown(); $event.stopPropagation()">
+      <span *ngIf="isLoggedIn()" (click)="toggleDropdown(); $event.stopPropagation()">
         <img
           [src]="(dropdownMenuData && dropdownMenuData.profilePhotoUrl) ? dropdownMenuData.profilePhotoUrl : 'assets/default-image.jpg'"
           alt="Foto de perfil" class="profile-pic">
       </span>
 
-      <span *ngIf="!isLoggedIn" class="material-symbols-outlined nav-icon profile-icon"
+      <span *ngIf="!isLoggedIn()" class="material-symbols-outlined nav-icon profile-icon"
         (click)="toggleDropdown(); $event.stopPropagation()">
         person
       </span>

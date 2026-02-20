@@ -39,6 +39,9 @@ import { SwapSkillsComponent } from './components/swap-skills/swap-skills.compon
 import { SwapInterestsComponent } from './components/swap-interests/swap-interests.component';
 import { DeleteAccountConfirmationComponent } from './pages/delete-account-confirmation/delete-account-confirmation.component';
 import { UserSearchComponent } from './components/user-search/user-search.component';
+import { TermsConditionsComponent } from './pages/terms-conditions/terms-conditions.component';
+import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.component';
+import { ComingSoonComponent } from './pages/coming-soon/coming-soon.component';
 import { getProfileDataResolver } from './resolver/get-profile-data.service';
 import { AvatarSelectorComponent } from './pages/avatar-selector/avatar-selector.component';
 
@@ -64,7 +67,7 @@ export const appRoutes: Routes = [
   { path: 'skills-panel', component: SkillsPanelComponent }, // ruta para el panel de habilidades
   { path: 'loading', component: LoadingScreenComponent }, // ruta para la pantalla de carga
   { path: 'interests-panel', component: InterestsPanelComponent }, // ruta para el panel de intereses
-  { path: 'profile-info', component: ProfileInfoComponent }, // ruta para la información personal (temporal)
+  { path: 'profile-info', component: ProfileInfoComponent, canActivate: [AuthGuard] }, // ruta para la información personal (temporal)
   { path: 'profile-edit', component: EditProfileComponent , canActivate: [AuthGuard] }, // ruta para el perfil de usuario
   { path: 'user/:username', loadComponent: () => import('./pages/public-profile/public-profile.component').then(m => m.PublicProfileComponent)}, //enlace a el perfil publico pero indicando el username del cual
   { path: 'recovery-email', component: RecoveryEmailComponent },
@@ -76,16 +79,18 @@ export const appRoutes: Routes = [
   { path: 'filter-skills', component: FilterSkillsComponent },
   { path: 'location-search', component: LocationSearchComponent },
   { path: 'swap-skills', component: SwapSkillsComponent },
-  { path: 'notifications', component: SwapRequestsComponent },
+  { path: 'notifications', component: SwapRequestsComponent, canActivate: [AuthGuard]},
   { path: 'swap-interests', component: SwapInterestsComponent },
   { path: 'delete-account-confirmation', component: DeleteAccountConfirmationComponent },
   { path: '404', component: Error404Component },
-  { path: 'my-swaps', component: MySwapsPageComponent,},
+  { path: 'my-swaps', component: MySwapsPageComponent, canActivate: [AuthGuard]},
   { path: 'privacy-and-security', component: PrivacyAndSecurityComponent, canActivate: [AuthGuard] },
   { path: 'user-search', component: UserSearchComponent },
+  { path: 'coming-soon', component: ComingSoonComponent, canActivate: [AuthGuard] },
+  { path: 'terms-conditions', component: TermsConditionsComponent, canActivate: [AuthGuard] },
+  { path: 'privacy-policy', component: PrivacyPolicyComponent, canActivate: [AuthGuard] },
   { path: 'chat', loadComponent: () => import('./pages/chat/chat.component').then(m => m.ChatComponent), canActivate: [AuthGuard] },
   { path: 'swap/:username', component: SwapComponent, canActivate: [AuthGuard] },
   { path: 'select-avatar', component: AvatarSelectorComponent, canActivate: [AuthGuard]},
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
-
 ];
