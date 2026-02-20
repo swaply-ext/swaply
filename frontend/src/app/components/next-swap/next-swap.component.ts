@@ -96,7 +96,6 @@ export class NextSwapComponent {
       next: (user) => {
         this.profileToLearn.set({
           ...user,
-          rating: user.rating ?? 3.8,
           skills: user.skills || []
         });
          console.log('skills learn:', this.profileToLearn()?.skills);

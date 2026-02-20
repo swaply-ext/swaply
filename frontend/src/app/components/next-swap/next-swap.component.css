@@ -283,27 +283,6 @@ button {
     border: 1px solid rgba(255,255,255,0.2);
 }
 
-.rating {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.2rem;
-  margin-left: 0.4rem;
-  padding-left: 0.4rem;
-  border-left: 1px solid rgba(255,255,255,0.1);
-  flex-shrink: 0;
-}
-
-.rating-value {
-  font-size: 0.85rem;
-  color: var(--text-white);
-  font-weight: 600;
-}
-
-.star-icon {
-  font-size: 1rem;
-  color: var(--star-color);
-}
-
 /* --- ÁREA DE ACCIONES (Botones) --- */
 .actions-area {
     display: flex;
