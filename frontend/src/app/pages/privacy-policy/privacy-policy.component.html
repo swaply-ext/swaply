@@ -1,12 +1,13 @@
-<app-app-navbar></app-app-navbar>
+<app-app-navbar *ngIf="!isModal"></app-app-navbar>
 
-<div class="privacy-security-page">
-  <div class="privacy-security-layout">
-    <aside class="privacy-security-sidebar">
+<div [ngClass]="isModal ? 'modal-overlay' : 'privacy-security-page'">
+  <div [ngClass]="isModal ? 'modal-content' : 'privacy-security-layout'">
+    
+    <aside class="privacy-security-sidebar" *ngIf="!isModal">
       <app-side-menu></app-side-menu>
     </aside>
 
-    <main class="privacy-security-content">
+    <main [ngClass]="{'privacy-security-content': !isModal}">
       <section class="panel">
         <h2>Política de Privacidad y Tratamiento de Datos</h2>
         <p class="panel-description">Cumplimiento estricto de normativas internacionales de protección de datos personales.</p>
@@ -34,7 +35,7 @@
 
           <div class="legal-section">
             <h3>5. Protocolos de Seguridad (Cifrado)</h3>
-            <p>Utilizamos protocolos de transporte seguro (TLS/SSL) para proteger la información en tránsito. Las contraseñas se almacenan mediante algoritmos de hashing de un solo sentido (salting), garantizando que incluso en caso de brecha de seguridad, su acceso permanezca inaccesible.</p>
+            <p>Utilizamos protocolos de transporte seguro (TLS/SSL) para proteger la información en tránsito. Las contraseñas se almacenan mediante algoritmos de hashing de un solo sentido, garantizando que incluso en caso de brecha de seguridad, su acceso permanezca inaccesible.</p>
           </div>
 
           <div class="legal-section">
@@ -44,7 +45,9 @@
         </div>
 
         <div class="action-row">
-          <button class="btn btn-primary btn-large" routerLink="/home">Entendido y Conforme</button>
+          <button *ngIf="isModal" class="btn btn-primary btn-large" (click)="onClose()">Entendido y Cerrar</button>
+          
+          <button *ngIf="!isModal" class="btn btn-large btn-disabled" disabled>Aceptado </button>
         </div>
       </section>
     </main>

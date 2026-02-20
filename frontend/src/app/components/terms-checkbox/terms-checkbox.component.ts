@@ -8,10 +8,23 @@ import { Component, EventEmitter, Output } from '@angular/core';
 })
 export class TermsCheckboxComponent {
   @Output() checkedChange = new EventEmitter<boolean>();
+  @Output() showTerms = new EventEmitter<void>();
+  @Output() showPrivacy = new EventEmitter<void>();
+  
   checked = false;
 
   onChange(event: any) {
     this.checked = event.target.checked;
     this.checkedChange.emit(this.checked);
+  }
+
+  openTerms(event: Event) {
+    event.preventDefault();
+    this.showTerms.emit();
+  }
+
+  openPrivacy(event: Event) {
+    event.preventDefault();
+    this.showPrivacy.emit();
   }
 }

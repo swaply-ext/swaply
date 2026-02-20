@@ -1,15 +1,16 @@
-<app-app-navbar></app-app-navbar>
+<app-app-navbar *ngIf="!isModal"></app-app-navbar>
 
-<div class="privacy-security-page">
-  <div class="privacy-security-layout">
-    <aside class="privacy-security-sidebar">
+<div [ngClass]="isModal ? 'modal-overlay' : 'privacy-security-page'">
+  <div [ngClass]="isModal ? 'modal-content' : 'privacy-security-layout'">
+    
+    <aside class="privacy-security-sidebar" *ngIf="!isModal">
       <app-side-menu></app-side-menu>
     </aside>
 
-    <main class="privacy-security-content">
+    <main [ngClass]="{'privacy-security-content': !isModal}">
       <section class="panel">
         <h2>Términos y Condiciones de Servicio</h2>
-        <p class="panel-description">Acuerdo vinculante entre el usuario y la plataforma Swaply. v2.0</p>
+        <p class="panel-description">Acuerdo vinculante entre el usuario y la plataforma Swaply.</p>
 
         <div class="scroll-area">
           <div class="legal-section">
@@ -42,11 +43,13 @@
             <p>Cualquier disputa relacionada con estos términos será resuelta bajo las leyes de la jurisdicción donde se encuentre registrada la entidad matriz de Swaply, renunciando el usuario expresamente a cualquier otro fuero que pudiera corresponderle.</p>
           </div>
         </div>
-
         <div class="action-row">
-          <button class="btn btn-primary btn-large" routerLink="/home">Confirmar Lectura y Aceptación</button>
+          <button *ngIf="isModal" class="btn btn-primary btn-large" (click)="onClose()">Entendido y Cerrar</button>
+          
+          <button *ngIf="!isModal" class="btn btn-large btn-disabled" disabled>Aceptado</button>
         </div>
       </section>
     </main>
+
   </div>
 </div>
