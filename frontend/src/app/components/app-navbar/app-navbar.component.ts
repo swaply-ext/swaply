@@ -16,6 +16,7 @@ import { UserSearchComponent } from '../user-search/user-search.component';
 })
 export class AppNavbarComponent implements OnInit {
   showDropdown = false;
+  isMobileMenuOpen = false;
   dropdownMenuData!: DropdownMenuData;
 
   constructor(
@@ -47,12 +48,18 @@ export class AppNavbarComponent implements OnInit {
   toggleDropdown() {
     this.showDropdown = !this.showDropdown;
   }
+  toggleMobileMenu() {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
 
+  closeMobileMenu() {
+    this.isMobileMenuOpen = false;
+  }
   isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
   }
 
-    goToNotifications() {
+  goToNotifications() {
     this.router.navigate(['/notifications']);
   }
 }
