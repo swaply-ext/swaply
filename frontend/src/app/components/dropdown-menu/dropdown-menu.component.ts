@@ -34,22 +34,6 @@ export class DropdownMenuComponent {
     }
   }
 
-  getStars(rating: number): { icon: string; filled: boolean }[] {
-    const safeRating = Math.max(0, Math.min(5, rating));
-    const fullStars = Math.floor(safeRating);
-    const decimal = safeRating - fullStars;
-    const halfStar = decimal >= 0.5 ? 1 : 0;
-    const emptyStars = 5 - fullStars - halfStar;
-
-    return [
-      ...Array(fullStars).fill({ icon: 'star', filled: true }),
-      ...Array(halfStar).fill({ icon: 'star_half', filled: true }),
-      ...Array(emptyStars).fill({ icon: 'star', filled: false })
-    ];
-  }
-
-
-
   goToMyProfile() {
     this.router.navigate(['/myprofile']);
     this.closeMenu.emit();
