@@ -11,7 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class PaymentService {
 
-  private readonly API_URL = 'http://localhost:8081/api/payment';
+  private readonly API_URL = '/payment';
 
   private http = inject(HttpClient); //el inject es mejor que el constructor, pero sirve oara lo mismo
   private router = inject(Router);

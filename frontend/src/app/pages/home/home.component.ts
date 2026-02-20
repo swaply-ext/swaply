@@ -68,18 +68,6 @@ export class HomeComponent implements OnInit {
   // --- Mock Data para UI (Demo) ---
   hasIntercambio = signal(true);
   isConfirmed = signal(false);
-  skillToLearn = signal({
-    titulo: 'Clase de Guitarra Acústica',
-    img: 'assets/photos_skills/music/guitar.jpg',
-    hora: 'Hoy, 18:00h',
-    via: 'Vía Napoli 5'
-  });
-  skillToTeach = signal({
-    titulo: 'Taller de Manualidades',
-    img: 'assets/photos_skills/leisure/crafts.jpg',
-    hora: 'Hoy, 18:00h',
-    via: 'Vía Napoli 5'
-  });
 
   ngOnInit() {
     // 1. Verificación de perfil y pagos (Fire & Forget - Segundo plano)
