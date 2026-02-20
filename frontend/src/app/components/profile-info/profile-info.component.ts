@@ -2,6 +2,8 @@ import { Component, OnChanges, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { AccountService } from '../../services/account.service';
+import { ChatService } from '../../services/chat.service';
 import { PrivateProfileData } from '../../models/private-profile-data.model';
 // import { UserLocation } from '../../models/user-location.model';
 import { UserSkills} from '../../models/skills.models';
@@ -27,13 +29,32 @@ export class ProfileInfoComponent implements OnChanges {
     console.log('ProfileData changed:', this.profileData);
   }
 
-  constructor(private authService: AuthService, private router: Router ) { }
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private accountService: AccountService,
+    private chatService: ChatService,
+     ) { }
   starsArray = [1, 2, 3, 4, 5];
 
   get isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
   }
-
+  contactUser() {
+    const target = this.profileData?.username;
+    if (!target) return;
+    this.chatService.createRoomWithUsername(target).subscribe({
+      next: (room: any) => {
+        // Navigate to chat and select the room
+        this.router.navigate(['/chat'], { queryParams: { roomId: room.id } });
+      },
+      error: (err: any) => {
+        console.error('Error creando sala', err);
+        // Fallback: navigate to chat without room
+        this.router.navigate(['/chat']);
+      }
+    });
+  }
   goToEdit(){
     // Evitamos navegar si es solo lectura
     if (!this.isReadOnly) {

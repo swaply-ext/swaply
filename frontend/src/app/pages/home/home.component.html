@@ -9,7 +9,9 @@
 
     <section class="nearby-section">
       <div class="nearby-header">
-        <h2 class="section-title">Intercambios Cerca de Ti</h2>
+        <h2 class="section-title">
+          @if(hasSearched()) { Resultados de búsqueda } @else { Intercambios Cerca de Ti }
+        </h2>
         <div class="nearby-actions">
           <app-skill-search
             style="width: auto; display: block"
@@ -69,12 +71,12 @@
             <h3>Clase de {{ card.skillTitle | titlecase }}</h3>
 
             <ng-container *ngIf="hasSearched()">
-              <div *ngIf="card.isMatch" class="match-status is-match">
+              <div *ngIf="card.isSwapMatch" class="match-status is-match">
                 <span class="material-symbols-outlined">bolt</span>
                 ¡MATCH!
               </div>
 
-              <div *ngIf="!card.isMatch" class="match-status no-match">
+              <div *ngIf="!card.isSwapMatch" class="match-status no-match">
                 <span class="material-symbols-outlined">person</span>
                 No tiene interés en tus habilidades
               </div>

@@ -10,9 +10,23 @@ import com.swaply.backend.application.auth.exception.InvalidCredentialsException
 import com.swaply.backend.application.auth.exception.NewPasswordMatchesOldException;
 import com.swaply.backend.application.auth.exception.UserAlreadyExistsException;
 import com.swaply.backend.shared.UserCRUD.exception.UserNotFoundException;
+import com.swaply.backend.shared.chat.exception.RoomNotFoundException;
+import com.swaply.backend.shared.chat.exception.UserNotInThisRoomException;
 
 @ControllerAdvice
 public class RestExceptionHandler {
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<String> handlePremiumStatusConflict(IllegalStateException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    }
+
+// No se si asi es como hay que hacerlo
+
+    @ExceptionHandler(SecurityException.class)
+    public ResponseEntity<String> handlePaymentSecurityViolation(SecurityException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+    }
 
     // Errores si no existe un usuario (ha fallado con exito)
     @ExceptionHandler(UserNotFoundException.class)
@@ -52,9 +66,23 @@ public class RestExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error inesperado: " + e.getMessage());
     }
+
     @ExceptionHandler(NewPasswordMatchesOldException.class)
     public ResponseEntity<String> handleNewPasswordMatchesOld(NewPasswordMatchesOldException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
+
+    @ExceptionHandler(UserNotInThisRoomException.class)
+    public ResponseEntity<String> handdleUserNotExistsInThisRoom(InvalidCredentialsException e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+    }
+
+    @ExceptionHandler(RoomNotFoundException.class)
+    public ResponseEntity<String> handleRoomNotExists(UserNotFoundException e) {
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
     
+
 }

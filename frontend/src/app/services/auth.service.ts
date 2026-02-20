@@ -7,8 +7,7 @@ import { Observable, tap } from 'rxjs';
 })
 export class AuthService {
   private http = inject(HttpClient);
-  
-  // URL base para no repetir código
+
   private baseUrl = '/auth';
 
   isLoggedIn = signal<boolean>(!!localStorage.getItem('authToken'));
@@ -16,7 +15,6 @@ export class AuthService {
   login(credentials: any) {
     console.log(this.isLoggedIn());
     return this.http.post(`${this.baseUrl}/login`, credentials, {
-      // context: new HttpContext().set(SKIP_LOADING, true),
       responseType: 'text',
       observe: 'response'
     }).pipe(
@@ -40,6 +38,29 @@ export class AuthService {
     this.isLoggedIn.set(false);
   }
 
+
+  getToken(): string | null {
+    return localStorage.getItem('authToken');
+  }
+
+
+  getUserIdFromToken(): string {
+    const token = this.getToken();
+    if (!token) return '';
+
+    try {
+      const payload = token.split('.')[1];
+
+      const decodedPayload = atob(payload);
+
+      const parsed = JSON.parse(decodedPayload);
+
+      return parsed.sub || '';
+    } catch (error) {
+      return '';
+    }
+  }
+
   verifyRegistrationCode(email: string, code: string): Observable<HttpResponse<string>> {
     const verifyData = { email, code };
     return this.http.post(`${this.baseUrl}/registerCodeVerify`, verifyData, {
@@ -60,14 +81,10 @@ export class AuthService {
       observe: 'response'
     });
   }
-  
-  /**
-   * Envía la solicitud de cambio de contraseña.
-   * El HttpInterceptor se encargará de añadir el token en el header.
-   */
+
   changePassword(credentials: {password: string, newPassword: string}) {
     return this.http.post(`${this.baseUrl}/passwordChange`, credentials, {
-      observe: 'response' // Necesario para leer el status 200 completo
+      observe: 'response'
     });
   }
 }

@@ -61,10 +61,17 @@ public interface UserRepository extends CosmosRepository<User, String> {
     @Query(value = "SELECT VALUE c.username FROM c WHERE c.id = @id AND c.type = 'user'")
     Optional<String> findUsernameOnlyById(@Param("id") String id);
 
+        @Query(value = "SELECT VALUE c.profilePhotoUrl FROM c WHERE c.id = @id AND c.type = 'user'")
+    Optional<String> findProfilePhotoUrlOnlyById(@Param("id") String id);
+
     // Metodos con Derived Queries para no tener que definir type cada vez
 
     default Optional<String> findUsernameById(String id){
         return findUsernameOnlyById(id);
+    }
+
+        default Optional<String> findprofilePhotoUrlById(String id){
+        return findProfilePhotoUrlOnlyById(id);
     }
 
     default List<User> findAllUsers() {

@@ -1,6 +1,8 @@
 package com.swaply.backend.application.swap.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,14 +31,17 @@ public class SwapService {
 
     public Swap createSwap(String sendingUser, SwapDTO dto) {
         String id = UUID.randomUUID().toString();
-
+        LocalDateTime now = LocalDateTime.now();
         Swap sentSwap = mapper.toEntity(dto);
         sentSwap.setStatus(Swap.Status.STANDBY);
         sentSwap.setIsRequester(true);
         sentSwap.setId(id);
         sentSwap.setRequestedUserId(userService.getUserByUsername(dto.getRequestedUsername()).getId());
+        sentSwap.setCreatedAt(now);
 
         UserDTO sender = userService.getUserByID(sendingUser);
+        UserDTO Reciever = userService.getUserByUsername(dto.getRequestedUsername());
+        String RecieverId = Reciever.getId();
 
         if (sender.getSwaps() == null) {
             sender.setSwaps(new ArrayList<>());
@@ -49,26 +54,26 @@ public class SwapService {
         receivedSwap.setIsRequester(false);
         receivedSwap.setId(id);
         receivedSwap.setRequestedUserId(sendingUser);
+        receivedSwap.setCreatedAt(now);
 
         UserDTO receiver = userService.getUserByID(sentSwap.getRequestedUserId());
         if (receiver.getSwaps() == null) {
             receiver.setSwaps(new ArrayList<>());
         }
         receiver.getSwaps().add(receivedSwap);
-        userService.updateUser(receiver.getId(), receiver);
+        userService.updateUser(RecieverId, receiver);
 
-        //Enviar email de notificación
-                try {
+        // Enviar email de notificación
+        try {
             UserDTO senderDto = userService.getUserByID(sendingUser);
             UserDTO receiverDto = userService.getUserByUsername(dto.getRequestedUsername());
 
             mailService.sendSwapRequestEmail(
-                receiverDto.getEmail(),       
-                receiverDto.getName(),        
-                senderDto.getName(),          
-                dto.getSkill(),             
-                dto.getInterest()        
-            );
+                    receiverDto.getEmail(),
+                    receiverDto.getName(),
+                    senderDto.getName(),
+                    dto.getSkill(),
+                    dto.getInterest());
             System.out.println("Notificación enviada a: " + receiverDto.getEmail());
 
         } catch (Exception e) {
@@ -87,7 +92,15 @@ public class SwapService {
     public List<Swap> getAllSwaps(String id) {
         UserDTO userSwap = userService.getUserByID(id);
         List<Swap> listaSwaps = userSwap.getSwaps();
-        return listaSwaps;
+
+        if (listaSwaps == null || listaSwaps.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        List<Swap> swapsOrdenados = new ArrayList<>(listaSwaps);
+        swapsOrdenados.sort(
+                Comparator.comparing(Swap::getCreatedAt, Comparator.nullsFirst(Comparator.naturalOrder())).reversed());
+        return swapsOrdenados;
     }
 
     public Swap getNextSwap(String id) {
@@ -109,11 +122,11 @@ public class SwapService {
     }
 
     public void updateSwapStatus(String swapId, String status, String currentUserId) {
-        //get sender
+        // get sender
         UserDTO sender = userService.getUserByID(currentUserId);
         Swap senderSwap = getSwapFromDTO(sender, swapId);
 
-        //get receiver
+        // get receiver
         UserDTO receiver = userService.getUserByID(senderSwap.getRequestedUserId());
         Swap receiverSwap = getSwapFromDTO(receiver, swapId);
 
@@ -131,7 +144,7 @@ public class SwapService {
         senderSwap.setStatus(newStatus);
         receiverSwap.setStatus(newStatus);
         // Save to database
-        userService.updateUser(currentUserId,sender);
-        userService.updateUser(receiver.getId(),receiver);
+        userService.updateUser(currentUserId, sender);
+        userService.updateUser(senderSwap.getRequestedUserId(), receiver);
     }
 }

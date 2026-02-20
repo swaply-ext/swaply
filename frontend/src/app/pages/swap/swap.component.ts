@@ -198,7 +198,6 @@ export class SwapComponent implements OnInit {
     const targetUser = this.targetUser();
 
     if (!targetItem || !myItem || !targetUser) {
-      alert("No se puede crear el intercambio. No existen coincidencias compatibles.");
       return;
     }
 

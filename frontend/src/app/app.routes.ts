@@ -41,14 +41,15 @@ import { DeleteAccountConfirmationComponent } from './pages/delete-account-confi
 import { UserSearchComponent } from './components/user-search/user-search.component';
 import { getProfileDataResolver } from './resolver/get-profile-data.service';
 import { AvatarSelectorComponent } from './pages/avatar-selector/avatar-selector.component';
+import { LandingComponent } from './landing/landing.component';
 
 // Creamos una ruta para la verificación de correo
 // Ahora usamos el componente real EmailVerificationComponent
 export const appRoutes: Routes = [
-  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] }, // ruta para ver HomeComponent
+  { path: '', component: HomeComponent, canActivate: [AuthGuard], resolve: { profileData: getProfileDataResolver }}, // ruta principal muestra el componente Home
+  { path: 'home', component: HomeComponent, canActivate: [AuthGuard], resolve: { profileData: getProfileDataResolver } }, // ruta para ver HomeComponent
   { path: 'skills', component: SkillsComponent, canActivate: [AuthGuard] }, // ruta para ver SkillsComponent
-  { path: 'interests', component: InterestsComponent, canActivate: [AuthGuard] }, // ruta para ver InterestsComponent
-  { path: '', component: HomeComponent, canActivate: [AuthGuard]}, // ruta principal muestra el componente Home
+  { path: 'interests', component: InterestsComponent, canActivate: [AuthGuard],}, // ruta para ver InterestsComponent
   { path: 'register', component: RegisterFormComponent }, // ruta para el formulario de registro
   { path: 'code-sent-confirmation', component: CodeSentConfirmationComponent },
   { path: 'verify', component: EmailVerificationComponent }, // ruta para la verificación de correo
@@ -83,7 +84,9 @@ export const appRoutes: Routes = [
   { path: 'my-swaps', component: MySwapsPageComponent,},
   { path: 'privacy-and-security', component: PrivacyAndSecurityComponent, canActivate: [AuthGuard] },
   { path: 'user-search', component: UserSearchComponent },
+  { path: 'chat', loadComponent: () => import('./pages/chat/chat.component').then(m => m.ChatComponent), canActivate: [AuthGuard] },
   { path: 'swap/:username', component: SwapComponent, canActivate: [AuthGuard] },
+  { path: 'landing', component: LandingComponent },
   { path: 'select-avatar', component: AvatarSelectorComponent, canActivate: [AuthGuard]},
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
 

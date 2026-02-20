@@ -7,7 +7,7 @@
       <a href="#">Para Ti</a>
       <a href="#">Comunidad</a>
       <a href="#">Eventos</a>
-      <a href="#" class="nav-premium">
+      <a [routerLink]="['/landing']" fragment="planes" class="nav-premium">
         <span class="material-symbols-outlined premium-icon">crown</span>
         Premium
       </a>
@@ -20,7 +20,7 @@
 
   <div class="nav-right">
 
-    <span class="material-symbols-outlined nav-icon">chat_bubble</span>
+    <a routerLink="/chat" class="nav-icon-link"><span class="material-symbols-outlined nav-icon">chat_bubble</span></a>
     <button class="menu-btn" (click)="goToNotifications()"> <span
         class="material-symbols-outlined nav-icon">notifications</span> </button>
 
