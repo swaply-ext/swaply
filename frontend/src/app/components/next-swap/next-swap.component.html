@@ -39,10 +39,6 @@
                     <img [src]="profileToLearn()?.profilePhotoUrl" alt="Avatar" class="user-avatar" />
                   </div>
                   <span class="badge-text">{{ '@'+ profileToLearn()?.username }}</span>
-                  <span class="rating">
-                    <span class="material-symbols-outlined star-icon">{{ getStarIcon(profileToLearn()?.rating ?? 0) }}</span>
-                    <span class="rating-value">{{ profileToLearn()?.rating }}</span>
-                  </span>
                 </div>
               </div>
             </div>

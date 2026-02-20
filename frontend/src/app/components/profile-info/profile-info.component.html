@@ -12,18 +12,6 @@
 
     <p *ngIf="profileData.location != null" class="location">{{ profileData.location.displayName }}</p>
 
-    <div class="rating">
-      <i class="material-icons" *ngFor="let starNum of starsArray">
-        {{
-          3.8 >= starNum
-            ? "star"
-            : 3.8 >= starNum - 0.5
-            ? "star_half"
-            : "star_border"
-        }}
-      </i>
-      <span>3.8</span>
-    </div>
   </div>
 
   <div class="actions" *ngIf="isPublic">
