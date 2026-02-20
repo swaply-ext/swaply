@@ -1,35 +1,103 @@
 .side-menu-container {
-  width: 250px;
-  height: 700px;
-  margin: 2rem auto;
-  margin-left: auto;
-  padding: 1rem;
-  border: 1px solid #315465;
-  border-radius: 8px;
-  background-color: #315465;
-  text-decoration: none;
+  width: 100%;
+  max-width: 17.5rem;
+  margin: 0;
+  padding: 1.5rem 1rem;
+  border-radius: 0.75rem;
+  background-color: #143F4C;
+  border: 0.0625rem solid #1F4E5D;
+  box-shadow: 0 0.625rem 1.5625rem -0.3125rem rgba(0, 0, 0, 0.2);
+  position: sticky;
+  top: 6.25rem;
+  height: fit-content;
+  box-sizing: border-box;
 }
+
 ul {
-  list-style: none; /* elimina el marcador */
+  list-style: none;
   padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
 }
-ul li:not(:last-child) {
-  margin-bottom: 2rem;
+
+.divider {
+  height: 0.0625rem;
+  background-color: rgba(255, 255, 255, 0.08);
+  margin: 0.75rem 1rem;
+  flex-shrink: 0;
 }
-.side-btn{
-    color: var(  --secundary-color-1);
-    text-decoration: none;
+
+.side-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  color: #d1d5db;
+  text-decoration: none;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-left: 0.1875rem solid transparent;
+  transition: all 0.25s ease-in-out;
 }
+
+.side-btn .material-symbols-outlined {
+  font-size: 1.375rem;
+  transition: transform 0.25s ease;
+}
+
 .side-btn:hover {
-    /* al pasar por encima, hacer que se haga un mini cuadrado  */
-    background-color: var(--background-tertiary, #fff);
-    color: var(--text-on-dark, #315465);
-    padding: 0.5rem 0.8rem;
-    border-radius: 4px;
-    transition: background-color 0.9s, color 0.3s;
-    transition-timing-function: ease-in-out;
+  background-color: #1F4E5D;
+  color: #ffffff;
+  transform: translateX(0.375rem);
 }
+
+.side-btn:hover .material-symbols-outlined {
+  transform: scale(1.15);
+}
+
 .activo {
-  text-decoration: underline; /* o ponerlo en negrita, color, etc */
-  font-weight: bold;
+  background-color: rgba(60, 181, 124, 0.15);
+  color: #3CB57C;
+  font-weight: 600;
+  border-left-color: #3CB57C;
+}
+
+.activo:hover {
+  background-color: rgba(60, 181, 124, 0.2);
+  color: #3CB57C;
+  transform: translateX(0);
+}
+
+.exit-btn {
+  color: #fca5a5;
+  margin-top: 0.5rem;
+}
+
+.exit-btn:hover {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+}
+
+.exit-btn.activo {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  border-left-color: #ef4444;
+}
+
+@media (max-width: 64rem) {
+  .side-menu-container {
+    max-width: 15.625rem;
+  }
+}
+
+@media (max-width: 48rem) {
+  .side-menu-container {
+    position: relative;
+    top: 0;
+    max-width: 100%;
+    margin-bottom: 2rem;
+  }
 }
