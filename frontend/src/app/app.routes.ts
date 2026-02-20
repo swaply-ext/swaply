@@ -44,6 +44,7 @@ import { PrivacyPolicyComponent } from './pages/privacy-policy/privacy-policy.co
 import { ComingSoonComponent } from './pages/coming-soon/coming-soon.component';
 import { getProfileDataResolver } from './resolver/get-profile-data.service';
 import { AvatarSelectorComponent } from './pages/avatar-selector/avatar-selector.component';
+import { LandingComponent } from './landing/landing.component';
 
 // Creamos una ruta para la verificación de correo
 // Ahora usamos el componente real EmailVerificationComponent
@@ -91,6 +92,7 @@ export const appRoutes: Routes = [
   { path: 'privacy-policy', component: PrivacyPolicyComponent, canActivate: [AuthGuard] },
   { path: 'chat', loadComponent: () => import('./pages/chat/chat.component').then(m => m.ChatComponent), canActivate: [AuthGuard] },
   { path: 'swap/:username', component: SwapComponent, canActivate: [AuthGuard] },
+  { path: 'landing', component: LandingComponent },
   { path: 'select-avatar', component: AvatarSelectorComponent, canActivate: [AuthGuard]},
   { path: '**', redirectTo: '/404', pathMatch: 'full' }
 ];

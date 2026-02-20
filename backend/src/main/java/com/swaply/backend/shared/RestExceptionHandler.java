@@ -16,6 +16,18 @@ import com.swaply.backend.shared.chat.exception.UserNotInThisRoomException;
 @ControllerAdvice
 public class RestExceptionHandler {
 
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<String> handlePremiumStatusConflict(IllegalStateException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    }
+
+// No se si asi es como hay que hacerlo
+
+    @ExceptionHandler(SecurityException.class)
+    public ResponseEntity<String> handlePaymentSecurityViolation(SecurityException e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+    }
+
     // Errores si no existe un usuario (ha fallado con exito)
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<String> handleNotFound(UserNotFoundException e) {
