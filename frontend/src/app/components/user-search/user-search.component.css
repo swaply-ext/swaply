@@ -115,3 +115,14 @@
   font-size: 0.9rem;
   height: 2.75rem;
 }
+/*UISER SEARCH RESPONSIVE*/
+@media (max-width: 1250px) {
+  .search-dropdown {
+    position: relative; 
+    top: auto;
+    min-width: unset;
+    box-shadow: none; 
+    border: 1px solid rgba(255, 255, 255, 0.1); 
+    margin-top: 0.5rem;
+  }
+}
