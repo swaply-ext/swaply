@@ -7,6 +7,7 @@ import { RouterLink } from '@angular/router';
 import { Swap } from '../../models/swap.model';
 import { SwapProfileData} from '../../models/swap-profile-data';
 import { UserSkills } from '../../models/user-skills.model';
+
 @Component({
   selector: 'app-next-swap',
   standalone: true,
@@ -36,8 +37,7 @@ export class NextSwapComponent {
 
   imageToLearn = computed(() => {
     const swap = this.nextSwap();
-    if (!swap) return 'assets/photos_skills/default.jpg'; // Imagen por defecto si es null
-    // Pasamos '' como categoría ya que no viene en el objeto swap, la función buscará por nombre
+    if (!swap) return 'assets/photos_skills/default.jpg';
     return this.assignImageToSkill('', swap.skill) || 'assets/photos_skills/default.jpg';
   });
 
@@ -54,7 +54,7 @@ export class NextSwapComponent {
       this.hasIntercambio.set(false);
     }
   }
-  //recibir proximo intercambio
+
   getNextSwap(): void {
     this.swapService.getNextSwap().subscribe({
       next: (swap) => {
@@ -65,7 +65,6 @@ export class NextSwapComponent {
           this.hasIntercambio.set(true);
           this.getUserLearn(swap.requestedUserId);
         }
-        //comprobar que no hay:
         if (swap == null) {
           this.hasIntercambio.set(false);
         }
@@ -76,7 +75,7 @@ export class NextSwapComponent {
       }
     });
   }
-  //recibir user
+
   getUserTeach(): void {
     this.accountService.getProfileData().subscribe({
       next: (user) => {
@@ -84,7 +83,6 @@ export class NextSwapComponent {
           ...user,
           skills: user.skills || []
         });
-
         console.log('skills teach:', this.profileToTeach()?.skills);
       },
       error: (err) => {
@@ -93,11 +91,9 @@ export class NextSwapComponent {
     });
   }
 
-  //recibir usuario a enseñar
   getUserLearn(userId: string): void {
     this.usersService.getUserById(userId).subscribe({
       next: (user) => {
-        // Add default rating if not provided by backend
         this.profileToLearn.set({
           ...user,
           rating: user.rating ?? 3.8,
@@ -112,7 +108,6 @@ export class NextSwapComponent {
 
   confirmIntercambio() {
     const currentSwap = this.nextSwap();
-
     if (!currentSwap || !currentSwap.id) {
       return;
     }
@@ -130,11 +125,9 @@ export class NextSwapComponent {
 
   denyIntercambio() {
     const currentSwap = this.nextSwap();
-
     if (!currentSwap || !currentSwap.id) {
       return;
     }
-
 
     this.swapService.updateSwapStatus(currentSwap.id, 'DENIED').subscribe({
       next: async () => {
@@ -149,12 +142,9 @@ export class NextSwapComponent {
 
   private assignImageToSkill(category: string, skillName: string): string | undefined {
     if (!skillName) return undefined;
-
     const name = skillName.toLowerCase();
 
-    // Mapa de palabras clave a imágenes y carpetas
     const skillMap: { [key: string]: { folder: string, filename: string } } = {
-      // Deportes
       'fútbol': { folder: 'sports', filename: 'football.jpg' },
       'futbol': { folder: 'sports', filename: 'football.jpg' },
       'pádel': { folder: 'sports', filename: 'padel.jpg' },
@@ -166,8 +156,6 @@ export class NextSwapComponent {
       'vóley': { folder: 'sports', filename: 'voleyball.jpg' },
       'voley': { folder: 'sports', filename: 'voleyball.jpg' },
       'boxeo': { folder: 'sports', filename: 'boxing.jpg' },
-
-      // Música
       'guitarra': { folder: 'music', filename: 'guitar.jpg' },
       'piano': { folder: 'music', filename: 'piano.jpg' },
       'violín': { folder: 'music', filename: 'violin.jpg' },
@@ -176,8 +164,6 @@ export class NextSwapComponent {
       'bateria': { folder: 'music', filename: 'drums.jpg' },
       'saxofón': { folder: 'music', filename: 'saxophone.jpg' },
       'saxofon': { folder: 'music', filename: 'saxophone.jpg' },
-
-      // Ocio / Otros
       'dibujo': { folder: 'leisure', filename: 'draw.jpg' },
       'cocina': { folder: 'leisure', filename: 'cook.jpg' },
       'baile': { folder: 'leisure', filename: 'dance.jpg' },
@@ -186,7 +172,6 @@ export class NextSwapComponent {
       'digital': { folder: 'leisure', filename: 'digital_entertainment.jpg' }
     };
 
-    // Buscar coincidencia exacta de palabras clave
     for (const key in skillMap) {
       if (name.includes(key)) {
         const skill = skillMap[key];
@@ -194,7 +179,6 @@ export class NextSwapComponent {
       }
     }
 
-    // Si no hay coincidencia, asigna carpeta según categoría
     let folder = 'leisure';
     if (category) {
       const cat = category.toLowerCase();
@@ -212,12 +196,9 @@ export class NextSwapComponent {
   getSkillLevel(skills: UserSkills[], skillName: string): number {
     const normalizedName = this.normalizeString(skillName);
     const skill = skills.find(s => { 
-      console.log('Comparing skill id:', this.normalizeString(s.id), 'with normalized name:', normalizedName);
       return this.normalizeString(s.id) === normalizedName
-   });
-    console.log('skillName:', skillName, 'normalized:', normalizedName, 'found skill:', skill?.id, 'level:', skill?.level);
+    });
     return skill ? Number(skill.level) || 0 : 0 ;
-    
   }
 
   getLevelText(level: number): string {
@@ -228,7 +209,6 @@ export class NextSwapComponent {
       default: return 'unknown';
     }
   }
-
 
   private sleep(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
