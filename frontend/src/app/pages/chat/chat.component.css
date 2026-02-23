@@ -1,11 +1,6 @@
 .chat-container {
   display: flex;
   height: calc(100vh - 5rem);
-  /*  width: 95%;
-  max-width: 87.5rem;
-  margin: 1.25rem auto;
-  border-radius: 1.5rem;
-  border: 0.0625rem solid rgba(255, 255, 255, 0.08);*/
   background: var(--background-gradient);
   box-shadow: 0 1.25rem 3.125rem rgba(0, 0, 0, 0.4),
     0 0 0 0.0625rem rgba(255, 255, 255, 0.05) inset;
