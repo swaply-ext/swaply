@@ -10,33 +10,35 @@
   padding-right: 2.188rem; 
   height: 2.188rem;
   font-size: 0.875rem;
+  font-family: var(--font-primary);
   width: 100%;
-  background-color: #bfbfbf;
+  background-color: var(--secundary-color-2);
   border-radius: 0.5rem;
   outline: none;
   border: none;
+  color: var(--secundary-color-3);
 }
 
 .input-container .material-icons {
   position: absolute;
   right: 0.625rem; 
   font-size: 1.25rem;
-  color: #555;
+  color: var(--secundary-color-3);
   pointer-events: none; 
 }
 
 .input-container.error input {
-  border: 0.125rem solid red;
-  background-color: #ffe6e6;
-  color: red; 
+  border: 0.125rem solid var(--error-color-1);
+  background-color: var(--error-bg);
+  color: var(--error-color-1); 
 }
 
 .input-container.error input::placeholder {
-  color: #ff6666; 
+  color: var(--error-color-2); 
 }
 
 .error-message {
-  color: #ff4d4f;
+  color: var(--error-color-1);
   font-size: 0.85rem;
   margin-top: 0.313rem;
   padding-left: 0.313rem;

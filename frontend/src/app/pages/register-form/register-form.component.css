@@ -11,7 +11,7 @@
   padding: 1.875rem;
   border: 0.063rem solid #315465;
   border-radius: 0.5rem;
-  box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-large);
   background-color: #315465;
   display: flex;
   flex-direction: column;
@@ -35,17 +35,17 @@
 }
 
 .register-container.error input {
-  border: 0.125rem solid red;
-  background-color: #ffe6e6;
-  color: red;
+  border: 0.125rem solid var(--error-color-1);
+  background-color: var(--error-bg);
+  color: var(--error-color-1);
 }
 
 .register-container.error input::placeholder {
-  color: #ff6666;
+  color: var(--error-color-2);
 }
 
 .error-message {
-  color: #ff4d4f;
+  color: var(--error-color-1);
   font-size: 0.85rem;
   margin-top: 0.313rem;
   padding-left: 0.313rem;
