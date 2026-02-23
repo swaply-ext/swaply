@@ -104,6 +104,14 @@ public class ChatService {
         return new ChatHistoryResponse(messages, nextToken);
     }
 
+    public Integer getTotalUnreadMessages(String userId) {
+    List<ChatRoom> rooms = chatRoomRepository.findRoomsByUserId(userId);
+    return rooms.stream()
+                .map(r -> r.getUnreadCount().getOrDefault(userId, 0))
+                .reduce(0, Integer::sum);
+}
+
+
     public SendChatRoomsDTO getChatRoomsByUserId(String userId) {
         List<ChatRoom> rooms = chatRoomRepository.findRoomsByUserId(userId);
         List<String> otherUsernames = new ArrayList<>();
