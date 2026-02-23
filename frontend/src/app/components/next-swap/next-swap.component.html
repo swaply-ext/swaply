@@ -29,7 +29,7 @@
                     >location_on</span
                   >
                   <span class="badge-text">{{
-                    profileToLearn()?.location?.displayName
+                    validateInputsService.formatLocation(profileToLearn()?.location?.displayName)
                   }}</span>
                 </div>
                 <div
@@ -74,7 +74,7 @@
                     >location_on</span
                   >
                   <span class="badge-text">{{
-                    profileToTeach()?.location?.displayName
+                    validateInputsService.formatLocation(profileToTeach()?.location?.displayName)
                   }}</span>
                 </div>
                 <div
