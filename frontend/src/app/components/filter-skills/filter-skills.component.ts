@@ -140,4 +140,14 @@ private skillsService = inject(SkillsService);
   onSelectSkill(skill: Skill) {
     console.log('Skill seleccionada:', skill);
   }
+
+  // Método público para limpiar todas las selecciones de filtros
+  clear(): void {
+    this.categories.forEach(cat => {
+      cat.subcategories.forEach(sub => {
+        sub.selected = false;
+      });
+    });
+    this.results.set([]);
+  }
 }
