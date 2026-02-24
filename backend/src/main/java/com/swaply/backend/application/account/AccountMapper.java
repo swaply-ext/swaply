@@ -4,6 +4,7 @@ import com.swaply.backend.application.account.dto.ProfileDataDTO;
 import com.swaply.backend.application.account.dto.PublicProfileDTO;
 import com.swaply.backend.application.account.dto.SkillsDTO;
 import com.swaply.backend.application.account.dto.EditProfileDTO;
+import com.swaply.backend.application.account.dto.NavNarInformationDTO;
 import com.swaply.backend.application.account.dto.PersonalInfoDTO;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import org.mapstruct.*;
@@ -13,6 +14,9 @@ import org.mapstruct.*;
         nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 
 public interface AccountMapper {
+
+    @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE)
+    NavNarInformationDTO navBarFromUserDTO(UserDTO dto);
 
     @BeanMapping(unmappedTargetPolicy = ReportingPolicy.IGNORE)
     UserDTO fromSkillsDTO(SkillsDTO dto);
