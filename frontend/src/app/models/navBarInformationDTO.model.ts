@@ -4,6 +4,6 @@ export interface navBarInformationDTO {
     username: string;
     profilePhotoUrl: string;
     isPremium: boolean
-    msgCOunt: number
+    msgCount: number
     notificationCount: number
 }

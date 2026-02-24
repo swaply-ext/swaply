@@ -7,6 +7,7 @@ import { AccountService } from '../../services/account.service';
 import { AuthService } from '../../services/auth.service';
 import { UserSearchComponent } from '../user-search/user-search.component';
 import { ComingSoonComponent } from '../../pages/coming-soon/coming-soon.component';
+import { navBarInformationDTO } from '../../models/navBarInformationDTO.model';
 
 @Component({
   selector: 'app-app-navbar',
@@ -19,6 +20,7 @@ export class AppNavbarComponent implements OnInit {
   showDropdown = false;
   isMobileMenuOpen = false;
   dropdownMenuData!: DropdownMenuData;
+  navBarInformation!: navBarInformationDTO;
 
   constructor(
     private router: Router,
@@ -31,6 +33,7 @@ export class AppNavbarComponent implements OnInit {
     this.renderer.addClass(document.body, 'with-navbar');
     this.accountService.getNavbarData().subscribe({
       next: (navBarInformation) => {
+        this.navBarInformation = navBarInformation
         this.dropdownMenuData = {
           fullName: `${navBarInformation.name} ${navBarInformation.surname}`,
           username: navBarInformation.username,

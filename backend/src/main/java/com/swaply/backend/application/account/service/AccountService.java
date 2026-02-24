@@ -8,9 +8,12 @@ import com.swaply.backend.application.account.dto.PublicProfileDTO;
 import com.swaply.backend.application.account.dto.SkillsDTO;
 import com.swaply.backend.application.auth.exception.UserAlreadyExistsException;
 import com.swaply.backend.shared.UserCRUD.UserService;
+import com.swaply.backend.shared.UserCRUD.Model.Swap.Status;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.shared.chat.service.ChatService;
 import com.swaply.backend.application.account.AccountMapper;
+
+
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -65,7 +68,7 @@ public class AccountService /* implements UserRepository */ {
     public NavBarInformationDTO navBarInformation(String userId){
         UserDTO userDTO = userService.getUserByID(userId);
         NavBarInformationDTO dto = mapper.navBarFromUserDTO(userDTO);
-        Integer swapCount = userDTO.getSwaps().size();
+        Integer swapCount = (int) userDTO.getSwaps().stream().filter(s -> s.getStatus().equals(Status.STANDBY)).count();
         dto.setNotificationCount(swapCount);
         Integer unreadCount = chatService.getTotalUnreadMessages(userId);
         dto.setMsgCount(unreadCount);

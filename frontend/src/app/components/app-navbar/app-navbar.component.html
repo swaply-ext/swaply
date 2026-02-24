@@ -24,9 +24,23 @@
   </div>
 
   <div class="nav-right">
-    <a routerLink="/chat" class="nav-icon-link"><span class="material-symbols-outlined nav-icon">chat_bubble</span></a>
-    <button class="menu-btn" (click)="goToNotifications()"> 
-      <span class="material-symbols-outlined nav-icon">notifications</span> 
+
+    @if (navBarInformation.msgCount > 0) {
+      <a routerLink="/chat" class="nav-icon-link">
+        <span class="material-symbols-outlined nav-icon">mark_chat_unread</span>
+      </a>
+    }@else {
+      <a routerLink="/chat" class="nav-icon-link"><span class="material-symbols-outlined nav-icon">chat_bubble</span></a>
+    }
+
+    <button class="menu-btn" (click)="goToNotifications()">
+      
+      @if (navBarInformation.notificationCount > 0) {
+      <span class="material-symbols-outlined nav-icon">notifications_unread</span>
+      }@else {
+      <span class="material-symbols-outlined nav-icon">notifications</span>
+      }
+      
     </button>
 
     <div class="profile-wrapper">
