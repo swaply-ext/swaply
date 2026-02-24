@@ -135,12 +135,6 @@ button {
   border-radius: 0.25rem;
 }
 
-.card-details h4:hover {
-  white-space: normal;
-  overflow: visible;
-  background-color: rgba(255, 255, 255, 0.05);
-}
-
 .badges-group {
   display: flex;
   flex-direction: column;
@@ -184,12 +178,6 @@ button {
   text-overflow: ellipsis;
   flex: 1;
   min-width: 0;
-}
-
-.info-badge:hover .badge-text {
-  white-space: normal;
-  overflow: visible;
-  word-break: break-word;
 }
 
 .avatar-wrapper {
