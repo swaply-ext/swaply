@@ -1,6 +1,6 @@
 <div class="terms-container">
   <label>
-  <input type="checkbox" (change)="onChange($event)">
-  Acepto los términos y condiciones
-</label>
+    <input type="checkbox" (change)="onChange($event)">
+    Acepto los <span class="legal-link" (click)="openTerms($event)">términos y condiciones</span> y la <span class="legal-link" (click)="openPrivacy($event)">política de privacidad</span>
+  </label>
 </div>

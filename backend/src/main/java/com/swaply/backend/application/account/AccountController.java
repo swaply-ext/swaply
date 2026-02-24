@@ -7,12 +7,14 @@ import org.springframework.web.bind.annotation.*;
 import com.swaply.backend.shared.storage.StorageService; 
 import org.springframework.web.multipart.MultipartFile;
 import com.swaply.backend.application.account.dto.EditProfileDTO;
+import com.swaply.backend.application.account.dto.NavNarInformationDTO;
 import com.swaply.backend.application.account.dto.PersonalInfoDTO;
 import com.swaply.backend.application.account.dto.ProfileDataDTO;
 import com.swaply.backend.application.account.dto.PublicProfileDTO;
 import com.swaply.backend.application.account.dto.SkillsDTO;
 import com.swaply.backend.application.account.service.AccountService;
 import com.swaply.backend.config.security.SecurityUser;
+
 
 @RestController
 @RequestMapping("/api/account")
@@ -66,6 +68,13 @@ public class AccountController {
         ProfileDataDTO profileData = service.getProfileData(SecurityUser.getUsername());
         return ResponseEntity.ok(profileData);
     }
+
+    @GetMapping("/navBar")
+    public ResponseEntity<NavNarInformationDTO> getMethodName(@AuthenticationPrincipal SecurityUser SecurityUser) {
+        NavNarInformationDTO dto = service.navBarInformation(SecurityUser.getUsername());
+        return ResponseEntity.ok(dto);
+    }
+    
 
     @DeleteMapping("/deleteProfile")
     public ResponseEntity<Boolean> deleteProfile(@AuthenticationPrincipal SecurityUser SecurityUser) {

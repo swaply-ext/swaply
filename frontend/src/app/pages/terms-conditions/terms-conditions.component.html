@@ -1,0 +1,55 @@
+<app-app-navbar *ngIf="!isModal"></app-app-navbar>
+
+<div [ngClass]="isModal ? 'modal-overlay' : 'privacy-security-page'">
+  <div [ngClass]="isModal ? 'modal-content' : 'privacy-security-layout'">
+    
+    <aside class="privacy-security-sidebar" *ngIf="!isModal">
+      <app-side-menu></app-side-menu>
+    </aside>
+
+    <main [ngClass]="{'privacy-security-content': !isModal}">
+      <section class="panel">
+        <h2>Términos y Condiciones de Servicio</h2>
+        <p class="panel-description">Acuerdo vinculante entre el usuario y la plataforma Swaply.</p>
+
+        <div class="scroll-area">
+          <div class="legal-section">
+            <h3>1. Marco Jurídico y Aceptación</h3>
+            <p>El presente documento constituye un contrato legalmente vinculante. Al marcar la casilla de aceptación o al acceder a los servicios de Swaply, usted declara tener plena capacidad legal para obligarse. Estos términos regulan el acceso y uso de la infraestructura tecnológica proporcionada por Swaply.</p>
+          </div>
+
+          <div class="legal-section">
+            <h3>2. Naturaleza Jurídica del Intercambio</h3>
+            <p>Swaply opera bajo un modelo de "economía colaborativa". La plataforma actúa estrictamente como un tercero neutral que facilita el contacto entre partes interesadas. Los intercambios de habilidades (Swaps) son acuerdos bilaterales privados entre usuarios en los que Swaply no es parte, ni garante, ni responsable solidario.</p>
+          </div>
+
+          <div class="legal-section">
+            <h3>3. Veracidad de la Información y Perfiles</h3>
+            <p>El usuario es el único responsable de la exactitud de las capacidades y certificaciones declaradas en su perfil. Swaply se reserva el derecho de auditar perfiles, pero no asume la obligación de verificar la competencia técnica de los usuarios en materias como boxeo, cocina o cualquier otra disciplina técnica o deportiva.</p>
+          </div>
+
+          <div class="legal-section">
+            <h3>4. Exención de Responsabilidad por Daños</h3>
+            <p>Bajo ninguna circunstancia Swaply será responsable de daños directos, indirectos, incidentales o consecuentes derivados de los encuentros físicos entre usuarios. Recomendamos realizar los intercambios en lugares públicos y bajo medidas de seguridad personales adecuadas.</p>
+          </div>
+
+          <div class="legal-section">
+            <h3>5. Suspensión y Terminación de Cuenta</h3>
+            <p>Swaply se reserva la facultad de suspender unilateralmente y sin previo aviso el acceso a la cuenta de cualquier usuario que vulnere los principios de respeto, veracidad o seguridad de la comunidad, así como por el uso de la plataforma con fines de explotación comercial no autorizada.</p>
+          </div>
+
+          <div class="legal-section">
+            <h3>6. Jurisdicción y Ley Aplicable</h3>
+            <p>Cualquier disputa relacionada con estos términos será resuelta bajo las leyes de la jurisdicción donde se encuentre registrada la entidad matriz de Swaply, renunciando el usuario expresamente a cualquier otro fuero que pudiera corresponderle.</p>
+          </div>
+        </div>
+        <div class="action-row">
+          <button *ngIf="isModal" class="btn btn-primary btn-large" (click)="onClose()">Entendido y Cerrar</button>
+          
+          <button *ngIf="!isModal" class="btn btn-large btn-disabled" disabled>Aceptado</button>
+        </div>
+      </section>
+    </main>
+
+  </div>
+</div>

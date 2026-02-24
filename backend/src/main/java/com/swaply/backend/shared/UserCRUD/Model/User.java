@@ -45,5 +45,6 @@ public class User {
     private String profilePhotoUrl;
     private boolean isPremium;
     private boolean isModerator;
+    private String stripeCustomerId;
     private List<Swap> swaps;
 }

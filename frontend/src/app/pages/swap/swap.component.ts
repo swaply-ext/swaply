@@ -24,17 +24,17 @@ export class SwapComponent implements OnInit {
   myUser = signal<ProfileDataDTO | null>(null);
   targetUser = signal<UserSwapDTO | null>(null);
 
-  selectedTeachSkill = signal<any>(null); 
-  mySkillsDisplay = signal<any[]>([]); 
-  
+  selectedTeachSkill = signal<any>(null);
+  mySkillsDisplay = signal<any[]>([]);
+
   selectedTargetSkill = signal<{
     skillName: string;
     skillIcon?: string;
     skillImage?: string;
     location?: string;
   } | null>(null);
-  
-  targetUserInterests = signal<any[]>([]); 
+
+  targetUserInterests = signal<any[]>([]);
 
   constructor(
     private route: ActivatedRoute,
@@ -60,7 +60,7 @@ export class SwapComponent implements OnInit {
               const mainSkill = {
                 id: target.skillName,
                 name: target.skillName,
-                category: target.skillCategory || '', 
+                category: target.skillCategory || '',
                 level: target.skillLevel,
                 icon: target.skillIcon
               };
@@ -77,7 +77,7 @@ export class SwapComponent implements OnInit {
 
               if (paramSkillName && filteredTargetSkills.length > 0) {
                 const searchName = paramSkillName.toLowerCase();
-                const idx = filteredTargetSkills.findIndex(s => 
+                const idx = filteredTargetSkills.findIndex(s =>
                   (s.name || '').toLowerCase().includes(searchName) || searchName.includes((s.name || '').toLowerCase())
                 );
                 if (idx > 0) {
@@ -105,7 +105,7 @@ export class SwapComponent implements OnInit {
                     location: target.location.displayName
                 });
               }
-              
+
               const targetInterests = target.interests || [];
               const myRawSkills = me.skills || [];
 
@@ -139,16 +139,16 @@ export class SwapComponent implements OnInit {
     this.targetUserInterests.set(updatedList);
 
     const currentUser = this.targetUser();
-    
+
     const categorySafe = item.category || '';
 
-    const safeImage = item.image 
-                    || this.assignImageToSkill(categorySafe, item.name) 
+    const safeImage = item.image
+                    || this.assignImageToSkill(categorySafe, item.name)
                     || 'assets/default-avatar.png';
-                    
+
     this.selectedTargetSkill.set({
       skillName: item.name,
-      skillIcon: item.icon, 
+      skillIcon: item.icon,
       skillImage: safeImage,
       location: currentUser?.location.displayName
     });
@@ -164,9 +164,9 @@ export class SwapComponent implements OnInit {
       };
     });
     this.mySkillsDisplay.set(updatedList);
-    
+
     const categorySafe = item.category || '';
-    
+
     this.selectedTeachSkill.set({
         ...item,
         image: item.image || this.assignImageToSkill(categorySafe, item.name)
@@ -176,18 +176,18 @@ export class SwapComponent implements OnInit {
   getTeachSkillName() {
     const info = this.selectedTeachSkill();
     if (this.mySkillsDisplay().length === 0) {
-        return info?.name || 'Yo'; 
+        return info?.name || 'Yo';
     }
     return info?.name ? `Clase de ${info.name}` : '';
   }
 
   getTargetSkillName() {
     const info = this.selectedTargetSkill();
-    
+
     if (this.targetUserInterests().length === 0) {
-        return info?.skillName || 'Usuario'; 
+        return info?.skillName || 'Usuario';
     }
-    
+
     return info?.skillName ? `Clase de ${info.skillName}` : '';
   }
 
@@ -203,7 +203,6 @@ export class SwapComponent implements OnInit {
     const targetUser = this.targetUser();
 
     if (!targetItem || !myItem || !targetUser) {
-      alert("No se puede crear el intercambio. No existen coincidencias compatibles.");
       return;
     }
 
@@ -258,9 +257,9 @@ export class SwapComponent implements OnInit {
 
   private assignImageToSkill(category: string, skillName: string): string | undefined {
     if (!skillName) return undefined;
-    
+
     const name = String(skillName).toLowerCase();
-    
+
     const map: any = {
       'futbol': ['sports', 'football.jpg'],
       'fútbol': ['sports', 'football.jpg'],
