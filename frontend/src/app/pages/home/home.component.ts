@@ -265,9 +265,6 @@ export class HomeComponent implements OnInit {
     return filename ? `assets/photos_skills/${folder}/${filename}` : undefined;
   }
   
-  skillToLearn = signal({ titulo: 'Clase de Guitarra Acústica', img: 'assets/photos_skills/music/guitar.jpg', hora: 'Hoy, 18:00h', via: 'Vía Napoli 5' });
-  skillToTeach = signal({ titulo: 'Taller de Manualidades', img: 'assets/photos_skills/leisure/crafts.jpg', hora: 'Hoy, 18:00h', via: 'Vía Napoli 5' });
-
   // Método para limpiar el search cuando se usa el filtro
   clearSearch(): void {
     this.skillSearchComponent?.clear();
