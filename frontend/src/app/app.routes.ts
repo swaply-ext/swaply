@@ -23,7 +23,6 @@ import { RecoveryEmailComponent } from './pages/recovery-email/recovery-email.co
 import { PassVerificationComponent } from './pages/pass-verification/pass-verification.component';
 import { SideMenuComponent } from './components/side-menu/side-menu.component';
 import { ExitComponent } from './pages/exit/exit.component';
-import { Error404Component } from './pages/error-404/error-404.component';
 import { PrivateProfileComponent } from './pages/private-profile/private-profile.component';
 import { SkillSearchComponent } from './components/skill-search/skill-search.component';
 import { AuthGuard } from './services/auth-guard.service';
@@ -83,7 +82,6 @@ export const appRoutes: Routes = [
   { path: 'notifications', component: SwapRequestsComponent, canActivate: [AuthGuard]},
   { path: 'swap-interests', component: SwapInterestsComponent },
   { path: 'delete-account-confirmation', component: DeleteAccountConfirmationComponent },
-  { path: '404', component: Error404Component },
   { path: 'my-swaps', component: MySwapsPageComponent, canActivate: [AuthGuard]},
   { path: 'privacy-and-security', component: PrivacyAndSecurityComponent, canActivate: [AuthGuard] },
   { path: 'user-search', component: UserSearchComponent },
