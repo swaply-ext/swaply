@@ -14,8 +14,8 @@ body {
   align-items: flex-start;
   gap: 2rem;
   position: relative;
-  border: var(--shadow-large);
   background-color: var(--bg-panel);
+
 }
 
 .edit-icon {
