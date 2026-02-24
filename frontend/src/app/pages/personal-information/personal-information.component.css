@@ -1,11 +1,18 @@
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+}
+
 .information-container {
-  width: 21.875rem;
-  margin: 3rem auto;
-  padding: 1.25rem;
-  border-radius: 1.25rem;
+  width: 25rem;
+  padding: 1.875rem;
+  border: 0.063rem solid #315465;
+  border-radius: 0.5rem;
   box-shadow: var(--shadow-large);
-  border: 0.063rem solid var(--border-color);
-  background-color: var(--bg-panel);
+  background-color: #315465;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -14,11 +21,10 @@
 .information-container h2 {
   font-family: var(--font-primary);
   font-weight: 700;
-  margin-bottom: 1.25rem;
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   text-align: center;
   color: var(--principal-color-2);
-  margin-bottom: 1.25rem;
+  margin-bottom: 1.5rem;
 }
 
 .information-container form {
@@ -30,12 +36,12 @@
 
 .information-container.error input {
   border: 0.125rem solid var(--error-color-1);
-  background-color: #ffe6e6;
+  background-color: var(--error-bg);
   color: var(--error-color-1);
 }
 
 .information-container.error input::placeholder {
-  color: var(--error-color-1);
+  color: var(--error-color-2);
 }
 
 .error-message {
@@ -43,5 +49,31 @@
   font-size: 0.85rem;
   margin-top: 0.313rem;
   padding-left: 0.313rem;
-  text-align: left;
+}
+
+::ng-deep .information-container app-location-search .nearby-search {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.625rem;
+  width: 100%;
+}
+
+::ng-deep .information-container app-location-search .nearby-search input {
+  padding-left: 0.625rem !important;
+  padding-right: 0.625rem !important;
+  height: 2.188rem !important;
+  font-size: 0.875rem !important;
+  font-family: var(--font-primary) !important;
+  background-color: var(--secundary-color-2) !important;
+  border-radius: 0.5rem !important;
+  border: none !important;
+  color: var(--secundary-color-3) !important;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+::ng-deep .information-container app-location-search .nearby-search input::placeholder {
+  font-size: 0.875rem !important;
+  font-family: var(--font-primary) !important;
+  color: var(--text-disabled) !important;
 }

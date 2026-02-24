@@ -6,60 +6,44 @@
 }
 
 .input-container select {
-    background: var(--bg-input);
-  border: 0.063rem solid var(--border-color);
-  border-radius: 0.5rem;
-  padding: 0.625rem 0.75rem;
-  color: var(--secundary-color-1);
-  font-size: 0.95rem;
-  outline: none;
-  transition: border-color 0.2s ease, background 0.2s ease;
+  padding-left: 0.625rem;
+  padding-right: 2.188rem; 
+  height: 2.188rem;
+  font-size: 0.875rem;
+  font-family: var(--font-primary);
   width: 100%;
+  background-color: var(--secundary-color-2);
+  border-radius: 0.5rem;
+  outline: none;
+  border: none;
+  color: var(--secundary-color-3); 
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
 }
 
 .input-container option {
-  background: var(--bg-input);
-  border: 0.063rem solid var(--border-color);
-  border-radius: 0.5rem;
-  padding: 0.625rem 0.75rem;
-  color: var(--secundary-color-1);
-  font-size: 0.95rem;
-  outline: none;
-  transition: border-color 0.2s ease, background 0.2s ease;
-  width: 100%;
+  background-color: var(--text-white);
+  color: var(--secundary-color-3);
+  font-size: 0.875rem;
 }
-
-.input-container option {
-  background-color: rgba(0, 0, 0, 0.8); 
-  color: var(--secundary-color-1);
-  font-size: 0.95rem;
-}
-
-
 
 .input-container .material-icons {
   position: absolute;
-  right: 0.625rem;
+  right: 0.625rem; 
   font-size: 1.25rem;
-  color: var(--secundary-color-1);
-  pointer-events: none;
+  color: var(--secundary-color-3);
+  pointer-events: none; 
 }
 
 .input-container.error select {
   border: 0.125rem solid var(--error-color-1);
-  background-color: var(--bg-input);
-  color: var(--error-color-1);
-}
-
-.input-container.error select::placeholder {
-  color:  var(--error-color-1);
+  background-color: var(--error-bg);
+  color: var(--error-color-1); 
 }
 
 .error-message {
-  color:  var(--error-color-1);
+  color: var(--error-color-1);
   font-size: 0.85rem;
   margin-top: 0.313rem;
   padding-left: 0.313rem;
