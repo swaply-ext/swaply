@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { SkillCardComponent } from '../skill-card/skill-card.component';
@@ -18,7 +18,20 @@ export class InterestsPanelComponent {
 
   open = true;
 
+  sortedSkills: Array<SkillInput> = [];
+
   constructor(private router: Router) {}
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['InterestsInput']) {
+      this.sortSkills();
+    }
+  }
+
+  private sortSkills(){
+    this.sortedSkills = [...this.InterestsInput].sort((a,b) => b.level -a.level);
+  }
+
 
   togglePanel() {
     this.open = !this.open;

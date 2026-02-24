@@ -14,7 +14,7 @@ body {
   align-items: flex-start;
   gap: 2rem;
   position: relative;
-  border: 0.063rem solid var(--border-color);
+  border: var(--shadow-large);
   background-color: var(--bg-panel);
 }
 
