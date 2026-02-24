@@ -54,7 +54,7 @@ public interface UserRepository extends CosmosRepository<User, String> {
     List<User> findUsersBySingleSkillId(@Param("skillId") String skillId);
 
     // Busqueda por multiples skills "esta es para el filtro"
-    @Query(value = "SELECT * FROM c WHERE c.type = 'user' AND EXISTS(SELECT VALUE s FROM s IN c.skills WHERE ARRAY_CONTAINS(@skillIds, s.id))")
+    @Query(value = "SELECT TOP 10 * FROM c WHERE c.type = 'user' AND EXISTS(SELECT VALUE s FROM s IN c.skills WHERE ARRAY_CONTAINS(@skillIds, s.id))")
     List<User> findUsersByMultipleSkillIds(@Param("skillIds") List<String> skillIds);
 
     // Se obtiene unicamente el nombre de usuario a partir de una ID

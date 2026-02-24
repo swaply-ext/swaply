@@ -16,6 +16,7 @@ public class UserSwapDTO {
     private String username;
     private String profilePhotoUrl;
     private String location;
+    private boolean premium;
 
     // Info de la Skill principal (Match)
     private String skillName;     
