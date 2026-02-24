@@ -140,8 +140,7 @@ public class SwapService {
         }
         if (status.equalsIgnoreCase("ACCEPTED")) {
             newStatus = Swap.Status.ACCEPTED;
-            System.out.println(currentUserId + " " + senderSwap.getRequestedUserId());
-            String msj = "Acabo de aceptar tu intercambio de " + senderSwap.getSkill() + " por " + senderSwap.getInterest() + ". ¡Empecemos a intercambiar!";
+            String msj = "Acabo de aceptar tu intercambio de " + senderSwap.getSkill() + " por " + senderSwap.getInterest() + ". ¡Empecemos a aprender!";
             handleChatOnAccept(currentUserId, senderSwap.getRequestedUserId(), msj);
         } else {
             newStatus = Swap.Status.DENIED;
@@ -163,7 +162,6 @@ public class SwapService {
         } else {
             String currentUsername = userService.getUserByID(currentUserId).getUsername();
             String otherUsername = userService.getUserByID(otherUserId).getUsername();
-            System.out.println("Creando chat entre " + currentUsername + " y " + otherUsername);
             chatRoom = chatService.createChatRoom(currentUserId, otherUsername);
         }
 
