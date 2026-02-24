@@ -58,9 +58,13 @@ export class LoginFormComponent {
       },
       error: (err: HttpErrorResponse) => {
         if (err.status == 401) {
-          this.router.navigate(['/error-auth']);
+          this.router.navigate(['/error'],{
+          state: {type: 'login'}
+        });
         } else {
-          this.router.navigate(['/error-auth']);
+          this.router.navigate(['/error'],{
+            state: {type: 'login'}
+          });
         }
       }
     });

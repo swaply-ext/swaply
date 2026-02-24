@@ -3,8 +3,8 @@
     <span class="material-icons">close</span>
   </div>
 
-  <h2>ERROR 404</h2>
-  <p>Página no encontrada</p>
+  <h2>{{ payload.title }}</h2>
+  <p>{{ payload.msg }}</p>
 
   <div class="button-wrapper">
     <button class="continue-button" (click)="backToHome()">Volver al inicio</button>
