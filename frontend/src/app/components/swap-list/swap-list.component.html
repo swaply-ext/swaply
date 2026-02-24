@@ -20,19 +20,19 @@
 
         <div class="interchange-card-wrapper">
           <h3 class="section-title">Habilidad a aprender</h3>
+          @let otherUser = getOtherProfile(swap.requestedUserId);
 
           <div class="skill-card">
-            <img [src]="getImageToLearn(swap)" [alt]="swap.interest" class="activity-img">
+            <img [src]="getImageToTeach(swap)" [alt]="swap.skill" class="activity-img">
 
             <div class="card-details">
-              <h4>Clase de {{ swap.interest }}</h4>
+              <h4>Clase de {{ swap.skill }}</h4>
 
-              @let otherUser = getOtherProfile(swap.requestedUserId);
 
               <div class="badges-group">
                 <div class="info-badge">
                   <span class="material-symbols-outlined badge-icon">location_on</span>
-                  <span class="badge-text">{{ otherUser?.location?.displayName }}</span>
+                  <span class="badge-text">{{ validateInputsService.formatLocation(otherUser?.location?.displayName) || 'Sin ubicación'}}</span>
                 </div>
 
                 @if (otherUser) {
@@ -57,15 +57,15 @@
           <h3 class="section-title">Habilidad a enseñar</h3>
 
           <div class="skill-card">
-            <img [src]="getImageToTeach(swap)" [alt]="swap.skill" class="activity-img">
+            <img [src]="getImageToLearn(swap)" [alt]="swap.skill" class="activity-img">
 
             <div class="card-details">
-              <h4>Clase de {{ swap.skill }}</h4>
+              <h4>Clase de {{ swap.interest }}</h4>
 
               <div class="badges-group">
                 <div class="info-badge">
                   <span class="material-symbols-outlined badge-icon">location_on</span>
-                  <span class="badge-text">{{ currentUser()?.location?.displayName }}</span>
+                  <span class="badge-text">{{ validateInputsService.formatLocation(currentUser()?.location?.displayName) || 'Sin ubicación'}}</span>
                 </div>
                 
                 <div class="info-badge user-link-container" [routerLink]="['/user', currentUser()?.username]"

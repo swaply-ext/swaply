@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal, computed } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal, computed, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
@@ -49,6 +49,10 @@ export class HomeComponent implements OnInit {
   private locationService = inject(LocationService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+
+  // Referencias a los componentes hijos
+  @ViewChild('skillSearch') skillSearchComponent?: SkillSearchComponent;
+  @ViewChild('filterSkills') filterSkillsComponent?: FilterSkillsComponent;
 
   // --- Estado y Señales ---
   private myUserId: string = '';
@@ -259,5 +263,33 @@ export class HomeComponent implements OnInit {
     else if (name.includes('digital')) { filename = 'digital_entertainment.jpg'; folder = 'leisure'; }
 
     return filename ? `assets/photos_skills/${folder}/${filename}` : undefined;
+  }
+  
+  // Método para limpiar el search cuando se usa el filtro
+  clearSearch(): void {
+    this.skillSearchComponent?.clear();
+  }
+
+  // Método para limpiar el filtro cuando se usa el search
+  clearFilter(): void {
+    this.filterSkillsComponent?.clear();
+  }
+
+  // Handler para cuando se selecciona una habilidad del search
+  onSkillSelected(skillId: string): void {
+    // Solo clear el filtro si hay un skillId válido (no vacío)
+    if (skillId && skillId.trim() !== '') {
+      this.clearFilter();
+    }
+    this.performMatchSearch(skillId);
+  }
+
+  // Handler para cuando se selecciona un filtro
+  onFilterSelected(filterIds: string): void {
+    // Solo clear el search si hay un filtro válido (no vacío)
+    if (filterIds && filterIds.trim() !== '') {
+      this.clearSearch();
+    }
+    this.performMatchSearch(filterIds);
   }
 }
