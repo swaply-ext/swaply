@@ -265,20 +265,8 @@ export class HomeComponent implements OnInit {
     return filename ? `assets/photos_skills/${folder}/${filename}` : undefined;
   }
   
-  goToSwap(card: HomeCard) { 
-    if (!card.username) return;
-    this.router.navigate(['/swap', card.username], {
-      queryParams: { skillName: card.skillName }
-    });
-  }
-
-  hasIntercambio = signal(true);
-  isConfirmed = signal(false);
   skillToLearn = signal({ titulo: 'Clase de Guitarra Acústica', img: 'assets/photos_skills/music/guitar.jpg', hora: 'Hoy, 18:00h', via: 'Vía Napoli 5' });
   skillToTeach = signal({ titulo: 'Taller de Manualidades', img: 'assets/photos_skills/leisure/crafts.jpg', hora: 'Hoy, 18:00h', via: 'Vía Napoli 5' });
-
-  toggleIntercambio() { this.hasIntercambio.update(v => !v); this.isConfirmed.set(false); }
-  toggleConfirmation() { this.isConfirmed.update(v => !v); }
 
   // Método para limpiar el search cuando se usa el filtro
   clearSearch(): void {
