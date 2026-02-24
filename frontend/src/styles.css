@@ -55,13 +55,21 @@
   --star-color: #f1c40f;
 
   /* --- SOMBRAS --- */
-  --shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
   --shadow-large: 0 0.625rem 0.938rem -0.188rem rgba(0, 0, 0, 0.1); /* Sombra más grande - NUEVO */
 }
 
+
+.page-wrapper {
+  width: 80%; 
+  /* max-width: 75rem; */
+  margin: 0 auto;
+  display: block;
+} 
+
 body {
   font-family: var(--font-primary);
-  background: linear-gradient(to bottom, #012534 0%, #00839e 100%);
+  background: var(--background-gradient);
   min-height: 100vh;
   margin: 0;
 }

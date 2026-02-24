@@ -721,7 +721,7 @@ body {
 }
 
 .footer-copyright {
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    border-top: 0.0625rem solid rgba(255, 255, 255, 0.2);
     padding-top: 2rem;
     margin-top: 2rem;
     text-align: center;

@@ -1,6 +1,7 @@
 @if(profileViewData && skills && interests){
 <app-app-navbar></app-app-navbar>
 <body>
+  <div class="page-wrapper">
     <app-profile-info [profileData]="profileViewData"></app-profile-info>
 
     <div class="profile-panels-container">
@@ -14,5 +15,6 @@
         [InterestsInput]="interests"
       ></app-interests-panel>
     </div>
+  </div>
   </body>
 }

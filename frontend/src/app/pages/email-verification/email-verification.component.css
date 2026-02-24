@@ -1,11 +1,11 @@
 .verification-container {
-  max-width: 500px;
+  max-width: 31.25rem;
   width: 90%;
-  margin: 200px auto;
-  padding: 20px;
-  border: 1px solid #315465;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  margin: 12.5rem auto;
+  padding: 1.25rem;
+  border: 0.0625rem solid #315465;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.25rem 0.625rem rgba(0,0,0,0.1);
   background-color: #315465;
   display: flex;
   flex-direction: column;
@@ -20,7 +20,7 @@
   font-size: 2rem;
   text-align: center;
   color: var(--principal-color-2);
-  margin-bottom: 20px;
+  margin-bottom: 1.25rem;
 }
 
 .verification-container p {
@@ -28,58 +28,51 @@
   font-size: 1rem;
   text-align: center;
   color: #fcfcfc;
-  margin-bottom: 20px;
+  margin-bottom: 1.25rem;
 }
 
 .code-inputs {
   display: flex;
-  gap: 10px;
+  gap: 0.625rem;
   flex-wrap: wrap;
   justify-content: center;
-  margin-bottom: 30px;
+  margin-bottom: 1.875rem;
 }
 
 .code-inputs input {
-  width: 50px;
-  height: 50px;
+  width: 3.125rem;
+  height: 3.125rem;
   font-size: 1.5rem;
   text-align: center;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   outline: none;
   border: none;
   background-color: #bfbfbf;
   transition: all 0.2s;
 }
 
-/* .code-inputs input:focus {
-  box-shadow: 0 0 5px #2fa16f;
-  background-color: #e6f4ea;
-} */
-
 button {
-  padding: 12px 25px;
+  padding: 0.75rem 1.5625rem;
   font-size: 1rem;
   cursor: pointer;
   background-color: #2fa16f;
   color: white;
   border: none;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   transition: background-color 0.2s, transform 0.1s;
 }
 
 .button-group {
-  position: relative; /* referencia para los elementos absolutos */
+  position: relative;
   width: 100%;
-  height: 50px; /* altura según tu botón */
+  height: 3.125rem;
 }
 
 #button-verify {
   position: absolute;
-  left: 50%;       /* mueve el borde izquierdo al centro */
-  transform: translateX(-50%); /* centra el botón respecto a su propio ancho */
+  left: 50%;
+  transform: translateX(-50%);
 }
-
-
 
 button:hover {
   background-color: #27925a;
@@ -87,24 +80,24 @@ button:hover {
 
 .back-button {
   position: absolute;
-  left: 120px; 
-  top: 40%;   
-  transform: translateY(-50%); 
+  left: 7.5rem;
+  top: 40%;
+  transform: translateY(-50%);
   background-color: transparent !important;
-  color: var(--principal-color-2); 
+  color: var(--principal-color-2);
   font-size: 1.5rem;
   padding: 0.6rem 0.8rem;
   font-weight: bold;
   cursor: pointer;
-  border-right: none; 
-  height: 100%; 
+  border-right: none;
+  height: 100%;
 }
 
 .back-button::before {
-  content: "<"; 
+  content: "<";
   margin-right: 0.3rem;
-  color: var(--principal-color-2); 
-  font-weight: bold; 
+  color: var(--principal-color-2);
+  font-weight: bold;
   font-size: x-large;
 }
 
@@ -116,40 +109,40 @@ button:hover {
   font-size: 1rem;
   text-align: center;
   min-height: 1.2em;
-  margin-top: 15px;
+  margin-top: 0.9375rem;
 }
 
 .code-inputs.error input {
-  border: 2px solid red;
+  border: 0.125rem solid red;
   background-color: #ffe6e6;
-  color: red; 
+  color: red;
 }
 
 .code-inputs.error input::placeholder {
-  color: #ff6666; 
+  color: #ff6666;
 }
 
 .error-message {
   color: #ff4d4f;
   font-size: 0.85rem;
-  margin-top: 5px;
-  padding-left: 5px;
+  margin-top: 0.3125rem;
+  padding-left: 0.3125rem;
   text-align: left;
 }
 
-@media (max-width: 500px) {
+@media (max-width: 31.25rem) {
   .code-inputs input {
-    width: 45px;
-    height: 45px;
+    width: 2.8125rem;
+    height: 2.8125rem;
     font-size: 1.3rem;
   }
 
   button {
-    padding: 10px 20px;
+    padding: 0.625rem 1.25rem;
     font-size: 0.9rem;
   }
 
   .verification-container {
-    padding: 15px;
+    padding: 0.9375rem;
   }
 }

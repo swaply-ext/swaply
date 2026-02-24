@@ -1,10 +1,10 @@
 .login-container {
-  width: 350px;
-  margin: 0px auto;
-  padding: 40px 20px 20px 20px;
-  border: 1px solid #315465;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 21.875rem;
+  margin: 0rem auto;
+  padding: 2.5rem 1.25rem 1.25rem 1.25rem;
+  border: 0.0625rem solid #315465;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.1);
   background-color: #315465;
   display: flex;
   flex-direction: column;
@@ -17,10 +17,10 @@
 }
 
 .login-logo {
-  width: 200px;
+  width: 12.5rem;
   height: auto;
-  margin-bottom: 70px;
-  margin-top: 70px;
+  margin-bottom: 4.375rem;
+  margin-top: 4.375rem;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -28,13 +28,11 @@
   -webkit-user-drag: none;
 }
 
-
-
 .login-container h2 {
   font-family: var(--font-primary);
   font-weight: 700;
-  margin-bottom: 40px;
-  font-size: 24px;
+  margin-bottom: 2.5rem;
+  font-size: 1.5rem;
   text-align: center;
   color: var(--principal-color-2);
 }
@@ -43,34 +41,33 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  border-radius: 8px;
+  border-radius: 0.5rem;
 }
 
 .login-container div {
-  margin: 2px 0;
+  margin: 0.125rem 0;
   display: flex;
   align-items: center;
-  font-size: 12px;
+  font-size: 0.75rem;
   color: #fcfcfc;
   cursor: pointer;
   text-align: center;
-
 }
 
 .login-container.error input {
- border: 2px solid red;
+  border: 0.125rem solid red;
   background-color: #ffe6e6;
-  color: red; 
+  color: red;
 }
 
 .login-container.error input::placeholder {
-  color: #ff6666; 
+  color: #ff6666;
 }
 
 .error-message {
   color: #ff4d4f;
   font-size: 0.85rem;
-  margin-top: 5px;
-  padding-left: 5px;
+  margin-top: 0.3125rem;
+  padding-left: 0.3125rem;
   text-align: left;
 }

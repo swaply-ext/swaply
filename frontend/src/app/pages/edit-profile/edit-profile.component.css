@@ -1,7 +1,12 @@
+:host {
+  display: block;
+  width: 80%;
+  max-width: 75rem;
+  margin: 0 auto;
+}
+
 body {
-  min-height: 100vh;
-  margin: 0;
-  background: linear-gradient(to bottom, #012534 0%, #00839E 100%);
+margin: 0;
 }
 
 .profile-page-container {
@@ -12,6 +17,7 @@ body {
   width: 100%;
   margin: 0 auto;
   padding: 1.25rem;
+  
 }
 
 app-profile-info {

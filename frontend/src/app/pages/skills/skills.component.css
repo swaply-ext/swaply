@@ -2,7 +2,7 @@
 .skills-container {
   flex: 1;
   padding: 1.5rem 2rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border:  0.0625rem solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.4);
   border-radius: 1.2rem;
   background-color: var(--bg-panel);
@@ -44,7 +44,7 @@ p {
 .category-title {
   font-size: 1.2rem;
   font-weight: bold;
-  letter-spacing: 1px;
+  letter-spacing:  0.0625rem;
 }
 
 /* Flecha de rotación */
@@ -67,7 +67,7 @@ p {
 }
 
 .chips-container.open {
-  max-height: 2000px; /* Suficiente para expandir */
+  max-height: 125rem; /* Suficiente para expandir */
   padding: 2rem 1rem;
 }
 
@@ -81,7 +81,7 @@ p {
 .save-btn {
   background-color: transparent;
   color: var(--principal-color-2);
-  border: 2px solid var(--principal-color-2);
+  border: 0.125rem solid var(--principal-color-2);
   padding: 0.6rem 2.5rem;
   border-radius: 2rem;
   font-size: 1rem;
@@ -93,7 +93,7 @@ p {
 
 .save-btn:hover {
   background-color: var(--principal-color-2);
-  box-shadow: 0 0 15px var(--principal-color-2);
+  box-shadow:0 0 0.9375rem var(--principal-color-2);
   color: var(--principal-color-1);
 }
 

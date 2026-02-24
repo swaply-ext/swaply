@@ -1,20 +1,20 @@
 :host {
   display: flex;
-  justify-content: center;  /* centra horizontalmente */
-  align-items: center;      /* centra verticalmente */
+  justify-content: center;
+  align-items: center;
   min-height: 100vh;
   font-family: 'Quicksand', sans-serif;
   margin: 0;
-  background: linear-gradient(to bottom, #012534 0%, #00839E 100%); /* fondo degradado */
+  background: linear-gradient(to bottom, #012534 0%, #00839E 100%);
 }
 
 .confirmation-container {
   background: #356B8A;
   padding: 3rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  border-radius: 0.75rem;
+  box-shadow: 0 0.25rem 0.9375rem rgba(0,0,0,0.1);
   text-align: center;
-  max-width: 450px;
+  max-width: 28.125rem;
   width: 90%;
   display: flex;
   flex-direction: column;
@@ -23,14 +23,14 @@
 }
 
 .icon-circle {
-  width: 140px;
-  height: 140px;
-  background-color: var(--principal-color-2); /* verde */
+  width: 8.75rem;
+  height: 8.75rem;
+  background-color: var(--principal-color-2);
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: -120px;          /* sobresale hacia arriba */
+  margin-top: -7.5rem;
   margin-bottom: 1.5rem;
 }
 
@@ -42,12 +42,12 @@
 .confirmation-container p {
   color: #fff;
   font-size: 1rem;
-  margin-top: 0.5rem;   /* espacio entre párrafos */
+  margin-top: 0.5rem;
   margin-bottom: 0;
   text-align: center;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 30rem) {
   .confirmation-container {
     padding: 1.5rem;
     width: 90%;
