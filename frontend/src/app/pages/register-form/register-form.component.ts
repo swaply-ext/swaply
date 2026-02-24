@@ -7,6 +7,8 @@ import { ConfirmEmailInputComponent } from '../../components/confirm-email-input
 import { PasswordInputComponent } from '../../components/password-input/password-input.component';
 import { ConfirmPasswordInputComponent } from '../../components/confirm-password-input/confirm-password-input.component';
 import { TermsCheckboxComponent } from '../../components/terms-checkbox/terms-checkbox.component';
+import { TermsConditionsComponent } from '../terms-conditions/terms-conditions.component';
+import { PrivacyPolicyComponent } from '../privacy-policy/privacy-policy.component';
 import { ActionButtonsComponent } from '../../components/action-buttons/action-buttons.component';
 import { UsernameInputComponent } from "../../components/username-input/username-input.component";
 import { RegisterDataService } from '../../services/register-data.service';
@@ -30,7 +32,9 @@ interface User {
     ConfirmPasswordInputComponent,
     TermsCheckboxComponent,
     ActionButtonsComponent,
-    UsernameInputComponent
+    UsernameInputComponent,
+    TermsConditionsComponent,
+    PrivacyPolicyComponent
   ],
   templateUrl: './register-form.component.html',
   styleUrls: ['./register-form.component.css']
@@ -45,6 +49,8 @@ export class RegisterFormComponent {
   showError = false;
   hasErrorAll = false;
   message = '';
+  showTermsModal = false;
+  showPrivacyModal = false;
 
   constructor(
     private router: Router,

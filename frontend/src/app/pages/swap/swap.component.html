@@ -21,7 +21,7 @@
             <span class="material-symbols-outlined location-icon"
               >location_on</span
             >
-            <span class="location-text">{{ me.location.displayName }}</span>
+            <span class="location-text">{{ validateInputsService.formatLocation(me.location.displayName) }}</span>
           </div>
 
           <div class="username">
@@ -53,7 +53,7 @@
               >location_on</span
             >
             <span class="location-text">{{
-              targetSkill.location || targetUser()?.location
+              validateInputsService.formatLocation(targetUser()?.location?.displayName)
             }}</span>
           </div>
           <div class="target-username"  [routerLink]="['/user', targetUser()?.username]">

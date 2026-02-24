@@ -16,9 +16,9 @@
           @if(hasSearched()) { Resultados de búsqueda } @else { Intercambios Cerca de Ti }
         </h2>
         <div class="nearby-actions">
-          <app-skill-search style="width: auto; display: block;"
-            (skillSelected)="performMatchSearch($event)"></app-skill-search>
-          <app-filter-skills (filterChange)="performMatchSearch($event)"></app-filter-skills>
+          <app-skill-search #skillSearch style="width: auto; display: block;"
+            (skillSelected)="onSkillSelected($event)"></app-skill-search>
+          <app-filter-skills #filterSkills (filterChange)="onFilterSelected($event)"></app-filter-skills>
         </div>
       </div>
 
@@ -79,9 +79,6 @@
             <div class="card-footer">
               <span class="location" [class.nearby]="card.distance === 'Cerca de ti'">
                 <span class="material-symbols-outlined card-icon">location_on</span> {{ card.distance }}km
-              </span>
-              <span class="rating">
-                <span class="material-symbols-outlined card-icon">star</span> {{ card.rating }}
               </span>
             </div>
           </div>

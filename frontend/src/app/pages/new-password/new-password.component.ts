@@ -35,10 +35,9 @@ export class NewPasswordComponent implements OnInit {
 
   ngOnInit() {
     this.token = this.activatedRoute.snapshot.queryParams['token'];
-    
+
     console.log('Token recuperado:', this.token);
     if (!this.token) {
-      alert('No token available. Vuelve a solicitar el mail.');
       this.router.navigate(['/recovery-password']);
       return;
     }

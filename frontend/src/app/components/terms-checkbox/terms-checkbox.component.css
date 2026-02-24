@@ -23,3 +23,12 @@
   cursor: pointer;
   text-align: center;
 }
+
+.legal-link {
+  color: #8fd3f4; 
+  text-decoration: underline;
+  cursor: pointer;
+}
+.legal-link:hover {
+  color: #fff;
+}

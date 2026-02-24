@@ -1,6 +1,7 @@
 package com.swaply.backend.application.account.service;
 
 import com.swaply.backend.application.account.dto.EditProfileDTO;
+import com.swaply.backend.application.account.dto.NavNarInformationDTO;
 import com.swaply.backend.application.account.dto.PersonalInfoDTO;
 import com.swaply.backend.application.account.dto.ProfileDataDTO;
 import com.swaply.backend.application.account.dto.PublicProfileDTO;
@@ -8,6 +9,7 @@ import com.swaply.backend.application.account.dto.SkillsDTO;
 import com.swaply.backend.application.auth.exception.UserAlreadyExistsException;
 import com.swaply.backend.shared.UserCRUD.UserService;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
+import com.swaply.backend.shared.chat.service.ChatService;
 import com.swaply.backend.application.account.AccountMapper;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -18,14 +20,16 @@ public class AccountService /* implements UserRepository */ {
 
     private final UserService userService;
     private final AccountMapper mapper;
+    private final ChatService chatService;
 
     @Value("${frontend.reset-password-url}")
     private String resetPasswordBaseUrl;
 
     public AccountService(UserService userService,
-            AccountMapper mapper) {
+            AccountMapper mapper, ChatService chatService) {
         this.userService = userService;
         this.mapper = mapper;
+        this.chatService = chatService;
     }
 
     public void UpdatePersonalInfo(String userId, PersonalInfoDTO dto) {
@@ -56,6 +60,16 @@ public class AccountService /* implements UserRepository */ {
     public EditProfileDTO getEditProfileData(String userId) {
         UserDTO userDTO = userService.getUserByID(userId);
         return mapper.editDatafromUserDTO(userDTO);
+    }
+
+    public NavNarInformationDTO navBarInformation(String userId){
+        UserDTO userDTO = userService.getUserByID(userId);
+        NavNarInformationDTO dto = mapper.navBarFromUserDTO(userDTO);
+        Integer swapCount = userDTO.getSwaps().size();
+        dto.setNotificationCount(swapCount);
+        Integer unreadCount = chatService.getTotalUnreadMessages(userId);
+        dto.setMsgCount(unreadCount);
+        return dto;
     }
 
     public void updateEditProfileData(String userId, EditProfileDTO dto) {

@@ -1,29 +1,34 @@
 <div class="profile-card">
-    <button *ngIf="!isPublic"class="material-icons edit-icon" (click)="goToEdit()">edit</button>
-  <img [src]="profileData.profilePhotoUrl || 'assets/default-image.jpg'" alt="User avatar" class="avatar" />
+  <button
+    *ngIf="!isPublic"
+    class="material-icons edit-icon"
+    (click)="goToEdit()"
+  >
+    edit
+  </button>
+  <img
+    [src]="profileData.profilePhotoUrl || 'assets/default-image.jpg'"
+    alt="User avatar"
+    class="avatar"
+  />
 
   <div class="info">
     <h2 class="name">{{ profileData.fullName }}</h2>
 
     <div class="username-row">
       <p class="username">{{ "@" + profileData.username }}</p>
-      <span class="material-icons share-icon">share</span>
+      <button class="share-btn" (click)="share()">
+        <span class="material-icons share-icon">share</span>
+      </button>
+      @if (showToast) {
+        <div class="copyed-notification">Enlace copiado al portapapeles 📋</div>
+      }
     </div>
 
-    <p *ngIf="profileData.location != null" class="location">{{ profileData.location.displayName }}</p>
+    <p *ngIf="profileData.location != null" class="location">
+      {{ profileData.location.displayName }}
+    </p>
 
-    <div class="rating">
-      <i class="material-icons" *ngFor="let starNum of starsArray">
-        {{
-          3.8 >= starNum
-            ? "star"
-            : 3.8 >= starNum - 0.5
-            ? "star_half"
-            : "star_border"
-        }}
-      </i>
-      <span>3.8</span>
-    </div>
   </div>
 
   <div class="right-block">

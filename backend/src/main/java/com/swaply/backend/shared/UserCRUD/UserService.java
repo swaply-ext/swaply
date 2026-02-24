@@ -153,4 +153,24 @@ public class UserService {
     public boolean existsUserByLocation(String location) {
         return repository.existsUserByLocation(location);
     }
+
+    //metodo oara activar el premium de un usuario
+    public void activatePremium(String userId) {
+        User user = repository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado con ID: " + userId));
+        
+        user.setPremium(true);
+        repository.save(user);
+}
+
+    public User findUserEntityById(String id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado con ID: " + id));
+    }
+
+    public void updateStripeCustomerId(String userId, String stripeCustomerId) {
+        User user = findUserEntityById(userId);
+        user.setStripeCustomerId(stripeCustomerId);
+        repository.save(user);
+    }
 }
