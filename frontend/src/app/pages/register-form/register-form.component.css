@@ -1,10 +1,10 @@
 .register-container {
-  width: 21.875rem;             
-  margin: 3.125rem auto;        
-  padding: 1.25rem;            
-  border: 0.0625rem solid #315465;   
-  border-radius: 0.5rem;       
-  box-shadow: 0 0.25rem 0.625rem rgba(0,0,0,0.1); 
+  width: 350px;             
+  margin: 50px auto;        
+  padding: 20px;            
+  border: 1px solid #315465;   
+  border-radius: 8px;       
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
   background-color: #315465;   
   display: flex;
   flex-direction: column;
@@ -14,22 +14,22 @@
 .register-container h2 {
   font-family: var(--font-primary);
   font-weight: 700;
-  margin-bottom: 1.25rem;
-  font-size: 1.5rem;
+  margin-bottom: 20px;
+  font-size: 24px;
   text-align: center;
   color: var(--principal-color-2);
-  margin-bottom: 1.25rem;
+  margin-bottom: 20px;
 }
 
 .register-container form {
   width: 100%;              
   display: flex;
   flex-direction: column;
-  border-radius: 0.5rem;
+  border-radius: 8px;
 }
 
 .register-container.error input {
-  border: 0.125rem solid red;
+ border: 2px solid red;
   background-color: #ffe6e6;
   color: red; 
 }
@@ -41,6 +41,6 @@
 .error-message {
   color: #ff4d4f;
   font-size: 0.85rem;
-  margin-top: 0.3125rem;
-  padding-left: 0.3125rem;
+  margin-top: 5px;
+  padding-left: 5px;
 }
