@@ -1,7 +1,7 @@
 package com.swaply.backend.application.account.service;
 
 import com.swaply.backend.application.account.dto.EditProfileDTO;
-import com.swaply.backend.application.account.dto.NavNarInformationDTO;
+import com.swaply.backend.application.account.dto.NavBarInformationDTO;
 import com.swaply.backend.application.account.dto.PersonalInfoDTO;
 import com.swaply.backend.application.account.dto.ProfileDataDTO;
 import com.swaply.backend.application.account.dto.PublicProfileDTO;
@@ -62,9 +62,9 @@ public class AccountService /* implements UserRepository */ {
         return mapper.editDatafromUserDTO(userDTO);
     }
 
-    public NavNarInformationDTO navBarInformation(String userId){
+    public NavBarInformationDTO navBarInformation(String userId){
         UserDTO userDTO = userService.getUserByID(userId);
-        NavNarInformationDTO dto = mapper.navBarFromUserDTO(userDTO);
+        NavBarInformationDTO dto = mapper.navBarFromUserDTO(userDTO);
         Integer swapCount = userDTO.getSwaps().size();
         dto.setNotificationCount(swapCount);
         Integer unreadCount = chatService.getTotalUnreadMessages(userId);

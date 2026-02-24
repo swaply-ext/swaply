@@ -29,14 +29,12 @@ export class AppNavbarComponent implements OnInit {
 
   ngOnInit(): void {
     this.renderer.addClass(document.body, 'with-navbar');
-    this.accountService.getProfileData().subscribe({
-      next: (user) => {
+    this.accountService.getNavbarData().subscribe({
+      next: (navBarInformation) => {
         this.dropdownMenuData = {
-
-          //Aquí deberia de llegar un DTO específico co nestso campos, actualmente se utiliza un DTO erroneo para hacer el apaño
-          fullName: `${user.name} ${user.surname}`,
-          username: user.username,
-          profilePhotoUrl: user.profilePhotoUrl,
+          fullName: `${navBarInformation.name} ${navBarInformation.surname}`,
+          username: navBarInformation.username,
+          profilePhotoUrl: navBarInformation.profilePhotoUrl,
           rating: 3.8
         };
       },

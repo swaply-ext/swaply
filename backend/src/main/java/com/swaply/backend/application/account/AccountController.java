@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import com.swaply.backend.shared.storage.StorageService; 
 import org.springframework.web.multipart.MultipartFile;
 import com.swaply.backend.application.account.dto.EditProfileDTO;
-import com.swaply.backend.application.account.dto.NavNarInformationDTO;
+import com.swaply.backend.application.account.dto.NavBarInformationDTO;
 import com.swaply.backend.application.account.dto.PersonalInfoDTO;
 import com.swaply.backend.application.account.dto.ProfileDataDTO;
 import com.swaply.backend.application.account.dto.PublicProfileDTO;
@@ -70,8 +70,8 @@ public class AccountController {
     }
 
     @GetMapping("/navBar")
-    public ResponseEntity<NavNarInformationDTO> getMethodName(@AuthenticationPrincipal SecurityUser SecurityUser) {
-        NavNarInformationDTO dto = service.navBarInformation(SecurityUser.getUsername());
+    public ResponseEntity<NavBarInformationDTO> getMethodName(@AuthenticationPrincipal SecurityUser SecurityUser) {
+        NavBarInformationDTO dto = service.navBarInformation(SecurityUser.getUsername());
         return ResponseEntity.ok(dto);
     }
     

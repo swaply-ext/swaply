@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class NavNarInformationDTO {
+public class NavBarInformationDTO {
     private String name;
     private String surname;
     private String username;
