@@ -2,29 +2,26 @@
   <span class="material-symbols-outlined">tune</span>
   <span class="filter-text">Filtrar</span>
 </div>
- 
+
 <div class="filter-dropdown" *ngIf="isOpen()">
- 
+  <div class="clear-button-container">
+    <button class="clear-button" (click)="reset()">Limpiar</button>
+  </div>
   <div class="category" *ngFor="let cat of categories">
- 
+
     <div class="category-header" (click)="toggleCategory(cat)">
       {{ cat.name }}
     </div>
- 
+
     <div class="subcategory" *ngIf="cat.open">
       <label *ngFor="let sub of cat.subcategories">
-        <input 
-          type="checkbox" 
-          [checked]="sub.selected" 
-          (change)="toggleSub(sub)"
-        >
+        <input type="checkbox" [checked]="sub.selected" (change)="toggleSub(sub)">
         {{ sub.name }}
       </label>
     </div>
- 
+
     <hr />
- 
+
   </div>
- 
+
 </div>
- 

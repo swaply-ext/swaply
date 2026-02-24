@@ -150,4 +150,9 @@ private skillsService = inject(SkillsService);
     });
     this.results.set([]);
   }
+  reset(): void {
+    this.clear();
+    this.filterChange.emit('');
+    this.searchSubject.next();
+  }
 }

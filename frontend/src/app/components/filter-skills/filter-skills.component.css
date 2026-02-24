@@ -129,3 +129,28 @@ hr {
   color: var(--principal-color-2);
   font-size: 0.9rem;
 }
+ 
+.clear-button-container {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border-top: none;
+  padding: 0;
+}
+ 
+.clear-button {
+  background-color: transparent;
+  border: 1px solid #3CB57C;
+  color: #3CB57C;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-weight: 500;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+ 
+.clear-button:hover {
+  background-color: #3CB57C;
+  color: white;
+}
