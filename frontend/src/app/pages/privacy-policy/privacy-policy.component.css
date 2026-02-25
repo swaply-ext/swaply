@@ -70,6 +70,14 @@
   color: var(--text-muted);
 }
 
+.action-row {
+  display: flex;
+  justify-content: flex-end; 
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: auto;
+}
+
 .btn-primary {
   background-color: var(--principal-color-2);
   color: white;
