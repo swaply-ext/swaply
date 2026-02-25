@@ -73,7 +73,6 @@ export class PersonalInformationComponent implements OnInit {
     }
 
     // --- VALIDACIONES ESTRICTAS ---
-    // El orden importa. Primero comprobamos que existan datos.
     if (!this.name || this.name.trim() === '') return this.setError('Debes introducir un nombre.');
     if (this.validateName(this.name)) return this.setError('El nombre no tiene un formato válido.');
 
@@ -84,13 +83,20 @@ export class PersonalInformationComponent implements OnInit {
     if (!this.birthDate || isNaN(this.birthDate.getTime())) return this.setError('Debes introducir una fecha de nacimiento válida.');
     if (this.isFutureDate(this.birthDate) || this.isToday(this.birthDate)) return this.setError('La fecha de nacimiento no puede ser hoy ni en el futuro.');
 
+    const userAge = this.calculateAge(this.birthDate);
+    if (userAge < 18) {
+      return this.setError('Debes tener al menos 18 años para registrarte en Swaply.');
+    } 
+    if (userAge > 120) {
+      return this.setError('Por favor, introduce una fecha de nacimiento real.');
+    }
+
     if (!this.gender || this.gender.trim() === '') return this.setError('Debes seleccionar un género.');
 
     if (!this.phone || this.phone === 0) return this.setError('Debes introducir un número de teléfono.');
     if (this.validatePhone(this.phone)) return this.setError('El número de teléfono no es válido.');
 
     if (!this.location || !this.location.displayName) return this.setError('Debes seleccionar una ubicación de la lista.');
-    // --------------------------------
 
     const personalData = {
       name: this.name,
@@ -154,6 +160,19 @@ export class PersonalInformationComponent implements OnInit {
       date.getMonth() === today.getMonth() &&
       date.getFullYear() === today.getFullYear()
     );
+  }
+
+  private calculateAge(birthDate: Date): number {
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    
+    // Si aun no a cumplido la edad minima necesaria le restamos un año
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    
+    return age;
   }
 
   private isFutureDate(date: Date): boolean {
