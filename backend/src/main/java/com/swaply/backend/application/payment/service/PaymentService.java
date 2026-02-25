@@ -40,7 +40,7 @@ public class PaymentService {
                         .setQuantity(1L)
                         .setPriceData(SessionCreateParams.LineItem.PriceData.builder()
                                 .setCurrency("eur")
-                                .setUnitAmount(500L) // el precio, es decir 5 euros
+                                .setUnitAmount(499L) // el precio, es decir 4,99 euros
                                 .setProductData(SessionCreateParams.LineItem.PriceData.ProductData.builder()
                                         .setName("Suscripción Premium Swaply")
                                         .build())

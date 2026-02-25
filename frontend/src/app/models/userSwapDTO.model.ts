@@ -8,6 +8,7 @@ export interface UserSwapDTO {
   profilePhotoUrl: string;
   location: string;
   //ESTO TIENE QUE SER UserLocation MAS ADELANTE, HAY QUE CAMBIAR EN BACKEND
+  isPremium?: boolean;
 
   skillName: string;
   skillIcon: string;

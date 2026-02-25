@@ -5,7 +5,6 @@
   width: 100%;
   font-family: 'Inter', sans-serif;
 }
-
 .navbar {
   background-color: #143F4C;
   padding: 1rem 2rem;
@@ -21,7 +20,7 @@
 }
 
 .hamburger-btn {
-  display: none; 
+  display: none;
 }
 
 .nav-logo {
@@ -33,7 +32,6 @@
   height: 2.75rem;
   width: auto;
 }
-
 .nav-menu {
   display: flex;
   flex-grow: 1;
@@ -43,7 +41,7 @@
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 2rem; 
+  gap: 2rem;
   margin-left: 2rem;
 }
 
@@ -86,7 +84,7 @@
 .nav-search input {
   width: 100%;
   padding: 0.6rem 1rem 0.6rem 2.8rem;
-  border-radius: 9999px; 
+  border-radius: 9999px;
   background-color: #0F2D37;
   color: #e5e7eb;
   border: 0.0625rem solid transparent;
@@ -135,8 +133,47 @@
 
 .profile-wrapper {
   position: relative;
-  display: inline-block;
+  display: flex;
+  align-items: center;
 }
+
+.logged-in-user {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.avatar-crown {
+  position: absolute;
+  top: -0.75rem;
+  right: -0.5rem;
+  font-size: 1.5rem;
+  z-index: 20;
+  transform: rotate(15deg);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
+  pointer-events: none;
+  
+  /* AQUÍ CAMBIAS EL COLOR DE LA CORONA */
+  color: #E7B210; 
+}
+
+.profile-pic {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 0.15rem solid #E7B210;
+  object-fit: cover;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-pic.premium-border {
+  /* AQUÍ CAMBIAS EL COLOR DEL BORDE PREMIUM */
+  border-color: #E7B210;
+  box-shadow: 0 0 8px rgba(3, 219, 219, 0.5);
+}
+
 
 .dropdown-overlay {
   position: absolute;
@@ -162,37 +199,26 @@
   pointer-events: auto;
 }
 
-.profile-pic {
-  width: 2.5rem;
-  aspect-ratio: 1/1;
-  border-radius: 50%;
-  border: 0.125rem solid #3CB57C; 
-  object-fit: cover;
-  cursor: pointer;
-}
-
 button {
   background-color: transparent;
   border: none;
   cursor: pointer;
 }
 
-/*ESTILOS RESPONSIVOS MENÚ HAMBURGUESA */
-
 @media (max-width: 1250px) {
   .navbar {
     padding: 0.75rem 1.5rem;
-    flex-wrap: nowrap; 
+    flex-wrap: nowrap;
     justify-content: space-between;
   }
 
- .hamburger-btn {
+  .hamburger-btn {
     display: flex;
     align-items: center;
     color: #d1d5db;
     margin-right: 1rem;
   }
-  
+
   .hamburger-btn .material-symbols-outlined {
     font-size: 2.2rem;
   }
@@ -203,14 +229,13 @@ button {
 
   .nav-menu {
     position: absolute;
-    top: 100%; 
+    top: 100%;
     left: 0;
     width: 100%;
     background-color: #143F4C;
     flex-direction: column;
     align-items: stretch;
     padding: 0 1.5rem;
-    
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
@@ -218,9 +243,9 @@ button {
   }
 
   .nav-menu.open {
-    max-height: 600px; 
+    max-height: 600px;
     padding: 1.5rem;
-    border-top: 1px solid rgba(255,255,255,0.05);
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
   }
 
   .nav-links {
@@ -235,7 +260,7 @@ button {
     font-size: 1.2rem;
     padding: 1rem 0;
     width: 100%;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   }
 
   .nav-premium {
@@ -252,13 +277,14 @@ button {
   .nav-right {
     gap: 1rem;
   }
-  
+
   .nav-icon {
     font-size: 1.6rem;
   }
-  
+
   .profile-pic {
     width: 2.25rem;
+    height: 2.25rem;
   }
 }
 
@@ -266,7 +292,7 @@ button {
   .navbar {
     padding: 0.75rem 1rem;
   }
-  
+
   .nav-right {
     gap: 0.5rem;
   }
