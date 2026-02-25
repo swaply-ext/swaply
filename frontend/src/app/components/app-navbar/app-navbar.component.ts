@@ -24,7 +24,7 @@ export class AppNavbarComponent implements OnInit {
     private router: Router,
     private accountService: AccountService, 
     private authService: AuthService,
-    private renderer: Renderer2 //autodetecta si el navbar está presente para añadir padding al body
+    private renderer: Renderer2 
   ) {}
 
   ngOnInit(): void {
@@ -32,11 +32,11 @@ export class AppNavbarComponent implements OnInit {
     this.accountService.getProfileData().subscribe({
       next: (user) => {
         this.dropdownMenuData = {
-
-          //Aquí deberia de llegar un DTO específico co nestso campos, actualmente se utiliza un DTO erroneo para hacer el apaño
           fullName: `${user.name} ${user.surname}`,
           username: user.username,
           profilePhotoUrl: user.profilePhotoUrl,
+          // Se añade la propiedad isPremium obtenida del servicio de cuenta
+          isPremium: user.isPremium,
           rating: 3.8
         };
       },
@@ -49,6 +49,7 @@ export class AppNavbarComponent implements OnInit {
   toggleDropdown() {
     this.showDropdown = !this.showDropdown;
   }
+  
   toggleMobileMenu() {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
   }
@@ -56,6 +57,7 @@ export class AppNavbarComponent implements OnInit {
   closeMobileMenu() {
     this.isMobileMenuOpen = false;
   }
+  
   isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
   }

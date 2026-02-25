@@ -22,6 +22,8 @@ public class UserSwapDTO {
     private String skillIcon;     
     private Integer skillLevel;   
     private String skillCategory;
+    @JsonProperty("isPremium")
+    private boolean premium;
 
     // Info del Match
     @JsonProperty("isSwapMatch")
