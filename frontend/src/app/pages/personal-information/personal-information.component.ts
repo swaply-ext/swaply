@@ -10,6 +10,7 @@ import { RegisterDataService } from '../../services/register-data.service';
 import { GenderInputComponent } from '../../components/gender-input/gender-input.component';
 import { LocationSearchComponent } from '../../components/location-search/location-search.component';
 import { NgIf } from '@angular/common';
+import { ValidateInputsService } from '../../services/validate-inputs.service'; 
 
 interface Location {
   placeId: string;
@@ -50,7 +51,8 @@ export class PersonalInformationComponent implements OnInit {
   constructor(
     private router: Router,
     private accountService: AccountService,
-    private registerDataService: RegisterDataService
+    private registerDataService: RegisterDataService,
+    private validateInputsService: ValidateInputsService
   ) { }
 
   ngOnInit() {
@@ -67,36 +69,33 @@ export class PersonalInformationComponent implements OnInit {
   registerData() {
     this.showError = false;
 
-    // Asegurarnos de que si hay fecha como string, la pasamos a objeto Date
     if (this.birthDate && typeof this.birthDate === 'string') {
       this.birthDate = new Date(this.birthDate);
     }
 
-    // --- VALIDACIONES ESTRICTAS ---
+    // --- USAMOS EL SERVICIO PARA LAS VALIDACIONES ---
+    
     if (!this.name || this.name.trim() === '') return this.setError('Debes introducir un nombre.');
-    if (this.validateName(this.name)) return this.setError('El nombre no tiene un formato válido.');
+    if (!this.validateInputsService.isNameValid(this.name)) return this.setError('El nombre no tiene un formato válido.');
 
     if (!this.surname || this.surname.trim() === '') return this.setError('Debes introducir un apellido.');
-    if (this.validateName(this.surname)) return this.setError('El apellido no tiene un formato válido.');
+    if (!this.validateInputsService.isSurnameValid(this.surname)) return this.setError('El apellido no tiene un formato válido.');
 
-    // Aquí evitamos que pasen si birthDate es null o "Invalid Date"
     if (!this.birthDate || isNaN(this.birthDate.getTime())) return this.setError('Debes introducir una fecha de nacimiento válida.');
-    if (this.isFutureDate(this.birthDate) || this.isToday(this.birthDate)) return this.setError('La fecha de nacimiento no puede ser hoy ni en el futuro.');
-
-    const userAge = this.calculateAge(this.birthDate);
-    if (userAge < 18) {
-      return this.setError('Debes tener al menos 18 años para registrarte en Swaply.');
-    } 
-    if (userAge > 120) {
-      return this.setError('Por favor, introduce una fecha de nacimiento real.');
+    
+    // Le pasamos la fecha al servicio como string en formato ISO
+    const dateValidation = this.validateInputsService.validateBirthDate(this.birthDate.toISOString());
+    if (!dateValidation.isValid) {
+      return this.setError(dateValidation.message); // Usamos el mensaje del propio servicio
     }
 
     if (!this.gender || this.gender.trim() === '') return this.setError('Debes seleccionar un género.');
 
     if (!this.phone || this.phone === 0) return this.setError('Debes introducir un número de teléfono.');
-    if (this.validatePhone(this.phone)) return this.setError('El número de teléfono no es válido.');
+    if (!this.validateInputsService.isPhoneValid(this.phone)) return this.setError('El número de teléfono no es válido.');
 
     if (!this.location || !this.location.displayName) return this.setError('Debes seleccionar una ubicación de la lista.');
+
 
     const personalData = {
       name: this.name,
@@ -138,60 +137,6 @@ export class PersonalInformationComponent implements OnInit {
     this.showError = true;
     this.hasErrorAll = true;
     this.message = msg;
-  }
-
-  // --- VALIDACIONES MEJORADAS ---
-
-  private validateName(name: string): boolean {
-    const minLength = 3;
-    const maxLength = 30;
-    const requirements = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s'-]+$/;
-
-    if (name.length < minLength) return true;
-    if (name.length > maxLength) return true;
-    if (!requirements.test(name)) return true;
-    return false;
-  }
-
-  private isToday(date: Date): boolean {
-    const today = new Date();
-    return (
-      date.getDate() === today.getDate() &&
-      date.getMonth() === today.getMonth() &&
-      date.getFullYear() === today.getFullYear()
-    );
-  }
-
-  private calculateAge(birthDate: Date): number {
-    const today = new Date();
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-    
-    // Si aun no a cumplido la edad minima necesaria le restamos un año
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
-    
-    return age;
-  }
-
-  private isFutureDate(date: Date): boolean {
-    const today = new Date();
-    // Ponemos la hora de hoy a cero para que compare solo días
-    today.setHours(0, 0, 0, 0); 
-    return date > today;
-  }
-
-  private validatePhone(phone: number): boolean {
-    const numString = phone.toString();
-    const length = 9;
-    const requirements = /^[0-9]+$/;
-    const startsCorrectly = /^[6789]/;
-
-    if (numString.length !== length) return true;
-    if (!requirements.test(numString)) return true;
-    if (!startsCorrectly.test(numString)) return true;
-    return false;
   }
 
   onLocationSelected(newLocation: Location | null): void {
