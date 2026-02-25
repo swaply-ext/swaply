@@ -24,7 +24,7 @@ public class JwtService {
 
     private static final Duration RESET_TOKEN_EXPIRATION = Duration.ofMinutes(15);
     private static final String RESET_TOKEN_TYPE = "password-reset";
-
+s
     private static final Duration SESSION_TOKEN_EXPIRATION = Duration.ofDays(7);
     private static final String SESSION_TOKEN_TYPE = "session";
 
