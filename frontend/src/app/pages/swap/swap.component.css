@@ -40,14 +40,12 @@ button {
     outline: none;
 }
 
-/* --- ANIMACIONES --- */
 @keyframes pulseGlow {
     0% { box-shadow: 0 0 0 0 rgba(60, 181, 124, 0.4); }
     70% { box-shadow: 0 0 0 0.625rem rgba(60, 181, 124, 0); }
     100% { box-shadow: 0 0 0 0 rgba(60, 181, 124, 0); }
 }
 
-/* --- CONTENEDOR DE LA PÁGINA --- */
 .swap-page-container {
     width: 100%;
     min-height: calc(100vh - 4rem); 
@@ -58,23 +56,18 @@ button {
     align-items: center;
 }
 
-/* --- CAJA PRINCIPAL DE INTERCAMBIO --- */
 .interchange-box {
     background-color: var(--bg-interchange, #011c26);
     padding: 2rem;
     border-radius: 1.5rem;
     box-shadow: 0 0.625rem 1.875rem rgba(0, 0, 0, 0.2);
-    
-    /* --- CAMBIO AQUÍ: Borde sutil y elegante en lugar del grueso --- */
-    border: 0.0625rem solid rgba(255, 255, 255, 0.1); /* 1px al 10% de opacidad */
-    
+    border: 0.0625rem solid rgba(255, 255, 255, 0.1);   
     position: relative;
     overflow: hidden;
     width: 100%;
     max-width: 65rem; 
 }
 
-/* --- LAYOUT DEL CONTENIDO --- */
 .interchange-content {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
@@ -99,7 +92,6 @@ button {
     font-weight: 600;
 }
 
-/* --- EL PUENTE (Flecha central y conector) --- */
 .arrow-container {
     display: flex;
     align-items: center;
@@ -131,7 +123,6 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
-    /* Borde sutil del color principal para el icono */
     border: 0.0625rem solid rgba(60, 181, 124, 0.3);
     box-shadow: 0 0 1.25rem rgba(60, 181, 124, 0.05);
     z-index: 1; 
@@ -147,7 +138,6 @@ button {
     user-select: none;
 }
 
-/* --- TARJETA DE HABILIDAD --- */
 .skill-card {
     display: flex;
     flex-direction: row;
@@ -210,7 +200,6 @@ button {
     line-height: 1.2;
 }
 
-/* --- BADGES / PÍLDORAS --- */
 .badges-group {
     display: flex;
     flex-direction: column;
@@ -271,7 +260,6 @@ button {
     border: 0.0625rem solid rgba(255,255,255,0.2);
 }
 
-/* --- PANELES INFERIORES (Listas de habilidades) --- */
 .panel-actions {
     display: flex;
     justify-content: center;
@@ -288,7 +276,7 @@ button {
     max-width: 100%;
 }
 
-/* --- ESTADOS VACÍOS (Listas vacías) --- */
+
 .empty-state {
     display: flex;
     flex-direction: column;
@@ -317,7 +305,6 @@ button {
     line-height: 1.4;
 }
 
-/* --- BOTONES DE ACCIÓN (Crear / Cancelar) --- */
 .btn-container {
     display: flex;
     justify-content: space-between; 
