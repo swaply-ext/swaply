@@ -32,7 +32,8 @@ body {
   padding: 0;
 }
 
-.edit-icon:hover, .share-icon:hover {
+.edit-icon:hover,
+.share-icon:hover {
   color: var(--button-hover);
 }
 
@@ -73,6 +74,42 @@ body {
   font-size: 1rem;
   margin: 0;
   font-weight: 600;
+}
+.share-btn {
+  background: none;
+  border: none;
+  color: var(--border-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.copyed-notification {
+  position: fixed;
+  bottom: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #323232;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  font-size: 0.875rem;
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
+  to {
+    bottom: 1.25rem;
+    opacity: 1;
+  }
 }
 
 .share-icon {
@@ -136,7 +173,9 @@ body {
   border-radius: 1.25rem;
   font-family: inherit;
   cursor: pointer;
-  transition: transform 0.2s, background-color 0.2s;
+  transition:
+    transform 0.2s,
+    background-color 0.2s;
   margin: 0;
   align-self: auto;
 }

@@ -8,14 +8,11 @@
 .page-container {
   display: flex;
   justify-content: center;
-  padding: 2.5rem 1rem;
-  width: 100%;
-  box-sizing: border-box;
+  padding: 1rem;
 }
 
 .content-wrapper {
-  width: 100%;
-  max-width: 56.25rem;
+  width: fit-content;
   margin: 0 auto;
 }
 

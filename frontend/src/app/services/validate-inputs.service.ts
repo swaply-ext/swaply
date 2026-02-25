@@ -113,6 +113,17 @@ export class ValidateInputsService {
     return { isValid: true, message: '' };
   }
 
+  public formatLocation(displayName: string | undefined): string {
+    if (!displayName) {
+      return '';
+    }
+    const parts = displayName.split(', ');
+    if (parts.length > 1) {
+      return `${parts[0]}, ${parts[parts.length - 1]}`;
+    }
+    return displayName;
+  }
+
   private isToday(date: Date): boolean {
     const today = new Date();
     return (

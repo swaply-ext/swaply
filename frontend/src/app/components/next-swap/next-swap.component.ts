@@ -7,6 +7,7 @@ import { RouterLink } from '@angular/router';
 import { Swap } from '../../models/swap.model';
 import { SwapProfileData} from '../../models/swap-profile-data';
 import { UserSkills } from '../../models/user-skills.model';
+import { ValidateInputsService } from '../../services/validate-inputs.service';
 
 @Component({
   selector: 'app-next-swap',
@@ -19,7 +20,8 @@ import { UserSkills } from '../../models/user-skills.model';
 export class NextSwapComponent {
   constructor(private swapService: SwapService,
     private accountService: AccountService,
-    private usersService: UsersService) { }
+    private usersService: UsersService,
+    public validateInputsService: ValidateInputsService) { }
 
   nextSwap = signal<Swap | null>(null);
   profileToTeach = signal<SwapProfileData | null>(null);

@@ -144,4 +144,11 @@ export class SkillSearchComponent {
     //se emite el id de la skill seleccionada
     this.skillSelected.emit(skill.id);
   }
+
+  // Método público para limpiar el componente de búsqueda
+  clear(): void {
+    this.searchTerm = '';
+    this.results.set([]);
+    this.showDropdown.set(false);
+  }
 }

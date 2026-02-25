@@ -6,7 +6,7 @@ import { AccountService } from '../../services/account.service';
 import { ChatService } from '../../services/chat.service';
 import { PrivateProfileData } from '../../models/private-profile-data.model';
 // import { UserLocation } from '../../models/user-location.model';
-import { UserSkills} from '../../models/user-skills.model';
+import { UserSkills } from '../../models/user-skills.model';
 
 
 
@@ -24,9 +24,9 @@ export class ProfileInfoComponent implements OnChanges {
   @Input() isReadOnly: boolean = false;
   @Input() isPublic: boolean = false;
   @Input() skills: UserSkills[] = [];
+  showToast = false;
 
   ngOnChanges(): void {
-    console.log('ProfileData changed:', this.profileData);
   }
 
   constructor(
@@ -34,7 +34,7 @@ export class ProfileInfoComponent implements OnChanges {
     private router: Router,
     private accountService: AccountService,
     private chatService: ChatService,
-     ) { }
+  ) { }
   starsArray = [1, 2, 3, 4, 5];
 
   get isLoggedIn(): boolean {
@@ -55,7 +55,7 @@ export class ProfileInfoComponent implements OnChanges {
       }
     });
   }
-  goToEdit(){
+  goToEdit() {
     // Evitamos navegar si es solo lectura
     if (!this.isReadOnly) {
       this.router.navigate(['/profile-edit']);
@@ -78,5 +78,31 @@ export class ProfileInfoComponent implements OnChanges {
     }
 
     this.router.navigate(['/swap', targetUsername], { queryParams: queryParms });
+  }
+
+
+
+  async share() {
+
+    const urlToShare = `${window.location.origin}/user/${this.profileData.username}`;
+
+    const shareData = {
+      title: 'Swaply | Intercambios Inteligentes',
+      text: `¡Mira este perfil en Swaply! 🚀\n\nIncreíbles habilidades para aprender.\n\nÉchale un vistazo aquí: ${urlToShare}`,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(urlToShare);
+        this.showToast = true;
+        setTimeout(() => {
+          this.showToast = false;
+        }, 3000);
+      }
+    } catch (err) {
+
+    }
   }
 }
