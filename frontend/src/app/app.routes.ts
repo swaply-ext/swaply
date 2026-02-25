@@ -57,10 +57,10 @@ export const appRoutes: Routes = [
   { path: 'code-sent-confirmation', component: CodeSentConfirmationComponent },
   { path: 'verify', component: EmailVerificationComponent }, // ruta para la verificación de correo
   { path: 'login', component: LoginFormComponent }, // ruta para el login
-  { path: 'recovery-password', component: RecoveryPasswordComponent }, // ruta para la recuperación de contraseña
+  { path: 'recovery-password', component: RecoveryPasswordComponent  }, // ruta para la recuperación de contraseña
   { path: 'link-sent-confirmation', component: LinkSentConfirmationComponent },
   { path: 'new-password', component: NewPasswordComponent }, // nueva ruta para cambiar contraseña
-  { path: 'personal-information', component: PersonalInformationComponent }, // ruta para información personal
+  { path: 'personal-information', component: PersonalInformationComponent, canActivate: [AuthGuard] }, // ruta para información personal
   { path: 'confirmation', component: ConfirmationComponent }, // ruta para pantalla de confirmación antes de Home
   { path: 'confirm-password', component: ConfirmPasswordComponent }, // ruta para pantalla de confirmación de cambio de contraseña
   { path: 'error-auth', component: ErrorAuthComponent }, // ruta para pantalla de error de autenticación

@@ -10,6 +10,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.swaply.backend.config.security.CustomUserDetailsService;
 
+import io.jsonwebtoken.ExpiredJwtException; 
 import java.io.IOException;
 import org.springframework.lang.NonNull;
 import jakarta.servlet.FilterChain;
@@ -31,7 +32,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain) throws ServletException, IOException {
 
-
         final String authHeader = request.getHeader("Authorization");
         final String token;
         final String userId;
@@ -41,13 +41,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-
         token = authHeader.replace("Bearer ", "");
-
 
         try {
             userId = jwtService.extractUserIdFromSessionToken(token);
-
 
             if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = this.customUserDetailsService.loadUserByUsername(userId);
@@ -61,9 +58,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
+            
+            filterChain.doFilter(request, response);
+
+
 
         } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("{\"error\": \"Invalid token\"}");
+            response.getWriter().flush();
+            return;
         }
-        filterChain.doFilter(request, response);
     }
 }

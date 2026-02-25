@@ -5,28 +5,39 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails; // <--- Import necesario
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.time.Duration;
+import java.util.function.Function; // <--- Import necesario
 
 @Service
 public class JwtService {
 
-    // @Value("${jwt-secret-passwordReset}")
-    @Value("${jwt-secret-key}") // Temporal hasta generar ambos secretos
+    @Value("${jwt-secret-key}") 
     private String passwordResetSecretKey;
 
-    // @Value("${jwt-secret-session}")
-    @Value("${jwt-secret-key}") // Temporal hasta generar ambos secretos
+    @Value("${jwt-secret-key}") 
     private String sessionSecretKey;
 
     private static final Duration RESET_TOKEN_EXPIRATION = Duration.ofMinutes(15);
     private static final String RESET_TOKEN_TYPE = "password-reset";
 
-    private static final Duration SESSION_TOKEN_EXPIRATION = Duration.ofDays(7);
+    private static final Duration SESSION_TOKEN_EXPIRATION = Duration.ofMinutes(1);
     private static final String SESSION_TOKEN_TYPE = "session";
+
+
+
+    private Claims extractAllClaims(String token, String secret) {
+        return Jwts.parser()
+                .verifyWith(getSigningKey(secret))
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
+    
 
     private String buildToken(String userId, String type, Duration expiration, String secret) {
         return Jwts.builder()
@@ -59,11 +70,8 @@ public class JwtService {
     }
 
     private String extractIdFromToken(String token, String secret, String type) {
-        Claims claims = Jwts.parser()
-                .verifyWith(getSigningKey(secret))
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+        Claims claims = extractAllClaims(token, secret);
+        
         String tokentype = claims.get("type", String.class);
         if (!type.equals(tokentype)) {
             throw new IllegalArgumentException("Token inválido: no es del tipo esperado.");
@@ -85,5 +93,4 @@ public class JwtService {
                 sessionSecretKey,
                 SESSION_TOKEN_TYPE);
     }
-
 }
