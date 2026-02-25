@@ -56,40 +56,32 @@ export class HomeComponent implements OnInit {
 
   // --- Estado y Señales ---
   private myUserId: string = '';
+  private currentSearchQuery: string = '';
 
   // Datos principales
-  private allCards: HomeCard[] = []; // Fuente de verdad completa
-  cards = signal<HomeCard[]>([]);    // Lo que se muestra en pantalla (reactivo)
+  cards = signal<HomeCard[]>([]);
 
   // Flags de carga y estado
   isLoadingMatches = signal(false);
   hasSearched = signal(false);
 
-  // Paginación / Scroll infinito
-  itemsToShow = signal(6);
-  canLoadMore = computed(() => this.cards().length < this.allCards.length);
+  // Paginación
+  private page = signal(0);
+  private readonly pageSize = 6;
+  canLoadMore = signal(true);
 
   // --- Mock Data para UI (Demo) ---
   hasIntercambio = signal(true);
   isConfirmed = signal(false);
 
   ngOnInit() {
-    // 1. Verificación de perfil y pagos (Fire & Forget - Segundo plano)
-    // Esto asegura que la lógica de negocio se ejecute sin bloquear la carga visual de usuarios
     this.redirectionService.checkProfile().subscribe();
+    this.paymentService.checkPaymentStatus(() => {});
 
-    this.paymentService.checkPaymentStatus((isLoading: boolean) => {
-      // Opcional: Si quieres que el spinner dependa del pago, descomenta esto,
-      // pero para que funcione como el V2, mejor controlamos el loading en la carga de datos.
-      // this.isLoadingMatches.set(isLoading);
-    });
-
-    // 2. CARGA PRINCIPAL DE DATOS (Igual que en la versión que funciona)
-    // Se ejecuta inmediatamente al iniciar.
-    this.loadUserProfileAndRecommendations();
+    this.loadUserProfileAndInitialData();
   }
 
-  private loadUserProfileAndRecommendations() {
+  private loadUserProfileAndInitialData() {
     this.accountService.getProfileData().subscribe({
       next: (profile: any) => {
         const myUsername = profile?.username;
@@ -97,97 +89,91 @@ export class HomeComponent implements OnInit {
           this.searchService.getUserByUsername(myUsername).subscribe({
             next: (userDto) => {
               this.myUserId = userDto.userId;
-              this.loadInitialRecommendations();
+              this.loadNextPage();
             },
-            error: () => this.loadInitialRecommendations() // Fallback
+            error: () => this.loadNextPage() // Fallback
           });
         } else {
-          this.loadInitialRecommendations();
+          this.loadNextPage();
         }
       },
-      error: () => this.loadInitialRecommendations() // Fallback
+      error: () => this.loadNextPage() // Fallback
     });
   }
 
-  // --- Lógica de Búsqueda y Recomendaciones ---
+  // --- Lógica de Carga de Datos ---
 
-  loadInitialRecommendations() {
+  loadNextPage() {
     this.isLoadingMatches.set(true);
-    this.hasSearched.set(false);
+    const serviceCall = this.hasSearched() && this.currentSearchQuery
+      ? this.searchService.getMatches(this.currentSearchQuery, this.page(), this.pageSize)
+      : this.searchService.getRecommendations(this.page(), this.pageSize);
 
-    this.searchService.getRecommendations().subscribe({
-      next: (matches) => this.processResults(matches, false),
+    serviceCall.subscribe({
+      next: (matches) => {
+        this.processResults(matches, this.hasSearched());
+        this.page.update(p => p + 1);
+      },
       error: (err) => {
-        console.error("Error cargando recomendaciones:", err);
+        console.error("Error cargando datos:", err);
         this.isLoadingMatches.set(false);
+        this.canLoadMore.set(false);
       }
     });
   }
 
   performMatchSearch(skillQuery: string) {
-    if (!skillQuery || skillQuery.trim() === '') {
-      this.loadInitialRecommendations();
-      return;
-    }
+    this.currentSearchQuery = skillQuery;
+    this.hasSearched.set(skillQuery.trim() !== '');
 
-    this.isLoadingMatches.set(true);
-    this.hasSearched.set(true);
+    // Resetear estado para nueva búsqueda
+    this.page.set(0);
+    this.cards.set([]);
+    this.canLoadMore.set(true);
 
-    this.searchService.getMatches(skillQuery).subscribe({
-      next: (matches) => this.processResults(matches, true),
-      error: (err) => {
-        console.error("Error en búsqueda:", err);
-        this.allCards = [];
-        this.updateView();
-        this.isLoadingMatches.set(false);
-      }
-    });
+    this.loadNextPage();
   }
 
   private processResults(matches: UserSwapDTO[], calculateDistance: boolean) {
-    this.allCards = matches.map(m => ({
+    if (matches.length < this.pageSize) {
+      this.canLoadMore.set(false);
+    }
+
+    const newCards = matches.map(m => ({
       ...m,
       skillImage: this.assignImageToSkill(m.skillCategory, m.skillName),
       profilePhotoUrl: m.profilePhotoUrl || 'assets/default-image.jpg',
       distance: m.distance || 'Cerca'
     }));
 
-    this.itemsToShow.set(6); // Resetear paginación
-    this.updateView();
+    this.cards.update(currentCards => [...currentCards, ...newCards]);
     this.isLoadingMatches.set(false);
 
     if (calculateDistance && this.myUserId) {
-      this.calculateDistancesForCards();
+      this.calculateDistancesForCards(newCards);
     }
   }
 
-  private updateView() {
-    // Actualizamos la señal con una copia del array para disparar la detección de cambios
-    this.cards.set([...this.allCards.slice(0, this.itemsToShow())]);
-  }
-
   loadMore() {
-    this.itemsToShow.update(val => val + 6);
-    this.updateView();
+    if (this.canLoadMore()) {
+      this.loadNextPage();
+    }
   }
 
   // --- Cálculo de Distancias ---
 
-  private calculateDistancesForCards() {
-    this.allCards.forEach(card => {
-      // No calcular distancia con uno mismo
-      if (card.userId === this.myUserId) return;
+  private calculateDistancesForCards(cardsToUpdate: HomeCard[]) {
+    cardsToUpdate.forEach(card => {
+      if (card.userId === this.myUserId || !card.username) return;
 
-      if (card.username) {
-        this.locationService.getDistance(this.myUserId, card.username).subscribe({
-          next: (distString) => {
-            card.distance = distString;
-            // Importante: Actualizar la vista después de recibir el dato asíncrono
-            this.updateView();
-          },
-          error: (e) => console.error(`Error distancia con ${card.username}`, e)
-        });
-      }
+      this.locationService.getDistance(this.myUserId, card.username).subscribe({
+        next: (distString) => {
+          card.distance = distString;
+          // Actualizar la señal para reflejar el cambio de distancia
+          this.cards.update(currentCards => [...currentCards]);
+        },
+        error: (e) => console.error(`Error distancia con ${card.username}`, e)
+      });
     });
   }
 
@@ -234,7 +220,6 @@ export class HomeComponent implements OnInit {
     const name = skillName ? skillName.toLowerCase() : '';
     let folder = 'leisure';
 
-    // Determinar carpeta base por categoría
     if (category) {
         const cat = category.toLowerCase();
         if (cat.includes('deporte') || cat.includes('sports')) folder = 'sports';
@@ -242,20 +227,16 @@ export class HomeComponent implements OnInit {
     }
 
     let filename = '';
-
-    // Deportes
     if (name.includes('fútbol') || name.includes('futbol') || name.includes('football')) { filename = 'football.jpg'; folder = 'sports'; }
     else if (name.includes('pádel') || name.includes('padel')) { filename = 'padel.jpg'; folder = 'sports'; }
     else if (name.includes('básquet') || name.includes('basquet') || name.includes('baloncesto') || name.includes('basket')) { filename = 'basketball.jpg'; folder = 'sports'; }
     else if (name.includes('vóley') || name.includes('voley') || name.includes('volley') || name.includes('voleibol')) { filename = 'voleyball.jpg'; folder = 'sports'; }
     else if (name.includes('boxeo') || name.includes('boxing')) { filename = 'boxing.jpg'; folder = 'sports'; }
-    // Música
     else if (name.includes('guitarra') || name.includes('guitar')) { filename = 'guitar.jpg'; folder = 'music'; }
     else if (name.includes('piano')) { filename = 'piano.jpg'; folder = 'music'; }
     else if (name.includes('violín') || name.includes('violin')) { filename = 'violin.jpg'; folder = 'music'; }
     else if (name.includes('batería') || name.includes('bateria') || name.includes('drum')) { filename = 'drums.jpg'; folder = 'music'; }
     else if (name.includes('saxofón') || name.includes('saxofon') || name.includes('sax')) { filename = 'saxophone.jpg'; folder = 'music'; }
-    // Ocio
     else if (name.includes('dibujo') || name.includes('draw')) { filename = 'draw.jpg'; folder = 'leisure'; }
     else if (name.includes('cocina') || name.includes('cook')) { filename = 'cook.jpg'; folder = 'leisure'; }
     else if (name.includes('baile') || name.includes('dance')) { filename = 'dance.jpg'; folder = 'leisure'; }
@@ -264,29 +245,23 @@ export class HomeComponent implements OnInit {
 
     return filename ? `assets/photos_skills/${folder}/${filename}` : undefined;
   }
-  
-  // Método para limpiar el search cuando se usa el filtro
+
   clearSearch(): void {
     this.skillSearchComponent?.clear();
   }
 
-  // Método para limpiar el filtro cuando se usa el search
   clearFilter(): void {
     this.filterSkillsComponent?.clear();
   }
 
-  // Handler para cuando se selecciona una habilidad del search
   onSkillSelected(skillId: string): void {
-    // Solo clear el filtro si hay un skillId válido (no vacío)
     if (skillId && skillId.trim() !== '') {
       this.clearFilter();
     }
     this.performMatchSearch(skillId);
   }
 
-  // Handler para cuando se selecciona un filtro
   onFilterSelected(filterIds: string): void {
-    // Solo clear el search si hay un filtro válido (no vacío)
     if (filterIds && filterIds.trim() !== '') {
       this.clearSearch();
     }
