@@ -16,14 +16,15 @@ public class UserSwapDTO {
     private String username;
     private String profilePhotoUrl;
     private String location;
-    private boolean premium;
 
     // Info de la Skill principal (Match)
-    private String skillId;
     private String skillName;     
     private String skillIcon;     
     private Integer skillLevel;   
     private String skillCategory;
+    @JsonProperty("isPremium")
+    private boolean premium;
+    private String skillId;
 
     // Info del Match
     @JsonProperty("isSwapMatch")
