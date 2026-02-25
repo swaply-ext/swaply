@@ -68,7 +68,12 @@ public class AccountService /* implements UserRepository */ {
     public NavBarInformationDTO navBarInformation(String userId){
         UserDTO userDTO = userService.getUserByID(userId);
         NavBarInformationDTO dto = mapper.navBarFromUserDTO(userDTO);
-        Integer swapCount = (int) userDTO.getSwaps().stream().filter(s -> s.getStatus().equals(Status.STANDBY)).count();
+        Integer swapCount = (int) userDTO.getSwaps()
+            .stream()
+            .filter(s -> s.getStatus().equals(Status.STANDBY))
+            .filter(s -> !s.getIsRequester())
+            .count();
+            
         dto.setNotificationCount(swapCount);
         Integer unreadCount = chatService.getTotalUnreadMessages(userId);
         dto.setMsgCount(unreadCount);

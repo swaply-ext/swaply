@@ -117,7 +117,7 @@
 }
 
 .nav-icon {
-  font-size: 1.8125rem;
+  font-size: 2.1rem;
   color: #d1d5db;
   cursor: pointer;
   transition: color 0.2s, transform 0.2s;
@@ -176,6 +176,40 @@ button {
   border: none;
   cursor: pointer;
 }
+
+.unread-point {
+  position: absolute;
+  width: 1.4rem;          /* círculo fijo */
+  height: 1.4rem;
+  background-color: red;
+  border-radius: 50%;
+  color: white;
+  font-size: 0.9rem;        /* número más grande */
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  overflow: hidden;       /* evita que sobresalga */
+  transform: scale(0.8);  /* ajusta para que 9+ quepa */
+}
+
+
+.icon-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.unread-point-message {
+  top: -0.15rem;
+  right: -0.25rem;
+}
+
+.unread-point-notifications {
+  top: -0.10rem;
+  right: 0.4rem;
+}
+
 
 /*ESTILOS RESPONSIVOS MENÚ HAMBURGUESA */
 
