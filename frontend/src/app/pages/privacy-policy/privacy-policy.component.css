@@ -74,7 +74,7 @@
   display: flex;
   justify-content: flex-end; 
   padding-top: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--divider-color);
   margin-top: auto;
 }
 
