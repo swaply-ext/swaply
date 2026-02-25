@@ -19,6 +19,7 @@ public class UserSwapDTO {
     private boolean premium;
 
     // Info de la Skill principal (Match)
+    private String skillId;
     private String skillName;     
     private String skillIcon;     
     private Integer skillLevel;   

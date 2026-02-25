@@ -123,6 +123,7 @@ public class HomeService {
         dto.setProfilePhotoUrl(user.getProfilePhotoUrl());
         dto.setPremium(user.isPremium());
 
+        dto.setSkillId(skill.getId());
         dto.setSkillName("Clase de " + (skill.getName() != null ? skill.getName() : skill.getId()));
         dto.setSkillCategory(skill.getCategory());
         dto.setSkillLevel(skill.getLevel());
