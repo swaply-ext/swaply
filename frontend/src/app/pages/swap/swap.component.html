@@ -55,9 +55,9 @@
             </div>
 
             <div class="badges-group">
-              <div class="info-badge" [title]="targetUser()?.location?.displayName">
+              <div class="info-badge" [title]="locationTargetUser">
                 <span class="material-symbols-outlined badge-icon">location_on</span>
-                <span class="badge-text">{{ validateInputsService.formatLocation(targetUser()?.location?.displayName) }}</span>
+                <span class="badge-text">{{ locationTargetUser }}</span>
               </div>
               
               <div class="info-badge user-link-container" [routerLink]="['/user', targetUser()?.username]" [title]="'@' + targetUser()?.username">

@@ -1,7 +1,7 @@
 package com.swaply.backend.shared.location;
 
-import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -77,13 +77,13 @@ public class LocationService {
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
         double distanceKM = EARTH_RADIUS * c;
-        DecimalFormat df = new DecimalFormat("#.#");
 
-        if (distanceKM >= 10){
-            df = new DecimalFormat("#");
+        if (distanceKM >= 10) {
+            return String.format(Locale.US, "%.0f", distanceKM);
+        } else {
+            String s = String.format(Locale.US, "%.1f", distanceKM);
+            return s.replaceAll("\\.0$", "");
         }
-        
-        return df.format(distanceKM);
-        
+
     }
 }

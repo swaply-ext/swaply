@@ -174,7 +174,7 @@
             <img src="/assets/fotos/crown_70dp_B89230_FILL0_wght400_GRAD0_opsz48.png" alt="Icono Plan Premium"
                 class="plan-icon">
             <h3>Plan Premium</h3>
-            <span class="price">€4.99 / mes</span>
+            <span class="price">4.99€ / mes</span>
             <p class="description">Para aquellos que quieren llevar su aprendizaje al siguiente nivel y apoyar
                 nuestra misión.</p>
             <ul class="features-list">
@@ -213,9 +213,12 @@
         <div class="footer-column links-column">
             <h4>Legal</h4>
             <ul>
-                <li><a href="#">Términos y Condiciones</a></li>
-                <li><a href="#">Política de Privacidad</a></li>
-                <li><a href="#">Política de Cookies</a></li>
+                <li>
+                    <a (click)="showTermsModal = true" style="cursor: pointer;">
+                    Términos y Condiciones
+                    </a>
+                </li>
+                <li><a (click)="showPrivacyModal = true" style="cursor: pointer;">Política de Privacidad y Cookies</a></li>
             </ul>
         </div>
 
@@ -234,3 +237,6 @@
         <p>&copy; 2026 Swaply. Todos los derechos reservados.</p>
     </div>
 </footer>
+
+<app-terms-conditions *ngIf="showTermsModal" [isModal]="true" (closeModal)="showTermsModal = false"></app-terms-conditions>
+<app-privacy-policy *ngIf="showPrivacyModal" [isModal]="true" (closeModal)="showPrivacyModal = false"></app-privacy-policy>

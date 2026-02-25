@@ -25,6 +25,8 @@ export class SwapComponent implements OnInit {
   myUser = signal<ProfileDataDTO | null>(null);
   targetUser = signal<UserSwapDTO | null>(null);
 
+  locationTargetUser : string = 'No existe';
+
   selectedTeachSkill = signal<any>(null);
   mySkillsDisplay = signal<any[]>([]);
 
@@ -65,6 +67,7 @@ export class SwapComponent implements OnInit {
     ).subscribe({
       next: ({ target, me }) => {
         this.targetUser.set(target);
+        this.locationTargetUser = this.validateInputsService.formatLocation(target.location) ?? 'No disponible';
         this.myUser.set(me);
 
         const mainSkill = {
@@ -104,14 +107,14 @@ export class SwapComponent implements OnInit {
             skillName: item.name,
             skillIcon: (item as any).icon,
             skillImage: item.image,
-            location: target.location.displayName
+            location: target.location
           });
         } else {
           this.selectedTargetSkill.set({
             skillName: target.name || target.username,
             skillIcon: undefined,
             skillImage: target.profilePhotoUrl || 'assets/default-avatar.png',
-            location: target.location.displayName
+            location: target.location
           });
         }
 
@@ -162,7 +165,7 @@ export class SwapComponent implements OnInit {
       skillName: item.name,
       skillIcon: item.icon,
       skillImage: safeImage,
-      location: currentUser?.location.displayName
+      location: currentUser?.location
     });
   }
 
