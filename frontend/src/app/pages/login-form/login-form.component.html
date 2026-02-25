@@ -10,7 +10,7 @@
 <div class="login-container" id="login">
   <h2>INICIAR SESIÓN</h2>
 
-  <form>
+  <form (keydown.enter)="$event.preventDefault(); login()">
     <app-email-input
       (emailChange)="email = $event"
       [hasError]="showError"

@@ -2,7 +2,7 @@
   <h2>REGISTRARSE</h2>
 
   <!--Formulario de registro con componentes personalizados-->
-  <form>
+  <form (keydown.enter)="$event.preventDefault(); register()">
     <app-username-input
       [(username)]="username"
       [hasError]="hasErrorAll">
