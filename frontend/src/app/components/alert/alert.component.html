@@ -3,7 +3,7 @@
     <div class="alert-container" [ngClass]="data.category" (click)="$event.stopPropagation()">
 
       <div class="icon-circle">
-        <span class="material-icons">{{ getIcon(data.category) }}</span>
+        <span class="material-symbols-outlined">{{ getIcon(data.category) }}</span>
       </div>
 
       <h2>{{ data.title }}</h2>
