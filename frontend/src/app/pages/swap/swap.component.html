@@ -51,7 +51,7 @@
               >location_on</span
             >
             <span class="location-text">{{
-              validateInputsService.formatLocation(targetUser()?.location?.displayName)
+              locationTargetUser
             }}</span>
           </div>
           <div class="target-username"  [routerLink]="['/user', targetUser()?.username]">

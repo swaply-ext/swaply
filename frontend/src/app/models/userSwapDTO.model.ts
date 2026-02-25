@@ -6,7 +6,8 @@ export interface UserSwapDTO {
   name: string;
   username: string;
   profilePhotoUrl: string;
-  location: UserLocation;
+  location: string;
+  //ESTO TIENE QUE SER UserLocation MAS ADELANTE, HAY QUE CAMBIAR EN BACKEND
 
   skillName: string;
   skillIcon: string;
