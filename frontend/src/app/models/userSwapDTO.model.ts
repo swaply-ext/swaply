@@ -7,6 +7,7 @@ export interface UserSwapDTO {
   username: string;
   profilePhotoUrl: string;
   location: UserLocation;
+  isPremium?: boolean;
 
   skillName: string;
   skillIcon: string;

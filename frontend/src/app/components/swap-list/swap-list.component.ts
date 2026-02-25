@@ -6,6 +6,7 @@ import { UsersService } from '../../services/users.service';
 import { AccountService } from '../../services/account.service';
 import { Swap } from '../../models/swap.model';
 import { UserLocation } from '../../models/user-location.model';
+import { ValidateInputsService } from '../../services/validate-inputs.service';
 
 export interface Profile {
   title?: string;
@@ -27,6 +28,11 @@ export class SwapListComponent implements OnInit {
   private swapService = inject(SwapService);
   private accountService = inject(AccountService);
   private usersService = inject(UsersService);
+
+  public constructor(
+    public validateInputsService: ValidateInputsService
+    
+  ) { }
 
   @Input() set swapsList(data: Swap[]) {
 

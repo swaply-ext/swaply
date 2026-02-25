@@ -309,4 +309,9 @@ public class ChatService {
             throw new RuntimeException("Error fatal: No se encontró el algoritmo SHA-256", e);
         }
     }
+
+    public Optional<ChatRoom> findChatRoomByParticipants(String user1Id, String user2Id) {
+        String generatedId = generateSecureRoomId(user1Id, user2Id);
+        return chatRoomRepository.findRoomById(generatedId);
+    }
 }

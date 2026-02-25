@@ -8,6 +8,7 @@ export interface DropdownMenuData {
   username: string;
   profilePhotoUrl: string;
   rating: number;
+  isPremium: boolean;
 }
 
 @Component({

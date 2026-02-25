@@ -11,6 +11,7 @@ import { SwapInterestsComponent } from "../../components/swap-interests/swap-int
 import { ProfileDataDTO } from '../../models/profile-data-dto.model';
 import { RouterLink } from '@angular/router';
 import { map, switchMap } from 'rxjs';
+import { ValidateInputsService } from '../../services/validate-inputs.service';
 
 @Component({
   selector: 'app-swap',
@@ -40,7 +41,8 @@ export class SwapComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private accountService: AccountService,
-    private searchService: SearchService
+    private searchService: SearchService,
+    public validateInputsService: ValidateInputsService
   ) { }
 
   ngOnInit(): void {
