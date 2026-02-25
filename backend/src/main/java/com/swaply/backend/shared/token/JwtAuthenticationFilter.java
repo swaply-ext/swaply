@@ -10,7 +10,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.swaply.backend.config.security.CustomUserDetailsService;
 
-import io.jsonwebtoken.ExpiredJwtException; 
 import java.io.IOException;
 import org.springframework.lang.NonNull;
 import jakarta.servlet.FilterChain;
