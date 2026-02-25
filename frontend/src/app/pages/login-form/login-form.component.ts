@@ -51,7 +51,7 @@ export class LoginFormComponent {
       email: this.email,
       password: this.password
     };
-
+    localStorage.removeItem('authToken');
     this.authService.login(newUser).subscribe({
       next: () => {
         this.router.navigate(['/']);
