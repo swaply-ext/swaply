@@ -1,5 +1,6 @@
 import { LocationSearchComponent } from './components/location-search/location-search.component';
-import { Routes } from '@angular/router';
+import { Router, Routes } from '@angular/router';
+import { AlertService } from './services/alert.service';
 import { HomeComponent } from './pages/home/home.component';
 import { SkillsComponent } from './pages/skills/skills.component';
 import { InterestsComponent } from './pages/interests/interests.component';
@@ -11,7 +12,7 @@ import { NewPasswordComponent } from './pages/new-password/new-password.componen
 import { PersonalInformationComponent } from './pages/personal-information/personal-information.component'
 import { ConfirmationComponent } from './pages/confirmation/confirmation.component';
 import { ConfirmPasswordComponent } from './pages/confirm-password/confirm-password.component';
-import { ErrorComponent } from './pages/error/error.component';
+import { AlertComponent } from './components/alert/alert.component';
 import { AppNavbarComponent } from './components/app-navbar/app-navbar.component'; //menu nav no es una pagina, esta provisional
 import { SkillsPanelComponent } from './components/skills-panel/skills-panel.component';
 import { LoadingScreenComponent } from './components/loading-screen/loading-screen.component';
@@ -44,6 +45,7 @@ import { ComingSoonComponent } from './pages/coming-soon/coming-soon.component';
 import { getProfileDataResolver } from './resolver/get-profile-data.service';
 import { AvatarSelectorComponent } from './pages/avatar-selector/avatar-selector.component';
 import { LandingComponent } from './landing/landing.component';
+import { inject } from '@angular/core';
 
 // Creamos una ruta para la verificación de correo
 // Ahora usamos el componente real EmailVerificationComponent
@@ -62,7 +64,6 @@ export const appRoutes: Routes = [
   { path: 'personal-information', component: PersonalInformationComponent }, // ruta para información personal
   { path: 'confirmation', component: ConfirmationComponent }, // ruta para pantalla de confirmación antes de Home
   { path: 'confirm-password', component: ConfirmPasswordComponent }, // ruta para pantalla de confirmación de cambio de contraseña
-  { path: 'error', component: ErrorComponent }, // ruta para pantalla de error
   { path: 'navbar', component: AppNavbarComponent }, // ruta para el menú de navegación (temporal)
   { path: 'skills-panel', component: SkillsPanelComponent }, // ruta para el panel de habilidades
   { path: 'loading', component: LoadingScreenComponent }, // ruta para la pantalla de carga
@@ -92,5 +93,14 @@ export const appRoutes: Routes = [
   { path: 'swap/:username', component: SwapComponent, canActivate: [AuthGuard] },
   { path: 'landing', component: LandingComponent },
   { path: 'select-avatar', component: AvatarSelectorComponent, canActivate: [AuthGuard]},
-  { path: '**', component: ErrorComponent, data: { type: 'not-found' } }
+  // 404
+  {
+    path: '**',
+    component: AlertComponent,
+    canActivate: [() => {
+      const alertService = inject(AlertService);
+      const router = inject(Router);
+      alertService.show('error', 'notFound', );
+    }]
+  }
 ];
