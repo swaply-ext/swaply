@@ -1,0 +1,19 @@
+@if (alertService.alert(); as data) {
+    <div class="alert-overlay">
+    <div class="alert-container" [ngClass]="data.category" (click)="$event.stopPropagation()">
+
+      <div class="icon-circle">
+        <span class="material-icons">{{ getIcon(data.category) }}</span>
+      </div>
+
+      <h2>{{ data.title }}</h2>
+      <p>{{ data.msg }}</p>
+
+      <div class="button-wrapper">
+        <button class="action-button" (click)="alertService.close()">
+          {{ data.redirectToHome ? 'Ir al inicio' : 'Entendido' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}
