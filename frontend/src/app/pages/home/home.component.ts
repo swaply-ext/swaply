@@ -70,7 +70,7 @@ export class HomeComponent implements OnInit {
   canLoadMore = computed(() => this.cards().length < this.allCards.length);
 
   // --- Mock Data para UI (Demo) ---
-  hasIntercambio = signal(true);
+  showSwap = signal(true);
   isConfirmed = signal(false);
 
   ngOnInit() {
@@ -220,7 +220,7 @@ export class HomeComponent implements OnInit {
   }
 
   toggleIntercambio() {
-    this.hasIntercambio.update(v => !v);
+    this.showSwap.update(v => !v);
     this.isConfirmed.set(false);
   }
 
