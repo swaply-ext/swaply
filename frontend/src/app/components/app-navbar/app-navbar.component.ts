@@ -7,6 +7,7 @@ import { AccountService } from '../../services/account.service';
 import { AuthService } from '../../services/auth.service';
 import { UserSearchComponent } from '../user-search/user-search.component';
 import { ComingSoonComponent } from '../../pages/coming-soon/coming-soon.component';
+import { navBarInformationDTO } from '../../models/navBarInformationDTO.model';
 
 @Component({
   selector: 'app-app-navbar',
@@ -19,6 +20,7 @@ export class AppNavbarComponent implements OnInit, OnDestroy {
   showDropdown = false;
   isMobileMenuOpen = false;
   dropdownMenuData!: DropdownMenuData;
+  navBarInformation!: navBarInformationDTO;
 
   constructor(
     private router: Router,
@@ -29,14 +31,14 @@ export class AppNavbarComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.renderer.addClass(document.body, 'with-navbar');
-    this.accountService.getProfileData().subscribe({
-      next: (user) => {
+    this.accountService.getNavbarData().subscribe({
+      next: (navBarInformation) => {
+        this.navBarInformation = navBarInformation
         this.dropdownMenuData = {
-          fullName: `${user.name} ${user.surname}`,
-          username: user.username,
-          profilePhotoUrl: user.profilePhotoUrl,
-          // Se añade la propiedad isPremium obtenida del servicio de cuenta
-          isPremium: user.isPremium,
+          fullName: `${navBarInformation.name} ${navBarInformation.surname}`,
+          username: navBarInformation.username,
+          profilePhotoUrl: navBarInformation.profilePhotoUrl,
+          isPremium: navBarInformation.isPremium,
           rating: 3.8
         };
       },

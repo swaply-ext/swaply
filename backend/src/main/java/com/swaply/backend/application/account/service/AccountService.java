@@ -1,16 +1,19 @@
 package com.swaply.backend.application.account.service;
 
 import com.swaply.backend.application.account.dto.EditProfileDTO;
-import com.swaply.backend.application.account.dto.NavNarInformationDTO;
+import com.swaply.backend.application.account.dto.NavBarInformationDTO;
 import com.swaply.backend.application.account.dto.PersonalInfoDTO;
 import com.swaply.backend.application.account.dto.ProfileDataDTO;
 import com.swaply.backend.application.account.dto.PublicProfileDTO;
 import com.swaply.backend.application.account.dto.SkillsDTO;
 import com.swaply.backend.application.auth.exception.UserAlreadyExistsException;
 import com.swaply.backend.shared.UserCRUD.UserService;
+import com.swaply.backend.shared.UserCRUD.Model.Swap.Status;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.shared.chat.service.ChatService;
 import com.swaply.backend.application.account.AccountMapper;
+
+
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -62,10 +65,15 @@ public class AccountService /* implements UserRepository */ {
         return mapper.editDatafromUserDTO(userDTO);
     }
 
-    public NavNarInformationDTO navBarInformation(String userId){
+    public NavBarInformationDTO navBarInformation(String userId){
         UserDTO userDTO = userService.getUserByID(userId);
-        NavNarInformationDTO dto = mapper.navBarFromUserDTO(userDTO);
-        Integer swapCount = userDTO.getSwaps().size();
+        NavBarInformationDTO dto = mapper.navBarFromUserDTO(userDTO);
+        Integer swapCount = (int) userDTO.getSwaps()
+            .stream()
+            .filter(s -> s.getStatus().equals(Status.STANDBY))
+            .filter(s -> !s.getIsRequester())
+            .count();
+            
         dto.setNotificationCount(swapCount);
         Integer unreadCount = chatService.getTotalUnreadMessages(userId);
         dto.setMsgCount(unreadCount);

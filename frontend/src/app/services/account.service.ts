@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { navBarInformationDTO } from '../models/navBarInformationDTO.model';
 
 export interface Account {
   interests: { id: string, level: number }[];
@@ -18,6 +19,10 @@ export class AccountService {
 
   getProfileData(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/profileData`);
+  }
+
+  getNavbarData(): Observable<navBarInformationDTO>{
+    return this.http.get<navBarInformationDTO>(`${this.apiUrl}/navBar`);
   }
 
   updateProfileData(data: any): Observable<boolean> {

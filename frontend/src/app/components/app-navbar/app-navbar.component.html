@@ -25,10 +25,25 @@
   </div>
 
   <div class="nav-right">
-    <a routerLink="/chat" class="nav-icon-link"><span class="material-symbols-outlined nav-icon">chat_bubble</span></a>
-    <button class="menu-btn" (click)="goToNotifications()">
+
+    <a routerLink="/chat" class="nav-icon-link icon-wrapper">
+      <span class="material-symbols-outlined nav-icon">chat_bubble</span>
+
+      <span *ngIf="navBarInformation.msgCount > 0"
+            class="unread-point unread-point-message">
+        {{ navBarInformation.msgCount > 9 ? '9+' : navBarInformation.msgCount }}
+      </span>
+    </a>
+
+    <button class="menu-btn icon-wrapper" (click)="goToNotifications()">
       <span class="material-symbols-outlined nav-icon">notifications</span>
+
+      <span *ngIf="navBarInformation.notificationCount > 0"
+            class="unread-point unread-point-notifications">
+        {{ navBarInformation.notificationCount > 9 ? '9+' : navBarInformation.notificationCount }}
+      </span>
     </button>
+
 
     <div class="profile-wrapper">
 
