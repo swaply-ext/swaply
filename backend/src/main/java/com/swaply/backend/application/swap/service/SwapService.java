@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import com.swaply.backend.application.auth.exception.SwapNotFoundException;
@@ -14,6 +15,9 @@ import com.swaply.backend.application.swap.dto.SwapDTO;
 import com.swaply.backend.shared.UserCRUD.UserService;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.shared.UserCRUD.Model.Swap;
+import com.swaply.backend.shared.chat.dto.ChatMessageDTO;
+import com.swaply.backend.shared.chat.model.ChatRoom;
+import com.swaply.backend.shared.chat.service.ChatService;
 import com.swaply.backend.shared.mail.MailService;
 
 @Service
@@ -22,11 +26,13 @@ public class SwapService {
     private final SwapMapper mapper;
     private final UserService userService;
     private final MailService mailService;
+    private final ChatService chatService;
 
-    public SwapService(SwapMapper mapper, UserService userService, MailService mailService) {
+    public SwapService(SwapMapper mapper, UserService userService, MailService mailService, ChatService chatService) {
         this.mapper = mapper;
         this.userService = userService;
         this.mailService = mailService;
+        this.chatService = chatService;
     }
 
     public Swap createSwap(String sendingUser, SwapDTO dto) {
@@ -122,29 +128,49 @@ public class SwapService {
     }
 
     public void updateSwapStatus(String swapId, String status, String currentUserId) {
-        // get sender
         UserDTO sender = userService.getUserByID(currentUserId);
         Swap senderSwap = getSwapFromDTO(sender, swapId);
 
-        // get receiver
         UserDTO receiver = userService.getUserByID(senderSwap.getRequestedUserId());
         Swap receiverSwap = getSwapFromDTO(receiver, swapId);
 
-        // Set new status
         Swap.Status newStatus;
         if (!status.equalsIgnoreCase("ACCEPTED") && !status.equalsIgnoreCase("DENIED")) {
             throw new IllegalArgumentException("Invalid status: " + status);
         }
         if (status.equalsIgnoreCase("ACCEPTED")) {
             newStatus = Swap.Status.ACCEPTED;
+            String msj = "Acabo de aceptar tu intercambio de " + senderSwap.getSkill() + " por " + senderSwap.getInterest() + ". ¡Empecemos a aprender!";
+            handleChatOnAccept(currentUserId, senderSwap.getRequestedUserId(), msj);
         } else {
             newStatus = Swap.Status.DENIED;
         }
 
         senderSwap.setStatus(newStatus);
         receiverSwap.setStatus(newStatus);
-        // Save to database
+
         userService.updateUser(currentUserId, sender);
         userService.updateUser(senderSwap.getRequestedUserId(), receiver);
+    }
+
+    private void handleChatOnAccept(String currentUserId, String otherUserId, String msj) {
+        Optional<ChatRoom> existingChat = chatService.findChatRoomByParticipants(currentUserId, otherUserId);
+
+        ChatRoom chatRoom;
+        if (existingChat.isPresent()) {
+            chatRoom = existingChat.get();
+        } else {
+            String currentUsername = userService.getUserByID(currentUserId).getUsername();
+            String otherUsername = userService.getUserByID(otherUserId).getUsername();
+            chatRoom = chatService.createChatRoom(currentUserId, otherUsername);
+        }
+
+        ChatMessageDTO messageDTO = ChatMessageDTO.builder()
+                .roomId(chatRoom.getId())
+                .senderId(currentUserId)
+                .content(msj)
+                .build();
+
+        chatService.sendChatMessage(messageDTO);
     }
 }

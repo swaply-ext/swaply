@@ -1,4 +1,4 @@
-import { Component, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnInit, Renderer2, OnDestroy} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Router } from '@angular/router';
@@ -16,7 +16,7 @@ import { navBarInformationDTO } from '../../models/navBarInformationDTO.model';
   templateUrl: './app-navbar.component.html',
   styleUrls: ['./app-navbar.component.css']
 })
-export class AppNavbarComponent implements OnInit {
+export class AppNavbarComponent implements OnInit, OnDestroy {
   showDropdown = false;
   isMobileMenuOpen = false;
   dropdownMenuData!: DropdownMenuData;
@@ -24,9 +24,9 @@ export class AppNavbarComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private accountService: AccountService, 
+    private accountService: AccountService,
     private authService: AuthService,
-    private renderer: Renderer2 //autodetecta si el navbar está presente para añadir padding al body
+    private renderer: Renderer2
   ) {}
 
   ngOnInit(): void {
@@ -38,6 +38,7 @@ export class AppNavbarComponent implements OnInit {
           fullName: `${navBarInformation.name} ${navBarInformation.surname}`,
           username: navBarInformation.username,
           profilePhotoUrl: navBarInformation.profilePhotoUrl,
+          isPremium: navBarInformation.isPremium,
           rating: 3.8
         };
       },
@@ -47,9 +48,14 @@ export class AppNavbarComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    this.renderer.removeClass(document.body, 'with-navbar');
+  }
+
   toggleDropdown() {
     this.showDropdown = !this.showDropdown;
   }
+
   toggleMobileMenu() {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
   }
@@ -57,6 +63,7 @@ export class AppNavbarComponent implements OnInit {
   closeMobileMenu() {
     this.isMobileMenuOpen = false;
   }
+
   isLoggedIn(): boolean {
     return this.authService.isLoggedIn();
   }

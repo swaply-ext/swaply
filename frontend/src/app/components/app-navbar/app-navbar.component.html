@@ -9,15 +9,16 @@
 
   <div class="nav-menu" [class.open]="isMobileMenuOpen">
     <div class="nav-links">
-      <a routerLink="/home" (click)="closeMobileMenu()">Para Ti</a> <a routerLink="/coming-soon" (click)="closeMobileMenu()">Comunidad</a>
+      <a routerLink="/home" (click)="closeMobileMenu()">Para Ti</a> <a routerLink="/coming-soon"
+        (click)="closeMobileMenu()">Comunidad</a>
       <a routerLink="/coming-soon" (click)="closeMobileMenu()">Eventos</a>
-      
+
       <a [routerLink]="['/landing']" fragment="planes" class="nav-premium">
         <span class="material-symbols-outlined premium-icon">crown</span>
         Premium
       </a>
     </div>
-    
+
     <div class="nav-search">
       <app-user-search></app-user-search>
     </div>
@@ -45,10 +46,17 @@
 
 
     <div class="profile-wrapper">
-      <span *ngIf="isLoggedIn()" (click)="toggleDropdown(); $event.stopPropagation()">
+
+      <span *ngIf="isLoggedIn() && dropdownMenuData" (click)="toggleDropdown(); $event.stopPropagation()"
+        class="logged-in-user">
+
+        <span *ngIf="dropdownMenuData.isPremium" class="material-symbols-outlined avatar-crown">
+          crown
+        </span>
+
         <img
-          [src]="(dropdownMenuData && dropdownMenuData.profilePhotoUrl) ? dropdownMenuData.profilePhotoUrl : 'assets/default-image.jpg'"
-          alt="Foto de perfil" class="profile-pic">
+          [src]="dropdownMenuData.profilePhotoUrl || 'assets/default-image.jpg'"
+          alt="Foto de perfil" class="profile-pic" [class.premium-border]="dropdownMenuData.isPremium">
       </span>
 
       <span *ngIf="!isLoggedIn()" class="material-symbols-outlined nav-icon profile-icon"

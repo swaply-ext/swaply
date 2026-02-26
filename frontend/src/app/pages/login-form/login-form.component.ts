@@ -7,6 +7,7 @@ import { RouterLink } from '@angular/router';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { AlertService } from '../../services/alert.service';
 
 interface User {
   email: string;
@@ -33,6 +34,7 @@ export class LoginFormComponent {
   accepted = false;
   showError = false;
   private authService = inject(AuthService);
+  private alertService = inject(AlertService)
 
   constructor(private router: Router, private http: HttpClient) { }
 
@@ -51,16 +53,18 @@ export class LoginFormComponent {
       email: this.email,
       password: this.password
     };
-
+    localStorage.removeItem('authToken');
     this.authService.login(newUser).subscribe({
       next: () => {
         this.router.navigate(['/']);
       },
       error: (err: HttpErrorResponse) => {
         if (err.status == 401) {
-          this.router.navigate(['/error-auth']);
+          this.alertService.show('error', 'login');
+
         } else {
-          this.router.navigate(['/error-auth']);
+          this.alertService.show('error', 'login');
+
         }
       }
     });

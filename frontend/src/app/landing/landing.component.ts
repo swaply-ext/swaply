@@ -1,18 +1,24 @@
+import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { PaymentService } from '../services/payment.service';
 import { PaymentResponse } from '../models/payment.model';
 import { AuthService } from '../services/auth.service';
 import { LoadingService } from '../services/loading.service';
+import { TermsConditionsComponent } from "../pages/terms-conditions/terms-conditions.component";
+import { PrivacyPolicyComponent } from "../pages/privacy-policy/privacy-policy.component";
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [RouterLink],
+  imports: [CommonModule, RouterLink, TermsConditionsComponent, PrivacyPolicyComponent],
   templateUrl: './landing.html',
   styleUrls: ['./landing.css']
 })
 export class LandingComponent {
+
+  showTermsModal = false;
+  showPrivacyModal = false;
 
   private paymentService = inject(PaymentService);
   private authService = inject(AuthService);

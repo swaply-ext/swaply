@@ -14,18 +14,25 @@ export class BirthDateComponent implements OnInit {
   @Input() hasError: boolean = false;
   @Output() birthDateChange = new EventEmitter<Date>();
 
-  minDate: string = '1930-01-01';
+  minDate: string = '';
   maxDate: string = '';
   
   errorMessage: string = '';
+  minYear: number = 0;
+  maxYear: number = 0;
 
   ngOnInit() {
     const today = new Date();
-    const year = today.getFullYear();
+    
+    this.maxYear = today.getFullYear() - 18; 
+    this.minYear = today.getFullYear() - 120; 
+
     const month = String(today.getMonth() + 1).padStart(2, '0');
     const day = String(today.getDate()).padStart(2, '0');
     
-    this.maxDate = `${year}-${month}-${day}`;
+    // Asignamos los límites para que el calendario HTML bloquee el resto de fechas
+    this.maxDate = `${this.maxYear}-${month}-${day}`;
+    this.minDate = `${this.minYear}-${month}-${day}`;
   }
 
   onDateChange(value: any) {
@@ -35,16 +42,16 @@ export class BirthDateComponent implements OnInit {
     if (value) {
       const inputDate = new Date(value);
       const selectedYear = inputDate.getFullYear();
-      const today = new Date();
 
-      if (selectedYear < 1930) {
-        this.errorMessage = 'El año no puede ser anterior a 1930';
+      // Validamos inmediatamente cuando el usuario cambia la fecha
+      if (selectedYear < this.minYear) {
+        this.errorMessage = `Por favor, introduce una fecha de nacimiento correcta.`;
         this.hasError = true;
-      } else if (inputDate > today) {
-        this.errorMessage = 'La fecha no puede estar en el futuro';
+      } else if (inputDate > new Date(this.maxDate)) {
+        this.errorMessage = 'Debes tener al menos 18 años para registrarte';
         this.hasError = true;
       }
-      
+    
       this.birthDateChange.emit(inputDate);
     } else {
       this.birthDateChange.emit(null as any);

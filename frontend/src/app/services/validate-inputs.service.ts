@@ -94,6 +94,15 @@ export class ValidateInputsService {
     return !!gender;
   }
 
+  public isPhoneValid(phone: number | string): boolean {
+    const numString = phone.toString();
+    const length = 9;
+    const requirements = /^[0-9]+$/;
+    const startsCorrectly = /^[6789]/;
+    
+    return numString.length === length && requirements.test(numString) && startsCorrectly.test(numString);
+  }
+
   public validateBirthDate(birthDate: string): { isValid: boolean, message: string } {
     if (!birthDate) {
       return { isValid: false, message: 'La fecha de nacimiento es obligatoria.' };
@@ -111,6 +120,17 @@ export class ValidateInputsService {
     }
 
     return { isValid: true, message: '' };
+  }
+
+  public formatLocation(displayName: string | undefined): string {
+    if (!displayName) {
+      return '';
+    }
+    const parts = displayName.split(', ');
+    if (parts.length > 1) {
+      return `${parts[0]}, ${parts[parts.length - 1]}`;
+    }
+    return displayName;
   }
 
   private isToday(date: Date): boolean {

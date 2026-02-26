@@ -1,4 +1,4 @@
-import { Component, signal, ChangeDetectionStrategy, computed } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy, computed, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AccountService } from '../../services/account.service';
 import { SwapService } from '../../services/swap.service';
@@ -7,6 +7,7 @@ import { RouterLink } from '@angular/router';
 import { Swap } from '../../models/swap.model';
 import { SwapProfileData} from '../../models/swap-profile-data';
 import { UserSkills } from '../../models/user-skills.model';
+import { ValidateInputsService } from '../../services/validate-inputs.service';
 
 @Component({
   selector: 'app-next-swap',
@@ -19,12 +20,14 @@ import { UserSkills } from '../../models/user-skills.model';
 export class NextSwapComponent {
   constructor(private swapService: SwapService,
     private accountService: AccountService,
-    private usersService: UsersService) { }
+    private usersService: UsersService,
+    public validateInputsService: ValidateInputsService) { }
 
   nextSwap = signal<Swap | null>(null);
   profileToTeach = signal<SwapProfileData | null>(null);
   profileToLearn = signal<SwapProfileData | null>(null);
 
+  showSwap = output<boolean>();
   hasIntercambio = signal(true);
   isConfirmed = signal(false);
   isDenied = signal(false);
@@ -63,15 +66,18 @@ export class NextSwapComponent {
         this.nextSwap.set(swap);
         if (swap?.requestedUserId) {
           this.hasIntercambio.set(true);
+          this.showSwap.emit(true);
           this.getUserLearn(swap.requestedUserId);
         }
         if (swap == null) {
+          this.showSwap.emit(false);
           this.hasIntercambio.set(false);
         }
       },
       error: (err) => {
         this.nextSwap.set(null);
         this.hasIntercambio.set(false);
+        this.showSwap.emit(false);
       }
     });
   }
@@ -194,7 +200,7 @@ export class NextSwapComponent {
 
   getSkillLevel(skills: UserSkills[], skillName: string): number {
     const normalizedName = this.normalizeString(skillName);
-    const skill = skills.find(s => { 
+    const skill = skills.find(s => {
       return this.normalizeString(s.id) === normalizedName
     });
     return skill ? Number(skill.level) || 0 : 0 ;

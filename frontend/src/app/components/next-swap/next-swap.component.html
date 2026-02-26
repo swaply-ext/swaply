@@ -29,9 +29,9 @@
               </div>
               
               <div class="badges-group">
-                <div class="info-badge" [title]="profileToLearn()?.location?.displayName">
+                <div class="info-badge">
                   <span class="material-symbols-outlined badge-icon">location_on</span>
-                  <span class="badge-text">{{ profileToLearn()?.location?.displayName }}</span>
+                  <span class="badge-text">{{validateInputsService.formatLocation(profileToLearn()?.location?.displayName)}}</span>
                 </div>
                 
                 <div class="info-badge user-link-container" [routerLink]="['/user', profileToLearn()?.username]" [title]="'@' + profileToLearn()?.username">
@@ -65,9 +65,9 @@
               </div>
 
               <div class="badges-group">
-                <div class="info-badge" [title]="profileToTeach()?.location?.displayName">
+                <div class="info-badge">
                   <span class="material-symbols-outlined badge-icon">location_on</span>
-                  <span class="badge-text">{{ profileToTeach()?.location?.displayName }}</span>
+                  <span class="badge-text">{{validateInputsService.formatLocation(profileToTeach()?.location?.displayName)}}</span>
                 </div>
                 
                 <div class="info-badge user-link-container" [routerLink]="['/user', profileToTeach()?.username]" [title]="'@' + profileToTeach()?.username">
