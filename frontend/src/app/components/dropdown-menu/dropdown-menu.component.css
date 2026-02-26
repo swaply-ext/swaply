@@ -48,13 +48,21 @@
   box-shadow: inset 0 -0.0625rem var(--secundary-color-2);
 }
 
+
 .profile-pic {
   width: 4rem;
   height: 4rem;
   border-radius: 50%;
-  border: 0.125rem solid var(--profile-pic-border);
+  border: 0.125rem solid var(--principal-color-2); 
   object-fit: cover;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
 }
+
+img.profile-pic.premium-border {
+  border: 0.125rem solid #E7B210 !important;
+  box-shadow: 0 0 8px rgba(231, 178, 16, 0.6) !important;
+}
+
 
 .profile-info {
   flex: 1;
