@@ -1,8 +1,8 @@
 .privacy-security-page {
   display: flex;
   justify-content: center;
-  padding-top: 5.625rem;
-  width: 80%;
+  padding-top: 2rem;
+  /* min-width: 80%; */
   margin: 0 auto;
 }
 
@@ -68,6 +68,14 @@
   font-size: 0.9rem;
   line-height: 1.6;
   color: var(--text-muted);
+}
+
+.action-row {
+  display: flex;
+  justify-content: flex-end; 
+  padding-top: 1rem;
+  border-top: 1px solid var(--divider-color);
+  margin-top: auto;
 }
 
 .btn-primary {
