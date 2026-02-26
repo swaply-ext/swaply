@@ -207,19 +207,19 @@ button {
 
 .unread-point {
   position: absolute;
-  width: 1.4rem;          /* círculo fijo */
+  width: 1.4rem;
   height: 1.4rem;
   background-color: red;
   border-radius: 50%;
   color: white;
-  font-size: 0.9rem;        /* número más grande */
+  font-size: 0.9rem;
   font-weight: 400;
   display: flex;
   align-items: center;
   justify-content: center;
   line-height: 1;
-  overflow: hidden;       /* evita que sobresalga */
-  transform: scale(0.8);  /* ajusta para que 9+ quepa */
+  overflow: hidden;
+  transform: scale(0.8);
 }
 
 
