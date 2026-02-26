@@ -267,8 +267,8 @@ img {
 }
 
 .card-user-info.premium-user .user-avatar {
-  border: 2px solid #B89230;
-  padding: 2px;
+  border: 0.125rem solid #B89230;
+  padding: 0.125rem;
 }
 
 .user-avatar {

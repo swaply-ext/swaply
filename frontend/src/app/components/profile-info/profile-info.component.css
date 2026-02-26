@@ -55,7 +55,7 @@ body {
 
 img.avatar.premium-border {
   border: 0.22rem solid #E7B210 !important; 
-  box-shadow: 0 0 16px rgba(231, 178, 16, 0.5) !important;
+  box-shadow: 0 0 1rem rgba(231, 178, 16, 0.5) !important;
 }
 
 .profile-crown {
@@ -65,7 +65,7 @@ img.avatar.premium-border {
   font-size: 2.75rem;
   z-index: 20;
   transform: rotate(15deg);
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
+  filter: drop-shadow(0 0.125rem 0.25rem rgba(0, 0, 0, 0.6));
   pointer-events: none;
   color: #E7B210;
 }
