@@ -44,13 +44,7 @@
 
             <div class="card-header-row">
 
-                <div class="card-user-info"
-                     [routerLink]="['/user', card.username]"
-                     (click)="$event.stopPropagation()"
-                     style="cursor: pointer;">
-                  <img [src]="card.profilePhotoUrl" [alt]="card.username" class="user-avatar">
-                  <span>{{ card.username }}</span>
-                </div>
+
 
               <div class="card-user-info" [routerLink]="['/user', card.username]" (click)="$event.stopPropagation()"
                 [class.premium-user]="card.isPremium">
