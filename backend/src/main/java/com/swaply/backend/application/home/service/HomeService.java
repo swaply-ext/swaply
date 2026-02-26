@@ -4,6 +4,7 @@ import com.swaply.backend.application.search.dto.UserSwapDTO;
 import com.swaply.backend.shared.UserCRUD.Model.User;
 import com.swaply.backend.shared.UserCRUD.Model.UserSkills;
 import com.swaply.backend.shared.UserCRUD.UserRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.swaply.backend.shared.location.LocationService;
 
@@ -24,7 +25,7 @@ public class HomeService {
         this.locationService = locationService;
     }
 
-    public List<UserSwapDTO> getRecommendedMatches(String currentUserId) {
+    public List<UserSwapDTO> getRecommendedMatches(String currentUserId, Pageable pageable) {
         User myUser = userRepository.findUserById(currentUserId).orElse(null);
 
         if (myUser == null || myUser.getInterests() == null || myUser.getInterests().isEmpty()) {
@@ -45,7 +46,7 @@ public class HomeService {
 
         List<String> myInterestIds = new ArrayList<>(myInterestLevels.keySet());
 
-        List<User> candidates = userRepository.findUsersByMultipleSkillIds(myInterestIds);
+         List<User> candidates = userRepository.findUsersByMultipleSkillIds(myInterestIds);
 
         List<UserSwapDTO> matches = candidates.stream()
                 .filter(user -> !user.getId().equals(currentUserId))
@@ -83,7 +84,22 @@ public class HomeService {
         List<UserSwapDTO> finalMatches = new ArrayList<>(premiumMatches);
         finalMatches.addAll(notPremiumMatches);
         return finalMatches;
+    }
 
+    // --- HELPER PARA LIMPIAR DISTANCIA ---
+    // Convierte "12.5 km", "12,5", "Lejos" en un número Double ordenable
+    private double getNumericDistance(UserSwapDTO dto) {
+        if (dto.getDistance() == null) return Double.MAX_VALUE;
+        try {
+            // Quitamos "km", espacios y cambiamos coma por punto
+            String clean = dto.getDistance().toLowerCase()
+                    .replace("km", "")
+                    .replace(",", ".")
+                    .trim();
+            return Double.parseDouble(clean);
+        } catch (Exception e) {
+            return Double.MAX_VALUE; // Si falla, lo mandamos al final
+        }
     }
 
     private boolean isReciprocalMatch(User otherUser,  Map<String, Integer> mySkillsLevels) {
@@ -104,25 +120,29 @@ public class HomeService {
 
     }
 
-    private Stream<UserSwapDTO> extractMatchingSkills(User otherUser, Map<String, Integer> myInterestLevels,
-            String currentUserId) {
-        String distance = locationService.calculateDistance(currentUserId, otherUser.getUsername());
+    private Stream<UserSwapDTO> extractMatchingSkills(User otherUser, Map<String, Integer> myInterestLevels, String currentUserId) {
+        String distance;
+        try {
+            distance = locationService.calculateDistance(currentUserId, otherUser.getUsername());
+        } catch (Exception e) {
+            distance = null;
+        }
+        
+        String finalDistance = distance;
 
         return otherUser.getSkills().stream()
                 .filter(skill -> {
                     String skillId = normalizeString(skill.getId());
-                    if (!myInterestLevels.containsKey(skillId))
-                        return false;
+                    if (!myInterestLevels.containsKey(skillId)) return false;
                     int myLevel = myInterestLevels.get(skillId);
                     int otherLevel = skill.getLevel() != null ? skill.getLevel() : 0;
                     return otherLevel >= myLevel;
                 })
-                .map(skill -> mapToCard(otherUser, skill, true, distance));
+                .map(skill -> mapToCard(otherUser, skill, true, finalDistance));
     }
 
     private String normalizeString(String input) {
-        if (input == null)
-            return "";
+        if (input == null) return "";
         String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
         return pattern.matcher(normalized).replaceAll("").toLowerCase().trim();
@@ -135,17 +155,14 @@ public class HomeService {
         dto.setUsername(user.getUsername());
         dto.setProfilePhotoUrl(user.getProfilePhotoUrl());
         dto.setPremium(user.isPremium());
-
         dto.setSkillId(skill.getId());
         dto.setSkillName("Clase de " + (skill.getName() != null ? skill.getName() : skill.getId()));
         dto.setSkillCategory(skill.getCategory());
         dto.setSkillLevel(skill.getLevel());
         dto.setSkillIcon(skill.getIcon() != null ? skill.getIcon() : "🎓");
-
-        dto.setDistance(distance != null ? String.valueOf(distance) : null);
+        dto.setDistance(distance); // Guardamos el string tal cual viene
         dto.setRating(5.0);
         dto.setSwapMatch(isMatch);
-
         return dto;
     }
 }

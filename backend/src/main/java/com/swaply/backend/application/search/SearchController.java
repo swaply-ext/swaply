@@ -3,6 +3,8 @@ package com.swaply.backend.application.search;
 import com.swaply.backend.application.search.dto.UserSwapDTO;
 import com.swaply.backend.application.search.service.SearchService;
 import com.swaply.backend.config.security.SecurityUser;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -22,10 +24,10 @@ public class SearchController {
     @GetMapping("/match")
     public ResponseEntity<List<UserSwapDTO>> searchMatches(
             @RequestParam String skill,
-            @AuthenticationPrincipal SecurityUser user) {
+            @AuthenticationPrincipal SecurityUser user,
+            @PageableDefault(size = 6) Pageable pageable) { // Por defecto 6
         
-        List<UserSwapDTO> results = searchService.searchUsersWithMatch(skill, user.getUsername());
-        
+        List<UserSwapDTO> results = searchService.searchUsersWithMatch(skill, user.getUsername(), pageable);
         return ResponseEntity.ok(results);
     }
 
@@ -34,8 +36,7 @@ public class SearchController {
             @PathVariable String username,
             @AuthenticationPrincipal SecurityUser user) {
 
-
-    UserSwapDTO target = searchService.getUserByUsername(username);
+        UserSwapDTO target = searchService.getUserByUsername(username);
 
         if (target != null) {
             return ResponseEntity.ok(target);
@@ -43,5 +44,4 @@ public class SearchController {
             return ResponseEntity.notFound().build();
         }
     }
-
 }

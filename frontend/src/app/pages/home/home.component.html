@@ -21,35 +21,31 @@
         </div>
       </div>
 
-      <div *ngIf="isLoadingMatches()" class="loading-matches-indicator">
+      <div *ngIf="isLoadingMatches() && cards().length === 0" class="loading-matches-indicator">
         <div class="spinner-mini"></div>
         <span>Cargando resultados...</span>
       </div>
 
-      <div class="card-grid" *ngIf="!isLoadingMatches()">
-        <div class="skill-card" *ngFor="let card of cards()" (click)="goToSwap(card)">
+      <div class="card-grid" *ngIf="!isLoadingMatches() || cards().length > 0">
 
+        <div class="skill-card" *ngFor="let card of cards()" (click)="goToSwap(card)">
           <div class="card-image-wrapper">
              <img *ngIf="card.skillImage" [src]="card.skillImage" [alt]="card.skillName" class="card-image"
                 (error)="card.skillImage = undefined">
-             
              <div *ngIf="!card.skillImage" class="card-image-placeholder">
                {{ card.skillIcon || '⚡' }}
              </div>
           </div>
 
           <div class="card-content clickable-user">
-
             <div class="card-header-row">
-                
-                <div class="card-user-info" 
+                <div class="card-user-info"
                      [routerLink]="['/user', card.username]"
                      (click)="$event.stopPropagation()"
                      style="cursor: pointer;">
                   <img [src]="card.profilePhotoUrl" [alt]="card.username" class="user-avatar">
                   <span>{{ card.username }}</span>
                 </div>
-
                 <div class="level-container" [ngClass]="getLevelClass(card.skillLevel)">
                     <span class="level-text">{{ getLevelLabel(card.skillLevel) }}</span>
                     <div class="level-bars">
@@ -58,7 +54,6 @@
                       <div class="bar" [class.active]="(card.skillLevel || 1) >= 3"></div>
                     </div>
                 </div>
-
             </div>
 
             <h3>{{ card.skillName }}</h3>
@@ -68,7 +63,6 @@
                 <span class="material-symbols-outlined">bolt</span>
                 ¡MATCH!
               </div>
-
               <div *ngIf="!card.isSwapMatch" class="match-status no-match">
                 <span class="material-symbols-outlined">person</span>
                 No tiene interés en tus habilidades
@@ -91,9 +85,16 @@
       <div class="see-more-button" *ngIf="!isLoadingMatches() && !hasSearched() && cards().length === 0">
         <p class="msg-instruction">Añade intereses a tu perfil para ver recomendaciones.</p>
       </div>
-      <div class="see-more-button" *ngIf="canLoadMore() && !isLoadingMatches()">
+
+      <div class="see-more-button" *ngIf="canLoadMore() && !isLoadingMatches() && cards().length > 0">
         <button class="btn btn-primary" (click)="loadMore()">Ver Más</button>
       </div>
+
+      <div class="loading-more-indicator" *ngIf="isLoadingMatches() && cards().length > 0" style="text-align: center; padding: 20px;">
+        <div class="spinner-mini" style="display: inline-block;"></div>
+        <span style="margin-left: 10px;">Cargando más...</span>
+      </div>
+
     </section>
   </main>
 </div>

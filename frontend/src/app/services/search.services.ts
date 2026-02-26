@@ -13,16 +13,23 @@ import { UserSwapDTO } from '../models/userSwapDTO.model';
 export class SearchService {
   private http = inject(HttpClient);
 
-  getMatches(skill: string): Observable<UserSwapDTO[]> {
-    const params = new HttpParams().set('skill', skill);
+  getMatches(skill: string, page: number, size: number): Observable<UserSwapDTO[]> {
+    const params = new HttpParams()
+        .set('skill', skill)
+        .set('page', page.toString())
+        .set('size', size.toString());
     return this.http.get<UserSwapDTO[]>(`/search/match`, {
       params,
       context: new HttpContext().set(SKIP_LOADING, true)
     });
   }
 
-  getRecommendations(): Observable<UserSwapDTO[]> {
+  getRecommendations(page: number, size: number): Observable<UserSwapDTO[]> {
+    const params = new HttpParams()
+        .set('page', page.toString())
+        .set('size', size.toString());
     return this.http.get<UserSwapDTO[]>(`/home/recommendations`, {
+      params,
       context: new HttpContext().set(SKIP_LOADING, true)
     });
   }
