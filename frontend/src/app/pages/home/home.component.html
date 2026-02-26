@@ -4,10 +4,12 @@
 
   <main class="main-content">
 
-    <section class="interchange-section">
-      <h2 class="section-title">Próximo Intercambio</h2>
-      <app-next-swap></app-next-swap>
-    </section>
+    @if (showSwap()){
+      <section class="interchange-section">
+        <h2 class="section-title">Próximo Intercambio</h2>
+        <app-next-swap (showSwap)="showSwap.set($event)"></app-next-swap>
+      </section>
+    }
 
     <section class="nearby-section">
       <div class="nearby-header">
@@ -32,7 +34,7 @@
           <div class="card-image-wrapper">
              <img *ngIf="card.skillImage" [src]="card.skillImage" [alt]="card.skillName" class="card-image"
                 (error)="card.skillImage = undefined">
-             
+
              <div *ngIf="!card.skillImage" class="card-image-placeholder">
                {{ card.skillIcon || '⚡' }}
              </div>
@@ -41,8 +43,8 @@
           <div class="card-content clickable-user">
 
             <div class="card-header-row">
-                
-                <div class="card-user-info" 
+
+                <div class="card-user-info"
                      [routerLink]="['/user', card.username]"
                      (click)="$event.stopPropagation()"
                      style="cursor: pointer;">

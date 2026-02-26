@@ -39,7 +39,7 @@ body {
 .panel-row {
   display: flex;
   gap: 1.875rem;
-  flex-wrap: wrap; 
+  flex-wrap: wrap;
 }
 
 /* PANELS */
@@ -113,7 +113,7 @@ body {
   position: relative;
   flex: 1;
   max-width: 17.5rem;
-  overflow: hidden; 
+  overflow: hidden;
 }
 
 .password-wrapper input {
@@ -279,8 +279,7 @@ body {
   border: none;
   padding: 0;
   cursor: pointer;
-  color: inherit; 
-  text-decoration: underline; 
+  text-decoration: underline;
 }
 
 .toggle-slider {

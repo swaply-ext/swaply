@@ -15,7 +15,8 @@ export class ActionButtonsComponent {
 
   // Botón "Registrar"
   onRegistrarseClick() {
-    this.submit.emit(); 
+    localStorage.removeItem('authToken');
+    this.submit.emit();
   }
 
   // Botón "Iniciar sesión"
