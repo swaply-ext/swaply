@@ -56,7 +56,7 @@ export class RegisterFormComponent {
   constructor(
     private router: Router,
     private registerDataService: RegisterDataService,
-    private alertService: AlertService    
+    private alertService: AlertService
   ) { }
 
   register() {
@@ -79,7 +79,7 @@ export class RegisterFormComponent {
       return;
     }
 
-    if (!this.username || this.validateUsername(this.username)) {
+    if (this.validateUsername(this.username)) {
       this.showError = true;
       this.hasErrorAll = true;
       this.message = 'Debes introducir un nombre de usuario válido';
@@ -108,27 +108,32 @@ export class RegisterFormComponent {
       return;
     }
 
-    // 🔹 Registro inicial (verifica email y username en backend)
     const newUser = { username: this.username, email: this.email, password: this.password };
+
     this.registerDataService.initialRegister(newUser).subscribe({
       next: () => {
-        // Guardamos datos y vamos a la siguiente pantalla
         this.registerDataService.setRegisterData(newUser);
         this.router.navigateByUrl('/code-sent-confirmation');
       },
       error: (err) => {
-        console.error('Error capturado:', err);
-        const backendMessage = (err.error?.text || err.error || err.message || '').toString().toLowerCase();
+        const backendMessage = this.extractErrorMessage(err).toLowerCase();
 
-        if (backendMessage.includes('email') || backendMessage.includes('correo')) {
-          this.alertService.show('error', 'generic', { msg: 'Este correo ya está registrado.' });
-        } else if (backendMessage.includes('username') || backendMessage.includes('usuario')) {
-          this.alertService.show('warning', 'generic', { msg: 'Ese nombre de usuario no está disponible.' });
+        if (backendMessage.includes('username')) {
+          this.alertService.show('warning', 'usernameInUse');
+        } else if (backendMessage.includes('email')) {
+          this.alertService.show('error', 'emailInUse');
         } else {
-          this.alertService.show('error', 'generic');
+          this.alertService.show('error', 'registerFailed');
         }
       }
     });
+  }
+
+  private extractErrorMessage(err: any): string {
+    if (err.message) return err.message;
+    if (!err.error) return '';
+    if (typeof err.error === 'string') return err.error;
+    return err.error.message || err.error.text || JSON.stringify(err.error);
   }
 
   private validateEmail(email: string): boolean {
@@ -152,11 +157,12 @@ export class RegisterFormComponent {
     if (!number.test(password)) return { valid: false, message: 'Debe contener al menos un número.' };
     if (!special.test(password)) return { valid: false, message: 'Debe contener al menos un carácter especial (!@#$%^&*?).' };
     if (simpleSeq.test(password)) return { valid: false, message: 'No use secuencias simples o información personal.' };
-    if (password.toLowerCase() == this.email.toLowerCase()) return { valid: false, message: `No use su correo electrónico` };
-    if (password.toLowerCase() == this.username.toLowerCase()) return { valid: false, message: `No use su nombre de usuario` };
+    if (password.toLowerCase() === this.email.toLowerCase()) return { valid: false, message: 'No use su correo electrónico.' };
+    if (password.toLowerCase() === this.username.toLowerCase()) return { valid: false, message: 'No use su nombre de usuario.' };
 
     return { valid: true, message: '' };
   }
+
   onPasswordChange(password: string) {
     this.password = password;
     const passwordValidation = this.validatePassword(password);
@@ -172,11 +178,11 @@ export class RegisterFormComponent {
   private validateUsername(username: string): boolean {
     const minLength = 3;
     const maxLength = 30;
-    const requeriments = /^[a-z0-9_-]+$/
+    const requeriments = /^[a-z0-9_-]+$/;
 
     if (username.length < minLength) return true;
     if (username.length > maxLength) return true;
     if (!requeriments.test(username)) return true;
-    else return false;
+    return false;
   }
 }

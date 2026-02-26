@@ -111,6 +111,9 @@ public class SwapService {
 
     public Swap getNextSwap(String id) {
         UserDTO userSwap = userService.getUserByID(id);
+        if (userSwap.getSwaps() == null) {
+            throw new SwapNotFoundException("Swap not found");
+        }
         Swap nextSwap = userSwap.getSwaps().stream()
                 .filter(l -> l.getStatus() == Swap.Status.STANDBY)
                 .filter(l -> !l.getIsRequester())
