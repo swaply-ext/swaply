@@ -61,7 +61,7 @@ export class PublicProfileComponent implements OnInit {
   public skills: PanelSkill[] = [];
   public profileData: ProfileData = {} as ProfileData;
   public clasesImpartidas: any[] = [];
-  public isHistoryOpen: boolean = true; 
+  public isHistoryOpen: boolean = true;
   public privateProfileData: PrivateProfileData = {} as PrivateProfileData;
   private currentUsername: string = '';
 
@@ -117,7 +117,9 @@ export class PublicProfileComponent implements OnInit {
       const usernameFromUrl = params.get('username');
 
       if (!usernameFromUrl) {
-        this.router.navigate(['/error-404']);
+        this.router.navigate(['/error'],{
+          state: {type: 'not-found'}
+        });
         return;
       }
 
@@ -135,14 +137,18 @@ export class PublicProfileComponent implements OnInit {
         // Log vital para ver que datos llegan del backend
         console.log(' [PublicProfile] Datos del usuario publico recibidos del backend:', user);
         if (!user) {
-          this.router.navigate(['/error-404']);
+          this.router.navigate(['/error'],{
+          state: {type: 'not-found'}
+        });
           return;
         }
         this.splitAndSendUser(user);
       },
       error: (err: any) => {
         console.error('Error cargando perfil:', err);
-        this.router.navigate(['/error-404']);
+        this.router.navigate(['/error'],{
+          state: {type: 'not-found'}
+        });
       }
     });
   }
@@ -162,8 +168,8 @@ export class PublicProfileComponent implements OnInit {
     return list.map(item => {
       const rawId = item.id || item.skillName || item.name || 'unknown';
       return {
-        id: rawId.toString(), 
-        level: item.level || 0 
+        id: rawId.toString(),
+        level: item.level || 0
       };
     });
   }
@@ -210,7 +216,7 @@ export class PublicProfileComponent implements OnInit {
       if (originalId === 'unknown') return;
       const fileName = fileMapper[originalId] || originalId;
 
-      let category = 'leisure'; 
+      let category = 'leisure';
       if (sportsList.includes(fileName)) category = 'sports';
       else if (musicList.includes(fileName)) category = 'music';
 
@@ -218,7 +224,7 @@ export class PublicProfileComponent implements OnInit {
         user: fakeStudents[index % fakeStudents.length].name,
         userImg: fakeStudents[index % fakeStudents.length].img,
         img: `assets/photos_skills/${category}/${fileName}.jpg`,
-        titulo: `Clase de ${originalId.charAt(0).toUpperCase() + originalId.slice(1)}`, 
+        titulo: `Clase de ${originalId.charAt(0).toUpperCase() + originalId.slice(1)}`,
         rating: (4.0 + Math.random()).toFixed(1)
       });
     });

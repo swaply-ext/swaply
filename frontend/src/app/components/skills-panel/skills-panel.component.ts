@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { SkillCardComponent } from '../skill-card/skill-card.component';
@@ -18,18 +18,30 @@ export class SkillsPanelComponent {
 
   open = true;
 
-  constructor(private router: Router) {}
+  sortedSkills: Array<SkillInput> = [];
+
+  constructor(private router: Router) { }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['SkillInput']) {
+      this.sortSkills();
+    }
+  }
+
+  private sortSkills() {
+    this.sortedSkills = [...this.SkillInput].sort((a, b) => b.level - a.level);
+  }
 
   togglePanel() {
     this.open = !this.open;
   }
 
-  goToSkills() { 
-      this.router.navigate(['/skills']);
+  goToSkills() {
+    this.router.navigate(['/skills']);
   }
 
-  handleLevelChange(event: {id: string, newLevel: number}) {
-  console.log(`Guardar en BD: ID ${event.id} ahora es nivel ${event.newLevel}`);
-  // Aquí llamarías a un servicio para guardar
-}
+  handleLevelChange(event: { id: string, newLevel: number }) {
+    console.log(`Guardar en BD: ID ${event.id} ahora es nivel ${event.newLevel}`);
+    // Aquí llamarías a un servicio para guardar
+  }
 }
