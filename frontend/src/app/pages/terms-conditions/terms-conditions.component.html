@@ -1,13 +1,13 @@
 <app-app-navbar *ngIf="!isModal"></app-app-navbar>
-
-<div [ngClass]="isModal ? 'modal-overlay' : 'privacy-security-page'">
-  <div [ngClass]="isModal ? 'modal-content' : 'privacy-security-layout'">
+<div class="page-wrapper">
+<div [ngClass]="isModal ? 'modal-overlay' : 'profile-page-container'">
+  <div [ngClass]="isModal ? 'modal-content' : 'profile-bottom-row'">
     
-    <aside class="privacy-security-sidebar" *ngIf="!isModal">
+    <aside class="profile-side-layout" *ngIf="!isModal">
       <app-side-menu></app-side-menu>
     </aside>
 
-    <main [ngClass]="{'privacy-security-content': !isModal}">
+    <main class="profile-info-container">
       <section class="panel">
         <h2>Términos y Condiciones de Servicio</h2>
         <p class="panel-description">Acuerdo vinculante entre el usuario y la plataforma Swaply.</p>
@@ -51,5 +51,6 @@
       </section>
     </main>
 
+  </div>
   </div>
 </div>

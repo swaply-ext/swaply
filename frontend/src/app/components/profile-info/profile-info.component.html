@@ -38,6 +38,12 @@
 
   </div>
 
+  <div class="right-block">
+
+    <div class="description">
+    {{ profileData.description }}
+  </div>
+
   <div class="actions" *ngIf="isPublic">
     <button class="btn-message" (click)="contactUser()">
       <span class="material-icons">chat_bubble_outline</span>
@@ -50,7 +56,6 @@
     </button>
   </div>
 
-  <div class="description">
-    {{ profileData.description }}
+  
   </div>
 </div>

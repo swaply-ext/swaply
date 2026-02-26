@@ -1,23 +1,16 @@
-body {
-  min-height: 100vh;
-  margin: 0;
-  background: linear-gradient(to bottom, #012534 0%, #00839E 100%);
-}
-
 .profile-page-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.875rem; 
-  width: 100%;
+  gap: 1.875rem;
   margin: 0 auto;
-  padding: 1.25rem;
+  padding-top: 2rem;
 }
-
+ 
 app-profile-info {
   width: 100%;
 }
-
+ 
 .profile-info-container {
   width: 100%;
   display: flex;
@@ -27,10 +20,10 @@ app-profile-info {
   border-radius: 1rem;
   padding: 1.875rem;
   color: #fff;
-  margin: 2rem;
+  margin: 0 2rem;
   box-shadow: 0 0.25rem 0.9375rem rgba(0,0,0,0.3);
 }
-
+ 
 .profile-skills,
 .profile-interests {
   border-radius: 0.75rem;
@@ -40,17 +33,17 @@ app-profile-info {
   margin-left: 19rem;
   box-sizing: border-box;
 }
-
-
+ 
+ 
 .profile-skills {
   justify-content: flex-start;
 }
-
+ 
 .profile-interests {
   justify-content: flex-end;
 }
-
-@media (max-width: 900px) {
+ 
+@media (max-width: 56.25rem) {
   .profile-skills,
   .profile-interests {
     flex: 1 1 100%;
@@ -61,63 +54,63 @@ app-profile-info {
     min-height: auto;
   }
 }
-
+ 
 .profile-row {
   display: flex;
   justify-content: space-between;
   gap: 1.25rem;
-
+ 
 }
-
+ 
 .profile-section {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
-
+ 
 .profile-section label {
   font-weight: 600;
   font-size: 0.95rem;
   color: #d2faff;
 }
-
+ 
 .profile-section.image {
   flex: 0 0 9.375rem;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-
+ 
 .avatar-container {
   position: relative;
   width: 9.375rem;
   height: 9.375rem;
   margin: 0 auto;
 }
-
+ 
 .avatar-wrapper {
   width: 100%;
   height: 100%;
   cursor: pointer;
   border-radius: 50%;
-  overflow: hidden; 
+  overflow: hidden;
   box-shadow: 0 0.25rem 0.625rem rgba(0,0,0,0.2);
 }
-
+ 
 .profile-avatar {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border: 0.1875rem solid #00bcd4;
   display: block;
-  border-radius: 50%; 
+  border-radius: 50%;
   transition: filter 0.3s ease;
 }
-
+ 
 .profile-avatar.loading {
   filter: blur(0.1875rem) brightness(0.7);
 }
-
+ 
 .avatar-overlay {
   position: absolute;
   top: 0;
@@ -128,12 +121,12 @@ app-profile-info {
   display: flex;
   justify-content: center;
   align-items: center;
-  opacity: 0; 
+  opacity: 0;
   transition: opacity 0.3s ease;
   border-radius: 50%;
-  pointer-events: none; 
+  pointer-events: none;
 }
-
+ 
 .add-photo-btn {
   position: absolute;
   bottom: 0.3125rem;
@@ -141,9 +134,9 @@ app-profile-info {
   width: 2.25rem;
   height: 2.25rem;
   border-radius: 50%;
-  background-color: #3CB57C; 
+  background-color: #3CB57C;
   color: white;
-  border: 0.125rem solid #0F2D37; 
+  border: 0.125rem solid #0F2D37;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -152,17 +145,17 @@ app-profile-info {
   transition: transform 0.2s ease, background-color 0.2s;
   z-index: 10;
 }
-
+ 
 .add-photo-btn:hover {
   transform: scale(1.1);
   background-color: #319b69;
 }
-
+ 
 .add-photo-btn span {
   font-size: 1.5rem;
   font-weight: bold;
 }
-
+ 
 .spinner {
   width: 1.875rem;
   height: 1.875rem;
@@ -171,30 +164,30 @@ app-profile-info {
   border-top-color: #fff;
   animation: spin 1s ease-in-out infinite;
 }
-
+ 
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
-
+ 
 .profile-section.names {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 0.9375rem;
 }
-
+ 
 .name-field {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
-
+ 
 .name-field label {
   font-weight: 600;
   font-size: 0.95rem;
   color: #d2faff;
 }
-
+ 
 .name-field input {
   background: rgba(255, 255, 255, 0.1);
   border: 0.0625rem solid #00bcd4;
@@ -205,20 +198,20 @@ app-profile-info {
   outline: none;
   transition: border-color 0.2s ease, background 0.2s ease;
 }
-
+ 
 .name-field input:focus {
   border-color: #00eaff;
   background: rgba(255, 255, 255, 0.15);
 }
-
+ 
 .name-field input::placeholder {
   color: rgba(255, 255, 255, 0.6);
 }
-
+ 
 .profile-section.full {
   width: 100%;
 }
-
+ 
 .profile-section input,
 .profile-section select,
 .profile-section textarea {
@@ -231,29 +224,29 @@ app-profile-info {
   outline: none;
   transition: border-color 0.2s ease, background 0.2s ease;
 }
-
+ 
 .profile-section option {
   color: black;
 }
-
+ 
 .profile-section input:focus,
 .profile-section select:focus,
 .profile-section textarea:focus {
   border-color: #00eaff;
   background: rgba(255, 255, 255, 0.15);
 }
-
+ 
 .profile-section.about textarea {
   width: 100%;
   resize: none;
   height: 6.25rem;
 }
-
+ 
 .profile-section.half {
   flex: 1;
 }
-
-@media (max-width: 700px) {
+ 
+@media (max-width: 43.75rem) {
   .profile-row {
     flex-direction: column;
   }
@@ -261,7 +254,7 @@ app-profile-info {
     width: 100%;
   }
 }
-
+ 
 .error-message {
   color: var(--error-color-1, #ff6b6b);
   font-size: 0.85rem;
@@ -269,50 +262,50 @@ app-profile-info {
   padding-left: 0.3125rem;
   text-align: left;
 }
-
+ 
 .input-error {
-  border: 0.125rem solid var(--error-color-2, #ff4d4d) !important; 
+  border: 0.125rem solid var(--error-color-2, #ff4d4d) !important;
 }
-
+ 
 .disable {
   background-color: rgba(255, 255, 255, 0.1) !important;
   pointer-events: none;
   color: #aaa !important;
   border: 0.0625rem solid #555 !important;
 }
-
+ 
 .button-row {
   display: flex;
   justify-content: center;
   gap: 2.5rem;
   margin-top: 1.25rem;
 }
-
+ 
 .profile-bottom-row {
   display: flex;
   width: 100%;
   gap: 1.25rem;
   align-items: stretch;
 }
-
+ 
 .profile-side-layout {
   flex-shrink: 0;
   width: 15.625rem;
 }
-
+ 
 /* CSS DEL SUBCOMPONENTE SKILLS PANEL */
-
+ 
 .profile-panels-container {
   display: flex;
   flex-direction: column;
-  align-items: stretch;   
+  align-items: stretch;  
   gap: 1rem;
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
 }
-
-
+ 
+ 
 .profile-skills,
 .profile-interests {
   border-radius: 0.75rem;
@@ -320,16 +313,16 @@ app-profile-info {
   flex: 1;
   box-sizing: border-box;
 }
-
+ 
 .profile-skills {
   justify-content: flex-start;
 }
-
+ 
 .profile-interests {
   justify-content: flex-end;
 }
-
-@media (max-width: 900px) {
+ 
+@media (max-width: 56.25rem) {
   .profile-skills,
   .profile-interests {
     flex: 1 1 100%;
@@ -339,7 +332,7 @@ app-profile-info {
     padding: 0.75rem;
     min-height: auto;
   }
-
+ 
   .profile-actions {
     flex-direction: column;
     gap: 0.5rem;

@@ -1,24 +1,24 @@
-.privacy-security-page {
+.profile-page-container {
   display: flex;
-  justify-content: center;
-  padding-top: 5.625rem;
-  width: 80%;
-  margin: 0 auto;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 2rem;
 }
 
-.privacy-security-layout {
+.profile-bottom-row {
   display: flex;
   width: 100%;
-  max-width: 81.25rem;
+  /* max-width: 81.25rem; */
+  gap: 1.5rem;
+  justify-content: center;
 }
 
-.privacy-security-sidebar {
-  width: 16.25rem;
-  margin-right: 1.875rem;
+.profile-side-layout {
   flex-shrink: 0;
+  width: 15.625rem;
 }
 
-.privacy-security-content {
+.profile-info-container {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -83,7 +83,7 @@
   display: flex;
   justify-content: flex-end;
   padding-top: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 0.0625rem solid rgba(255, 255, 255, 0.1);
   margin-top: auto;
 }
 
@@ -128,7 +128,7 @@
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.75); 
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(0.25rem);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -147,16 +147,15 @@
 }
 
 @media (max-width: 56.25rem) {
-  .privacy-security-layout {
+  .profile-bottom-row {
     flex-direction: column;
+    align-items: center;
   }
-  .privacy-security-sidebar {
+  .profile-side-layout {
     width: 100%;
-    margin-right: 0;
-    margin-bottom: 1.25rem;
+    max-width: 17.5rem;
   }
-  .privacy-security-page {
-    width: 95%;
-    padding-top: 4rem;
+  .profile-info-container {
+    width: 100%;
   }
 }

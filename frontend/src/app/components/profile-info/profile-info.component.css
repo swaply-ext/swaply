@@ -11,11 +11,15 @@ body {
   color: #d9f7e7;
   font-family: "Quicksand", sans-serif;
   display: flex;
-  align-items: flex-start;
+  /* align-items: flex-start; */
   gap: 2rem;
   position: relative;
   background-color: var(--bg-panel);
 
+}
+
+.profile-card > * {
+  min-width: 0;
 }
 
 .edit-icon {
@@ -148,12 +152,27 @@ img.avatar.premium-border {
   margin: 0;
 }
 
+.right-block {
+  display: flex;
+  flex-direction: column;
+  gap: 1.7rem;
+  flex: 1;
+  min-width: 0;
+}
+
+
+.description {
+  font-size: 0.95rem;
+  color: #e0e0e0;
+  line-height: 1.5;
+  margin: 0;
+}
+
+
 .actions {
   display: flex;
   gap: 1rem;
-  margin-top: auto;
-  margin-bottom: 0.5rem;
-  align-self: flex-start;
+  /* margin-top: auto; */
 }
 
 .btn-message {
@@ -168,7 +187,6 @@ img.avatar.premium-border {
   cursor: pointer;
   border-radius: 1.25rem;
   transition: all 0.2s ease;
-
   background-color: transparent;
   border: 0.125rem solid var(--principal-color-2);
   color: var(--principal-color-2);
@@ -197,11 +215,7 @@ img.avatar.premium-border {
   border-radius: 1.25rem;
   font-family: inherit;
   cursor: pointer;
-  transition:
-    transform 0.2s,
-    background-color 0.2s;
-  margin: 0;
-  align-self: auto;
+  transition: transform 0.2s, background-color 0.2s;
 }
 
 .btn-swap-internal:hover {
@@ -213,17 +227,33 @@ img.avatar.premium-border {
   font-size: 1.1rem;
 }
 
-.description {
-  flex: 1;
-  font-size: 0.95rem;
-  color: #e0e0e0;
-  line-height: 1.5;
-  margin: 0;
-  padding-top: 0.5rem;
-  align-self: center;
+
+
+@media (max-width: 75rem) {
+
+  .profile-card {
+   display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+   flex-direction: column;
+  }
+
+@media (max-width: 75rem) {
+
+  .description {
+    order: 3;
+  }
+
+  .actions {
+    order: 2;
+  }
+
+}
+
 }
 
 @media (max-width: 56.25rem) {
+
   .profile-card {
     flex-direction: column;
     align-items: center;
@@ -240,10 +270,15 @@ img.avatar.premium-border {
     justify-content: center;
   }
 
+  .actions {
+    margin-top: 1rem;
+    width: 100%;
+    justify-content: center;
+  }
+
   .description {
     width: 100%;
     text-align: center;
-    margin-top: 1rem;
   }
 
   .edit-icon {
@@ -251,10 +286,4 @@ img.avatar.premium-border {
     right: 0.8rem;
   }
 
-  .actions {
-    align-self: center;
-    margin-top: 1rem;
-    width: 100%;
-    justify-content: center;
-  }
 }
