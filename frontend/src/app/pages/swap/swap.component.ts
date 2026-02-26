@@ -10,15 +10,12 @@ import { ProfileDataDTO } from '../../models/profile-data-dto.model';
 import { RouterLink } from '@angular/router';
 import { map, switchMap } from 'rxjs';
 import { ValidateInputsService } from '../../services/validate-inputs.service';
-
-// Importamos los nuevos paneles genéricos
 import { SkillsPanelComponent } from "../../components/skills-panel/skills-panel.component";
 import { InterestsPanelComponent } from "../../components/interests-panel/interests-panel.component";
 
 @Component({
   selector: 'app-swap',
   standalone: true,
-  // Añadidos SkillsPanelComponent y InterestsPanelComponent aquí
   imports: [CommonModule, AppNavbarComponent, SkillsPanelComponent, InterestsPanelComponent, RouterLink],
   templateUrl: './swap.component.html',
   styleUrls: ['./swap.component.css']
@@ -30,7 +27,6 @@ export class SwapComponent implements OnInit {
 
   locationTargetUser: string = 'No existe';
 
-  // Guardan la información mostrada en la cabecera (incluyendo la ID seleccionada)
   selectedTeachSkill = signal<any>(null);
   selectedTargetSkill = signal<{
     id?: string;
@@ -40,7 +36,6 @@ export class SwapComponent implements OnInit {
     location?: string;
   } | null>(null);
 
-  // Arrays puros de {id, level} para los paneles
   mySkillsDisplay = signal<any[]>([]);
   targetUserInterests = signal<any[]>([]);
 
@@ -103,7 +98,6 @@ export class SwapComponent implements OnInit {
           }
         }
 
-        // Simplemente guardamos la lista filtrada
         this.targetUserInterests.set(filteredTargetSkills);
 
         if (filteredTargetSkills.length > 0) {
@@ -121,7 +115,6 @@ export class SwapComponent implements OnInit {
         const myRawSkills = me.skills || [];
         const filteredMySkills = this.filterMatch(myRawSkills, targetInterests);
         
-        // Simplemente guardamos la lista filtrada
         this.mySkillsDisplay.set(filteredMySkills);
 
         if (filteredMySkills.length > 0) {
@@ -142,17 +135,15 @@ export class SwapComponent implements OnInit {
     });
   }
 
-  // --- NUEVAS FUNCIONES DE SELECCIÓN ---
 
   selectTargetInterest(skill: any) {
     const currentUser = this.targetUser();
     const categorySafe = skill.category || '';
     
-    // Obtenemos la imagen para la cabecera
     const safeImage = skill.image || this.assignImageToSkill(categorySafe, skill.name || skill.id) || 'assets/default-avatar.png';
 
     this.selectedTargetSkill.set({
-      id: skill.id, // Guardamos la ID para marcar la tarjeta
+      id: skill.id, 
       skillName: skill.name || skill.id,
       skillIcon: skill.icon,
       skillImage: safeImage,
@@ -165,14 +156,12 @@ export class SwapComponent implements OnInit {
     const safeImage = skill.image || this.assignImageToSkill(categorySafe, skill.name || skill.id) || 'assets/default-avatar.png';
 
     this.selectedTeachSkill.set({
-      id: skill.id, // Guardamos la ID para marcar la tarjeta
+      id: skill.id,
       name: skill.name || skill.id,
       icon: skill.icon,
       image: safeImage
     });
   }
-
-  // --- TEXTOS PARA LA CABECERA ---
 
   getTeachSkillName() {
     const info = this.selectedTeachSkill();
