@@ -14,8 +14,9 @@
 }
 
 .profile-side-layout {
-  flex-shrink: 0;
-  width: 15.625rem;
+  flex: 0 1 fit-content; 
+  min-width: 15.625rem;  
+  max-width: 100%;
 }
 
 .profile-info-container {
@@ -270,8 +271,8 @@ input:checked+.toggle-slider:before {
   }
 
   .profile-side-layout {
-    width: 15.625rem;
-    flex-shrink: 0;
+    flex: 0 1 18rem;
+    min-width: 15.625rem;  
   }
 
   .profile-info-container {
@@ -296,7 +297,7 @@ input:checked+.toggle-slider:before {
 
   .profile-side-layout {
     width: 100%;
-    max-width: 17.5rem;
+    max-width: 100%;
   }
 
   .profile-info-container {

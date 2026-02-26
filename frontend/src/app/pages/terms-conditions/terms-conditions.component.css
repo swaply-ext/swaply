@@ -14,8 +14,9 @@
 }
 
 .profile-side-layout {
-  flex-shrink: 0;
-  width: 15.625rem;
+  flex: 0 1 fit-content; 
+  min-width: 15.625rem;  
+  max-width: 100%;
 }
 
 .profile-info-container {
@@ -153,7 +154,7 @@
   }
   .profile-side-layout {
     width: 100%;
-    max-width: 17.5rem;
+    max-width: 100%;
   }
   .profile-info-container {
     width: 100%;
