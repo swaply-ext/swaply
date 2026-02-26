@@ -10,7 +10,7 @@
   box-sizing: border-box;
   overflow: visible;
   opacity: 0;
-  transform: translateY(12px) scale(0.95);
+  transform: translateY(0.75rem) scale(0.95);
   pointer-events: none;
   transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), 
               transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -19,22 +19,21 @@
 
 .dropdown-overlay.show {
   opacity: 1;
-  transform: translateY(8px) scale(1);
+  transform: translateY(0.5rem) scale(1);
   pointer-events: auto;
 
 }
 
-/* Arrow on the right edge */
 .dropdown-arrow {
   position: absolute;
-  top: -8px;
-  right: 20px;
+  top: -0.5rem;
+  right: 1.25rem;
   width: 0;
   height: 0;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-bottom: 10px solid var(--bg-card);
-  filter: drop-shadow(0 -2px 3px rgba(0, 0, 0, 0.15));
+  border-left: 0.625rem solid transparent;
+  border-right: 0.625rem solid transparent;
+  border-bottom: 0.625rem solid var(--bg-card);
+  filter: drop-shadow(0 -0.125rem 0.1875rem rgba(0, 0, 0, 0.15));
 }
 
 .profile-card-wrapper {
@@ -67,23 +66,22 @@
   border-radius: 50%;
   border: 0.125rem solid var(--principal-color-2); 
   object-fit: cover;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.3);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .profile-pic:hover {
   transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(60, 181, 124, 0.3);
+  box-shadow: 0 0.25rem 0.75rem rgba(60, 181, 124, 0.3);
 }
 
-/* Premium crown badge */
 .premium-badge {
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
   font-size: 1.5rem;
   color: #E7B210;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+  filter: drop-shadow(0 0.125rem 0.25rem rgba(0, 0, 0, 0.5));
   animation: crownPulse 2s ease-in-out infinite;
 }
 
@@ -196,7 +194,7 @@ img.profile-pic.premium-border {
 .menu-btn:hover {
   background: rgba(60, 181, 124, 0.15);
   color: var(--text-white);
-  transform: translateX(4px);
+  transform: translateX(0.25rem);
 }
 
 .menu-btn:hover::before {
@@ -209,7 +207,7 @@ img.profile-pic.premium-border {
 }
 
 .menu-btn:active {
-  transform: translateX(4px) scale(0.98);
+  transform: translateX(0.25rem) scale(0.98);
 }
 
 .icon {
@@ -224,7 +222,7 @@ img.profile-pic.premium-border {
 
 .profile-logout {
   padding: 0.5rem 0.75rem 0.75rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 0.0625rem solid rgba(255, 255, 255, 0.05);
 }
 
 .logout-btn {
