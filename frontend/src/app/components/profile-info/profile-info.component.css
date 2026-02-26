@@ -152,26 +152,6 @@ img.avatar.premium-border {
   margin: 0;
 }
 
-.rating {
-  display: flex;
-  align-items: center;
-  gap: 0.2rem;
-  color: #f1c40f;
-  margin-top: 0.5rem;
-  font-size: 0.9rem;
-}
-
-.rating .material-icons {
-  font-size: 1.1rem;
-}
-
-.rating span {
-  color: #f1c40f;
-  margin-left: 0.3rem;
-  font-weight: bold;
-}
-
-
 .right-block {
   display: flex;
   flex-direction: column;
