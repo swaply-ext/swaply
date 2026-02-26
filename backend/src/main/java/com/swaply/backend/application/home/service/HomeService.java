@@ -46,7 +46,7 @@ public class HomeService {
 
         List<String> myInterestIds = new ArrayList<>(myInterestLevels.keySet());
 
-         List<User> candidates = userRepository.findUsersByMultipleSkillIds(myInterestIds);
+        List<User> candidates = userRepository.findUsersByMultipleSkillIdsList(myInterestIds);
 
         List<UserSwapDTO> matches = candidates.stream()
                 .filter(user -> !user.getId().equals(currentUserId))
@@ -83,26 +83,18 @@ public class HomeService {
         // Le añadimos la lista de ordenados por distancia a la de los premium
         List<UserSwapDTO> finalMatches = new ArrayList<>(premiumMatches);
         finalMatches.addAll(notPremiumMatches);
-        return finalMatches;
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), finalMatches.size());
+
+        if (start > end)
+            return Collections.emptyList();
+
+        return finalMatches.subList(start, end);
+
     }
 
-    // --- HELPER PARA LIMPIAR DISTANCIA ---
-    // Convierte "12.5 km", "12,5", "Lejos" en un número Double ordenable
-    private double getNumericDistance(UserSwapDTO dto) {
-        if (dto.getDistance() == null) return Double.MAX_VALUE;
-        try {
-            // Quitamos "km", espacios y cambiamos coma por punto
-            String clean = dto.getDistance().toLowerCase()
-                    .replace("km", "")
-                    .replace(",", ".")
-                    .trim();
-            return Double.parseDouble(clean);
-        } catch (Exception e) {
-            return Double.MAX_VALUE; // Si falla, lo mandamos al final
-        }
-    }
-
-    private boolean isReciprocalMatch(User otherUser,  Map<String, Integer> mySkillsLevels) {
+    private boolean isReciprocalMatch(User otherUser, Map<String, Integer> mySkillsLevels) {
         if (otherUser.getInterests() == null)
             return false;
 
@@ -120,20 +112,21 @@ public class HomeService {
 
     }
 
-    private Stream<UserSwapDTO> extractMatchingSkills(User otherUser, Map<String, Integer> myInterestLevels, String currentUserId) {
+    private Stream<UserSwapDTO> extractMatchingSkills(User otherUser, Map<String, Integer> myInterestLevels,
+            String currentUserId) {
         String distance;
         try {
             distance = locationService.calculateDistance(currentUserId, otherUser.getUsername());
         } catch (Exception e) {
             distance = null;
         }
-        
         String finalDistance = distance;
 
         return otherUser.getSkills().stream()
                 .filter(skill -> {
                     String skillId = normalizeString(skill.getId());
-                    if (!myInterestLevels.containsKey(skillId)) return false;
+                    if (!myInterestLevels.containsKey(skillId))
+                        return false;
                     int myLevel = myInterestLevels.get(skillId);
                     int otherLevel = skill.getLevel() != null ? skill.getLevel() : 0;
                     return otherLevel >= myLevel;
@@ -142,7 +135,8 @@ public class HomeService {
     }
 
     private String normalizeString(String input) {
-        if (input == null) return "";
+        if (input == null)
+            return "";
         String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
         return pattern.matcher(normalized).replaceAll("").toLowerCase().trim();
