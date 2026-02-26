@@ -13,7 +13,7 @@
 
   <div *ngIf="open" class="skills-grid">
     <app-skill-card
-      *ngFor="let item of SkillInput"
+      *ngFor="let item of sortedSkills"
       [id]="item.id"
       [level]="item.level"
       [editable]="!isPublic && editable"

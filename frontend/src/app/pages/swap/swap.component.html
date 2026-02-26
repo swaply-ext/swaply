@@ -1,10 +1,10 @@
 <app-app-navbar></app-app-navbar>
 
 <div class="swap-page-container">
-  
+
   <div class="interchange-box">
     <div class="interchange-content">
-      
+
       <div class="interchange-card-wrapper" *ngIf="myUser() as me">
         <h3 class="section-title">Lo que puedes ofrecer</h3>
 
@@ -12,18 +12,18 @@
           <div class="img-wrapper">
             <img class="activity-img" [src]="mySkill.image || 'assets/default-avatar.png'" [alt]="mySkill.name" />
           </div>
-          
+
           <div class="card-details">
             <div class="card-header-info">
               <h4>{{ getTeachSkillName() }}</h4>
             </div>
-            
+
             <div class="badges-group">
-              <div class="info-badge" [title]="me.location?.displayName">
+              <div class="info-badge" [title]="me.location.displayName">
                 <span class="material-symbols-outlined badge-icon">location_on</span>
                 <span class="badge-text">{{ validateInputsService.formatLocation(me.location.displayName) }}</span>
               </div>
-              
+
               <div class="info-badge user-link-container">
                 <div class="avatar-wrapper">
                   <img class="user-avatar" [src]="me.profilePhotoUrl || 'assets/default-avatar.png'" alt="Avatar" />
@@ -48,7 +48,7 @@
           <div class="img-wrapper">
             <img class="activity-img" [src]="getTargetSkillImage()" [alt]="getTargetSkillName()" />
           </div>
-          
+
           <div class="card-details">
             <div class="card-header-info">
               <h4>{{ getTargetSkillName() }}</h4>
@@ -59,7 +59,7 @@
                 <span class="material-symbols-outlined badge-icon">location_on</span>
                 <span class="badge-text">{{ locationTargetUser }}</span>
               </div>
-              
+
               <div class="info-badge user-link-container" [routerLink]="['/user', targetUser()?.username]" [title]="'@' + targetUser()?.username">
                 <div class="avatar-wrapper">
                   <img class="user-avatar" [src]="targetUser()?.profilePhotoUrl || 'assets/default-avatar.png'" alt="Avatar" />
@@ -75,7 +75,7 @@
   </div>
 
   <div class="panel-actions">
-    
+
     <div class="panel skills-panel" *ngIf="myUser() as me">
       <ng-container *ngIf="mySkillsDisplay().length > 0; else noMySkills">
         <app-swap-skills
@@ -92,7 +92,7 @@
         </div>
       </ng-template>
     </div>
-    
+
     <div class="panel interests-panel" *ngIf="targetUserInterests() as interests">
       <ng-container *ngIf="interests.length > 0; else noTargetSkills">
         <app-swap-interests
@@ -118,8 +118,8 @@
       <span class="material-symbols-outlined">close</span>
       CANCELAR
     </button>
-    
-    <button class="btn-action btn-accept" 
+
+    <button class="btn-action btn-accept"
             (click)="createSwap()"
             [disabled]="mySkillsDisplay().length === 0 || targetUserInterests().length === 0">
       <span class="material-symbols-outlined">done</span>

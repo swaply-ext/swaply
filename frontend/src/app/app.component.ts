@@ -5,11 +5,12 @@ import { CookiesComponent } from './components/cookies/cookies.component';
 import { LoadingService } from './services/loading.service';
 import { LoadingScreenComponent } from './components/loading-screen/loading-screen.component';
 import { NgIf, AsyncPipe } from '@angular/common';
+import { AlertComponent } from './components/alert/alert.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CookiesComponent, RouterModule, FormsModule, NgIf, LoadingScreenComponent, AsyncPipe],
+  imports: [RouterOutlet, CookiesComponent, RouterModule, FormsModule, NgIf, LoadingScreenComponent, AsyncPipe, AlertComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })

@@ -66,16 +66,18 @@ public class SearchService {
                         s -> s.getLevel() != null ? s.getLevel() : 0,
                         (existing, replacement) -> existing));
 
-        Set<String> myOfferingIds = (myUser.getSkills() != null)
-                ? myUser.getSkills().stream().map(s -> normalizeKey(s.getId())).collect(Collectors.toSet())
-                : Collections.emptySet();
+        Map<String, Integer> mySkillsLevels = myUser.getSkills().stream()
+                .collect(Collectors.toMap(
+                        s -> normalizeKey(s.getId()),
+                        s -> s.getLevel() != null ? s.getLevel() : 0,
+                        (existing, replacement) -> existing));
 
-        List<User> candidates = userRepository.findUsersByMultipleSkillIds(new ArrayList<>(searchIds));
+        List<User> candidates = userRepository.findUsersByFilterSkillsIds(new ArrayList<>(searchIds));
 
         List<UserSwapDTO> matches = candidates.stream()
                 .filter(user -> !user.getId().equals(myUserId))
                 .filter(user -> user.getSkills() != null)
-                .filter(user -> isReciprocalMatch(user, myOfferingIds))
+                .filter(user -> isReciprocalMatch(user, mySkillsLevels))
                 .flatMap(user -> extractMatchingSkills(user, myInterestLevels, myUserId))
                 .collect(Collectors.toList());
 
@@ -147,12 +149,22 @@ public class SearchService {
                 .map(skill -> mapToCard(otherUser, skill, true, distance));
     }
 
-    private boolean isReciprocalMatch(User otherUser, Set<String> myOfferingIds) {
+    private boolean isReciprocalMatch(User otherUser,  Map<String, Integer> mySkillsLevels) {
         if (otherUser.getInterests() == null)
             return false;
-        return otherUser.getInterests().stream()
-                .map(i -> normalizeKey(i.getId()))
-                .anyMatch(myOfferingIds::contains);
+
+        return otherUser.getInterests().stream().anyMatch(otherInterest -> {
+
+            String id = normalizeKey(otherInterest.getId());
+            int otherRequiredLevel = otherInterest.getLevel() != null ? otherInterest.getLevel() : 0;
+
+            if (!mySkillsLevels.containsKey(id))
+                return false;
+
+            int myLevel = mySkillsLevels.get(id);
+            return myLevel >= otherRequiredLevel;
+        });
+
     }
 
     private static void registerSynonyms(String... terms) {

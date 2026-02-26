@@ -1,0 +1,155 @@
+/* --- VARIABLES DE COLOR --- */
+:host {
+  --alert-primary-bg: #356b8a; /* Azul base de Swapply */
+  --alert-text-inv: #ffffff;
+  --transition-speed: 0.3s;
+
+  /* Colores por categoría */
+  --color-success: #3cb57c;
+  --color-error: #a11d1d;
+  --color-warning: #f1a100;
+  --color-info: #00839e;
+
+  display: block;
+  position: fixed;
+  z-index: 9999;
+}
+
+/* --- OVERLAY (TELÓN) --- */
+.alert-overlay {
+  position: fixed;
+  inset: 0; /* Cubre toda la pantalla */
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(0.25rem);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+/* --- CONTENEDOR PRINCIPAL (LA CARD) --- */
+.alert-container {
+  background-color: var(--alert-primary-bg);
+  padding: 3rem 2rem;
+  border-radius: 1rem;
+  text-align: center;
+  max-width: 28rem;
+  width: 100%;
+  position: relative;
+  box-shadow: 0 0.625rem 1.875rem rgba(0, 0, 0, 0.4);
+  animation: scaleIn var(--transition-speed) ease-out;
+
+  /* Color dinámico que heredarán los hijos */
+  --current-color: var(--color-info);
+}
+
+/* --- LOGICA DE COLORES POR CLASE --- */
+.alert-container.success { --current-color: var(--color-success); }
+.alert-container.error   { --current-color: var(--color-error); }
+.alert-container.warning { --current-color: var(--color-warning); }
+.alert-container.info    { --current-color: var(--color-info); }
+
+.alert-container.warning .icon-circle .material-icons {
+  transform: translateY(-0.4rem); /* Subimos un poco más de lo habitual */
+}
+.alert-container.success .icon-circle .material-icons,
+.alert-container.error .icon-circle .material-icons {
+  transform: translateY(0); /* Reset por si acaso */
+}
+
+/* --- EL CÍRCULO DEL ICONO --- */
+.icon-circle {
+  width: 8rem;
+  height: 8rem;
+  background-color: var(--current-color);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* Posicionamiento flotante */
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Centra el círculo sobre el borde superior */
+
+  box-shadow: 0 0.25rem 0.9375rem rgba(0, 0, 0, 0.3);
+  transition: background-color var(--transition-speed);
+}
+
+.icon-circle .material-icons {
+  color: var(--alert-text-inv);
+  font-size: 5rem;
+}
+
+/* --- TEXTOS --- */
+h2 {
+  color: var(--alert-text-inv);
+  font-size: 2.2rem;
+  margin: 1.5rem 0 0.5rem 0;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+}
+
+p {
+  color: var(--alert-text-inv);
+  font-size: 1.1rem;
+  line-height: 1.5;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+/* --- BOTÓN --- */
+.action-button {
+  background-color: var(--current-color);
+  color: var(--alert-text-inv);
+  padding: 0.8rem 3rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-speed);
+  text-transform: uppercase;
+}
+
+.action-button:hover {
+  filter: brightness(1.2);
+  transform: translateY(-0.125rem);
+  box-shadow: 0 0.3125rem 0.625rem rgba(0, 0, 0, 0.2);
+}
+
+.action-button:active {
+  transform: translateY(0);
+}
+
+/* --- ANIMACIONES --- */
+@keyframes scaleIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 30rem) {
+  .alert-container {
+    padding: 2.5rem 1.5rem;
+  }
+
+  h2 { font-size: 1.8rem; }
+
+  .icon-circle {
+    width: 6rem;
+    height: 6rem;
+  }
+
+  .icon-circle .material-icons {
+    font-size: 3.5rem;
+  }
+}

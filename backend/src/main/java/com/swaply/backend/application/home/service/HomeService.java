@@ -37,22 +37,25 @@ public class HomeService {
                         s -> s.getLevel() != null ? s.getLevel() : 0,
                         (existing, replacement) -> existing));
 
-        List<String> myInterestIds = new ArrayList<>(myInterestLevels.keySet());
+        Map<String, Integer> mySkillsLevels = myUser.getSkills().stream()
+                .collect(Collectors.toMap(
+                        s -> normalizeString(s.getId()),
+                        s -> s.getLevel() != null ? s.getLevel() : 0,
+                        (existing, replacement) -> existing));
 
-        Set<String> myOfferingIds = (myUser.getSkills() != null)
-                ? myUser.getSkills().stream().map(s -> normalizeString(s.getId())).collect(Collectors.toSet())
-                : Collections.emptySet();
+        List<String> myInterestIds = new ArrayList<>(myInterestLevels.keySet());
 
         List<User> candidates = userRepository.findUsersByMultipleSkillIds(myInterestIds);
 
         List<UserSwapDTO> matches = candidates.stream()
                 .filter(user -> !user.getId().equals(currentUserId))
                 .filter(user -> user.getSkills() != null)
-                .filter(user -> isReciprocalMatch(user, myOfferingIds))
+                .filter(user -> isReciprocalMatch(user, mySkillsLevels))
                 .flatMap(user -> extractMatchingSkills(user, myInterestLevels, currentUserId))
                 .collect(Collectors.toList());
 
-        // Hacemos una lista con los premium que haya encontrado en la lista de candidatos ordenados por distancia, de menor a mayor
+        // Hacemos una lista con los premium que haya encontrado en la lista de
+        // candidatos ordenados por distancia, de menor a mayor
         List<UserSwapDTO> premiumMatches = matches.stream()
                 .filter(user -> user.isPremium())
                 .sorted(Comparator.comparingDouble(d -> {
@@ -83,12 +86,22 @@ public class HomeService {
 
     }
 
-    private boolean isReciprocalMatch(User otherUser, Set<String> myOfferingIds) {
+    private boolean isReciprocalMatch(User otherUser,  Map<String, Integer> mySkillsLevels) {
         if (otherUser.getInterests() == null)
             return false;
-        return otherUser.getInterests().stream()
-                .map(i -> normalizeString(i.getId()))
-                .anyMatch(myOfferingIds::contains);
+
+        return otherUser.getInterests().stream().anyMatch(otherInterest -> {
+
+            String id = normalizeString(otherInterest.getId());
+            int otherRequiredLevel = otherInterest.getLevel() != null ? otherInterest.getLevel() : 0;
+
+            if (!mySkillsLevels.containsKey(id))
+                return false;
+
+            int myLevel = mySkillsLevels.get(id);
+            return myLevel >= otherRequiredLevel;
+        });
+
     }
 
     private Stream<UserSwapDTO> extractMatchingSkills(User otherUser, Map<String, Integer> myInterestLevels,
