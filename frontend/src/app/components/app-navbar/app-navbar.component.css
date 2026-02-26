@@ -84,7 +84,7 @@
 .nav-search input {
   width: 100%;
   padding: 0.6rem 1rem 0.6rem 2.8rem;
-  border-radius: 9999px;
+  border-radius: 624.9375rem;
   background-color: #0F2D37;
   color: #e5e7eb;
   border: 0.0625rem solid transparent;
@@ -152,10 +152,9 @@
   font-size: 1.5rem;
   z-index: 20;
   transform: rotate(15deg);
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.6));
+  filter: drop-shadow(0 0.125rem 0.25rem rgba(0, 0, 0, 0.6));
   pointer-events: none;
   
-  /* AQUÍ CAMBIAS EL COLOR DE LA CORONA */
   color: #E7B210; 
 }
 
@@ -171,26 +170,23 @@
 
 .profile-pic.premium-border {
   border-color: #E7B210;
-  box-shadow: 0 0 8px rgba(3, 219, 219, 0.5);
+  box-shadow: 0 0 0.5rem rgba(3, 219, 219, 0.5);
 }
-
 
 .dropdown-overlay {
   position: absolute;
-  top: 100%;
+  top: 100%; 
   right: -0.75rem;
   left: auto;
-  transform: translateY(0.5rem);
-  width: fit-content;
-  min-width: 15rem;
-  max-width: calc(100vw - 1rem);
-  padding: 1rem;
+  width: 16rem; 
+  padding: 0.5rem; 
   box-sizing: border-box;
   overflow: hidden;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s ease, transform 0.2s ease;
   z-index: 1000;
+  box-shadow: none;
 }
 
 .dropdown-overlay.show {
@@ -239,13 +235,13 @@ button {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0.625rem 0.9375rem -0.1875rem rgba(0, 0, 0, 0.2);
   }
 
   .nav-menu.open {
-    max-height: 600px;
+    max-height: 37.5rem;
     padding: 1.5rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-top: 0.0625rem solid rgba(255, 255, 255, 0.05);
   }
 
   .nav-links {
@@ -260,7 +256,7 @@ button {
     font-size: 1.2rem;
     padding: 1rem 0;
     width: 100%;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 0.0625rem solid rgba(255, 255, 255, 0.05);
   }
 
   .nav-premium {
