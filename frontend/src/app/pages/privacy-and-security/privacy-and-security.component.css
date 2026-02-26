@@ -33,6 +33,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 1.875rem;
+  padding-top: 2rem;
 }
 
 /* WRAPPER PARA CONTRASEÑA + 2FA */
