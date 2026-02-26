@@ -75,14 +75,18 @@
   </div>
 
   <div class="panel-actions">
-
+    
     <div class="panel skills-panel" *ngIf="myUser() as me">
       <ng-container *ngIf="mySkillsDisplay().length > 0; else noMySkills">
-        <app-swap-skills
-          [SkillsInput]="mySkillsDisplay()"
+        <app-skills-panel
+          title="Habilidades a ofrecer" 
+          [SkillInput]="mySkillsDisplay()"
+          [isPublic]="true"
           [editable]="false"
+          [selectable]="true"
+          [selectedSkillId]="selectedTeachSkill()?.id || ''"
           (skillSelected)="selectMySkill($event)">
-        </app-swap-skills>
+        </app-skills-panel>
       </ng-container>
 
       <ng-template #noMySkills>
@@ -95,12 +99,15 @@
 
     <div class="panel interests-panel" *ngIf="targetUserInterests() as interests">
       <ng-container *ngIf="interests.length > 0; else noTargetSkills">
-        <app-swap-interests
+        <app-interests-panel
+          [title]="'Habilidades de ' + targetUser()?.username"
           [InterestsInput]="interests"
+          [isPublic]="true"
           [editable]="false"
-          [targetUser]="targetUser()"
+          [selectable]="true"
+          [selectedSkillId]="selectedTargetSkill()?.id || ''"
           (skillSelected)="selectTargetInterest($event)">
-        </app-swap-interests>
+        </app-interests-panel>
       </ng-container>
 
       <ng-template #noTargetSkills>
@@ -112,7 +119,7 @@
     </div>
 
   </div>
-
+  
   <div class="btn-container">
     <button class="btn-action btn-reject" (click)="cancelSwap()">
       <span class="material-symbols-outlined">close</span>

@@ -12,13 +12,13 @@ button {
 
 @keyframes pulseGlow {
     0% { box-shadow: 0 0 0 0 rgba(60, 181, 124, 0.4); }
-    70% { box-shadow: 0 0 0 0.625rem rgba(60, 181, 124, 0); } 
+    70% { box-shadow: 0 0 0 0.625rem rgba(60, 181, 124, 0); }
     100% { box-shadow: 0 0 0 0 rgba(60, 181, 124, 0); }
 }
 
 @keyframes float {
-    0% { transform: translateY(0rem); } 
-    50% { transform: translateY(-0.3125rem); } 
+    0% { transform: translateY(0rem); }
+    50% { transform: translateY(-0.3125rem); }
     100% { transform: translateY(0rem); }
 }
 
@@ -26,8 +26,8 @@ button {
     background-color: var(--bg-interchange);
     padding: 2.5rem;
     border-radius: 1.5rem;
-    box-shadow: 0 0.625rem 1.875rem rgba(0, 0, 0, 0.2); 
-    border: 0.0625rem solid rgba(255, 255, 255, 0.04); 
+    box-shadow: 0 0.625rem 1.875rem rgba(0, 0, 0, 0.2);
+    border: 0.0625rem solid rgba(255, 255, 255, 0.04);
     position: relative;
     overflow: hidden;
 }
@@ -49,7 +49,7 @@ button {
     gap: 1rem;
     color: var(--text-muted);
     padding: 4rem 2rem;
-    border: 0.0625rem dashed rgba(255, 255, 255, 0.1); 
+    border: 0.0625rem dashed rgba(255, 255, 255, 0.1);
     background-color: rgba(0, 0, 0, 0.1);
 }
 
@@ -64,11 +64,11 @@ button {
 
 
 .interchange-content {
-    display: grid; 
+    display: grid;
     grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-    align-items: stretch; 
+    align-items: stretch;
     gap: 1.5rem;
-    margin-bottom: 2.5rem; 
+    margin-bottom: 2.5rem;
     position: relative;
     z-index: 1;
 }
@@ -76,13 +76,13 @@ button {
 .interchange-card-wrapper {
     display: flex;
     flex-direction: column;
-    height: 100%; 
+    height: 100%;
 }
 
 .section-title {
     font-size: 0.95rem;
     text-transform: uppercase;
-    letter-spacing: 0.0625rem; 
+    letter-spacing: 0.0625rem;
     color: var(--text-muted);
     margin-bottom: 1.2rem;
     font-weight: 600;
@@ -94,21 +94,21 @@ button {
     align-items: center;
     justify-content: center;
     padding: 0 1rem;
-    height: 100%; 
-    padding-top: 2rem; 
+    height: 100%;
+    padding-top: 2rem;
     box-sizing: border-box;
 }
 
 .swap-icon-wrapper {
     width: 3.5rem;
     height: 3.5rem;
-    background-color: rgba(60, 181, 124, 0.1); 
+    background-color: rgba(60, 181, 124, 0.1);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 0.0625rem solid rgba(60, 181, 124, 0.2); 
-    box-shadow: 0 0 1.25rem rgba(60, 181, 124, 0.05); 
+    border: 0.0625rem solid rgba(60, 181, 124, 0.2);
+    box-shadow: 0 0 1.25rem rgba(60, 181, 124, 0.05);
 }
 
 .pulse-animation {
@@ -124,19 +124,19 @@ button {
 .skill-card {
     display: flex;
     flex-direction: row;
-    gap: 1.5rem; 
+    gap: 1.5rem;
     background-color: rgba(255, 255, 255, 0.02);
-    border: 0.0625rem solid rgba(255, 255, 255, 0.05); 
+    border: 0.0625rem solid rgba(255, 255, 255, 0.05);
     padding: 1rem;
     border-radius: 1.2rem;
-    height: 100%; 
+    height: 100%;
     box-sizing: border-box;
     transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
 
 .skill-card:hover {
-    transform: translateY(-0.25rem); 
-    box-shadow: 0 0.75rem 1.75rem rgba(0, 0, 0, 0.2); 
+    transform: translateY(-0.25rem);
+    box-shadow: 0 0.75rem 1.75rem rgba(0, 0, 0, 0.2);
     background-color: rgba(255, 255, 255, 0.03);
     border-color: rgba(255, 255, 255, 0.08);
 }
@@ -151,21 +151,21 @@ button {
 }
 
 .activity-img {
-    width: 100%;      
-    height: 100%;    
+    width: 100%;
+    height: 100%;
     object-fit: cover;
     transition: transform 0.5s ease;
 }
 
 .skill-card:hover .activity-img {
-    transform: scale(1.05); 
+    transform: scale(1.05);
 }
 
 .card-details {
     display: flex;
     flex-direction: column;
     width: 100%;
-    min-width: 0; 
+    min-width: 0;
     padding: 0.2rem 0;
 }
 
@@ -195,7 +195,7 @@ button {
     font-weight: 600;
     color: var(--level-one-skill);
     text-transform: uppercase;
-    letter-spacing: 0.03125rem; 
+    letter-spacing: 0.03125rem;
 }
 
 .level-container.mid-level .level-text { color: var(--level-two-skill); }
@@ -223,19 +223,19 @@ button {
     display: flex;
     flex-direction: column;
     gap: 0.6rem;
-    margin-top: auto; 
-    padding-top: 1rem; 
+    margin-top: auto;
+    padding-top: 1rem;
 }
 
 .info-badge {
     display: inline-flex;
     align-items: center;
     gap: 0.6rem;
-    background-color: rgba(0, 0, 0, 0.3); 
+    background-color: rgba(0, 0, 0, 0.3);
     padding: 0.4rem 0.9rem;
-    border-radius: 2rem; 
-    border: 0.0625rem solid rgba(255, 255, 255, 0.03); 
-    max-width: 100%; 
+    border-radius: 2rem;
+    border: 0.0625rem solid rgba(255, 255, 255, 0.03);
+    max-width: 100%;
     box-sizing: border-box;
 }
 
@@ -252,7 +252,7 @@ button {
 .badge-icon {
     font-size: 1rem;
     color: var(--principal-color-2);
-    flex-shrink: 0; 
+    flex-shrink: 0;
 }
 
 .badge-text {
@@ -276,7 +276,7 @@ button {
     height: 1.5rem;
     border-radius: 50%;
     object-fit: cover;
-    border: 0.0625rem solid rgba(255,255,255,0.2); 
+    border: 0.0625rem solid rgba(255,255,255,0.2);
 }
 
 /* --- ÁREA DE ACCIONES (Botones) --- */
@@ -288,7 +288,7 @@ button {
     position: relative;
     z-index: 1;
     padding-top: 1rem;
-    border-top: 0.0625rem solid rgba(255, 255, 255, 0.04); 
+    border-top: 0.0625rem solid rgba(255, 255, 255, 0.04);
 }
 
 .status-badge, .btn-action {
@@ -296,8 +296,8 @@ button {
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-    padding: 0.7rem 1.4rem; 
-    font-size: 0.9rem; 
+    padding: 0.7rem 1.4rem;
+    font-size: 0.9rem;
     border-radius: 2rem;
     font-weight: 600;
     transition: all 0.2s ease;
@@ -314,31 +314,32 @@ button {
 
 /* BOTONES */
 .btn-reject {
-    background-color: transparent;
-    color: var(--text-gray-100);
-    border: 0.0625rem solid rgba(255,255,255,0.1); 
+    background-color: var(--error-color-1);
+    color: var(--text-white);
+    border: 0.0625rem solid rgba(255,255,255,0.1);
+
 }
 
 .btn-reject:hover {
-    background-color: rgba(229, 57, 53, 0.1);
-    color: var(--error-color-1);
-    border-color: rgba(229, 57, 53, 0.3);
+    filter: brightness(1.1);
+    transform: translateY(-0.125rem);
+    box-shadow: 0 0.375rem 1.25rem rgba(229, 57, 53, 0.3);
 }
 
 .btn-accept {
     background-color: var(--principal-color-2);
-    color: #000; 
-    box-shadow: 0 0.25rem 0.9375rem rgba(60, 181, 124, 0.3); 
+    color: var(--text-white);
+    box-shadow: 0 0.25rem 0.9375rem rgba(60, 181, 124, 0.3);
 }
 
 .btn-accept:hover {
-    background-color: var(--principal-color-2-hover);
+    filter: brightness(1.1);
     transform: translateY(-0.125rem);
-    box-shadow: 0 0.375rem 1.25rem rgba(60, 181, 124, 0.4); 
+    box-shadow: 0 0.375rem 1.25rem rgba(60, 181, 124, 0.4);
 }
 
 
-@media (max-width: 64rem) { 
+@media (max-width: 64rem) {
     .interchange-content {
         grid-template-columns: 1fr;
         gap: 1.5rem;
@@ -352,9 +353,9 @@ button {
     .swap-icon-wrapper {
         transform: rotate(90deg);
     }
-    
+
     .skill-card {
-        flex-direction: column; 
+        flex-direction: column;
         text-align: center;
     }
 
@@ -369,14 +370,14 @@ button {
 
     .badges-group {
         align-items: center;
-        margin-top: 1rem; 
+        margin-top: 1rem;
     }
-    
+
     .actions-area {
         flex-direction: column-reverse;
         gap: 0.8rem;
     }
-    
+
     .btn-action {
         width: 100%;
     }

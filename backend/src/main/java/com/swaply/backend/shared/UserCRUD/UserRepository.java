@@ -53,9 +53,13 @@ public interface UserRepository extends CosmosRepository<User, String> {
     @Query(value = "SELECT * FROM c WHERE c.type = 'user' AND EXISTS(SELECT VALUE s FROM s IN c.skills WHERE CONTAINS(s.id, @skillId, true))")
     List<User> findUsersBySingleSkillId(@Param("skillId") String skillId);
 
-    // Busqueda por multiples skills "esta es para el filtro"
+    // Busqueda por multiples skills "recomendaciones"
     @Query(value = "SELECT TOP 10 * FROM c WHERE c.type = 'user' AND EXISTS(SELECT VALUE s FROM s IN c.skills WHERE ARRAY_CONTAINS(@skillIds, s.id))")
     List<User> findUsersByMultipleSkillIds(@Param("skillIds") List<String> skillIds);
+
+    // Busqueda por multiples skills "esta es para el filtro"
+    @Query(value = "SELECT TOP 20 * FROM c WHERE c.type = 'user' AND EXISTS(SELECT VALUE s FROM s IN c.skills WHERE ARRAY_CONTAINS(@skillIds, s.id))")
+    List<User> findUsersByFilterSkillsIds(@Param("skillIds") List<String> skillIds);
 
     // Se obtiene unicamente el nombre de usuario a partir de una ID
     @Query(value = "SELECT VALUE c.username FROM c WHERE c.id = @id AND c.type = 'user'")

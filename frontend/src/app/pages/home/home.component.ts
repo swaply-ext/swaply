@@ -70,7 +70,7 @@ export class HomeComponent implements OnInit {
   canLoadMore = computed(() => this.cards().length < this.allCards.length);
 
   // --- Mock Data para UI (Demo) ---
-  hasIntercambio = signal(true);
+  showSwap = signal(true);
   isConfirmed = signal(false);
 
   ngOnInit() {
@@ -144,7 +144,7 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  private processResults(matches: UserSwapDTO[], calculateDistance: boolean) {
+ private processResults(matches: UserSwapDTO[], calculateDistance: boolean) {
     this.allCards = matches.map(m => ({
       ...m,
       skillImage: this.assignImageToSkill(m.skillCategory, m.skillName),
@@ -152,7 +152,7 @@ export class HomeComponent implements OnInit {
       distance: m.distance || 'Cerca'
     }));
 
-    this.itemsToShow.set(6); // Resetear paginación
+    this.itemsToShow.set(6); 
     this.updateView();
     this.isLoadingMatches.set(false);
 
@@ -220,7 +220,7 @@ export class HomeComponent implements OnInit {
   }
 
   toggleIntercambio() {
-    this.hasIntercambio.update(v => !v);
+    this.showSwap.update(v => !v);
     this.isConfirmed.set(false);
   }
 
