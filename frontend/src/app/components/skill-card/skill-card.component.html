@@ -5,9 +5,10 @@
     'mid-level': skill.level === 2,
     'high-level': skill.level === 3,
     'is-editable': editable,
+    'is-selectable': selectable, 
     'selected': selected
   }"
-  (click)="toggleCardLevel()"
+  (click)="handleCardClick()" 
 >
   <div class="card-header">
     <span class="skill-name">{{ skill.name }}</span>

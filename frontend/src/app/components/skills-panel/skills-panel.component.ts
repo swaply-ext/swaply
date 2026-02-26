@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { SkillCardComponent } from '../skill-card/skill-card.component';
@@ -6,30 +6,27 @@ import { SkillInput } from '../../services/skills.service';
 
 @Component({
   selector: 'app-skills-panel',
-  templateUrl: './skills-panel.component.html',
-  styleUrls: ['./skills-panel.component.css'],
   standalone: true,
-  imports: [CommonModule, SkillCardComponent]
+  imports: [CommonModule, SkillCardComponent],
+  templateUrl: './skills-panel.component.html',
+  styleUrls: ['./skills-panel.component.css']
 })
 export class SkillsPanelComponent {
-  @Input() SkillInput: Array<SkillInput> = [];
-  @Input() editable: boolean = false;
+  @Input() SkillInput: Array<SkillInput> = []; 
   @Input() isPublic: boolean = false;
+  @Input() editable: boolean = false;
+  @Input() title: string = 'Habilidades'; 
+
+  @Input() selectable: boolean = false;
+  @Input() selectedSkillId: string = '';
+  @Output() skillSelected = new EventEmitter<any>();
 
   open = true;
 
-  sortedSkills: Array<SkillInput> = [];
+  constructor(private router: Router) {}
 
-  constructor(private router: Router) { }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['SkillInput']) {
-      this.sortSkills();
-    }
-  }
-
-  private sortSkills() {
-    this.sortedSkills = [...this.SkillInput].sort((a, b) => b.level - a.level);
+  get sortedSkills() {
+    return [...this.SkillInput].sort((a: any, b: any) => (b.level || 0) - (a.level || 0));
   }
 
   togglePanel() {
@@ -40,8 +37,17 @@ export class SkillsPanelComponent {
     this.router.navigate(['/skills']);
   }
 
-  handleLevelChange(event: { id: string, newLevel: number }) {
-    console.log(`Guardar en BD: ID ${event.id} ahora es nivel ${event.newLevel}`);
-    // Aquí llamarías a un servicio para guardar
+  handleLevelChange(newLevel: any, item: any) {
+    item.level = newLevel;
+  }
+
+  onSkillSelected(item: any) {
+    if (this.selectable) {
+      this.skillSelected.emit(item);
+    }
+  }
+
+  trackByFn(index: number, item: any) {
+    return item.id;
   }
 }
