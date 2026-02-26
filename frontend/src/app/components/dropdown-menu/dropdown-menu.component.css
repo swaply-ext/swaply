@@ -60,7 +60,7 @@
 
 img.profile-pic.premium-border {
   border: 0.125rem solid #E7B210 !important;
-  box-shadow: 0 0 8px rgba(231, 178, 16, 0.6) !important;
+  box-shadow: 0 0 0.5rem rgba(231, 178, 16, 0.6) !important;
 }
 
 
