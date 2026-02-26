@@ -12,6 +12,7 @@ import { PrivacyPolicyComponent } from '../privacy-policy/privacy-policy.compone
 import { ActionButtonsComponent } from '../../components/action-buttons/action-buttons.component';
 import { UsernameInputComponent } from "../../components/username-input/username-input.component";
 import { RegisterDataService } from '../../services/register-data.service';
+import { AlertService } from '../../services/alert.service';
 
 interface User {
   username: string;
@@ -54,7 +55,8 @@ export class RegisterFormComponent {
 
   constructor(
     private router: Router,
-    private registerDataService: RegisterDataService
+    private registerDataService: RegisterDataService,
+    private alertService: AlertService    
   ) { }
 
   register() {
@@ -115,21 +117,15 @@ export class RegisterFormComponent {
         this.router.navigateByUrl('/code-sent-confirmation');
       },
       error: (err) => {
-        console.log('Conflicto backend:', err.message);
+        console.error('Error capturado:', err);
+        const backendMessage = (err.error?.text || err.error || err.message || '').toString().toLowerCase();
 
-        const typeError = err.message;
-        console.log(typeError.includes('email'));
-         if (typeError.includes('email')) {
-          this.showError = true;
-          this.hasErrorAll = true;
-          this.message = 'El correo ya está registrado';
-        } else if (typeError.includes('username')) {
-          this.showError = true;
-          this.hasErrorAll = true;
-          this.message = 'El username ya está registrado';
+        if (backendMessage.includes('email') || backendMessage.includes('correo')) {
+          this.alertService.show('error', 'generic', { msg: 'Este correo ya está registrado.' });
+        } else if (backendMessage.includes('username') || backendMessage.includes('usuario')) {
+          this.alertService.show('warning', 'generic', { msg: 'Ese nombre de usuario no está disponible.' });
         } else {
-          this.showError = true;
-          this.message = 'Error, inténtelo más tarde';
+          this.alertService.show('error', 'generic');
         }
       }
     });

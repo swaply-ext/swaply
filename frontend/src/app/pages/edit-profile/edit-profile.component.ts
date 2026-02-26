@@ -13,6 +13,8 @@ import { ValidateInputsService } from '../../services/validate-inputs.service';
 import { UserSkills } from '../../models/user-skills.model';
 import { UserLocation } from '../../models/user-location.model';
 import { EditProfileData } from '../../models/edit-profile.model';
+import { AlertService } from '../../services/alert.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -41,7 +43,9 @@ export class EditProfileComponent implements OnInit {
 
   constructor(
     private accountService: AccountService,
-    private validateInputsService: ValidateInputsService
+    private validateInputsService: ValidateInputsService,
+    private alertService: AlertService,
+    private router: Router
   ) { }
 
   // Variables individuales para enlazar con el formulario
@@ -189,7 +193,8 @@ export class EditProfileComponent implements OnInit {
       next: (success) => {
         if (success) {
           console.log('Perfil actualizado con éxito.');
-          window.location.reload();
+          this.alertService.show('success', 'generic', { msg: 'Tus cambios se han guardado correctamente.' });
+          this.router.navigate(['/myprofile']);
         } else {
           console.error('Error al actualizar el perfil: respuesta negativa del servidor.');
         }

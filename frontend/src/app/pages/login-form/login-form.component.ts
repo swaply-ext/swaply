@@ -59,13 +59,7 @@ export class LoginFormComponent {
         this.router.navigate(['/']);
       },
       error: (err: HttpErrorResponse) => {
-        if (err.status == 401) {
-          this.alertService.show('error', 'login');
-
-        } else {
-          this.alertService.show('error', 'login');
-
-        }
+       this.alertService.show('error', 'login');
       }
     });
   }

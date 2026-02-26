@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PaymentConfirmationDTO, PaymentResponse } from '../models/payment.model';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AlertService } from './alert.service';
 
 
 
@@ -16,6 +17,7 @@ export class PaymentService {
   private http = inject(HttpClient); //el inject es mejor que el constructor, pero sirve oara lo mismo
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private alertService = inject(AlertService);
 
   createCheckoutSession(): Observable<PaymentResponse> {
     return this.http.post<PaymentResponse>(`${this.API_URL}/checkout`, {});
@@ -46,16 +48,17 @@ export class PaymentService {
       next: () => {
 
         //se limpia la URL para quitar el session_id
+        this.alertService.show('success', 'premium');         
         this.router.navigate([], {
           queryParams: { session_id: null },
-          queryParamsHandling: 'merge', //este mantiene otros parámetros que pueda haber
-          replaceUrl: true //reemplaza el historial para que si le das para atrás no vuelva al pago
-        });
-        setLoading(false); //spinner fuera
+          queryParamsHandling: 'merge',
+          replaceUrl: true
+        });        
+        setLoading(false);
       },
       error: (err) => {
-        // El ID era falso, expirado o hubo error de red
         console.error('Error verificando pago:', err);
+        this.alertService.show('error', 'payment');
         setLoading(false);
       }
     });

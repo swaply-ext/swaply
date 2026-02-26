@@ -7,6 +7,7 @@ import { UsersService } from '../../services/users.service';
 import { AccountService } from '../../services/account.service';
 import { Swap } from '../../models/swap.model';
 import { ProfileDataDTO } from '../../models/profile-data-dto.model';
+import { AlertService } from '../../services/alert.service';
 
 
 
@@ -20,6 +21,7 @@ import { ProfileDataDTO } from '../../models/profile-data-dto.model';
 export class SwapRequestsComponent implements OnInit {
   private swapService = inject(SwapService);
   private usersService = inject(UsersService);
+  private alertService = inject(AlertService);
 
   requests = signal<Swap[]>([]);
   loading = signal<boolean>(true);
@@ -67,18 +69,26 @@ export class SwapRequestsComponent implements OnInit {
   acceptRequest(swap: Swap) {
     this.swapService.updateSwapStatus(swap.id, 'ACCEPTED').subscribe({
       next: () => {
+        this.alertService.show('success', 'swapAccepted'); 
         this.removeSwapFromList(swap.id);
       },
-      error: (err) => console.error(err)
+      error: (err) => {
+        console.error(err);
+        this.alertService.show('error', 'generic'); 
+      }
     });
   }
 
   rejectRequest(swap: Swap) {
     this.swapService.updateSwapStatus(swap.id, 'DENIED').subscribe({
       next: () => {
+        this.alertService.show('success', 'swapRejected'); 
         this.removeSwapFromList(swap.id);
       },
-      error: (err) => console.error(err)
+      error: (err) => {
+        console.error(err);
+        this.alertService.show('error', 'generic'); 
+      }
     });
   }
 
