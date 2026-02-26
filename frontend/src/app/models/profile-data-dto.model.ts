@@ -9,4 +9,5 @@ export interface ProfileDataDTO {
   interests: Array<UserSkills>
   skills: Array<UserSkills>;
   profilePhotoUrl: string;
+  isPremium?: boolean;
 }

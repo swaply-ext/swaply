@@ -1,24 +1,30 @@
 <div class="skills-panel-container">
   <header>
     <button class="toggle-btn" (click)="togglePanel()">
-      <span class="material-icons">keyboard_arrow_down</span>
+      <span class="material-symbols-outlined">keyboard_arrow_down</span>
     </button>
+    
+    <h1>{{ title }}</h1>
 
-    <h1>Intereses</h1>
-
-
-    <button *ngIf="!isPublic" class="edit-btn" (click)="goToInterests()">
+    <button *ngIf="!isPublic && !selectable" class="edit-btn" (click)="goToInterests()">
       <span class="material-icons">edit</span>
     </button>
   </header>
 
-  <div *ngIf="open" class="skills-grid">
+  <div [hidden]="!open" class="skills-grid">
     <app-skill-card
-      *ngFor="let item of sortedSkills"
+      *ngFor="let item of sortedInterests; trackBy: trackByFn"
       [id]="item.id"
-      [level]="item.level"
+      [level]="item.level || 0"
       [editable]="!isPublic && editable"
-      (levelChange)="handleLevelChange($event)">
+      [selectable]="selectable"
+      [selected]="(item.id) === selectedSkillId"
+      (click)="onSkillSelected(item)"
+      (levelChange)="handleLevelChange($event, item)">
     </app-skill-card>
+
+    <div *ngIf="InterestsInput.length === 0" class="empty-state-text">
+      No hay elementos para mostrar.
+    </div>
   </div>
 </div>

@@ -1,8 +1,12 @@
 <div class="profile-card-wrapper">
   <div class="profile-card">
     <div class="profile-header">
+      
       <img [src]="dropdownMenuData.profilePhotoUrl || 'assets/default-image.jpg'"
-           alt="Foto de perfil" class="profile-pic">
+           alt="Foto de perfil" 
+           class="profile-pic"
+           [class.premium-border]="dropdownMenuData.isPremium">
+           
       <div class="profile-info">
         <h3 class="name">{{ dropdownMenuData.fullName }}</h3>
         <p class="username">&#64;{{ dropdownMenuData.username }}</p>
