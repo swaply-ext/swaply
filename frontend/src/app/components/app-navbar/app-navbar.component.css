@@ -163,13 +163,13 @@
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 50%;
-  border: 0.15rem solid #E7B210;
+  
+  border: 0.15rem solid #3cb57c; 
   object-fit: cover;
   transition: border 0.3s ease, box-shadow 0.3s ease;
 }
 
 .profile-pic.premium-border {
-  /* AQUÍ CAMBIAS EL COLOR DEL BORDE PREMIUM */
   border-color: #E7B210;
   box-shadow: 0 0 8px rgba(3, 219, 219, 0.5);
 }

@@ -39,6 +39,7 @@ interface ProfileData {
   description: string;
   profilePhotoUrl: string;
   rating: number;
+  isPremium?: boolean;
 }
 
 @Component({
@@ -180,7 +181,8 @@ export class PublicProfileComponent implements OnInit {
       location: user.location,
       description: user.description || '',
       profilePhotoUrl: user.profilePhotoUrl || 'assets/people_demo/user_placeholder.png',
-      rating: user.rating || 0,
+      rating: user.rating || 0, 
+      isPremium: user.isPremium
     };
   }
 

@@ -32,7 +32,7 @@
 
     <div class="profile-wrapper">
 
-      <span *ngIf="isLoggedIn()" (click)="toggleDropdown(); $event.stopPropagation()"
+      <span *ngIf="isLoggedIn() && dropdownMenuData" (click)="toggleDropdown(); $event.stopPropagation()"
         class="logged-in-user">
 
         <span *ngIf="dropdownMenuData.isPremium" class="material-symbols-outlined avatar-crown">
@@ -40,7 +40,7 @@
         </span>
 
         <img
-          [src]="(dropdownMenuData && dropdownMenuData.profilePhotoUrl) ? dropdownMenuData.profilePhotoUrl : 'assets/default-image.jpg'"
+          [src]="dropdownMenuData.profilePhotoUrl || 'assets/default-image.jpg'"
           alt="Foto de perfil" class="profile-pic" [class.premium-border]="dropdownMenuData.isPremium">
       </span>
 
