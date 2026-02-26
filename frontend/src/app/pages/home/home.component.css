@@ -254,6 +254,21 @@ img {
   border-radius: 1rem;
   padding-right: 0.5rem;
   transition: background-color 0.3s;
+  cursor: pointer; 
+}
+
+.card-user-info:hover {
+  background-color: var(--principal-color-2-hover);
+}
+
+
+.card-user-info.premium-user:hover {
+  background-color: rgba(184, 146, 48, 0.85) !important;
+}
+
+.card-user-info.premium-user .user-avatar {
+  border: 0.125rem solid #B89230;
+  padding: 0.125rem;
 }
 
 .user-avatar {
@@ -270,7 +285,7 @@ img {
 }
 
 .card-user-info:hover {
-  background-color: var(--principal-color-2-hover);
+  background-color: var(--hover-bg, var(--principal-color-2-hover)) !important;
 }
 
 .level-container {

@@ -6,4 +6,5 @@ export interface PrivateProfileData {
   description: string;
   profilePhotoUrl: string;
   rating: number;
+  isPremium?: boolean;
 }
