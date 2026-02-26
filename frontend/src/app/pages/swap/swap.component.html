@@ -74,7 +74,9 @@
     </div>
   </div>
 
-  <div class="panel skills-panel" *ngIf="myUser() as me">
+  <div class="panel-actions">
+    
+    <div class="panel skills-panel" *ngIf="myUser() as me">
       <ng-container *ngIf="mySkillsDisplay().length > 0; else noMySkills">
         <app-skills-panel
           title="Habilidades a ofrecer" 
@@ -116,6 +118,8 @@
       </ng-template>
     </div>
 
+  </div>
+  
   <div class="btn-container">
     <button class="btn-action btn-reject" (click)="cancelSwap()">
       <span class="material-symbols-outlined">close</span>

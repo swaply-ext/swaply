@@ -3,19 +3,24 @@
     <button class="toggle-btn" (click)="togglePanel()">
       <span class="material-symbols-outlined">keyboard_arrow_down</span>
     </button>
+    
     <h1>{{ title }}</h1> 
+
+    <button *ngIf="!isPublic && !selectable" class="edit-btn" (click)="goToSkills()">
+      <span class="material-icons">edit</span>
+    </button>
   </header>
 
   <div *ngIf="open" class="skills-grid">
     <app-skill-card
-      *ngFor="let item of displaySkills; trackBy: trackByFn"
+      *ngFor="let item of sortedSkills; trackBy: trackByFn"
       [id]="item.id || item.name"
       [level]="item.level || 0"
       [editable]="!isPublic && editable"
       [selectable]="selectable"
       [selected]="(item.id || item.name) === selectedSkillId"
-      (levelChange)="handleLevelChange($event)"
-      (cardSelected)="onSkillSelected(item)">
+      (click)="onSkillSelected(item)"
+      (levelChange)="handleLevelChange($event, item)">
     </app-skill-card>
   </div>
 </div>

@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { SkillCardComponent } from '../skill-card/skill-card.component';
 
 @Component({
@@ -10,31 +11,35 @@ import { SkillCardComponent } from '../skill-card/skill-card.component';
   styleUrls: ['./interests-panel.component.css']
 })
 export class InterestsPanelComponent {
-  // Inputs generales (Perfil y Swap)
-  @Input() InterestsInput: any[] = [];
+  @Input() InterestsInput: Array<any> = []; 
   @Input() isPublic: boolean = false;
   @Input() editable: boolean = false;
-  
-  // Título dinámico (por defecto 'Intereses' para el perfil)
   @Input() title: string = 'Intereses'; 
 
-  // Inputs y Outputs exclusivos para el modo Swap
   @Input() selectable: boolean = false;
   @Input() selectedSkillId: string = '';
   @Output() skillSelected = new EventEmitter<any>();
 
   open = true;
 
+  constructor(private router: Router) {}
+
+  get sortedInterests() {
+    return [...this.InterestsInput].sort((a: any, b: any) => (b.level || 0) - (a.level || 0));
+  }
+
   togglePanel() {
     this.open = !this.open;
   }
 
+  goToInterests() {
+    this.router.navigate(['/interests']);
+  }
+
   handleLevelChange(newLevel: any, item: any) {
-    // Lógica para cuando cambian el nivel en modo edición
     item.level = newLevel;
   }
 
-  // Se dispara al hacer clic en una tarjeta si estamos en modo Swap
   onSkillSelected(item: any) {
     if (this.selectable) {
       this.skillSelected.emit(item);

@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { SkillCardComponent } from '../skill-card/skill-card.component';
 
 @Component({
@@ -10,34 +11,38 @@ import { SkillCardComponent } from '../skill-card/skill-card.component';
   styleUrls: ['./skills-panel.component.css']
 })
 export class SkillsPanelComponent {
-  // Inputs normales
-  @Input() SkillInput: any[] = [];
+  @Input() SkillInput: Array<any> = []; 
   @Input() isPublic: boolean = false;
   @Input() editable: boolean = false;
-  
-  // NUEVO: Título dinámico
   @Input() title: string = 'Habilidades'; 
 
-  // Inputs/Outputs del modo Swap
   @Input() selectable: boolean = false;
   @Input() selectedSkillId: string = '';
   @Output() skillSelected = new EventEmitter<any>();
 
   open = true;
 
-  get displaySkills() {
-    return this.SkillInput;
+  constructor(private router: Router) {}
+
+  get sortedSkills() {
+    return [...this.SkillInput].sort((a: any, b: any) => (b.level || 0) - (a.level || 0));
   }
 
   togglePanel() {
     this.open = !this.open;
   }
 
-  handleLevelChange(event: any) {
+  goToSkills() {
+    this.router.navigate(['/skills']);
   }
 
-  onSkillSelected(skill: any) {
-    this.skillSelected.emit(skill);
+  handleLevelChange(newLevel: any, item: any) {
+  }
+
+  onSkillSelected(item: any) {
+    if (this.selectable) {
+      this.skillSelected.emit(item);
+    }
   }
 
   trackByFn(index: number, item: any) {
