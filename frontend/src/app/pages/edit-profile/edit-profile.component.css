@@ -9,9 +9,9 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 1.875rem; 
-  width: 100%;
+  width: 80%;  
   margin: 0 auto;
-  padding: 1.25rem;
+  padding-top: 2rem;
 }
 
 app-profile-info {
@@ -27,7 +27,7 @@ app-profile-info {
   border-radius: 1rem;
   padding: 1.875rem;
   color: #fff;
-  margin: 2rem;
+  margin: 0 2rem;
   box-shadow: 0 0.25rem 0.9375rem rgba(0,0,0,0.3);
 }
 
