@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { SkillCardComponent } from '../skill-card/skill-card.component';
+import { SkillInput } from '../../services/skills.service';
 
 @Component({
   selector: 'app-skills-panel',
@@ -11,7 +12,7 @@ import { SkillCardComponent } from '../skill-card/skill-card.component';
   styleUrls: ['./skills-panel.component.css']
 })
 export class SkillsPanelComponent {
-  @Input() SkillInput: Array<any> = []; 
+  @Input() SkillInput: Array<SkillInput> = []; 
   @Input() isPublic: boolean = false;
   @Input() editable: boolean = false;
   @Input() title: string = 'Habilidades'; 
@@ -37,6 +38,7 @@ export class SkillsPanelComponent {
   }
 
   handleLevelChange(newLevel: any, item: any) {
+    item.level = newLevel;
   }
 
   onSkillSelected(item: any) {
@@ -46,6 +48,6 @@ export class SkillsPanelComponent {
   }
 
   trackByFn(index: number, item: any) {
-    return item.id || item.name;
+    return item.id;
   }
 }

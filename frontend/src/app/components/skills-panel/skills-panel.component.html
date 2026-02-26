@@ -14,11 +14,11 @@
   <div *ngIf="open" class="skills-grid">
     <app-skill-card
       *ngFor="let item of sortedSkills; trackBy: trackByFn"
-      [id]="item.id || item.name"
+      [id]="item.id"
       [level]="item.level || 0"
       [editable]="!isPublic && editable"
       [selectable]="selectable"
-      [selected]="(item.id || item.name) === selectedSkillId"
+      [selected]="(item.id) === selectedSkillId"
       (click)="onSkillSelected(item)"
       (levelChange)="handleLevelChange($event, item)">
     </app-skill-card>

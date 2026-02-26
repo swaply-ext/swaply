@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { SkillCardComponent } from '../skill-card/skill-card.component';
+import { SkillInput } from '../../services/skills.service';
 
 @Component({
   selector: 'app-interests-panel',
@@ -11,7 +12,7 @@ import { SkillCardComponent } from '../skill-card/skill-card.component';
   styleUrls: ['./interests-panel.component.css']
 })
 export class InterestsPanelComponent {
-  @Input() InterestsInput: Array<any> = []; 
+  @Input() InterestsInput: Array<SkillInput> = []; 
   @Input() isPublic: boolean = false;
   @Input() editable: boolean = false;
   @Input() title: string = 'Intereses'; 
@@ -47,6 +48,6 @@ export class InterestsPanelComponent {
   }
 
   trackByFn(index: number, item: any) {
-    return item.id || item.name;
+    return item.id;
   }
 }
