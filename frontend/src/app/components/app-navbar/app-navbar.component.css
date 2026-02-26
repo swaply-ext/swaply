@@ -174,23 +174,22 @@
   box-shadow: 0 0 8px rgba(3, 219, 219, 0.5);
 }
 
-
 .dropdown-overlay {
   position: absolute;
-  top: 100%;
+  /* 100% lo coloca justo donde termina el navbar */
+  top: 100%; 
   right: -0.75rem;
   left: auto;
-  transform: translateY(0.5rem);
-  width: fit-content;
-  min-width: 15rem;
-  max-width: calc(100vw - 1rem);
-  padding: 1rem;
+  width: 16rem; 
+  padding: 0.5rem; /* Espaciado sutil para que no pegue al borde */
   box-sizing: border-box;
   overflow: hidden;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s ease, transform 0.2s ease;
   z-index: 1000;
+  /* Aseguramos que no haya sombra */
+  box-shadow: none;
 }
 
 .dropdown-overlay.show {
