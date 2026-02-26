@@ -54,34 +54,57 @@ public class SearchService {
                         s -> s.getLevel() != null ? s.getLevel() : 0,
                         (existing, replacement) -> existing));
 
-        Set<String> myOfferingIds = (myUser.getSkills() != null)
-                ? myUser.getSkills().stream().map(s -> normalizeKey(s.getId())).collect(Collectors.toSet())
-                : Collections.emptySet();
+        Map<String, Integer> mySkillsLevels = myUser.getSkills().stream()
+                .collect(Collectors.toMap(
+                        s -> normalizeKey(s.getId()),
+                        s -> s.getLevel() != null ? s.getLevel() : 0,
+                        (existing, replacement) -> existing));
 
-        List<User> candidates = userRepository.findUsersByMultipleSkillIdsList(new ArrayList<>(searchIds));
+       List<User> candidates = userRepository.findUsersByFilterSkillsIds(new ArrayList<>(searchIds));
 
-        List<UserSwapDTO> matches = candidates.parallelStream()
+        List<UserSwapDTO> matches = candidates.stream()
                 .filter(user -> !user.getId().equals(myUserId))
                 .filter(user -> user.getSkills() != null)
-                .filter(user -> isReciprocalMatch(user, myOfferingIds))
+                .filter(user -> isReciprocalMatch(user, mySkillsLevels))
                 .flatMap(user -> extractMatchingSkills(user, myInterestLevels, myUserId))
-                .filter(dto -> searchIds.contains(normalizeKey(dto.getSkillId())))
                 .collect(Collectors.toList());
 
-        // ORDENAMIENTO ROBUSTO: Premium -> Distancia
-        matches.sort(
-            Comparator.comparing(UserSwapDTO::isPremium, Comparator.reverseOrder())
-            .thenComparingDouble(this::getNumericDistance)
-        );
+        System.out.println(searchIds);
+        // Hacemos una lista con los premium que haya encontrado en la lista de
+        // candidatos ordenados por distancia, de menor a mayor
+        List<UserSwapDTO> premiumMatches = matches.stream()
+                .filter(user -> user.isPremium())
 
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), matches.size());
+                .filter(user -> searchIds.contains(normalizeKey(user.getSkillId())))
 
-        if (start >= matches.size()) {
-            return new ArrayList<>();
-        }
+                .sorted(Comparator.comparingDouble(d -> {
+                    try {
+                        return d.getDistance() != null ? Double.parseDouble(d.getDistance()) : Double.MAX_VALUE;
+                    } catch (NumberFormatException e) {
+                        return Double.MAX_VALUE;
+                    }
+                }))
+                .collect(Collectors.toList());
 
-        return matches.subList(start, end);
+        // Otra lista de los NO premium ordenadas por distancia de menor a mayor
+        List<UserSwapDTO> notPremiumMatches = matches.stream()
+                .filter(user -> !user.isPremium())
+
+                .filter(user -> searchIds.contains(normalizeKey(user.getSkillId())))
+
+                .sorted(Comparator.comparingDouble(d -> {
+                    try {
+                        return d.getDistance() != null ? Double.parseDouble(d.getDistance()) : Double.MAX_VALUE;
+                    } catch (NumberFormatException e) {
+                        return Double.MAX_VALUE;
+                    }
+                }))
+                .collect(Collectors.toList());
+
+        // Le añadimos la lista de ordenados por distancia a la de los premium
+        List<UserSwapDTO> finalMatches = new ArrayList<>(premiumMatches);
+        finalMatches.addAll(notPremiumMatches);
+        return finalMatches;
     }
 
     // Método helper duplicado para parsear distancia (idealmente iría en una clase Utils)
@@ -104,9 +127,6 @@ public class SearchService {
                 .orElse(null);
     }
 
-    // ... (Mantén el resto de métodos privados igual: expandQueryTerms, extractMatchingSkills, etc.) ...
-    
-    // Solo asegúrate de incluir el try-catch de distancia en extractMatchingSkills:
     private Stream<UserSwapDTO> extractMatchingSkills(User otherUser, Map<String, Integer> myInterestLevels, String currentUserId) {
         String distance;
         try {
@@ -126,13 +146,23 @@ public class SearchService {
                 })
                 .map(skill -> mapToCard(otherUser, skill, true, finalDistance));
     }
-    
-    // ... Resto de métodos (isReciprocalMatch, registerSynonyms, etc.) igual que antes
-    private boolean isReciprocalMatch(User otherUser, Set<String> myOfferingIds) {
-        if (otherUser.getInterests() == null) return false;
-        return otherUser.getInterests().stream()
-                .map(i -> normalizeKey(i.getId()))
-                .anyMatch(myOfferingIds::contains);
+
+    private boolean isReciprocalMatch(User otherUser,  Map<String, Integer> mySkillsLevels) {
+        if (otherUser.getInterests() == null)
+            return false;
+
+        return otherUser.getInterests().stream().anyMatch(otherInterest -> {
+
+            String id = normalizeKey(otherInterest.getId());
+            int otherRequiredLevel = otherInterest.getLevel() != null ? otherInterest.getLevel() : 0;
+
+            if (!mySkillsLevels.containsKey(id))
+                return false;
+
+            int myLevel = mySkillsLevels.get(id);
+            return myLevel >= otherRequiredLevel;
+        });
+
     }
 
     private Set<String> expandQueryTerms(String query) {
