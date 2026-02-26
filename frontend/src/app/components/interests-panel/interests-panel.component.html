@@ -11,7 +11,7 @@
     </button>
   </header>
 
-  <div *ngIf="open" class="skills-grid">
+  <div [hidden]="!open" class="skills-grid">
     <app-skill-card
       *ngFor="let item of sortedInterests; trackBy: trackByFn"
       [id]="item.id"
