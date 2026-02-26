@@ -59,6 +59,20 @@
   --shadow-large: 0 0.625rem 0.938rem -0.188rem rgba(0, 0, 0, 0.1); /* Sombra más grande - NUEVO */
 }
 
+.page-wrapper {
+  /* width: 80%; 
+  max-width: 75rem;
+  margin: 0 auto;  */
+  
+  display: block; 
+  width: 80%;
+  max-width: 75rem;   
+  margin-inline: auto;
+  /* padding-inline: 2rem; */
+
+
+} 
+
 body {
   font-family: var(--font-primary);
   background: linear-gradient(to bottom, #012534 0%, #00839e 100%);
