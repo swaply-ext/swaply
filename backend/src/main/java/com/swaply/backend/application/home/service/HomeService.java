@@ -37,19 +37,27 @@ public class HomeService {
                         s -> s.getLevel() != null ? s.getLevel() : 0,
                         (existing, replacement) -> existing));
 
-        List<String> myInterestIds = new ArrayList<>(myInterestLevels.keySet());
+        Map<String, Integer> mySkillsLevels = myUser.getSkills().stream()
+                .collect(Collectors.toMap(
+                        s -> normalizeString(s.getId()),
+                        s -> s.getLevel() != null ? s.getLevel() : 0,
+                        (existing, replacement) -> existing));
 
-        Set<String> myOfferingIds = (myUser.getSkills() != null)
-                ? myUser.getSkills().stream().map(s -> normalizeString(s.getId())).collect(Collectors.toSet())
-                : Collections.emptySet();
+        List<String> myInterestIds = new ArrayList<>(myInterestLevels.keySet());
 
         List<User> candidates = userRepository.findUsersByMultipleSkillIds(myInterestIds);
 
-        return candidates.stream()
-                .filter(user -> !user.getId().equals(currentUserId)) 
-                .filter(user -> user.getSkills() != null)            
-                .filter(user -> isReciprocalMatch(user, myOfferingIds)) 
-                .flatMap(user -> extractMatchingSkills(user, myInterestLevels, currentUserId)) 
+        List<UserSwapDTO> matches = candidates.stream()
+                .filter(user -> !user.getId().equals(currentUserId))
+                .filter(user -> user.getSkills() != null)
+                .filter(user -> isReciprocalMatch(user, mySkillsLevels))
+                .flatMap(user -> extractMatchingSkills(user, myInterestLevels, currentUserId))
+                .collect(Collectors.toList());
+
+        // Hacemos una lista con los premium que haya encontrado en la lista de
+        // candidatos ordenados por distancia, de menor a mayor
+        List<UserSwapDTO> premiumMatches = matches.stream()
+                .filter(user -> user.isPremium())
                 .sorted(Comparator.comparingDouble(d -> {
                     try {
                         return d.getDistance() != null ? Double.parseDouble(d.getDistance()) : Double.MAX_VALUE;
@@ -58,24 +66,53 @@ public class HomeService {
                     }
                 }))
                 .collect(Collectors.toList());
+
+        // Otra lista de los NO premium ordenadas por distancia de menor a mayor
+        List<UserSwapDTO> notPremiumMatches = matches.stream()
+                .filter(user -> !user.isPremium())
+                .sorted(Comparator.comparingDouble(d -> {
+                    try {
+                        return d.getDistance() != null ? Double.parseDouble(d.getDistance()) : Double.MAX_VALUE;
+                    } catch (NumberFormatException e) {
+                        return Double.MAX_VALUE;
+                    }
+                }))
+                .collect(Collectors.toList());
+
+        // Le añadimos la lista de ordenados por distancia a la de los premium
+        List<UserSwapDTO> finalMatches = new ArrayList<>(premiumMatches);
+        finalMatches.addAll(notPremiumMatches);
+        return finalMatches;
+
     }
 
-    
+    private boolean isReciprocalMatch(User otherUser,  Map<String, Integer> mySkillsLevels) {
+        if (otherUser.getInterests() == null)
+            return false;
 
-    private boolean isReciprocalMatch(User otherUser, Set<String> myOfferingIds) {
-        if (otherUser.getInterests() == null) return false;
-        return otherUser.getInterests().stream()
-                .map(i -> normalizeString(i.getId()))
-                .anyMatch(myOfferingIds::contains);
+        return otherUser.getInterests().stream().anyMatch(otherInterest -> {
+
+            String id = normalizeString(otherInterest.getId());
+            int otherRequiredLevel = otherInterest.getLevel() != null ? otherInterest.getLevel() : 0;
+
+            if (!mySkillsLevels.containsKey(id))
+                return false;
+
+            int myLevel = mySkillsLevels.get(id);
+            return myLevel >= otherRequiredLevel;
+        });
+
     }
 
-    private Stream<UserSwapDTO> extractMatchingSkills(User otherUser, Map<String, Integer> myInterestLevels, String currentUserId) {
+    private Stream<UserSwapDTO> extractMatchingSkills(User otherUser, Map<String, Integer> myInterestLevels,
+            String currentUserId) {
         String distance = locationService.calculateDistance(currentUserId, otherUser.getUsername());
-        
+
         return otherUser.getSkills().stream()
                 .filter(skill -> {
                     String skillId = normalizeString(skill.getId());
-                    if (!myInterestLevels.containsKey(skillId)) return false;
+                    if (!myInterestLevels.containsKey(skillId))
+                        return false;
                     int myLevel = myInterestLevels.get(skillId);
                     int otherLevel = skill.getLevel() != null ? skill.getLevel() : 0;
                     return otherLevel >= myLevel;
@@ -84,7 +121,8 @@ public class HomeService {
     }
 
     private String normalizeString(String input) {
-        if (input == null) return "";
+        if (input == null)
+            return "";
         String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
         return pattern.matcher(normalized).replaceAll("").toLowerCase().trim();
@@ -96,7 +134,9 @@ public class HomeService {
         dto.setName(user.getName());
         dto.setUsername(user.getUsername());
         dto.setProfilePhotoUrl(user.getProfilePhotoUrl());
+        dto.setPremium(user.isPremium());
 
+        dto.setSkillId(skill.getId());
         dto.setSkillName("Clase de " + (skill.getName() != null ? skill.getName() : skill.getId()));
         dto.setSkillCategory(skill.getCategory());
         dto.setSkillLevel(skill.getLevel());

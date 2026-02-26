@@ -2,7 +2,10 @@
   flex: 1;
   flex-basis: 0;
   padding: 1.5rem 2rem;
-  border: 0.1rem solid var(--border-color);
+  backdrop-filter: blur(8px);
+  box-shadow:
+    0 0px 0px 0px rgba(0, 0, 0, 0),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
   border-radius: 0.8rem;
   background-color: var(--bg-panel);
   font-family: "Quicksand", sans-serif;
@@ -25,7 +28,8 @@ header h1 {
   transform: translateX(-50%);
 }
 
-.toggle-btn, .edit-btn {
+.toggle-btn,
+.edit-btn {
   background: none;
   border: none;
   color: var(--border-color);
@@ -36,7 +40,8 @@ header h1 {
   padding: 0;
 }
 
-.toggle-btn:hover, .edit-btn:hover{
+.toggle-btn:hover,
+.edit-btn:hover {
   color: var(--button-hover);
 }
 
