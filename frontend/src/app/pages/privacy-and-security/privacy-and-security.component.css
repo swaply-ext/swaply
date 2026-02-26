@@ -69,7 +69,7 @@
   width: 100%;
   padding: 0.75rem 1rem;
   padding-right: 2.5rem;
-  border: 1px solid #00bcd4;
+  border: 0.0625rem solid #00bcd4;
   border-radius: 0.5rem;
   background: rgba(255, 255, 255, 0.1);
   color: #fff;
@@ -145,10 +145,11 @@
   height: auto;
 }
 
+ /* Ensure the button doesn't have an unnecessary top margin now that it's stacked */
 .send-button {
-  margin-top: 1rem;
+  margin-top: 0;
   height: auto;
-  max-width: 10rem;
+  width: fit-content; /* Keeps the button from stretching to full width */
 }
 
 .error-message {
@@ -159,7 +160,7 @@
 }
 
 .input-error {
-  border: 2px solid #e53935 !important;
+  border: 0.125rem solid #e53935 !important;
   background-color: rgba(229, 57, 53, 0.1) !important;
 }
 
@@ -178,7 +179,7 @@
 .footer-actions {
   display: flex;
   justify-content: flex-start;
-  gap: 1rem;
+  gap: 0.7rem;
 }
 
 .footer-actions {
@@ -279,9 +280,13 @@ input:checked+.toggle-slider:before {
 }
 .actions-row {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column; /* Stacks the items vertically */
+  align-items: flex-start; /* Ensures both are pinned to the left */
+  gap: 0.5rem;             /* Adds a small gap between the link and button */
+  margin-top: 0.5rem;
 }
+
+
 
 @media (max-width: 48rem) {
   .profile-bottom-row {
@@ -302,10 +307,12 @@ input:checked+.toggle-slider:before {
     flex-direction: column;
   }
 
-  .send-button {
-    width: fit-content;
-    max-width: none;
-  }
+ /* Ensure the button doesn't have an unnecessary top margin now that it's stacked */
+.send-button {
+  margin-top: 0;
+  height: auto;
+  width: fit-content; /* Keeps the button from stretching to full width */
+}
 
   .btn-small {
     padding: 0.5rem 1rem;

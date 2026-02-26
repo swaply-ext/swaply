@@ -43,7 +43,7 @@ app-profile-info {
   justify-content: flex-end;
 }
  
-@media (max-width: 900px) {
+@media (max-width: 56.25rem) {
   .profile-skills,
   .profile-interests {
     flex: 1 1 100%;
@@ -246,7 +246,7 @@ app-profile-info {
   flex: 1;
 }
  
-@media (max-width: 700px) {
+@media (max-width: 43.75rem) {
   .profile-row {
     flex-direction: column;
   }
@@ -322,7 +322,7 @@ app-profile-info {
   justify-content: flex-end;
 }
  
-@media (max-width: 900px) {
+@media (max-width: 56.25rem) {
   .profile-skills,
   .profile-interests {
     flex: 1 1 100%;
