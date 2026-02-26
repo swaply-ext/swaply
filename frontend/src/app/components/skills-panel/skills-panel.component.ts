@@ -37,7 +37,7 @@ export class SkillsPanelComponent {
   }
 
   goToSkills() {
-    this.router.navigate(['/skills']);
+    this.router.navigate(['/skills'], { queryParams: { source: 'profile' } });
   }
 
   handleLevelChange(event: { id: string, newLevel: number }) {

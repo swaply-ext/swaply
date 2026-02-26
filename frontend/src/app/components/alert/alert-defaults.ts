@@ -13,7 +13,9 @@ export const ALERT_LIBRARY: AlertLibrary = {
     generic: { title: 'Éxito', msg: 'Operación realizada.' },
     registration: { title: '¡Bienvenido!', msg: 'Cuenta creada con éxito.' },
     password: { title: 'Seguridad OK', msg: 'Contraseña actualizada.' },
-    premium: { title: '¡Premium Activado!', msg: 'Tu pago se ha verificado. Ya puedes disfrutar de todas las ventajas.' }
+    premium: { title: '¡Premium Activado!', msg: 'Tu pago se ha verificado. Ya puedes disfrutar de todas las ventajas.' },
+    swapAccepted: { title: '¡Swap Confirmado!', msg: 'Ya puedes empezar a chatear.' },
+    swapRejected: { title: 'Swap Rechazado', msg: 'Has rechazado la solicitud correctamente.' }
   },
   warning: {
     generic: { title: 'Cuidado', msg: 'Esto puede tener consecuencias.' },
