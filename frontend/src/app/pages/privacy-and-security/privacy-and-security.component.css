@@ -67,7 +67,6 @@
 
 .form-group input {
   width: 100%;
-  max-width: 18rem;
   padding: 0.75rem 1rem;
   padding-right: 2.5rem;
   border: 1px solid #00bcd4;
@@ -77,6 +76,7 @@
   font-size: 1rem;
   outline: none;
   transition: border-color 0.2s ease, background 0.2s ease;
+  box-sizing: border-box;
 }
 
 .form-group input:focus {
@@ -87,7 +87,7 @@
 .password-wrapper {
   position: relative;
   flex: 1;
-  max-width: 18rem;
+  width: 100%;
   overflow: hidden;
 }
 
@@ -303,7 +303,7 @@ input:checked+.toggle-slider:before {
   }
 
   .send-button {
-    width: 100%;
+    width: fit-content;
     max-width: none;
   }
 
