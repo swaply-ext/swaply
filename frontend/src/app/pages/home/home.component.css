@@ -215,7 +215,7 @@ img {
   border-radius: 1rem;
   padding-right: 0.5rem;
   transition: background-color 0.3s;
-  cursor: pointer; 
+  cursor: pointer;
 }
 
 .card-user-info:hover {
@@ -505,4 +505,15 @@ img {
 
 .interchange-section + .nearby-section {
   margin-top: 3rem;
+}
+
+
+.loading-matches-indicator {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.9375rem;
+  padding: 2.5rem 0;
+  width: 100%;
 }

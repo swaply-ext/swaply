@@ -23,8 +23,8 @@
         </div>
       </div>
 
-      <div *ngIf="isLoadingMatches()" class="loading-matches-indicator">
-        <div class="spinner-mini"></div>
+      <div *ngIf="isLoadingMatches()" class="loading-matches-indicator" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+        <app-inline-loader></app-inline-loader>
         <span>Cargando resultados...</span>
       </div>
 
@@ -43,8 +43,6 @@
           <div class="card-content clickable-user">
 
             <div class="card-header-row">
-
-
 
               <div class="card-user-info" [routerLink]="['/user', card.username]" (click)="$event.stopPropagation()"
                 [class.premium-user]="card.isPremium">
@@ -99,6 +97,7 @@
         <button class="btn btn-primary" (click)="loadMore()">Ver Más</button>
       </div>
     </section>
-  
+
   </main>
+ </div>
 </div>

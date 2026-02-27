@@ -1,0 +1,58 @@
+:host {
+  --animation-time: 2s;
+  --loader-size: 60px; /* Tamaño de la letra */
+  --stroke-thickness: 14;
+
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.p-loader {
+  width: var(--loader-size);
+  height: var(--loader-size);
+  overflow: visible;
+}
+
+/* --- ESTILOS COMUNES --- */
+.static-line,
+.growing-line {
+  fill: none;
+  stroke: var(--principal-color-2, #ff4081); /* Puse un color de respaldo por si falla la variable */
+  stroke-width: var(--stroke-thickness);
+  stroke-linecap: butt;
+  stroke-linejoin: round;
+}
+
+.arrow-head {
+  fill: var(--principal-color-2, #ff4081);
+  stroke: none;
+}
+
+/* --- ANIMACIONES --- */
+.growing-line {
+  stroke-dasharray: 220;
+  stroke-dashoffset: 220;
+  will-change: stroke-dashoffset;
+  animation: drawLine var(--animation-time) ease-in-out infinite;
+}
+
+.moving-arrow-group {
+  offset-path: path("M 50 50 L 75 50 A 25 25 0 1 0 50 25 L 50 95");
+  offset-rotate: auto;
+  offset-distance: 0%;
+  will-change: offset-distance;
+  animation: moveArrow var(--animation-time) ease-in-out infinite;
+}
+
+@keyframes drawLine {
+  0%, 10% { stroke-dashoffset: 220; }
+  50%, 60% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: 220; }
+}
+
+@keyframes moveArrow {
+  0%, 10% { offset-distance: 0%; opacity: 1; }
+  50%, 60% { offset-distance: 100%; opacity: 1; }
+  100% { offset-distance: 0%; opacity: 1; }
+}
