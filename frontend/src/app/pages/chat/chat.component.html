@@ -17,8 +17,8 @@
     </div>
 
     <div class="conversations-list">
-      <div *ngIf="loadingConversations" class="loading-state">
-        <i class="fas fa-spinner fa-spin"></i> Cargando...
+      <div *ngIf="loadingConversations" class="loading-state" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; gap: 10px; color: #888;">
+        <span>Cargando...</span>
       </div>
 
       <div *ngIf="!loadingConversations && filteredConversations.length === 0" class="empty-state-side">
@@ -88,8 +88,8 @@
 
       <div class="messages-area" #scrollContainer (scroll)="onScroll()">
 
-        <div *ngIf="isLoadingHistory" style="text-align: center; padding: 10px; color: #888;">
-             <small>Cargando historial...</small>
+        <div *ngIf="isLoadingHistory" style="display: flex; justify-content: center; padding: 15px; width: 100%;">
+             <app-inline-loader></app-inline-loader>
         </div>
 
         <div *ngFor="let msg of messages"

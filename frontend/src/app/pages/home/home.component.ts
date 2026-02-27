@@ -7,7 +7,6 @@ import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.compo
 import { SkillSearchComponent } from '../../components/skill-search/skill-search.component';
 import { FilterSkillsComponent } from '../../components/filter-skills/filter-skills.component';
 import { NextSwapComponent } from '../../components/next-swap/next-swap.component';
-// 👇 Importamos el nuevo componente
 import { InlineLoaderComponent } from '../../components/inline-loader/inline-loader.component';
 
 // Servicios

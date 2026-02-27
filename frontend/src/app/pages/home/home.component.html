@@ -25,7 +25,6 @@
 
       <div *ngIf="isLoadingMatches()" class="loading-matches-indicator" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
         <app-inline-loader></app-inline-loader>
-        <span>Cargando resultados...</span>
       </div>
 
       <div class="card-grid" *ngIf="!isLoadingMatches()">
