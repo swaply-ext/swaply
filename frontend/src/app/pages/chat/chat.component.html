@@ -7,7 +7,7 @@
       </div>
 
       <div class="search-box">
-        <span class="material-icons search-icon">search</span>
+        <span class="material-symbols-outlined search-icon">search</span>
         <input
           type="text"
           placeholder="Buscar..."
@@ -70,7 +70,7 @@
       <header class="chat-header">
         <div class="header-user-info">
           <button class="back-btn" *ngIf="isMobile" (click)="selectedConversation = null">
-            <span class="material-icons">arrow_back</span>
+            <span class="material-symbols-outlined">arrow_back</span>
           </button>
 
           <img
@@ -88,8 +88,12 @@
 
       <div class="messages-area" #scrollContainer (scroll)="onScroll()">
 
-        <div *ngIf="isLoadingHistory" style="display: flex; justify-content: center; padding: 15px; width: 100%;">
-             <app-inline-loader></app-inline-loader>
+        <div *ngIf="isLoadingHistory && messages.length === 0" style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; gap: 20px;">
+             <app-inline-loader style="--loader-size: 150px;"></app-inline-loader>
+        </div>
+
+        <div *ngIf="isLoadingHistory && messages.length > 0" style="display: flex; justify-content: center; padding: 20px; width: 100%;">
+             <app-inline-loader style="--loader-size: 70px;"></app-inline-loader>
         </div>
 
         <div *ngFor="let msg of messages"
@@ -102,6 +106,7 @@
             <span class="msg-time">{{ msg.timestamp | date:'HH:mm' }}</span>
           </div>
         </div>
+
       </div>
 
       <div class="chat-input-area">
@@ -113,7 +118,7 @@
           autocomplete="off"
         >
         <button class="send-btn" (click)="sendMessage()" [disabled]="!newMessage.trim()">
-          <span class="material-icons">send</span>
+          <span class="material-symbols-outlined">send</span>
         </button>
       </div>
     </div>
