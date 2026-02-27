@@ -68,12 +68,14 @@ public class AccountService /* implements UserRepository */ {
     public NavBarInformationDTO navBarInformation(String userId){
         UserDTO userDTO = userService.getUserByID(userId);
         NavBarInformationDTO dto = mapper.navBarFromUserDTO(userDTO);
-        Integer swapCount = (int) userDTO.getSwaps()
-            .stream()
-            .filter(s -> s.getStatus().equals(Status.STANDBY))
-            .filter(s -> !s.getIsRequester())
-            .count();
-            
+        Integer swapCount = 0;
+        if (userDTO.getSwaps() != null){
+            swapCount = (int) userDTO.getSwaps()
+                .stream()
+                .filter(s -> s.getStatus().equals(Status.STANDBY))
+                .filter(s -> !s.getIsRequester())
+                .count();
+        }
         dto.setNotificationCount(swapCount);
         Integer unreadCount = chatService.getTotalUnreadMessages(userId);
         dto.setMsgCount(unreadCount);
@@ -83,7 +85,6 @@ public class AccountService /* implements UserRepository */ {
     public void updateEditProfileData(String userId, EditProfileDTO dto) {
         UserDTO newUserDTO = mapper.fromEditProfileDataDTO(dto);
         UserDTO currentUserDTO = userService.getUserByID(userId);
-        //Comprobar si el username ha cambiado y si el nuevo ya existe
         if (!currentUserDTO.getUsername().equals(dto.getUsername())) {
             if (userService.existsByUsername(dto.getUsername())) {
                 throw new UserAlreadyExistsException("El usuario: " + dto.getUsername() + " ya esta en uso.");
@@ -102,7 +103,7 @@ public class AccountService /* implements UserRepository */ {
         UserDTO userDTO = userService.getUserByUsername(username);
         return mapper.mapUserToPublicProfile(userDTO);
     }
-  
+
     public void deleteUser(String userId) {
         userService.deleteUserById(userId);
     }

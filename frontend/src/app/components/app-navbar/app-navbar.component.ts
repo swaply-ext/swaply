@@ -38,7 +38,7 @@ export class AppNavbarComponent implements OnInit, OnDestroy {
           fullName: `${navBarInformation.name} ${navBarInformation.surname}`,
           username: navBarInformation.username,
           profilePhotoUrl: navBarInformation.profilePhotoUrl,
-          isPremium: navBarInformation.isPremium,
+          isPremium: navBarInformation.isPremium ?? (navBarInformation as any).premium,
           rating: 3.8
         };
       },
