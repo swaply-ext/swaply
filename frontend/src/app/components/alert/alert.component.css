@@ -77,7 +77,8 @@
   transition: background-color var(--transition-speed);
 }
 
-.icon-circle .material-icons {
+.icon-circle .material-symbols-outlined {
+  font-family: 'Material Symbols Outlined', sans-serif !important; 
   color: var(--alert-text-inv);
   font-size: 5rem;
 }

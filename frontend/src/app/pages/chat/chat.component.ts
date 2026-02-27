@@ -14,6 +14,8 @@ import { ChatService, ChatMessage } from '../../services/chat.service';
 import { AccountService } from '../../services/account.service';
 import { AppNavbarComponent } from '../../components/app-navbar/app-navbar.component';
 import { trigger, style, animate, transition } from '@angular/animations';
+// 👇 Tu importación ya estaba perfecta aquí
+import { InlineLoaderComponent } from '../../components/inline-loader/inline-loader.component';
 
 interface UIConversation {
   roomId: string;
@@ -27,7 +29,8 @@ interface UIConversation {
 @Component({
   standalone: true,
   selector: 'app-chat',
-  imports: [CommonModule, FormsModule, AppNavbarComponent],
+  // 👇 AQUÍ ES DONDE FALTABA AÑADIRLO
+  imports: [CommonModule, FormsModule, AppNavbarComponent, InlineLoaderComponent],
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css'],
   animations: [

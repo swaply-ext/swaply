@@ -22,7 +22,7 @@ public interface UserRepository extends CosmosRepository<User, String> {
     default boolean existsUserById(String id) {
         return findById(id, USER_PARTITION_KEY).isPresent();
     }
-      
+
     default void deleteUserById(String id) {
         deleteById(id, USER_PARTITION_KEY);
     }
@@ -49,6 +49,8 @@ public interface UserRepository extends CosmosRepository<User, String> {
 
     Optional<User> findUserByTypeAndUsername(String type, String username);
 
+    List<User> findByTypeAndIdIn(String type, List<String> ids);
+
     // Busqueda por 1 skill "la del buscador"
     @Query(value = "SELECT * FROM c WHERE c.type = 'user' AND EXISTS(SELECT VALUE s FROM s IN c.skills WHERE CONTAINS(s.id, @skillId, true))")
     List<User> findUsersBySingleSkillId(@Param("skillId") String skillId);
@@ -65,16 +67,16 @@ public interface UserRepository extends CosmosRepository<User, String> {
     @Query(value = "SELECT VALUE c.username FROM c WHERE c.id = @id AND c.type = 'user'")
     Optional<String> findUsernameOnlyById(@Param("id") String id);
 
-        @Query(value = "SELECT VALUE c.profilePhotoUrl FROM c WHERE c.id = @id AND c.type = 'user'")
+    @Query(value = "SELECT VALUE c.profilePhotoUrl FROM c WHERE c.id = @id AND c.type = 'user'")
     Optional<String> findProfilePhotoUrlOnlyById(@Param("id") String id);
 
     // Metodos con Derived Queries para no tener que definir type cada vez
 
-    default Optional<String> findUsernameById(String id){
+    default Optional<String> findUsernameById(String id) {
         return findUsernameOnlyById(id);
     }
 
-        default Optional<String> findprofilePhotoUrlById(String id){
+    default Optional<String> findprofilePhotoUrlById(String id) {
         return findProfilePhotoUrlOnlyById(id);
     }
 
@@ -103,18 +105,19 @@ public interface UserRepository extends CosmosRepository<User, String> {
     }
 
     default boolean existsUserByLocation(String location) {
-        return existsUserByTypeAndLocation (type, location);
+        return existsUserByTypeAndLocation(type, location);
     }
-    
+
     default Optional<User> findUserByUsername(String username) {
         return findUserByTypeAndUsername(type, username);
+    }
+
+    default List<User> findByIdIn(List<String> ids) {
+        return findByTypeAndIdIn(type, ids);
     }
 
     default List<User> findUserBySkillId(String skillId) {
         return findUsersBySingleSkillId(skillId);
     }
-
-
-    
 
 }

@@ -7,6 +7,7 @@ import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.compo
 import { SkillSearchComponent } from '../../components/skill-search/skill-search.component';
 import { FilterSkillsComponent } from '../../components/filter-skills/filter-skills.component';
 import { NextSwapComponent } from '../../components/next-swap/next-swap.component';
+import { InlineLoaderComponent } from '../../components/inline-loader/inline-loader.component';
 
 // Servicios
 import { AccountService } from '../../services/account.service';
@@ -33,7 +34,8 @@ export type HomeCard = UserSwapDTO & {
     SkillSearchComponent,
     FilterSkillsComponent,
     NextSwapComponent,
-    RouterLink
+    RouterLink,
+    InlineLoaderComponent // 👇 Lo añadimos a los imports
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
@@ -152,7 +154,7 @@ export class HomeComponent implements OnInit {
       distance: m.distance || 'Cerca'
     }));
 
-    this.itemsToShow.set(6); 
+    this.itemsToShow.set(6);
     this.updateView();
     this.isLoadingMatches.set(false);
 
@@ -264,7 +266,7 @@ export class HomeComponent implements OnInit {
 
     return filename ? `assets/photos_skills/${folder}/${filename}` : undefined;
   }
-  
+
   // Método para limpiar el search cuando se usa el filtro
   clearSearch(): void {
     this.skillSearchComponent?.clear();

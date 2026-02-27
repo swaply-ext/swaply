@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SkillsService, SkillsModel } from '../../services/skills.service';
 import { AccountService, Account } from '../../services/account.service';
 import { SkillCardComponent } from '../../components/skill-card/skill-card.component';
@@ -54,7 +54,8 @@ export class InterestsComponent {
   constructor(
     private skillsService: SkillsService,
     private accountService: AccountService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
 
@@ -158,7 +159,7 @@ export class InterestsComponent {
       .subscribe({
         next: response => {
           console.log('Resputesta del backend:', response);
-          this.router.navigate(['/myprofile']);
+          this.router.navigate(['/myprofile']);  
         },
         error: err => console.error('Error enviando interests:', err)
       });
