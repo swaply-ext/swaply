@@ -34,11 +34,13 @@ export class AppNavbarComponent implements OnInit, OnDestroy {
     this.accountService.getNavbarData().subscribe({
       next: (navBarInformation) => {
         this.navBarInformation = navBarInformation
+        console.log("---------------------")
+        console.log(navBarInformation.isPremium);
         this.dropdownMenuData = {
           fullName: `${navBarInformation.name} ${navBarInformation.surname}`,
           username: navBarInformation.username,
           profilePhotoUrl: navBarInformation.profilePhotoUrl,
-          isPremium: navBarInformation.isPremium,
+          isPremium: navBarInformation.isPremium ?? (navBarInformation as any).premium,
           rating: 3.8
         };
       },
