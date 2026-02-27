@@ -1,15 +1,60 @@
 <div class="side-menu-container">
-    <nav class="side-menu-nav">
-        <ul>
-            <li><a class="side-btn" routerLinkActive="activo" routerLink="/profile-edit">Perfil y cuenta</a></li>
-            <li><a class="side-btn" routerLinkActive="activo" routerLink="/notification">Notificaciones</a></li>
-            <li><a class="side-btn" routerLinkActive="activo" routerLink="/preferences">Preferencias</a></li>
-            <li><a class="side-btn" routerLinkActive="activo" routerLink="/privacy-and-security">Privacidad y seguridad</a></li>
-            <li><a class="side-btn" routerLinkActive="activo" routerLink="/terms-conditions">Términos y condiciones</a></li>
-            <li><a class="side-btn" routerLinkActive="activo" routerLink="/privacy-olicy">Política de privacidad</a></li>
-            <li><a class="side-btn" routerLinkActive="activo" routerLink="/about">Acerca de Swaply</a></li>
-            <li><a class="side-btn" routerLinkActive="activo" routerLink="/support">Soporte</a></li>
-            <li><a class="side-btn" routerLinkActive="activo" routerLink="/exit">Cerrar sesión</a></li>
-        </ul>
-    </nav>
+  <nav class="side-menu-nav">
+    <ul>
+      <li>
+        <a class="side-btn" routerLinkActive="activo" routerLink="/profile-edit">
+          <span class="material-symbols-outlined">person</span>
+          <span class="btn-text">Perfil y cuenta</span>
+        </a>
+      </li>
+      <li>
+        <a class="side-btn" routerLinkActive="activo" routerLink="/coming-soon">
+          <span class="material-symbols-outlined">notifications</span>
+          <span class="btn-text">Notificaciones</span>
+        </a>
+      </li>
+      <li>
+        <a class="side-btn" routerLinkActive="activo" routerLink="/privacy-and-security">
+          <span class="material-symbols-outlined">security</span>
+          <span class="btn-text">Privacidad y seguridad</span>
+        </a>
+      </li>
+
+      <li class="divider"></li>
+
+      <li>
+        <a class="side-btn" routerLinkActive="activo" routerLink="/terms-conditions">
+          <span class="material-symbols-outlined">description</span>
+          <span class="btn-text">Términos y condiciones</span>
+        </a>
+      </li>
+      <li>
+        <a class="side-btn" routerLinkActive="activo" routerLink="/privacy-policy">
+          <span class="material-symbols-outlined">policy</span>
+          <span class="btn-text">Política de privacidad y cookies</span>
+        </a>
+      </li>
+      <li>
+        <a class="side-btn" routerLinkActive="activo" routerLink="/landing">
+          <span class="material-symbols-outlined">info</span>
+          <span class="btn-text">Acerca de Swaply</span>
+        </a>
+      </li>
+
+      <li class="divider"></li>
+
+      <li>
+        <a class="side-btn" routerLinkActive="activo" routerLink="/coming-soon">
+          <span class="material-symbols-outlined">support_agent</span>
+          <span class="btn-text">Soporte</span>
+        </a>
+      </li>
+      <li>
+        <a class="side-btn exit-btn" routerLinkActive="activo" routerLink="/exit">
+          <span class="material-symbols-outlined">logout</span>
+          <span class="btn-text">Cerrar sesión</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
 </div>

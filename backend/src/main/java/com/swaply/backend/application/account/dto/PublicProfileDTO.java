@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.swaply.backend.shared.UserCRUD.Model.Location;
 import com.swaply.backend.shared.UserCRUD.Model.UserSkills;
 
 
@@ -18,9 +20,11 @@ public class PublicProfileDTO {
     private String name;
     private String surname;
     private String username;
-    private String location;
+    private Location location;
     private String description;
     private String profilePhotoUrl;
     private List<UserSkills> interests;
     private List<UserSkills> skills;
+    @JsonProperty("isPremium")
+    private boolean isPremium;
 }

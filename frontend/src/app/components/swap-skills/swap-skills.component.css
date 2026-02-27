@@ -23,6 +23,7 @@ header h1 {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+  white-space: nowrap;
 }
 
 .toggle-btn, .edit-btn {

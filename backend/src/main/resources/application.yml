@@ -2,6 +2,8 @@ server:
   port: 8081
 
 spring:
+  main: 
+    allow-bean-definition-overriding: true
 
   cloud:
     azure:
@@ -36,3 +38,6 @@ azure:
 logging:
   level:
     com.azure.identity: INFO
+
+stripe:
+  key: ${stripe-key}

@@ -32,10 +32,9 @@ public class User {
     private String password;
     private Integer code;
     private Integer ttl;
-    private String location;
+    private Location location;
     private String gender;
     private String phone;
-    private String postalCode;
     private Double rating;
     private List<UserSkills> skills;
     private List<UserSkills> interests;
@@ -46,5 +45,6 @@ public class User {
     private String profilePhotoUrl;
     private boolean isPremium;
     private boolean isModerator;
+    private String stripeCustomerId;
     private List<Swap> swaps;
 }

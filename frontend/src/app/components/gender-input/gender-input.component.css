@@ -2,48 +2,50 @@
   position: relative;
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 0.625rem;
 }
 
 .input-container select {
-  padding-left: 10px;
-  padding-right: 35px;
-  height: 35px;
-  font-size: 14px;
+  padding-left: 0.625rem;
+  padding-right: 2.188rem; 
+  height: 2.188rem;
+  font-size: 0.875rem;
+  font-family: var(--font-primary);
   width: 100%;
-  background-color: #bfbfbf;
-  border-radius: 8px;
+  background-color: var(--secundary-color-2);
+  border-radius: 0.5rem;
   outline: none;
   border: none;
-  appearance: none; 
+  color: var(--secundary-color-3); 
+  appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
 }
 
-
+.input-container option {
+  background-color: var(--text-white);
+  color: var(--secundary-color-3);
+  font-size: 0.875rem;
+}
 
 .input-container .material-icons {
   position: absolute;
-  right: 10px;
-  font-size: 20px;
-  color: #555;
-  pointer-events: none;
+  right: 0.625rem; 
+  font-size: 1.25rem;
+  color: var(--secundary-color-3);
+  pointer-events: none; 
 }
 
 .input-container.error select {
-  border: 2px solid red;
-  background-color: #ffe6e6;
-  color: red; 
-}
-
-.input-container.error select::placeholder {
-  color: #ff6666; 
+  border: 0.125rem solid var(--error-color-1);
+  background-color: var(--error-bg);
+  color: var(--error-color-1); 
 }
 
 .error-message {
-  color: #ff4d4f;
+  color: var(--error-color-1);
   font-size: 0.85rem;
-  margin-top: 5px;
-  padding-left: 5px;
+  margin-top: 0.313rem;
+  padding-left: 0.313rem;
   text-align: left;
 }

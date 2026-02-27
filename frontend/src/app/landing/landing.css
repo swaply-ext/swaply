@@ -1,0 +1,1044 @@
+
+/* ===== AÑADIDO: Arreglo para que el header no tape los títulos al saltar ===== */
+
+
+:host {
+    --swaply-blue-dark: #023047;
+    --swaply-green-light: #3CB57C;
+    --swaply-blue-light: #5D94B5;
+    --text-light: #E0E0E0;          
+    --text-dark: #333;
+    --card-background: #253347;
+    display: block;
+    width: 100%;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: var(--text-light); 
+    overflow-x: hidden;
+    background-image: url('/assets/fotos/ada.png'); 
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-color: #0d1a29;
+    min-height: 100vh;
+    font-size: 1rem;
+}
+
+
+/* Sección Principal (Hero Section) */
+.hero-section {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* --- CAMBIO --- */
+    padding-bottom: 12.5rem;
+    /* Se reduce el padding, ya no tiene que alojar el bloque absoluto */
+    box-sizing: border-box;
+}
+
+/* Header */
+/* ===== REGLA MODIFICADA: Convertida a Sticky Header con GRID ===== */
+.header-bar {
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    /* display: flex;  <-- CAMBIADO */
+    /* justify-content: space-between; <-- ELIMINADO */
+    display: grid;
+    /* <-- AÑADIDO */
+    grid-template-columns: 1fr auto 1fr;
+    /* <-- AÑADIDO */
+    align-items: center;
+    padding: 0.625rem 1%;
+    box-sizing: border-box;
+    z-index: 1000;
+
+    /* Fondo para que no sea transparente al hacer scroll */
+    background-color: rgba(2, 48, 71, 0.85);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.logo {
+    height: 6.25rem;
+}
+
+/* ===== AÑADIDA NUEVA REGLA ===== */
+.logo-area {
+    justify-self: start;
+}
+
+/* ===== REGLA MODIFICADA ===== */
+.nav-area {
+    padding-top: 0;
+    text-align: right;
+    flex-shrink: 0;
+    justify-self: end;
+    /* <-- AÑADIDO */
+}
+
+.register-button {
+    background-color: var(--swaply-green-light);
+    color: white;
+    border: none;
+    padding: 0.625rem 1.25rem;
+    border-radius: 1.5625rem;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    text-decoration: none; 
+    display: inline-block; 
+}
+
+.register-button:hover {
+    background-color: #309b69;
+}
+
+/* ===== BLOQUE MODIFICADO: Estilos para la nueva navegación ===== */
+.header-nav {
+    /* flex-grow: 1; <-- ELIMINADO (Grid lo maneja) */
+    display: flex;
+    justify-content: center;
+}
+
+.header-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 3.125rem;
+    /* Espacio entre enlaces */
+}
+
+.header-nav a {
+    color: var(--text-light);
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.header-nav a:hover {
+    color: var(--swaply-green-light);
+    /* Tu color de acento */
+}
+
+/* ===== FIN DE BLOQUE MODIFICADO ===== */
+
+
+/* Hero Content */
+.hero-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 75rem;
+    margin: 0 auto;
+    padding-top: 7.5rem;
+    padding-bottom: 3.125rem;
+    box-sizing: border-box;
+}
+
+.text-content {
+    flex: 1;
+    padding-left: 2.5rem;
+    text-align: left;
+    max-width: 50%;
+}
+
+.text-content h1 {
+    font-size: clamp(2rem, 5vw, 4.8rem);
+    margin-bottom: 0.9375rem;
+    line-height: 1.2;
+    color: white;
+}
+
+.text-content p {
+    font-size: 1.125rem;
+    line-height: 1.5;
+    margin-bottom: 1.875rem;
+    color: var(--text-light);
+}
+
+.app-buttons {
+    display: flex;
+    gap: 0.9375rem;
+    align-items: center; 
+}
+
+.app-button {
+    height: 2.8125rem;
+    cursor: pointer;
+}
+
+/* ===== NUEVO: Estilo para las imágenes de app store y google play ===== */
+.interactive-app-button {
+    transition: transform 0.2s ease, filter 0.2s ease; /* Transiciones suaves */
+}
+
+.interactive-app-button:hover {
+    transform: scale(1.05); /* Ligeramente más grande */
+    filter: brightness(1.1); /* Un poco más brillante */
+}
+/* ===== FIN NUEVO ===== */
+
+/* ===== AÑADIDO: Botón verde con forma rectangular ===== */
+.app-download-btn {
+    /* Mismos colores que .register-button */
+    background-color: var(--swaply-green-light);
+    color: white;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Añadida transición para transform */
+    
+    /* Forma rectangular como las imágenes */
+    height: 2.8125rem;
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.5rem; /* <-- Bordes LIGERAMENTE redondeados */
+    box-sizing: border-box; /* Asegura que la altura sea exacta */
+
+    /* Centrado de texto */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.app-download-btn:hover {
+    background-color: #309b69; 
+    transform: scale(1.05); /* Mismo efecto de escala que las imágenes */
+}
+
+
+.illustration-content {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 2.5rem;
+}
+
+.hero-illustration {
+    max-width: 100%;
+    width: 37.5rem;
+    height: auto;
+    display: block;
+}
+
+/* Rectángulo "Funcionamiento" */
+/* --- CAMBIO GRANDE --- */
+.bottom-rectangle {
+    width: 90%;
+    max-width: 75rem;
+    background-color: rgba(2, 48, 71, 0.85);
+    border-radius: 1.25rem;
+    padding: 2.5rem;
+    box-shadow: 0 0.625rem 1.875rem rgba(0, 0, 0, 0.3);
+    text-align: center;
+    box-sizing: border-box;
+
+    /* --- AÑADIDO --- */
+    margin: -11.25rem auto 0 auto;
+}
+
+.bottom-rectangle h2 {
+    font-size: clamp(1.5rem, 3vw, 1.875rem);
+    color: white;
+    margin-bottom: 2.5rem;
+    text-transform: uppercase;
+}
+
+/* ===== REGLA AÑADIDA para el nuevo botón ===== */
+#funcionamiento-btn {
+    margin-top: 3.75rem; 
+}
+
+.steps-container {
+    display: flex;
+    justify-content: space-around;
+    gap: 3.75rem;
+}
+
+.step-card {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 0.9375rem;
+    padding: 1.5625rem;
+    flex: 1;
+    min-width: 15.625rem;
+    text-align: left;
+    position: relative;
+    box-sizing: border-box;
+    transition: transform 0.3s ease;
+}
+
+/* ===== AÑADIDO: Efecto zoom ===== */
+.step-card:hover {
+    transform: scale(1.05);
+}
+
+.step-icon {
+    height: 3.125rem;
+    margin-bottom: 0.9375rem;
+    display: block;
+}
+
+.step-card h3 {
+    font-size: 1.5625rem;
+    color: var(--swaply-green-light);
+    margin-bottom: 0.625rem;
+}
+
+.step-card p {
+    font-size: 1.25rem;
+    line-height: 1.4;
+    color: var(--text-light);
+}
+
+.arrow {
+    position: absolute;
+    right: -2.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.875rem;
+    color: var(--swaply-green-light);
+    font-weight: bold;
+}
+
+.steps-container .step-card:last-child .arrow {
+    display: none;
+}
+
+/* ========= "QUIENES SOMOS" ========= */
+.about-us-section {
+    background-color: rgba(2, 48, 71, 0.85);
+    width: 85%;
+    margin-left: 0;
+    margin-right: auto;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 1.25rem;
+    border-bottom-right-radius: 1.25rem;
+    max-width: none;
+    box-shadow: 0 0.625rem 1.875rem rgba(0, 0, 0, 0.3);
+    padding: 2.5rem 3%;
+    box-sizing: border-box;
+    text-align: left;
+    margin-top: 6.25rem;
+    color: var(--text-light);
+}
+
+.about-us-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 2.5rem;
+}
+
+.about-text {
+    flex-basis: 35%;
+}
+
+.team-container {
+    flex-basis: 60%;
+}
+
+.about-text h2,
+.team-container h2 {
+    font-size: 1.75rem;
+    color: white;
+    margin-top: 0;
+    margin-bottom: 1.5625rem;
+    text-transform: uppercase;
+}
+
+.about-text p {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+}
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 1.25rem;
+    text-align: center;
+}
+
+.team-member {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.3s ease;
+}
+
+/* ===== AÑADIDO: Efecto zoom ===== */
+.team-member:hover {
+    transform: scale(1.1);
+}
+
+.team-member img {
+    width: 6.25rem;
+    height: 6.25rem;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 0.625rem;
+    border: 0.125rem solid var(--swaply-green-light);
+}
+
+.team-member span {
+    font-size: 1.125rem;
+    color: white;
+}
+
+/* ========= "NUESTROS PLANES" ========= */
+.plans-section {
+    background-color: rgba(2, 48, 71, 0.85);
+    border-radius: 1.25rem;
+    width: 90%;
+    max-width: 53.125rem;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0 0.625rem 1.875rem rgba(0, 0, 0, 0.3);
+    padding: 2.5rem 1.875rem;
+    text-align: center;
+    margin-top: 6.25rem;
+}
+
+.plans-section h2 {
+    font-size: 1.75rem;
+    color: white;
+    margin-bottom: 1.875rem;
+    text-transform: uppercase;
+}
+
+.plans-container {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+}
+
+.plan-card {
+    background-color: #efefef;
+    border-radius: 0.9375rem;
+    padding: 1.5625rem;
+    flex-basis: 21.875rem;
+    flex-grow: 1;
+    max-width: 28.125rem;
+    text-align: left;
+    box-shadow: 0 0.25rem 0.9375rem rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    color: #000000;
+    transition: transform 0.3s ease;
+}
+
+/* ===== AÑADIDO: Efecto zoom ===== */
+.plan-card:hover {
+    transform: scale(1.03);
+}
+
+.plan-icon {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    height: 2.5rem;
+    width: auto;
+    margin-bottom: 0.9375rem;
+}
+
+.plan-card h3 {
+    font-size: 1.5625rem;
+    color: var(--swaply-green-light);
+    margin-top: 0;
+    margin-bottom: 0.625rem;
+}
+
+.premium-plan h3 {
+    color: #B89230;
+}
+
+.plan-card .price {
+    font-size: 1.125rem;
+    font-weight: bold;
+    color: rgb(0, 0, 0);
+    margin-bottom: 1.25rem;
+    display: block;
+}
+
+.plan-card .description {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #000000;
+    margin-bottom: 1.5625rem;
+    flex-grow: 1;
+}
+
+.features-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-grow: 1;
+}
+
+.features-list li {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+    color: #000000;
+}
+
+.premium-plan {
+    border: 0.25rem solid #B89230;
+}
+
+.premium-button {
+    background-color: #B89230;
+    color: #FFFFFF;
+    border: none;
+    padding: 0.9375rem 1.25rem;
+    font-size: 1rem;
+    border-radius: 0.625rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    display: block;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1.25rem;
+}
+
+.premium-button:hover {
+    background-color: #a07d2a;
+}
+
+.standard-plan {
+    border: 0.25rem solid var(--swaply-green-light);
+}
+
+.standard-button {
+    background-color: var(--swaply-green-light);
+    color: rgba(255, 255, 255, 0.865);
+    border: none;
+    padding: 0.9375rem 1.25rem;
+    font-size: 1rem;
+    border-radius: 0.625rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    display: block;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1.25rem;
+    text-decoration: none; 
+}
+
+.standard-button:hover {
+    background-color: #309b69;
+}
+
+/* ========= "COMUNIDAD" ========= */
+.community-section {
+    background-color: rgba(2, 48, 71, 0.85);
+    width: 85%;
+    max-width: none;
+    box-shadow: 0 0.625rem 1.875rem rgba(0, 0, 0, 0.3);
+    padding: 2.5rem 3%;
+    box-sizing: border-box;
+    text-align: left;
+    color: var(--text-light);
+    margin-left: auto;
+    margin-right: 0;
+    border-top-left-radius: 1.25rem;
+    border-bottom-left-radius: 1.25rem;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    margin-top: 6.25rem;
+}
+
+.community-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 2.5rem;
+    align-items: center;
+}
+
+.community-visual {
+    flex-basis: 60%;
+}
+
+.community-text {
+    flex-basis: 35%;
+}
+
+.community-visual .community-illustration {
+    width: 100%;
+    max-width: 34.375rem;
+    height: auto;
+    border-radius: 0.9375rem;
+    display: block;
+    margin: 0 auto;
+}
+
+.community-text h2 {
+    font-size: 1.75rem;
+    color: white;
+    margin-top: 0;
+    margin-bottom: 1.5625rem;
+    text-transform: uppercase;
+}
+
+.community-text p {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+}
+
+.community-text .register-button {
+    margin-top: 1.25rem;
+}
+
+/* ========= FOOTER ========= */
+.site-footer {
+    background-color: rgba(2, 48, 71, 0.95);
+    color: var(--text-light);
+    padding: 3.125rem 5% 1.25rem 5%;
+    margin-top: 6.25rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.875rem;
+    max-width: 75rem;
+    margin: 0 auto;
+    padding-bottom: 1.875rem;
+}
+
+.footer-column {
+    flex: 1;
+    min-width: 13.75rem;
+}
+
+.logo-column {
+    flex-basis: 30%;
+    min-width: 15.625rem;
+}
+
+.footer-logo {
+    height: 3.75rem; 
+    margin-bottom: 0.9375rem;
+}
+
+.logo-column p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--text-light);
+    margin: 0;
+}
+
+.links-column h4,
+.social-column h4 {
+    font-size: 1.25rem; 
+    color: white;
+    margin-top: 0;
+    margin-bottom: 1.25rem;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.links-column ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.links-column ul li {
+    margin-bottom: 0.75rem;
+}
+
+.links-column ul a {
+    color: var(--text-light);
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+.links-column ul a:hover {
+    color: var(--swaply-green-light);
+}
+
+.social-icons {
+    display: flex;
+    gap: 0.9375rem;
+}
+
+.social-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 2.8125rem; 
+    height: 2.8125rem;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.125rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.social-icon:hover {
+    background-color: var(--swaply-green-light);
+    color: var(--swaply-blue-dark);
+}
+
+.footer-copyright {
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 1.25rem;
+    margin-top: 1.25rem;
+    text-align: center;
+    font-size: 0.875rem; 
+    color: var(--text-light);
+}
+
+.footer-copyright p {
+    margin: 0;
+}
+
+
+/* ========= MEDIA QUERIES (ahora con em para consistencia con rem) ========= */
+/* ¡ESTAS SIEMPRE AL FINAL! */
+
+/* Escritorio Pequeño / Tablet Horizontal (ej. 1024px) */
+@media (max-width: 64em) {
+
+    /* 1024px / 16px = 64em */
+    .hero-content {
+        flex-direction: column;
+        padding-top: 5rem;
+        max-width: 95%;
+    }
+
+    .text-content,
+    .illustration-content {
+        padding: 0 1.25rem;
+        text-align: center;
+        max-width: 100%;
+    }
+
+    .text-content {
+        padding-left: 1.25rem;
+    }
+
+    .illustration-content {
+        justify-content: center;
+        padding-right: 1.25rem;
+        margin-top: 1.875rem;
+    }
+
+    .hero-illustration {
+        max-width: 80%;
+    }
+
+    .bottom-rectangle {
+        width: 95%;
+        padding: 1.875rem;
+        margin-top: 5rem;
+    }
+
+    .steps-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 3.125rem;
+    }
+
+    .step-card {
+        width: 80%;
+        min-width: unset;
+        flex: unset; 
+    }
+
+    .arrow {
+        right: 50%;
+        bottom: -2.1875rem;
+        top: unset;
+        transform: translateX(50%) rotate(90deg);
+    }
+
+    .steps-container .step-card:last-child .arrow {
+        display: none;
+    }
+
+    .about-us-section {
+        margin-top: 6.25rem;
+        width: 100%;
+        border-radius: 0;
+        padding: 2.5rem 5%;
+    }
+
+    .plans-section {
+        margin-top: 6.25rem;
+        width: 95%;
+    }
+
+    .about-us-container {
+        flex-direction: column;
+    }
+
+    .about-text,
+    .team-container {
+        flex-basis: 100%;
+    }
+
+    .team-container {
+        margin-top: 1.875rem;
+    }
+
+    .community-container {
+        flex-direction: column;
+    }
+
+    .community-visual,
+    .community-text {
+        flex-basis: 100%;
+    }
+
+    .community-text {
+        margin-top: 1.875rem;
+    }
+
+    .community-section {
+        width: 100%;
+        border-radius: 0;
+        padding: 2.5rem 5%;
+        margin-top: 6.25rem;
+    }
+
+    .header-nav {
+        display: none;
+    }
+
+    .header-bar {
+        padding: 0.625rem 4%;
+        display: flex;
+        justify-content: space-between;
+    }
+}
+
+
+/* Tablet Vertical / Móvil Grande (ej. 768px) */
+@media (max-width: 48em) {
+
+    .header-bar {
+        padding: 0.625rem 1.25rem;
+        align-items: center;
+    }
+
+    .nav-area {
+        padding-top: 0;
+    }
+
+    .logo {
+        height: 2.5rem;
+    }
+
+    .register-button {
+        padding: 0.5rem 0.9375rem;
+        font-size: 0.875rem;
+    }
+
+    .text-content h1 {
+        font-size: 2.25rem;
+    }
+
+    .text-content p {
+        font-size: 1rem;
+    }
+
+    .app-buttons {
+        justify-content: center;
+    }
+
+    .app-button {
+        height: 2.5rem;
+    }
+
+    .bottom-rectangle h2 {
+        font-size: 1.5rem;
+    }
+
+    .about-us-section {
+        margin-top: 5rem;
+        padding: 1.875rem 4%;
+    }
+
+    .community-section {
+        padding: 1.875rem 4%;
+        margin-top: 5rem;
+    }
+
+    .plans-section {
+        margin-top: 6.25rem;
+        padding: 1.875rem 1.25rem;
+    }
+
+    .team-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5625rem;
+    }
+
+    .team-member img {
+        width: 5rem;
+        height: 5rem;
+    }
+
+    .team-member span {
+        font-size: 0.875rem;
+    }
+
+    .standard-button,
+    .premium-button {
+        width: 80%;
+        padding: 0.75rem 0.9375rem;
+    }
+
+    .site-footer {
+        padding: 2.5rem 5%;
+        margin-top: 5rem;
+    }
+
+    .footer-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 2.5rem;
+    }
+
+    .footer-column {
+        min-width: 100%;
+    }
+
+    .logo-column {
+        min-width: 100%;
+    }
+
+    .links-column ul {
+        display: inline-block;
+    }
+
+    .social-icons {
+        justify-content: center;
+    }
+}
+
+
+/* Móvil Pequeño (ej. 480px) */
+@media (max-width: 30em) {
+
+    .header-bar {
+        padding: 0.625rem 0.9375rem;
+    }
+
+    .hero-content {
+        padding-top: 3.75rem;
+    }
+
+    .text-content {
+        padding-left: 0.9375rem;
+        padding-right: 0.9375rem;
+    }
+
+    .illustration-content {
+        padding-left: 0.9375rem;
+        padding-right: 0.9375rem;
+    }
+
+    .team-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.25rem;
+    }
+
+    .about-us-section {
+        margin-top: 5rem;
+        padding: 1.25rem 3%;
+    }
+
+    .plans-section {
+        margin-top: 5rem;
+        padding: 1.25rem;
+    }
+
+    .step-card {
+        width: 95%;
+    }
+
+    .bottom-rectangle {
+        padding: 1.25rem;
+    }
+}
+
+
+/* Móvil Extra Pequeño (ej. 320px) */
+@media (max-width: 20em) {
+
+    .text-content h1 {
+        font-size: clamp(1.75rem, 8vw, 2rem);
+    }
+
+    .text-content p {
+        font-size: 0.9375rem;
+    }
+
+    .app-button {
+        height: 2.1875rem;
+    }
+
+    .bottom-rectangle {
+        padding: 0.9375rem;
+    }
+
+    .bottom-rectangle h2 {
+        font-size: 1.25rem;
+    }
+
+    .step-card h3 {
+        font-size: 1.25rem;
+    }
+
+    .step-card p {
+        font-size: 0.9375rem;
+    }
+
+    .arrow {
+        font-size: 1.875rem;
+    }
+
+    .about-us-section {
+        margin-top: 5rem;
+    }
+
+    .team-member img {
+        width: 4.375rem;
+        height: 4.375rem;
+    }
+
+    .team-member span {
+        font-size: 0.75rem;
+    }
+}

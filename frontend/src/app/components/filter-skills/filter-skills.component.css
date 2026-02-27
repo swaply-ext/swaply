@@ -12,7 +12,7 @@
   background-color: #143F4C;
   color: #e5e7eb;
   padding: 0.6rem 1rem;
-  border-radius: 9999px;
+  border-radius: 500rem;
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.3s, filter 0.3s;
@@ -24,38 +24,38 @@
 }
  
 .filter-box .material-symbols-outlined {
-  font-size: 20px;
+  font-size: 1.25rem;
 }
  
 .filter-dropdown {
   position: absolute;
   top: 100%;
   right: 0;
-  width: 280px;
+  width: 17.5rem;
   background-color: #143F4C;
-  border: 1px solid var(--principal-color-2);
+  border: 0.0625rem solid var(--principal-color-2);
   border-radius: 0.5rem;
   margin-top: 0.5rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0.625rem 0.9375rem -0.1875rem rgba(0, 0, 0, 0.3);
   z-index: 50;
   overflow: hidden;
 }
 
 /* Estilo del scrollbar para que quede bonito en dark mode */
 .filter-dropdown::-webkit-scrollbar {
-  width: 8px;
+  width: 0.5rem;
 }
 .filter-dropdown::-webkit-scrollbar-track {
   background: #0f172a; 
 }
 .filter-dropdown::-webkit-scrollbar-thumb {
   background-color: #334155; 
-  border-radius: 4px;
+  border-radius: 0.25rem;
 }
  
 .category {
   padding: 0.75rem 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 0.0625rem solid rgba(255, 255, 255, 0.1);
 }
  
 .category-header {
@@ -80,11 +80,11 @@
   appearance: none;
   -webkit-appearance: none;
   
-  width: 20px;
-  height: 20px;
+  width: 1.25rem;
+  height: 1.25rem;
   border-radius: 50%; 
   
-  border: 2px solid #3CB57C; 
+  border: 0.125rem solid #3CB57C; 
   background-color: transparent;
   cursor: pointer;
   
@@ -100,8 +100,8 @@
 
 .subcategory input[type="checkbox"]::before {
   content: "";
-  width: 10px;
-  height: 10px;
+  width: 0.625rem;
+  height: 0.625rem;
   transform: scale(0);
   transition: 0.2s transform ease-in-out;
   background-color: white;
@@ -128,4 +128,29 @@ hr {
   padding: 0.25rem 0;
   color: var(--principal-color-2);
   font-size: 0.9rem;
+}
+ 
+.clear-button-container {
+  position: absolute;
+  top: 0.625rem;
+  right: 0.625rem;
+  border-top: none;
+  padding: 0;
+}
+ 
+.clear-button {
+  background-color: transparent;
+  border: 0.0625rem solid #3CB57C;
+  color: #3CB57C;
+  padding: 0.25rem 0.75rem;
+  border-radius: 500rem;
+  font-weight: 500;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+ 
+.clear-button:hover {
+  background-color: #3CB57C;
+  color: white;
 }

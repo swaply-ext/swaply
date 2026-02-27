@@ -1,14 +1,19 @@
 package com.swaply.backend.application.account.service;
 
 import com.swaply.backend.application.account.dto.EditProfileDTO;
+import com.swaply.backend.application.account.dto.NavBarInformationDTO;
 import com.swaply.backend.application.account.dto.PersonalInfoDTO;
 import com.swaply.backend.application.account.dto.ProfileDataDTO;
 import com.swaply.backend.application.account.dto.PublicProfileDTO;
 import com.swaply.backend.application.account.dto.SkillsDTO;
 import com.swaply.backend.application.auth.exception.UserAlreadyExistsException;
 import com.swaply.backend.shared.UserCRUD.UserService;
+import com.swaply.backend.shared.UserCRUD.Model.Swap.Status;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
+import com.swaply.backend.shared.chat.service.ChatService;
 import com.swaply.backend.application.account.AccountMapper;
+
+
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,14 +23,16 @@ public class AccountService /* implements UserRepository */ {
 
     private final UserService userService;
     private final AccountMapper mapper;
+    private final ChatService chatService;
 
     @Value("${frontend.reset-password-url}")
     private String resetPasswordBaseUrl;
 
     public AccountService(UserService userService,
-            AccountMapper mapper) {
+            AccountMapper mapper, ChatService chatService) {
         this.userService = userService;
         this.mapper = mapper;
+        this.chatService = chatService;
     }
 
     public void UpdatePersonalInfo(String userId, PersonalInfoDTO dto) {
@@ -58,10 +65,26 @@ public class AccountService /* implements UserRepository */ {
         return mapper.editDatafromUserDTO(userDTO);
     }
 
+    public NavBarInformationDTO navBarInformation(String userId){
+        UserDTO userDTO = userService.getUserByID(userId);
+        NavBarInformationDTO dto = mapper.navBarFromUserDTO(userDTO);
+        Integer swapCount = 0;
+        if (userDTO.getSwaps() != null){
+            swapCount = (int) userDTO.getSwaps()
+                .stream()
+                .filter(s -> s.getStatus().equals(Status.STANDBY))
+                .filter(s -> !s.getIsRequester())
+                .count();
+        }
+        dto.setNotificationCount(swapCount);
+        Integer unreadCount = chatService.getTotalUnreadMessages(userId);
+        dto.setMsgCount(unreadCount);
+        return dto;
+    }
+
     public void updateEditProfileData(String userId, EditProfileDTO dto) {
         UserDTO newUserDTO = mapper.fromEditProfileDataDTO(dto);
         UserDTO currentUserDTO = userService.getUserByID(userId);
-        //Comprobar si el username ha cambiado y si el nuevo ya existe
         if (!currentUserDTO.getUsername().equals(dto.getUsername())) {
             if (userService.existsByUsername(dto.getUsername())) {
                 throw new UserAlreadyExistsException("El usuario: " + dto.getUsername() + " ya esta en uso.");
@@ -80,7 +103,7 @@ public class AccountService /* implements UserRepository */ {
         UserDTO userDTO = userService.getUserByUsername(username);
         return mapper.mapUserToPublicProfile(userDTO);
     }
-  
+
     public void deleteUser(String userId) {
         userService.deleteUserById(userId);
     }

@@ -1,18 +1,22 @@
 package com.swaply.backend.shared.UserCRUD;
 
 import java.text.Normalizer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.swaply.backend.application.auth.service.PasswordService;
+import com.swaply.backend.config.security.SecurityUser;
 import com.swaply.backend.shared.UserCRUD.Model.User;
+import com.swaply.backend.shared.UserCRUD.Model.UserSkills;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.shared.UserCRUD.exception.UserNotFoundException;
-import java.text.Normalizer;
 import java.util.regex.Pattern;
 
 @Service
@@ -42,7 +46,7 @@ public class UserService {
 
     public UserDTO getUserByUsername(String username) {
         User user = repository.findUserByUsername(username)
-            .orElseThrow(() -> new UserNotFoundException("User not found with username: " + username));
+                .orElseThrow(() -> new UserNotFoundException("User not found with username: " + username));
         return mapper.entityToDTO(user);
     }
 
@@ -55,8 +59,26 @@ public class UserService {
     public UserDTO getUserByID(String id) {
         User user = repository.findUserById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
-        return mapper.entityToDTO(user);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null && auth.getPrincipal() instanceof SecurityUser principal) {
+            if (principal.isModerator() || principal.getUsername().equals(id)) {
+                return mapper.entityToDTO(user);
+            }
+        }
+
+        return mapper.publicDTOToUserDTO(mapper.entityToPublicDTO(user));
     }
+
+    public String getUsernameById(String id) {
+        return repository.findUsernameById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+    }
+
+        public String getProfilePhotoById(String id) {
+        return repository.findprofilePhotoUrlById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+    }
+
 
     public List<UserDTO> getAllUsers() {
         return repository.findAllUsers()
@@ -66,19 +88,22 @@ public class UserService {
     }
 
     private String normalizeString(String input) {
-    if (input == null) return "";
-    String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
-    Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-    return pattern.matcher(normalized).replaceAll("").toLowerCase();
-}
+        if (input == null)
+            return "";
+        input = input.replace(" ", "");
+        String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        return pattern.matcher(normalized).replaceAll("").toLowerCase();
+    }
 
-        public List<UserDTO> findUsersByUsernameContaining(String usernameFragment) {
-    String normalized = normalizeString(usernameFragment);
-    return repository.findUsersByUsernameContaining(normalized)
-            .stream()
-            .map(mapper::entityToDTO)
-            .collect(Collectors.toList());
-}
+    public List<UserDTO> findUsersByUsernameContaining(String usernameFragment) {
+        String normalized = normalizeString(usernameFragment);
+
+        return repository.findUsersByUsernameContaining(normalized)
+                .stream()
+                .map(mapper::entityToDTO)
+                .collect(Collectors.toList());
+    }
 
     public void deleteUserById(String id) {
         if (!repository.existsUserById(id)) {
@@ -86,20 +111,24 @@ public class UserService {
         }
         repository.deleteUserById(id);
     }
-    
-        @Transactional
-        public UserDTO createUser(UserDTO dto) {
-            User newUser = mapper.dtoToEntity(dto);
-    
-            newUser.setId(UUID.randomUUID().toString());
-    
-            String passwordHash = passwordService.hash(dto.getPassword());
-            newUser.setPassword(passwordHash);
-    
-            User savedUser = repository.save(newUser);
-    
-            return mapper.entityToDTO(savedUser);
-        }
+
+    @Transactional
+    public UserDTO createUser(UserDTO dto) {
+        User newUser = mapper.dtoToEntity(dto);
+
+        newUser.setId(UUID.randomUUID().toString());
+
+        String passwordHash = passwordService.hash(dto.getPassword());
+        newUser.setPassword(passwordHash);
+        List<UserSkills> emptySkills = new ArrayList<>();
+        List<UserSkills> emptyInterest =new ArrayList<>();
+        newUser.setSkills(emptySkills);
+        newUser.setInterests(emptyInterest);
+
+        User savedUser = repository.save(newUser);
+
+        return mapper.entityToDTO(savedUser);
+    }
 
     @Transactional
     public UserDTO updateUser(String id, UserDTO dto) {
@@ -120,7 +149,6 @@ public class UserService {
         repository.save(user);
     }
 
-
     public List<UserDTO> getUsersByLocation(String location) {
         return repository.findUserByLocation(location)
                 .stream()
@@ -130,5 +158,25 @@ public class UserService {
 
     public boolean existsUserByLocation(String location) {
         return repository.existsUserByLocation(location);
+    }
+
+    //metodo oara activar el premium de un usuario
+    public void activatePremium(String userId) {
+        User user = repository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado con ID: " + userId));
+        
+        user.setPremium(true);
+        repository.save(user);
+}
+
+    public User findUserEntityById(String id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado con ID: " + id));
+    }
+
+    public void updateStripeCustomerId(String userId, String stripeCustomerId) {
+        User user = findUserEntityById(userId);
+        user.setStripeCustomerId(stripeCustomerId);
+        repository.save(user);
     }
 }

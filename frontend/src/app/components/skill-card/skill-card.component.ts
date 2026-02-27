@@ -13,22 +13,19 @@ export class SkillCardComponent implements OnChanges {
   @Input() id: string = '';
   @Input() level: number = 0;
   @Input() editable: boolean = false;
-  
-  // input para manejar la seleccion
   @Input() selected: boolean = false;
+  @Input() selectable: boolean = false;
 
+  @Output() cardSelected = new EventEmitter<SkillDisplay>();
   @Output() levelChange = new EventEmitter<{id: string, newLevel: number}>();
 
   private skillsService = inject(SkillsService);
-
   skill: SkillDisplay | null = null;
 
   ngOnChanges(changes: SimpleChanges): void {
-    
     if (changes['id'] && this.id) {
       this.loadSkillData();
     }
-
     if (changes['level'] && this.skill) {
       this.skill.level = this.level;
     }
@@ -41,16 +38,29 @@ export class SkillCardComponent implements OnChanges {
       });
   }
 
-  changeLevel(clickedLevel: number) {
+  changeLevel(clickedLevel: number, event?: Event) {
+    if (event) {
+      event.stopPropagation();
+    }
+
     if (!this.editable || !this.skill) return;
 
-    if (this.skill.level === clickedLevel) {
+    if (this.skill.level === 0 && clickedLevel <= 1){
+      this.skill.level = 1;
+    } else if (this.skill.level === clickedLevel) {
       this.skill.level = 0;
     } else {
       this.skill.level = clickedLevel;
     }
 
-    // emitimos el evento por si el padre quiere guardar en bd
     this.levelChange.emit({ id: this.id, newLevel: this.skill.level });
+  }
+
+  handleCardClick() {
+    if (this.editable && this.skill) {
+      this.changeLevel(this.skill.level); 
+    } else if (this.selectable && this.skill) {
+      this.cardSelected.emit(this.skill); 
+    }
   }
 }

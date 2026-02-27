@@ -5,15 +5,13 @@ import {
   signal,
   ElementRef,
   HostListener,
-  Injectable
 } from '@angular/core';
-import { HttpClient, HttpClientModule, HttpContext, HttpParams } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Observable, Subject, of } from 'rxjs';
+import { Subject, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, tap, filter, catchError } from 'rxjs/operators';
-import { SKIP_LOADING } from '../../interceptors/loading.interceptor';
 import { Router } from '@angular/router';
+import { UsersService } from '../../services/users.service';
 
 export interface UserSearchItem {
   id: string;
@@ -21,32 +19,20 @@ export interface UserSearchItem {
   profilePhotoUrl?: string;
 }
 
-@Injectable({ providedIn: 'root' })
-class UserSearchService {
-  private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8081/api/users';
 
-  searchUsers(query: string): Observable<UserSearchItem[]> {
-    if (!query.trim()) return of([]);
-    const params = new HttpParams().set('contains', query);
-    return this.http.get<UserSearchItem[]>(this.apiUrl, {
-      params,
-      context: new HttpContext().set(SKIP_LOADING, true)
-    });
-  }
-}
 
 @Component({
   selector: 'app-user-search',
   standalone: true,
-  imports: [CommonModule, FormsModule, HttpClientModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './user-search.component.html',
   styleUrls: ['./user-search.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserSearchComponent {
+
   private router = inject(Router);
-  private userSearchService = inject(UserSearchService);
+  private userSearchService = inject(UsersService);
   private el = inject(ElementRef);
 
   searchTerm = '';
@@ -90,7 +76,7 @@ export class UserSearchComponent {
 
   onSelectUser(user: UserSearchItem) {
 
-    this.router.navigate(['/public-profile', user.username]); 
+    this.router.navigate(['/user', user.username]); 
     this.searchTerm = user.username;
     this.results.set([]);
     this.showDropdown.set(false);

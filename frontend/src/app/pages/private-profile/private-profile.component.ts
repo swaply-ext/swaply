@@ -4,21 +4,11 @@ import { AppNavbarComponent } from "../../components/app-navbar/app-navbar.compo
 import { ProfileInfoComponent } from "../../components/profile-info/profile-info.component";
 import { SkillsPanelComponent } from '../../components/skills-panel/skills-panel.component';
 import { InterestsPanelComponent } from '../../components/interests-panel/interests-panel.component';
-import { AccountService } from '../../services/account.service';
+import { ProfileDataDTO } from '../../models/profile-data-dto.model';
+import { PrivateProfileData } from '../../models/private-profile-data.model';
+import { UserSkills } from '../../models/user-skills.model';
+import { ActivatedRoute } from '@angular/router'; //Con este import se accede al resolver
 
-interface Skill {
-  id: string;
-  level: number;
-}
-
-interface ProfileData {
-  fullName: string;
-  username: string;
-  location: string;
-  description: string;
-  profilePhotoUrl: string;
-  rating: number;
-}
 @Component({
   selector: 'app-private-profile',
   standalone: true,
@@ -34,29 +24,21 @@ interface ProfileData {
 })
 export class PrivateProfileComponent implements OnInit {
 
-  public interests: Array<Skill> = [];
-  public skills: Array<Skill> = [];
-  public profileData: ProfileData = {} as ProfileData;
+  public interests: Array<UserSkills> = [];
+  public skills: Array<UserSkills> = [];
+  public profileViewData!: PrivateProfileData;
 
-  constructor(private accountService: AccountService) { }
+  constructor(
+    private resolver: ActivatedRoute
+  ) { } //declaramos el resolver
 
   ngOnInit(): void {
-    this.getProfileDataFromBackend();
+    //En lugar de llamar al servicio, llamamos al resolver
+    const user = this.resolver.snapshot.data['profileData'];
+    this.splitAndSendUser(user);
   }
 
-  getProfileDataFromBackend(): void {
-    this.accountService.getProfileData().subscribe({
-      next: (user) => {
-        // console.log('Datos recibidos del backend:', data);
-        this.splitAndSendUser(user);
-      },
-      error: (err) => {
-        console.error('Error al obtener datos del perfil:', err);
-      }
-    });
-  }
-
-  splitAndSendUser(user: any): void {
+  splitAndSendUser(user: ProfileDataDTO): void {
     this.interests = user.interests;
     this.skills = user.skills;
     this.mapProfileData(user);
@@ -64,17 +46,15 @@ export class PrivateProfileComponent implements OnInit {
     console.log(this.interests);
   }
 
-  mapProfileData(user: any): void {
-
-    this.profileData = {
+  mapProfileData(user: ProfileDataDTO): void {
+    this.profileViewData = {
       fullName: `${user.name} ${user.surname}`,
       username: user.username,
       location: user.location,
       description: user.description,
       profilePhotoUrl: user.profilePhotoUrl,
-      rating : 3.8,
+      rating: 0,
+      isPremium: user.isPremium
     };
   }
-
-
 }

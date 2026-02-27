@@ -1,6 +1,8 @@
 package com.swaply.backend.application.swap.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -10,75 +12,74 @@ import org.springframework.stereotype.Service;
 
 import com.swaply.backend.application.swap.SwapMapper;
 import com.swaply.backend.application.swap.dto.SwapDTO;
-import com.swaply.backend.shared.UserCRUD.UserRepository;
 import com.swaply.backend.shared.UserCRUD.UserService;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.shared.UserCRUD.Model.Swap;
-import com.swaply.backend.shared.UserCRUD.Model.User;
-import com.swaply.backend.shared.UserCRUD.exception.UserNotFoundException;
+import com.swaply.backend.shared.chat.dto.ChatMessageDTO;
+import com.swaply.backend.shared.chat.model.ChatRoom;
+import com.swaply.backend.shared.chat.service.ChatService;
 import com.swaply.backend.shared.mail.MailService;
-import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 
 @Service
 public class SwapService {
 
-    private final UserRepository repository;
     private final SwapMapper mapper;
     private final UserService userService;
     private final MailService mailService;
+    private final ChatService chatService;
 
-    public SwapService(SwapMapper mapper, UserRepository repository, UserService userService, MailService mailService) {
+    public SwapService(SwapMapper mapper, UserService userService, MailService mailService, ChatService chatService) {
         this.mapper = mapper;
-        this.repository = repository;
         this.userService = userService;
         this.mailService = mailService;
+        this.chatService = chatService;
     }
 
     public Swap createSwap(String sendingUser, SwapDTO dto) {
         String id = UUID.randomUUID().toString();
-
+        LocalDateTime now = LocalDateTime.now();
         Swap sentSwap = mapper.toEntity(dto);
         sentSwap.setStatus(Swap.Status.STANDBY);
         sentSwap.setIsRequester(true);
         sentSwap.setId(id);
         sentSwap.setRequestedUserId(userService.getUserByUsername(dto.getRequestedUsername()).getId());
+        sentSwap.setCreatedAt(now);
 
-        User sender = repository.findUserById(sendingUser)
-                .orElseThrow(() -> new UserNotFoundException(sendingUser));
+        UserDTO sender = userService.getUserByID(sendingUser);
+        UserDTO Reciever = userService.getUserByUsername(dto.getRequestedUsername());
+        String RecieverId = Reciever.getId();
 
         if (sender.getSwaps() == null) {
             sender.setSwaps(new ArrayList<>());
         }
         sender.getSwaps().add(sentSwap);
-        repository.save(sender);
+        userService.updateUser(sender.getId(), sender);
 
         Swap receivedSwap = mapper.toEntity(invertSwap(dto));
         receivedSwap.setStatus(Swap.Status.STANDBY);
         receivedSwap.setIsRequester(false);
         receivedSwap.setId(id);
         receivedSwap.setRequestedUserId(sendingUser);
+        receivedSwap.setCreatedAt(now);
 
-        User receiver = repository.findUserById(sentSwap.getRequestedUserId())
-                .orElseThrow(() -> new UserNotFoundException(sentSwap.getRequestedUserId()));
-
+        UserDTO receiver = userService.getUserByID(sentSwap.getRequestedUserId());
         if (receiver.getSwaps() == null) {
             receiver.setSwaps(new ArrayList<>());
         }
         receiver.getSwaps().add(receivedSwap);
-        repository.save(receiver);
+        userService.updateUser(RecieverId, receiver);
 
-        //Enviar email de notificación
-                try {
+        // Enviar email de notificación
+        try {
             UserDTO senderDto = userService.getUserByID(sendingUser);
             UserDTO receiverDto = userService.getUserByUsername(dto.getRequestedUsername());
 
             mailService.sendSwapRequestEmail(
-                receiverDto.getEmail(),       
-                receiverDto.getName(),        
-                senderDto.getName(),          
-                dto.getSkill(),             
-                dto.getInterest()        
-            );
+                    receiverDto.getEmail(),
+                    receiverDto.getName(),
+                    senderDto.getName(),
+                    dto.getSkill(),
+                    dto.getInterest());
             System.out.println("Notificación enviada a: " + receiverDto.getEmail());
 
         } catch (Exception e) {
@@ -97,7 +98,15 @@ public class SwapService {
     public List<Swap> getAllSwaps(String id) {
         UserDTO userSwap = userService.getUserByID(id);
         List<Swap> listaSwaps = userSwap.getSwaps();
-        return listaSwaps;
+
+        if (listaSwaps == null || listaSwaps.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        List<Swap> swapsOrdenados = new ArrayList<>(listaSwaps);
+        swapsOrdenados.sort(
+                Comparator.comparing(Swap::getCreatedAt, Comparator.nullsFirst(Comparator.naturalOrder())).reversed());
+        return swapsOrdenados;
     }
 
     public Swap getNextSwap(String id) {
@@ -119,29 +128,49 @@ public class SwapService {
     }
 
     public void updateSwapStatus(String swapId, String status, String currentUserId) {
-        //get sender
         UserDTO sender = userService.getUserByID(currentUserId);
         Swap senderSwap = getSwapFromDTO(sender, swapId);
 
-        //get receiver
         UserDTO receiver = userService.getUserByID(senderSwap.getRequestedUserId());
         Swap receiverSwap = getSwapFromDTO(receiver, swapId);
 
-        // Set new status
         Swap.Status newStatus;
         if (!status.equalsIgnoreCase("ACCEPTED") && !status.equalsIgnoreCase("DENIED")) {
             throw new IllegalArgumentException("Invalid status: " + status);
         }
         if (status.equalsIgnoreCase("ACCEPTED")) {
             newStatus = Swap.Status.ACCEPTED;
+            String msj = "Acabo de aceptar tu intercambio de " + senderSwap.getSkill() + " por " + senderSwap.getInterest() + ". ¡Empecemos a aprender!";
+            handleChatOnAccept(currentUserId, senderSwap.getRequestedUserId(), msj);
         } else {
             newStatus = Swap.Status.DENIED;
         }
 
         senderSwap.setStatus(newStatus);
         receiverSwap.setStatus(newStatus);
-        // Save to database
-        userService.updateUser(currentUserId,sender);
-        userService.updateUser(receiver.getId(),receiver);
+
+        userService.updateUser(currentUserId, sender);
+        userService.updateUser(senderSwap.getRequestedUserId(), receiver);
+    }
+
+    private void handleChatOnAccept(String currentUserId, String otherUserId, String msj) {
+        Optional<ChatRoom> existingChat = chatService.findChatRoomByParticipants(currentUserId, otherUserId);
+
+        ChatRoom chatRoom;
+        if (existingChat.isPresent()) {
+            chatRoom = existingChat.get();
+        } else {
+            String currentUsername = userService.getUserByID(currentUserId).getUsername();
+            String otherUsername = userService.getUserByID(otherUserId).getUsername();
+            chatRoom = chatService.createChatRoom(currentUserId, otherUsername);
+        }
+
+        ChatMessageDTO messageDTO = ChatMessageDTO.builder()
+                .roomId(chatRoom.getId())
+                .senderId(currentUserId)
+                .content(msj)
+                .build();
+
+        chatService.sendChatMessage(messageDTO);
     }
 }

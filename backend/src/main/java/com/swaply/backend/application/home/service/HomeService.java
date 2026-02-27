@@ -5,6 +5,7 @@ import com.swaply.backend.shared.UserCRUD.Model.User;
 import com.swaply.backend.shared.UserCRUD.Model.UserSkills;
 import com.swaply.backend.shared.UserCRUD.UserRepository;
 import org.springframework.stereotype.Service;
+import com.swaply.backend.shared.location.LocationService;
 
 import java.text.Normalizer;
 import java.util.*;
@@ -16,9 +17,11 @@ import java.util.stream.Stream;
 public class HomeService {
 
     private final UserRepository userRepository;
+    private final LocationService locationService;
 
-    public HomeService(UserRepository userRepository) {
+    public HomeService(UserRepository userRepository, LocationService locationService) {
         this.userRepository = userRepository;
+        this.locationService = locationService;
     }
 
     public List<UserSwapDTO> getRecommendedMatches(String currentUserId) {
@@ -28,80 +31,118 @@ public class HomeService {
             return List.of();
         }
 
-        
-        List<String> myInterestIds = myUser.getInterests().stream()
-                .map(s -> normalizeString(s.getId()))
-                .collect(Collectors.toList());
+        Map<String, Integer> myInterestLevels = myUser.getInterests().stream()
+                .collect(Collectors.toMap(
+                        s -> normalizeString(s.getId()),
+                        s -> s.getLevel() != null ? s.getLevel() : 0,
+                        (existing, replacement) -> existing));
 
-        Set<String> myOfferingIds = (myUser.getSkills() != null)
-                ? myUser.getSkills().stream().map(s -> normalizeString(s.getId())).collect(Collectors.toSet())
-                : Collections.emptySet();
+        Map<String, Integer> mySkillsLevels = myUser.getSkills().stream()
+                .collect(Collectors.toMap(
+                        s -> normalizeString(s.getId()),
+                        s -> s.getLevel() != null ? s.getLevel() : 0,
+                        (existing, replacement) -> existing));
 
-        String myLocation = (myUser.getLocation() != null) ? normalizeString(myUser.getLocation()) : "";
+        List<String> myInterestIds = new ArrayList<>(myInterestLevels.keySet());
 
-        
         List<User> candidates = userRepository.findUsersByMultipleSkillIds(myInterestIds);
 
-        return candidates.stream()
-                .filter(user -> !user.getId().equals(currentUserId)) 
-                .filter(user -> user.getSkills() != null)            
-                .filter(user -> isReciprocalMatch(user, myOfferingIds)) 
-                .flatMap(user -> extractMatchingSkills(user, myInterestIds, myLocation)) 
-                .sorted((d1, d2) -> { 
-                    
-                    boolean c1 = "Cerca de ti".equals(d1.getDistance());
-                    boolean c2 = "Cerca de ti".equals(d2.getDistance());
-                    return Boolean.compare(c2, c1);
-                })
+        List<UserSwapDTO> matches = candidates.stream()
+                .filter(user -> !user.getId().equals(currentUserId))
+                .filter(user -> user.getSkills() != null)
+                .filter(user -> isReciprocalMatch(user, mySkillsLevels))
+                .flatMap(user -> extractMatchingSkills(user, myInterestLevels, currentUserId))
                 .collect(Collectors.toList());
+
+        // Hacemos una lista con los premium que haya encontrado en la lista de
+        // candidatos ordenados por distancia, de menor a mayor
+        List<UserSwapDTO> premiumMatches = matches.stream()
+                .filter(user -> user.isPremium())
+                .sorted(Comparator.comparingDouble(d -> {
+                    try {
+                        return d.getDistance() != null ? Double.parseDouble(d.getDistance()) : Double.MAX_VALUE;
+                    } catch (NumberFormatException e) {
+                        return Double.MAX_VALUE;
+                    }
+                }))
+                .collect(Collectors.toList());
+
+        // Otra lista de los NO premium ordenadas por distancia de menor a mayor
+        List<UserSwapDTO> notPremiumMatches = matches.stream()
+                .filter(user -> !user.isPremium())
+                .sorted(Comparator.comparingDouble(d -> {
+                    try {
+                        return d.getDistance() != null ? Double.parseDouble(d.getDistance()) : Double.MAX_VALUE;
+                    } catch (NumberFormatException e) {
+                        return Double.MAX_VALUE;
+                    }
+                }))
+                .collect(Collectors.toList());
+
+        // Le añadimos la lista de ordenados por distancia a la de los premium
+        List<UserSwapDTO> finalMatches = new ArrayList<>(premiumMatches);
+        finalMatches.addAll(notPremiumMatches);
+        return finalMatches;
+
     }
 
-    
+    private boolean isReciprocalMatch(User otherUser,  Map<String, Integer> mySkillsLevels) {
+        if (otherUser.getInterests() == null)
+            return false;
 
-    private boolean isReciprocalMatch(User otherUser, Set<String> myOfferingIds) {
-        if (otherUser.getInterests() == null) return false;
-        return otherUser.getInterests().stream()
-                .map(i -> normalizeString(i.getId()))
-                .anyMatch(myOfferingIds::contains);
+        return otherUser.getInterests().stream().anyMatch(otherInterest -> {
+
+            String id = normalizeString(otherInterest.getId());
+            int otherRequiredLevel = otherInterest.getLevel() != null ? otherInterest.getLevel() : 0;
+
+            if (!mySkillsLevels.containsKey(id))
+                return false;
+
+            int myLevel = mySkillsLevels.get(id);
+            return myLevel >= otherRequiredLevel;
+        });
+
     }
 
-    private Stream<UserSwapDTO> extractMatchingSkills(User otherUser, List<String> myInterestIds, String myLocation) {
-        boolean isClose = checkLocationMatch(otherUser, myLocation);
-        String distanceLabel = isClose ? "Cerca de ti" : "Lejos de ti";
+    private Stream<UserSwapDTO> extractMatchingSkills(User otherUser, Map<String, Integer> myInterestLevels,
+            String currentUserId) {
+        String distance = locationService.calculateDistance(currentUserId, otherUser.getUsername());
 
-        
         return otherUser.getSkills().stream()
-                .filter(skill -> myInterestIds.contains(normalizeString(skill.getId())))
-                .map(skill -> mapToCard(otherUser, skill, true, distanceLabel));
-    }
-
-    private boolean checkLocationMatch(User candidate, String myLocation) {
-        if (myLocation.isEmpty()) return false;
-        if (candidate.getLocation() == null) return false;
-        String candidateLoc = normalizeString(candidate.getLocation());
-        return candidateLoc.contains(myLocation) || myLocation.contains(candidateLoc);
+                .filter(skill -> {
+                    String skillId = normalizeString(skill.getId());
+                    if (!myInterestLevels.containsKey(skillId))
+                        return false;
+                    int myLevel = myInterestLevels.get(skillId);
+                    int otherLevel = skill.getLevel() != null ? skill.getLevel() : 0;
+                    return otherLevel >= myLevel;
+                })
+                .map(skill -> mapToCard(otherUser, skill, true, distance));
     }
 
     private String normalizeString(String input) {
-        if (input == null) return "";
+        if (input == null)
+            return "";
         String normalized = Normalizer.normalize(input, Normalizer.Form.NFD);
         Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
         return pattern.matcher(normalized).replaceAll("").toLowerCase().trim();
     }
 
-    private UserSwapDTO mapToCard(User user, UserSkills skill, boolean isMatch, String distanceLabel) {
+    private UserSwapDTO mapToCard(User user, UserSkills skill, boolean isMatch, String distance) {
         UserSwapDTO dto = new UserSwapDTO();
         dto.setUserId(user.getId());
         dto.setName(user.getName());
         dto.setUsername(user.getUsername());
         dto.setProfilePhotoUrl(user.getProfilePhotoUrl());
+        dto.setPremium(user.isPremium());
 
+        dto.setSkillId(skill.getId());
         dto.setSkillName("Clase de " + (skill.getName() != null ? skill.getName() : skill.getId()));
         dto.setSkillCategory(skill.getCategory());
         dto.setSkillLevel(skill.getLevel());
         dto.setSkillIcon(skill.getIcon() != null ? skill.getIcon() : "🎓");
 
-        dto.setDistance(distanceLabel);
+        dto.setDistance(distance != null ? String.valueOf(distance) : null);
         dto.setRating(5.0);
         dto.setSwapMatch(isMatch);
 

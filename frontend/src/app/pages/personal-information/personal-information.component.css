@@ -1,47 +1,79 @@
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+}
+
 .information-container {
-  width: 350px;             
-  margin: 50px auto;        
-  padding: 20px;            
-  border: 1px solid #315465;   
-  border-radius: 8px;       
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
-  background-color: #315465;   
+  width: 25rem;
+  padding: 1.875rem;
+  border: 0.063rem solid #315465;
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow-large);
+  background-color: #315465;
   display: flex;
   flex-direction: column;
-  align-items: center;      
+  align-items: center;
 }
 
 .information-container h2 {
   font-family: var(--font-primary);
   font-weight: 700;
-  margin-bottom: 20px;
-  font-size: 24px;
+  font-size: 1.75rem;
   text-align: center;
   color: var(--principal-color-2);
-  margin-bottom: 20px;
+  margin-bottom: 1.5rem;
 }
 
 .information-container form {
-  width: 100%;              
+  width: 100%;
   display: flex;
   flex-direction: column;
-  border-radius: 8px;
+  border-radius: 0.5rem;
 }
 
 .information-container.error input {
- border: 2px solid red;
-  background-color: #ffe6e6;
-  color: red; 
+  border: 0.125rem solid var(--error-color-1);
+  background-color: var(--error-bg);
+  color: var(--error-color-1);
 }
 
 .information-container.error input::placeholder {
-  color: #ff6666; 
+  color: var(--error-color-2);
 }
 
 .error-message {
-  color: #ff4d4f;
+  color: var(--error-color-1);
   font-size: 0.85rem;
-  margin-top: 5px;
-  padding-left: 5px;
-  text-align: left;
+  margin-top: 0.313rem;
+  padding-left: 0.313rem;
+}
+
+::ng-deep .information-container app-location-search .nearby-search {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.625rem;
+  width: 100%;
+}
+
+::ng-deep .information-container app-location-search .nearby-search input {
+  padding-left: 0.625rem !important;
+  padding-right: 0.625rem !important;
+  height: 2.188rem !important;
+  font-size: 0.875rem !important;
+  font-family: var(--font-primary) !important;
+  background-color: var(--secundary-color-2) !important;
+  border-radius: 0.5rem !important;
+  border: none !important;
+  color: var(--secundary-color-3) !important;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+::ng-deep .information-container app-location-search .nearby-search input::placeholder {
+  font-size: 0.875rem !important;
+  font-family: var(--font-primary) !important;
+  color: var(--text-disabled) !important;
 }

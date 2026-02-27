@@ -1,0 +1,121 @@
+<app-app-navbar></app-app-navbar>
+<div class="chat-container">
+  <aside class="chat-sidebar" [style.display]="(selectedConversation && isMobile) ? 'none' : 'flex'">
+    <div class="sidebar-header">
+      <div class="logo-container">
+        <img src="assets/logo_swp_invert.png" alt="Swaply" class="sidebar-logo">
+      </div>
+
+      <div class="search-box">
+        <span class="material-icons search-icon">search</span>
+        <input
+          type="text"
+          placeholder="Buscar..."
+          [(ngModel)]="searchQuery"
+        >
+      </div>
+    </div>
+
+    <div class="conversations-list">
+      <div *ngIf="loadingConversations" class="loading-state">
+        <i class="fas fa-spinner fa-spin"></i> Cargando...
+      </div>
+
+      <div *ngIf="!loadingConversations && filteredConversations.length === 0" class="empty-state-side">
+        <p>No se encontraron chats.</p>
+      </div>
+
+      <div
+        *ngFor="let conv of filteredConversations"
+        class="conversation-item"
+        [class.active]="selectedConversation?.roomId === conv.roomId"
+        (click)="selectConversation(conv)"
+      >
+        <div class="avatar-container">
+          <img
+            [src]="conv.partnerAvatar"
+            alt="Avatar"
+            class="avatar-img"
+            onerror="this.src='assets/default-image.jpg'"
+          >
+        </div>
+
+        <div class="conversation-info">
+          <div class="info-top">
+            <span class="partner-name">{{ conv.partnerUsername }}</span>
+            <span class="time-ago" *ngIf="conv.lastMessageTime">
+              {{ conv.lastMessageTime | date:'HH:mm' }}
+            </span>
+          </div>
+          <div class="info-bottom">
+            <p class="last-message" [class.unread-text]="conv.unreadCount > 0">
+              {{ (conv.lastMessage || 'Nuevo chat') | slice:0:35 }}
+              {{ (conv.lastMessage?.length || 0) > 35 ? '...' : '' }}
+            </p>
+            <span *ngIf="conv.unreadCount > 0" class="unread-badge">{{ conv.unreadCount }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="chat-main" [style.display]="(!selectedConversation && isMobile) ? 'none' : 'flex'">
+    <div *ngIf="!selectedConversation" class="no-chat-selected">
+      <img src="assets/logo_swp_invert.png" alt="Swaply" class="placeholder-icon">
+      <h2>¡Hola!</h2>
+      <p>Selecciona un chat para comenzar a intercambiar habilidades.</p>
+    </div>
+
+    <div *ngIf="selectedConversation" class="active-chat-view" style="display: flex; flex-direction: column; height: 100%;">
+      <header class="chat-header">
+        <div class="header-user-info">
+          <button class="back-btn" *ngIf="isMobile" (click)="selectedConversation = null">
+            <span class="material-icons">arrow_back</span>
+          </button>
+
+          <img
+            [src]="selectedConversation.partnerAvatar || 'assets/default-image.jpg'"
+            class="header-avatar"
+            onerror="this.src='assets/default-image.jpg'"
+          >
+          <div class="header-text">
+            <h3>{{ selectedConversation.partnerUsername }}</h3>
+            <span class="username-handle">&#64;{{ selectedConversation.partnerUsername }}</span>
+          </div>
+        </div>
+        <div class="header-actions"></div>
+      </header>
+
+      <div class="messages-area" #scrollContainer (scroll)="onScroll()">
+
+        <div *ngIf="isLoadingHistory" style="text-align: center; padding: 10px; color: #888;">
+             <small>Cargando historial...</small>
+        </div>
+
+        <div *ngFor="let msg of messages"
+             class="message-row"
+             [class.mine]="msg.senderId.toString() === currentUserId"
+             [class.theirs]="msg.senderId.toString() !== currentUserId"
+             [@messageAnimation]>
+          <div class="message-bubble">
+            <div class="msg-content">{{ msg.content }}</div>
+            <span class="msg-time">{{ msg.timestamp | date:'HH:mm' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-input-area">
+        <input
+          type="text"
+          placeholder="Escribe un mensaje..."
+          [(ngModel)]="newMessage"
+          (keydown.enter)="sendMessage()"
+          autocomplete="off"
+        >
+        <button class="send-btn" (click)="sendMessage()" [disabled]="!newMessage.trim()">
+          <span class="material-icons">send</span>
+        </button>
+      </div>
+    </div>
+  </main>
+</div>

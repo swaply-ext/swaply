@@ -8,13 +8,12 @@ import {
   Output,
   EventEmitter 
 } from '@angular/core';
-import { HttpClient, HttpClientModule, HttpContext, HttpParams } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Injectable } from '@angular/core';
 import { Observable, Subject, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, tap, catchError } from 'rxjs/operators';
-import { SKIP_LOADING } from '../../interceptors/loading.interceptor';
+import { SkillsService } from '../../services/skills.service';
+
 
 export interface Skill {
   id: string;
@@ -23,36 +22,19 @@ export interface Skill {
   icon: string;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
-class FilterSkillsService {
-  private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8081/api/account/skills';
-
-  searchSkills(query: string): Observable<Skill[]> {
-    if (!query.trim()) {
-      return of([]);
-    }
-    const params = new HttpParams().set('query', query);
-    return this.http.get<Skill[]>(this.apiUrl, { params, context: new HttpContext().set(SKIP_LOADING, true) });
-  }
-}
-
 @Component({
   selector: 'app-filter-skills',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
-    HttpClientModule
+    FormsModule
   ],
   templateUrl: './filter-skills.component.html',
   styleUrls: ['./filter-skills.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FilterSkillsComponent {
-  private service = inject(FilterSkillsService);
+private skillsService = inject(SkillsService);
   private el = inject(ElementRef)
 
   @Output() filterChange = new EventEmitter<string>();
@@ -61,7 +43,7 @@ export class FilterSkillsComponent {
   results = signal<Skill[]>([]);
   isLoading = signal(false);
 
-  private searchSubject = new Subject<string>();
+  private searchSubject = new Subject<void>();
 
   categories = [
     {
@@ -109,8 +91,10 @@ export class FilterSkillsComponent {
       tap(() => this.isLoading.set(true)),
       switchMap(() => {
         const selectedIds = this.getSelectedIds();
-        if (!selectedIds) return of([]);
-        return this.service.searchSkills(selectedIds).pipe(
+        if (!selectedIds) {
+          return of([]);
+        }
+        return this.skillsService.searchSkills(selectedIds).pipe(
           catchError(() => of([]))
         );
       }),
@@ -139,6 +123,7 @@ export class FilterSkillsComponent {
     sub.selected = !sub.selected;
     const selected = this.getSelectedIds();
     this.filterChange.emit(selected);
+    this.searchSubject.next();
   }
 
 
@@ -154,5 +139,20 @@ export class FilterSkillsComponent {
 
   onSelectSkill(skill: Skill) {
     console.log('Skill seleccionada:', skill);
+  }
+
+  // Método público para limpiar todas las selecciones de filtros
+  clear(): void {
+    this.categories.forEach(cat => {
+      cat.subcategories.forEach(sub => {
+        sub.selected = false;
+      });
+    });
+    this.results.set([]);
+  }
+  reset(): void {
+    this.clear();
+    this.filterChange.emit('');
+    this.searchSubject.next();
   }
 }

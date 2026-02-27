@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.swaply.backend.shared.UserCRUD.Model.Location;
 import com.swaply.backend.shared.UserCRUD.Model.Swap;
 import com.swaply.backend.shared.UserCRUD.Model.UserSkills;
 
@@ -17,7 +18,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserDTO {
     private String id;
-    private String type;
     private String username;
     private String name;
     private String surname;
@@ -25,8 +25,7 @@ public class UserDTO {
     private String password;
     private Integer code;
     private Integer ttl;
-    private String location;
-    private String postalCode;
+    private Location location;
     private String gender;
     private String phone;
     private List<UserSkills> skills;
@@ -39,4 +38,5 @@ public class UserDTO {
     private boolean isPremium;
     private boolean isModerator;
     private List<Swap> swaps;
+    private Double rating;
 }

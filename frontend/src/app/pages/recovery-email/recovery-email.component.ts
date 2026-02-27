@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { AccountService } from '../../services/account.service';
 
 interface User {
   email: string;
@@ -24,7 +25,7 @@ export class RecoveryEmailComponent {
   constructor(
     private router: Router,
     private location: Location,
-    private http: HttpClient
+    private accountService: AccountService
   ) {}
 
   // Función para manejar el envío del formulario
@@ -43,7 +44,7 @@ export class RecoveryEmailComponent {
     }
 
     // Envía una petición POST al backend con el correo electrónico
-    this.http.post('http://localhost:8081/api/account/verifyCode', this.email)
+    this.accountService.verifyCode(this.email)
       .subscribe({
         next: response => {
           console.log('Respuesta del backend:', response);

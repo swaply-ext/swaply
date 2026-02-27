@@ -1,0 +1,72 @@
+<app-app-navbar></app-app-navbar>
+
+<main class="page-container">
+  <div class="page-wrapper">
+  <div class="content-wrapper">
+
+    <div class="header-container">
+      <div class="title-group">
+        <span class="material-symbols-outlined header-icon">handshake</span>
+        <h2 class="page-title">Mis Swaps</h2>
+      </div>
+      
+      @if (!isLoading) {
+        <span class="count-badge">
+          {{ acceptedSwaps.length }} {{ acceptedSwaps.length === 1 ? 'activo' : 'activos' }}
+        </span>
+      }
+    </div>
+
+    @if (!isLoading && pendingSwaps.length > 0) {
+      <div class="notification-banner fade-in" (click)="goToRequests()">
+        
+        <div class="banner-content">
+            <div class="icon-wrapper">
+                <span class="material-symbols-outlined bell-icon">notifications_active</span>
+                <span class="pulse-dot"></span>
+            </div>
+
+            <div class="text-wrapper">
+                <span class="banner-title">¡Tienes nuevas solicitudes!</span>
+                <span class="banner-desc" [innerHTML]="bannerText"></span>
+            </div>
+        </div>
+
+        <div class="action-icon">
+            <span class="material-symbols-outlined">arrow_forward</span>
+        </div>
+        
+        <div class="avatars-preview">
+            @for (swap of pendingSwaps.slice(0, 3); track swap.id; let i = $index) {
+                <img [src]="getRequesterUser(swap)?.profilePhotoUrl || 'assets/default-avatar.png'" 
+                     class="mini-avatar" 
+                     [style.zIndex]="3 - i"
+                     alt="avatar">
+            }
+        </div>
+      </div>
+    }
+
+    <div class="swaps-list-wrapper fade-in">
+        <app-swap-list *ngIf="!isLoading" [swapsList]="acceptedSwaps"></app-swap-list>
+    </div>
+
+    @if (isLoading) {
+        <div class="loading-state">
+            <p>Cargando tus intercambios...</p>
+        </div>
+    }
+
+    @if (!isLoading && acceptedSwaps.length === 0 && pendingSwaps.length === 0) {
+      <div class="empty-state">
+        <div class="icon-circle">
+          <span class="material-symbols-outlined">swap_horizontal_circle</span>
+        </div>
+        <h3>Sin actividad reciente</h3>
+        <p>Aún no tienes intercambios activos. ¡Busca una habilidad para aprender!</p>
+      </div>
+    }
+
+  </div>
+   </div>
+</main>

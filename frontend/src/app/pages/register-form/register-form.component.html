@@ -2,7 +2,7 @@
   <h2>REGISTRARSE</h2>
 
   <!--Formulario de registro con componentes personalizados-->
-  <form>
+  <form (keydown.enter)="$event.preventDefault(); register()">
     <app-username-input
       [(username)]="username"
       [hasError]="hasErrorAll">
@@ -32,7 +32,15 @@
       {{message}}
     </small>
 
-    <app-terms-checkbox (checkedChange)="accepted = $event"></app-terms-checkbox>
+    <app-terms-checkbox 
+      (checkedChange)="accepted = $event"
+      (showTerms)="showTermsModal = true"
+      (showPrivacy)="showPrivacyModal = true">
+    </app-terms-checkbox>
+    
     <app-action-buttons (submit)="register()"></app-action-buttons>
   </form>
 </div>
+
+<app-terms-conditions *ngIf="showTermsModal" [isModal]="true" (closeModal)="showTermsModal = false"></app-terms-conditions>
+<app-privacy-policy *ngIf="showPrivacyModal" [isModal]="true" (closeModal)="showPrivacyModal = false"></app-privacy-policy>

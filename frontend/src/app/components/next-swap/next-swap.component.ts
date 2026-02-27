@@ -1,32 +1,13 @@
-import { Component, signal, ChangeDetectionStrategy, computed } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy, computed, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AccountService } from '../../services/account.service';
 import { SwapService } from '../../services/swap.service';
 import { UsersService } from '../../services/users.service';
 import { RouterLink } from '@angular/router';
-
-interface profileToTeach {
-  title: string;
-  imgToTeach: string;
-  profilePhotoUrl: string;
-  location: string;
-  username: string;
-}
-interface profileToLearn {
-  title: string;
-  imgToLearn: string;
-  profilePhotoUrl: string;
-  location: string;
-  username: string;
-}
-interface nextSwap {
-  id: string;
-  requestedUserId: string;
-  skill: string;
-  interest: string;
-  status: 'ACCEPTED' | 'STANDBY' | 'DENIED';
-  isRequester: boolean;
-}
+import { Swap } from '../../models/swap.model';
+import { SwapProfileData} from '../../models/swap-profile-data';
+import { UserSkills } from '../../models/user-skills.model';
+import { ValidateInputsService } from '../../services/validate-inputs.service';
 
 @Component({
   selector: 'app-next-swap',
@@ -39,27 +20,34 @@ interface nextSwap {
 export class NextSwapComponent {
   constructor(private swapService: SwapService,
     private accountService: AccountService,
-    private usersService: UsersService) { }
+    private usersService: UsersService,
+    public validateInputsService: ValidateInputsService) { }
 
-  nextSwap = signal<nextSwap | null>(null);
-  profileToTeach = signal<profileToTeach | null>(null);
-  profileToLearn = signal<profileToLearn | null>(null);
+  nextSwap = signal<Swap | null>(null);
+  profileToTeach = signal<SwapProfileData | null>(null);
+  profileToLearn = signal<SwapProfileData | null>(null);
 
+  showSwap = output<boolean>();
   hasIntercambio = signal(true);
   isConfirmed = signal(false);
   isDenied = signal(false);
 
+  getStarIcon(rating: number): string {
+    const decimal = rating - Math.floor(rating);
+    if (decimal >= 0.5) return 'star_half';
+    return 'star';
+  }
+
   imageToLearn = computed(() => {
     const swap = this.nextSwap();
-    if (!swap) return 'assets/photos_skills/default.jpg'; // Imagen por defecto si es null
-    // Pasamos '' como categoría ya que no viene en el objeto swap, la función buscará por nombre
-    return this.assignImageToSkill('', swap.interest) || 'assets/photos_skills/default.jpg';
+    if (!swap) return 'assets/photos_skills/default.jpg';
+    return this.assignImageToSkill('', swap.skill) || 'assets/photos_skills/default.jpg';
   });
 
   imageToTeach = computed(() => {
     const swap = this.nextSwap();
     if (!swap) return 'assets/photos_skills/default.jpg';
-    return this.assignImageToSkill('', swap.skill) || 'assets/photos_skills/default.jpg';
+    return this.assignImageToSkill('', swap.interest) || 'assets/photos_skills/default.jpg';
   });
 
   ngOnInit(): void {
@@ -69,7 +57,7 @@ export class NextSwapComponent {
       this.hasIntercambio.set(false);
     }
   }
-  //recibir proximo intercambio
+
   getNextSwap(): void {
     this.swapService.getNextSwap().subscribe({
       next: (swap) => {
@@ -78,24 +66,30 @@ export class NextSwapComponent {
         this.nextSwap.set(swap);
         if (swap?.requestedUserId) {
           this.hasIntercambio.set(true);
+          this.showSwap.emit(true);
           this.getUserLearn(swap.requestedUserId);
         }
-        //comprobar que no hay:
         if (swap == null) {
+          this.showSwap.emit(false);
           this.hasIntercambio.set(false);
         }
       },
       error: (err) => {
         this.nextSwap.set(null);
         this.hasIntercambio.set(false);
+        this.showSwap.emit(false);
       }
     });
   }
-  //recibir user
+
   getUserTeach(): void {
     this.accountService.getProfileData().subscribe({
       next: (user) => {
-        this.profileToTeach.set(user);
+        this.profileToTeach.set({
+          ...user,
+          skills: user.skills || []
+        });
+        console.log('skills teach:', this.profileToTeach()?.skills);
       },
       error: (err) => {
         this.nextSwap.set(null);
@@ -103,11 +97,14 @@ export class NextSwapComponent {
     });
   }
 
-  //recibir usuario a enseñar
   getUserLearn(userId: string): void {
     this.usersService.getUserById(userId).subscribe({
       next: (user) => {
-        this.profileToLearn.set(user);
+        this.profileToLearn.set({
+          ...user,
+          skills: user.skills || []
+        });
+         console.log('skills learn:', this.profileToLearn()?.skills);
       },
       error: (err) => {
       }
@@ -116,7 +113,6 @@ export class NextSwapComponent {
 
   confirmIntercambio() {
     const currentSwap = this.nextSwap();
-
     if (!currentSwap || !currentSwap.id) {
       return;
     }
@@ -124,7 +120,7 @@ export class NextSwapComponent {
     this.swapService.updateSwapStatus(currentSwap.id, 'ACCEPTED').subscribe({
       next: async (response) => {
         this.isConfirmed.set(true);
-        await this.sleep(5000);
+        await this.sleep(1000);
         this.ngOnInit();
       },
       error: (err) => {
@@ -134,16 +130,14 @@ export class NextSwapComponent {
 
   denyIntercambio() {
     const currentSwap = this.nextSwap();
-
     if (!currentSwap || !currentSwap.id) {
       return;
     }
 
-
     this.swapService.updateSwapStatus(currentSwap.id, 'DENIED').subscribe({
       next: async () => {
         this.isDenied.set(true);
-        await this.sleep(5000);
+        await this.sleep(1000);
         this.ngOnInit();
       },
       error: (err) => {
@@ -153,24 +147,20 @@ export class NextSwapComponent {
 
   private assignImageToSkill(category: string, skillName: string): string | undefined {
     if (!skillName) return undefined;
-
     const name = skillName.toLowerCase();
 
-    // Mapa de palabras clave a imágenes y carpetas
     const skillMap: { [key: string]: { folder: string, filename: string } } = {
-      // Deportes
       'fútbol': { folder: 'sports', filename: 'football.jpg' },
       'futbol': { folder: 'sports', filename: 'football.jpg' },
       'pádel': { folder: 'sports', filename: 'padel.jpg' },
       'padel': { folder: 'sports', filename: 'padel.jpg' },
+      'básquet': { folder: 'sports', filename: 'basketball.jpg' },
       'basquet': { folder: 'sports', filename: 'basketball.jpg' },
       'baloncesto': { folder: 'sports', filename: 'basketball.jpg' },
       'basket': { folder: 'sports', filename: 'basketball.jpg' },
       'vóley': { folder: 'sports', filename: 'voleyball.jpg' },
       'voley': { folder: 'sports', filename: 'voleyball.jpg' },
       'boxeo': { folder: 'sports', filename: 'boxing.jpg' },
-
-      // Música
       'guitarra': { folder: 'music', filename: 'guitar.jpg' },
       'piano': { folder: 'music', filename: 'piano.jpg' },
       'violín': { folder: 'music', filename: 'violin.jpg' },
@@ -179,8 +169,6 @@ export class NextSwapComponent {
       'bateria': { folder: 'music', filename: 'drums.jpg' },
       'saxofón': { folder: 'music', filename: 'saxophone.jpg' },
       'saxofon': { folder: 'music', filename: 'saxophone.jpg' },
-
-      // Ocio / Otros
       'dibujo': { folder: 'leisure', filename: 'draw.jpg' },
       'cocina': { folder: 'leisure', filename: 'cook.jpg' },
       'baile': { folder: 'leisure', filename: 'dance.jpg' },
@@ -189,7 +177,6 @@ export class NextSwapComponent {
       'digital': { folder: 'leisure', filename: 'digital_entertainment.jpg' }
     };
 
-    // Buscar coincidencia exacta de palabras clave
     for (const key in skillMap) {
       if (name.includes(key)) {
         const skill = skillMap[key];
@@ -197,7 +184,6 @@ export class NextSwapComponent {
       }
     }
 
-    // Si no hay coincidencia, asigna carpeta según categoría
     let folder = 'leisure';
     if (category) {
       const cat = category.toLowerCase();
@@ -206,6 +192,27 @@ export class NextSwapComponent {
     }
 
     return undefined;
+  }
+
+  private normalizeString(str: string): string {
+    return str.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+
+  getSkillLevel(skills: UserSkills[], skillName: string): number {
+    const normalizedName = this.normalizeString(skillName);
+    const skill = skills.find(s => {
+      return this.normalizeString(s.id) === normalizedName
+    });
+    return skill ? Number(skill.level) || 0 : 0 ;
+  }
+
+  getLevelText(level: number): string {
+    switch (level) {
+      case 1: return 'Principiante';
+      case 2: return 'Intermedio';
+      case 3: return 'Experto';
+      default: return 'unknown';
+    }
   }
 
   private sleep(ms: number): Promise<void> {

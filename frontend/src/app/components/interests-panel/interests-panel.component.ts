@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { SkillCardComponent } from '../skill-card/skill-card.component';
@@ -6,30 +6,48 @@ import { SkillInput } from '../../services/skills.service';
 
 @Component({
   selector: 'app-interests-panel',
-  templateUrl: './interests-panel.component.html',
-  styleUrls: ['./interests-panel.component.css'],
   standalone: true,
-  imports: [CommonModule, SkillCardComponent]
+  imports: [CommonModule, SkillCardComponent],
+  templateUrl: './interests-panel.component.html',
+  styleUrls: ['./interests-panel.component.css']
 })
 export class InterestsPanelComponent {
-  @Input() InterestsInput: Array<SkillInput> = [];
-  @Input() editable: boolean = false;
+  @Input() InterestsInput: Array<SkillInput> = []; 
   @Input() isPublic: boolean = false;
+  @Input() editable: boolean = false;
+  @Input() title: string = 'Intereses'; 
+
+  @Input() selectable: boolean = false;
+  @Input() selectedSkillId: string = '';
+  @Output() skillSelected = new EventEmitter<any>();
 
   open = true;
 
   constructor(private router: Router) {}
+
+  get sortedInterests() {
+    return [...this.InterestsInput].sort((a: any, b: any) => (b.level || 0) - (a.level || 0));
+  }
 
   togglePanel() {
     this.open = !this.open;
   }
 
   goToInterests() {
-      this.router.navigate(['/interests']);
+    this.router.navigate(['/interests']);
   }
 
-  handleLevelChange(event: {id: string, newLevel: number}) {
-  console.log(`Guardar en BD: ID ${event.id} ahora es nivel ${event.newLevel}`);
-  // Aquí llamarías a un servicio para guardar
-}
+  handleLevelChange(newLevel: any, item: any) {
+    item.level = newLevel;
+  }
+
+  onSkillSelected(item: any) {
+    if (this.selectable) {
+      this.skillSelected.emit(item);
+    }
+  }
+
+  trackByFn(index: number, item: any) {
+    return item.id;
+  }
 }

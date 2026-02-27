@@ -3,203 +3,202 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AppNavbarComponent } from '../../components/app-navbar/app-navbar.component';
 import { AccountService } from '../../services/account.service';
-import { SearchService, UserSwapDTO, SwapDTO } from '../../services/search.services';
-import { SwapSkillsComponent } from "../../components/swap-skills/swap-skills.component";
-import { SwapInterestsComponent } from "../../components/swap-interests/swap-interests.component";
-
-interface UserProfile {
-  username: string;
-  name: string;
-  location?: string;
-  skills?: any[];
-  interests?: any[];
-  profilePhotoUrl?: string;
-}
+import { SearchService } from '../../services/search.services';
+import { UserSwapDTO } from '../../models/userSwapDTO.model';
+import { SwapDTO } from '../../models/swapDTO.model';
+import { ProfileDataDTO } from '../../models/profile-data-dto.model';
+import { RouterLink } from '@angular/router';
+import { map, switchMap } from 'rxjs';
+import { ValidateInputsService } from '../../services/validate-inputs.service';
+import { SkillsPanelComponent } from "../../components/skills-panel/skills-panel.component";
+import { InterestsPanelComponent } from "../../components/interests-panel/interests-panel.component";
 
 @Component({
   selector: 'app-swap',
   standalone: true,
-  imports: [CommonModule, AppNavbarComponent, SwapSkillsComponent, SwapInterestsComponent],
+  imports: [CommonModule, AppNavbarComponent, SkillsPanelComponent, InterestsPanelComponent, RouterLink],
   templateUrl: './swap.component.html',
   styleUrls: ['./swap.component.css']
 })
 export class SwapComponent implements OnInit {
 
-  myUser = signal<UserProfile | null>(null);
+  myUser = signal<ProfileDataDTO | null>(null);
   targetUser = signal<UserSwapDTO | null>(null);
 
-  selectedTeachSkill = signal<any>(null); 
-  
+  locationTargetUser: string = 'No existe';
+
+  selectedTeachSkill = signal<any>(null);
   selectedTargetSkill = signal<{
+    id?: string;
     skillName: string;
     skillIcon?: string;
     skillImage?: string;
     location?: string;
   } | null>(null);
 
-  targetUserInterests = signal<any[]>([]); 
-  mySkillsDisplay = signal<any[]>([]); 
+  mySkillsDisplay = signal<any[]>([]);
+  targetUserInterests = signal<any[]>([]);
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private accountService: AccountService,
-    private searchService: SearchService
-  ) {}
+    private searchService: SearchService,
+    public validateInputsService: ValidateInputsService
+  ) { }
 
   ngOnInit(): void {
-    const targetUserId = this.route.snapshot.paramMap.get('targetId');
+    const targetUsername = this.route.snapshot.paramMap.get('username');
     const paramSkillName = this.route.snapshot.queryParamMap.get('skillName');
 
-    // CARGAR MI USUARIO
-    this.accountService.getProfileData().subscribe({
-      next: (me) => {
+    if (!targetUsername) {
+      this.router.navigate(['/error'], {
+        state: { type: 'not-found' }
+      });
+      return;
+    }
+
+    this.searchService.getUserByUsername(targetUsername).pipe(
+      switchMap(target => {
+        return this.accountService.getProfileData().pipe(
+          map(me => ({ target, me }))
+        );
+      })
+    ).subscribe({
+      next: ({ target, me }) => {
+        this.targetUser.set(target);
+        this.locationTargetUser = this.validateInputsService.formatLocation(target.location) ?? 'No disponible';
         this.myUser.set(me);
-        
-        if (me.skills && me.skills.length > 0) {
-          const myVisualSkills = me.skills.map((s: any, index: number) => {
-            const realName = s.name || s.id || 'Skill sin nombre';
-            return {
-              ...s,
-              id: s.id || realName,
-              name: realName, 
-              image: s.image || this.assignImageToSkill(s.category, realName),
-              selected: index === 0 
-            };
-          });
 
-          this.mySkillsDisplay.set(myVisualSkills);
-          this.selectedTeachSkill.set(myVisualSkills[0]);
-        }
-      }
-    });
+        const mainSkill = {
+          id: target.skillName,
+          name: target.skillName,
+          category: target.skillCategory || '',
+          level: target.skillLevel,
+          icon: target.skillIcon
+        };
 
-    // CARGAR USUARIO DESTINO 
-    if (targetUserId) {
-      this.searchService.getUserById(targetUserId).subscribe({
-        next: (user) => {
-          this.targetUser.set(user);
-
-          // Construir lista con skill principal + secundarias
-          const mainSkill = {
-            id: user.skillName,
-            name: user.skillName,
-            category: user.skillCategory,
-            level: user.skillLevel,
-            icon: user.skillIcon,
-            image: this.assignImageToSkill(user.skillCategory, user.skillName),
-            selected: false
-          };
-
-          const secondarySkills = (user.userSkills || [])
-            .filter(s => s.name !== mainSkill.name) // Evitar duplicados
-            .map(s => ({
-              id: s.name,
-              name: s.name,
-              category: s.category,
-              level: s.level,
-              image: this.assignImageToSkill(s.category, s.name),
-              selected: false
-            }));
-
-          let allInterests = [mainSkill, ...secondarySkills];
-
-          // Si hay parametro URL, buscamos esa skill y la ponemos PRIMERA
-          if (paramSkillName) {
-            const targetNameInfo = paramSkillName.toLowerCase();
-            const foundIndex = allInterests.findIndex(s => 
-               s.name.toLowerCase().includes(targetNameInfo) || targetNameInfo.includes(s.name.toLowerCase())
-            );
-
-            // Si la encontramos y no está ya la primera, la movemos al principio
-            if (foundIndex > 0) {
-              const [itemToMove] = allInterests.splice(foundIndex, 1);
-              allInterests.unshift(itemToMove);
-            }
-          }
-
-          // Marcamos la primera (índice 0) como seleccionada
-          allInterests = allInterests.map((item, index) => ({
-             ...item,
-             selected: index === 0
+        const secondarySkills = (target.userSkills || [])
+          .filter(s => s.name !== mainSkill.name)
+          .map(s => ({
+            id: s.name, name: s.name, category: s.category || '', level: s.level
           }));
 
-          this.targetUserInterests.set(allInterests);
+        let allTargetSkills = [mainSkill, ...secondarySkills];
+        let filteredTargetSkills = this.filterMatch(allTargetSkills, me.interests || []);
 
-          // Actualizamos la carta grande superior con la primera (la seleccionada)
-          const selectedItem = allInterests[0];
+        if (paramSkillName && filteredTargetSkills.length > 0) {
+          const searchName = paramSkillName.toLowerCase();
+          const idx = filteredTargetSkills.findIndex(s =>
+            (s.name || '').toLowerCase().includes(searchName) || searchName.includes((s.name || '').toLowerCase())
+          );
+          if (idx > 0) {
+            const [item] = filteredTargetSkills.splice(idx, 1);
+            filteredTargetSkills.unshift(item);
+          }
+        }
+
+        this.targetUserInterests.set(filteredTargetSkills);
+
+        if (filteredTargetSkills.length > 0) {
+          this.selectTargetInterest(filteredTargetSkills[0]);
+        } else {
           this.selectedTargetSkill.set({
-            skillName: selectedItem.name,
-            skillIcon: (selectedItem as any).icon,
-            skillImage: selectedItem.image,
-            location: user.location
+            skillName: target.name || target.username,
+            skillIcon: undefined,
+            skillImage: target.profilePhotoUrl || 'assets/default-avatar.png',
+            location: target.location
           });
         }
-      });
-    }
+
+        const targetInterests = target.interests || [];
+        const myRawSkills = me.skills || [];
+        const filteredMySkills = this.filterMatch(myRawSkills, targetInterests);
+        
+        this.mySkillsDisplay.set(filteredMySkills);
+
+        if (filteredMySkills.length > 0) {
+          this.selectMySkill(filteredMySkills[0]);
+        } else {
+          this.selectedTeachSkill.set({
+            name: me.name || me.username,
+            image: me.profilePhotoUrl || 'assets/default-avatar.png'
+          });
+        }
+      },
+      error: (err) => {
+        console.error('Error recuperando datos:', err);
+        this.router.navigate(['/error'], {
+          state: { title: 'Error 404', msg: 'La página no existe' }
+        });
+      }
+    });
   }
 
-  selectTargetInterest(item: any) {
-    const updatedList = this.targetUserInterests().map(skill => ({
-      ...skill,
-      selected: skill.name === item.name 
-    }));
-    this.targetUserInterests.set(updatedList);
 
+  selectTargetInterest(skill: any) {
     const currentUser = this.targetUser();
+    const categorySafe = skill.category || '';
+    
+    const safeImage = skill.image || this.assignImageToSkill(categorySafe, skill.name || skill.id) || 'assets/default-avatar.png';
+
     this.selectedTargetSkill.set({
-      skillName: item.name,
-      skillIcon: item.icon, 
-      skillImage: item.image || this.assignImageToSkill(item.category, item.name),
+      id: skill.id, 
+      skillName: skill.name || skill.id,
+      skillIcon: skill.icon,
+      skillImage: safeImage,
       location: currentUser?.location
     });
   }
 
-  selectMySkill(item: any) {
-    const itemId = item.id || item.name;
-
-    const updatedList = this.mySkillsDisplay().map(skill => {
-      const currentId = skill.id || skill.name;
-      return {
-        ...skill,
-        selected: currentId === itemId
-      };
-    });
-    this.mySkillsDisplay.set(updatedList);
+  selectMySkill(skill: any) {
+    const categorySafe = skill.category || '';
+    const safeImage = skill.image || this.assignImageToSkill(categorySafe, skill.name || skill.id) || 'assets/default-avatar.png';
 
     this.selectedTeachSkill.set({
-        ...item,
-        name: item.name, 
-        image: item.image || this.assignImageToSkill(item.category, item.name)
+      id: skill.id,
+      name: skill.name || skill.id,
+      icon: skill.icon,
+      image: safeImage
     });
+  }
+
+  getTeachSkillName() {
+    const info = this.selectedTeachSkill();
+    if (this.mySkillsDisplay().length === 0) {
+      return info?.name || 'Yo';
+    }
+    return info?.name ? `Clase de ${info.name}` : '';
   }
 
   getTargetSkillName() {
     const info = this.selectedTargetSkill();
+    if (this.targetUserInterests().length === 0) {
+      return info?.skillName || 'Usuario';
+    }
     return info?.skillName ? `Clase de ${info.skillName}` : '';
   }
 
   getTargetSkillImage() {
-    return this.selectedTargetSkill()?.skillImage
-        || this.selectedTargetSkill()?.skillIcon
-        || 'assets/default-avatar.png';
+    return this.selectedTargetSkill()?.skillImage || 'assets/default-avatar.png';
   }
 
-  cancelSwap() { this.router.navigate(['/home']); }
+  cancelSwap() { 
+    this.router.navigate(['/home']); 
+  }
 
   createSwap() {
-    const targetItem = this.targetUserInterests().find(s => s.selected);
-    const myItem = this.mySkillsDisplay().find(s => s.selected);
+    const targetItem = this.selectedTargetSkill();
+    const myItem = this.selectedTeachSkill();
     const targetUser = this.targetUser();
 
-    if (!targetItem || !myItem || !targetUser) {
-      alert("Error: Selecciona una habilidad en cada lado.");
+    if (!targetItem?.skillName || !myItem?.name || !targetUser) {
       return;
     }
 
     const payload: SwapDTO = {
       requestedUsername: targetUser.username,
-      skill: targetItem.name,
+      skill: targetItem.skillName,
       interest: myItem.name
     };
 
@@ -209,39 +208,59 @@ export class SwapComponent implements OnInit {
       },
       error: (err) => {
         console.error(err);
-        console.log("Error al crear el intercambio");
       }
+    });
+  }
+
+  private filterMatch(offeredSkills: any[], neededInterests: any[]): any[] {
+    if (!neededInterests || neededInterests.length === 0) return [];
+
+    return offeredSkills.filter(offer => {
+      const offerName = (offer.name || offer.id || '').toLowerCase();
+      const offerLevel = offer.level !== undefined ? offer.level : 0;
+
+      const match = neededInterests.find(need => {
+        const needName = (need.name || need.id || '').toLowerCase();
+        return offerName.includes(needName) || needName.includes(offerName);
+      });
+
+      if (!match) return false;
+
+      const requiredLevel = match.level !== undefined ? match.level : 0;
+      return offerLevel >= requiredLevel;
     });
   }
 
   private assignImageToSkill(category: string, skillName: string): string | undefined {
     if (!skillName) return undefined;
-    const name = skillName.toLowerCase();
+
+    const name = String(skillName).toLowerCase();
+
     const map: any = {
-      'futbol': ['sports','football.jpg'],
-      'fútbol': ['sports','football.jpg'],
-      'padel': ['sports','padel.jpg'],
-      'pádel': ['sports','padel.jpg'],
-      'basket': ['sports','basketball.jpg'],
-      'basquet': ['sports','basketball.jpg'],
-      'baloncesto': ['sports','basketball.jpg'],
-      'voley': ['sports','voleyball.jpg'],
-      'vóley': ['sports','voleyball.jpg'],
-      'boxeo': ['sports','boxing.jpg'],
-      'guitarra': ['music','guitar.jpg'],
-      'piano': ['music','piano.jpg'],
-      'violin': ['music','violin.jpg'],
-      'violín': ['music','violin.jpg'],
-      'bateria': ['music','drums.jpg'],
-      'batería': ['music','drums.jpg'],
-      'saxofon': ['music','saxophone.jpg'],
-      'saxofón': ['music','saxophone.jpg'],
-      'dibujo': ['leisure','draw.jpg'],
-      'cocina': ['leisure','cook.jpg'],
-      'manualidades': ['leisure','crafts.jpg'],
-      'digital': ['leisure','digital_entertainment.jpg'],
-      'baile': ['leisure','dance.jpg'],
-      'dance': ['leisure','dance.jpg']
+      'futbol': ['sports', 'football.jpg'],
+      'fútbol': ['sports', 'football.jpg'],
+      'padel': ['sports', 'padel.jpg'],
+      'pádel': ['sports', 'padel.jpg'],
+      'basket': ['sports', 'basketball.jpg'],
+      'basquet': ['sports', 'basketball.jpg'],
+      'baloncesto': ['sports', 'basketball.jpg'],
+      'voley': ['sports', 'voleyball.jpg'],
+      'vóley': ['sports', 'voleyball.jpg'],
+      'boxeo': ['sports', 'boxing.jpg'],
+      'guitarra': ['music', 'guitar.jpg'],
+      'piano': ['music', 'piano.jpg'],
+      'violin': ['music', 'violin.jpg'],
+      'violín': ['music', 'violin.jpg'],
+      'bateria': ['music', 'drums.jpg'],
+      'batería': ['music', 'drums.jpg'],
+      'saxofon': ['music', 'saxophone.jpg'],
+      'saxofón': ['music', 'saxophone.jpg'],
+      'dibujo': ['leisure', 'draw.jpg'],
+      'cocina': ['leisure', 'cook.jpg'],
+      'manualidades': ['leisure', 'crafts.jpg'],
+      'digital': ['leisure', 'digital_entertainment.jpg'],
+      'baile': ['leisure', 'dance.jpg'],
+      'dance': ['leisure', 'dance.jpg']
     };
 
     for (const key of Object.keys(map)) {
@@ -250,11 +269,12 @@ export class SwapComponent implements OnInit {
         return `assets/photos_skills/${folder}/${file}`;
       }
     }
-    
+
     if (category) {
-        if (category.toLowerCase().includes('sport')) return 'assets/photos_skills/sports/football.jpg';
-        if (category.toLowerCase().includes('music')) return 'assets/photos_skills/music/guitar.jpg';
-        if (category.toLowerCase().includes('leisure')) return 'assets/photos_skills/leisure/crafts.jpg';
+      const catLower = String(category).toLowerCase();
+      if (catLower.includes('sport')) return 'assets/photos_skills/sports/football.jpg';
+      if (catLower.includes('music')) return 'assets/photos_skills/music/guitar.jpg';
+      if (catLower.includes('leisure')) return 'assets/photos_skills/leisure/crafts.jpg';
     }
 
     return undefined;

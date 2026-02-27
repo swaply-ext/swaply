@@ -1,26 +1,24 @@
 <div class="nearby-search">
-  <input type="text" placeholder="Buscar usuario..." [ngModel]="searchTerm"
-    (ngModelChange)="onSearchTermChanged($event)"
-    (focus)="onInputFocus()" 
-    (click)="onInputFocus()"
-  />
+  <form autocomplete="off">
+    <input type="text" name="search" placeholder="Buscar usuario..." [ngModel]="searchTerm"
+      (ngModelChange)="onSearchTermChanged($event)" (focus)="onInputFocus()" (click)="onInputFocus()"
+      autocomplete="off" />
+  </form>
 
   <span class="material-symbols-outlined search-icon" *ngIf="!isLoading()">search</span>
   <div class="spinner-mini" *ngIf="isLoading()"></div>
 
   <div class="search-dropdown" *ngIf="results().length > 0 && showDropdown()">
-  <ul>
-    <li *ngFor="let user of results()" (click)="onSelectUser(user)">
-      <img 
-        class="dropdown-avatar" 
-        [src]="user.profilePhotoUrl || 'assets/default-image.jpg'" 
-        alt="avatar">
-      <span class="dropdown-username">{{ user.username }}</span>
-    </li>
-  </ul>
-</div>
+    <ul>
+      <li *ngFor="let user of results()" (click)="onSelectUser(user)">
+        <img class="dropdown-avatar" [src]="user.profilePhotoUrl || 'assets/default-image.jpg'" alt="avatar">
+        <span class="dropdown-username">{{ user.username }}</span>
+      </li>
+    </ul>
+  </div>
 
-  <div class="search-dropdown empty" *ngIf="!isLoading() && results().length === 0 && searchTerm.length > 0 && showDropdown()">
+  <div class="search-dropdown empty"
+    *ngIf="!isLoading() && results().length === 0 && searchTerm.length > 0 && showDropdown()">
     Sin resultados
   </div>
 </div>
