@@ -1,3 +1,4 @@
+/* --- ESTILOS MODO ESCRITORIO --- */
 .side-menu-container {
   width: 100%;
   max-width: 17.5rem;
@@ -11,6 +12,7 @@
   top: 6.25rem;
   height: fit-content;
   box-sizing: border-box;
+  z-index: 100;
 }
 
 ul {
@@ -41,6 +43,9 @@ ul {
   font-weight: 500;
   border-left: 0.1875rem solid transparent;
   transition: all 0.25s ease-in-out;
+  cursor: pointer;
+  position: relative;
+  /* Preparado para el tooltip en móvil */
 }
 
 .side-btn .material-symbols-outlined {
@@ -72,20 +77,18 @@ ul {
 }
 
 .exit-btn {
-  color: #fca5a5;
+  color: var(--exit-color-1);
   margin-top: 0.5rem;
 }
 
 .exit-btn:hover {
-  background-color: rgba(239, 68, 68, 0.15);
-  color: #f87171;
+  background-color: var(--exit-background-hover);
+  color: var(--exit-color-2);
 }
 
-.exit-btn.activo {
-  background-color: rgba(239, 68, 68, 0.2);
-  color: #ef4444;
-  border-left-color: #ef4444;
-}
+
+
+/* --- RESPONSIVE / MODO BARRA HORIZONTAL --- */
 
 @media (max-width: 64rem) {
   .side-menu-container {
@@ -95,9 +98,103 @@ ul {
 
 @media (max-width: 48rem) {
   .side-menu-container {
-    position: relative;
-    top: 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    top: auto;
+    width: 100%;
     max-width: 100%;
-    margin-bottom: 2rem;
+    margin: 0;
+    padding: 0.5rem 0.25rem;
+    border-radius: 1.25rem 1.25rem 0 0;
+    border: none;
+    border-top: 0.0625rem solid #1F4E5D;
+    box-shadow: 0 -0.5rem 1.5rem rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+  }
+
+  ul {
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 0;
+  }
+
+  .divider {
+    display: none;
+    /* Quitamos líneas divisorias en horizontal */
+  }
+
+  .side-btn {
+    flex-direction: column;
+    padding: 0.8rem;
+    border-left: none;
+    border-bottom: 0.1875rem solid transparent;
+    border-radius: 0.5rem;
+  }
+
+  .side-btn:hover {
+    transform: translateY(-2px);
+  }
+
+  .activo {
+    border-bottom-color: #3CB57C;
+  }
+
+  .exit-btn {
+    margin-top: 0;
+    color: var(--exit-color-1);
+  }
+
+
+  .exit-btn:hover {
+    background-color: var(--exit-background-hover);
+    color: var(--exit-color-2);
+  }
+
+  /* --- LÓGICA DEL TOOLTIP (HOVER NOMBRE) --- */
+
+  .btn-text {
+    position: absolute;
+    bottom: 120%;
+    /* Aparece por encima del icono */
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background-color: #1F4E5D;
+    color: #fff;
+    padding: 0.5rem 0.8rem;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.3);
+  }
+
+  /* Triangulito inferior del Tooltip */
+  .btn-text::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 0.35rem;
+    border-style: solid;
+    border-color: #1F4E5D transparent transparent transparent;
+  }
+
+  /* Mostrar Tooltip al hacer Hover */
+  .side-btn:hover .btn-text {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Color especial si la pestaña está activa */
+  .activo .btn-text {
+    background-color: #3CB57C;
+  }
+
+  .activo .btn-text::after {
+    border-top-color: #3CB57C;
   }
 }

@@ -26,6 +26,11 @@
   --error-color-3: #751414; /* Vermell fosc */
   --error-bg: #ffe6e6;
 
+  /* --- BTN EXIT ---*/
+  --exit-color-1: #fca5a5;
+  --exit-color-2: #f87171;
+  --exit-background-hover: rgba(239, 68, 68, 0.15);
+
   /* --- FUENTES --- */
   --font-primary: "Quicksand", sans-serif;
   --font-secondary: "Inter", sans-serif;

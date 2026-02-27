@@ -1,120 +1,119 @@
 <app-app-navbar></app-app-navbar>
 <div class="page-wrapper">
-<div class="profile-page-container">
+  <div class="profile-page-container">
+    <div class="profile-bottom-row">
+      <aside class="profile-side-layout">
+        <app-side-menu></app-side-menu>
+      </aside>
 
-  <div class="profile-bottom-row">
+      <main class="profile-info-container">
+        <section class="panel">
+          <div class="profile-row">
+            <div class="profile-section image">
+              <input type="file" #fileInput style="display: none" (change)="onPhotoSelected($event)"
+                accept=".jpg,.jpeg,.png,.webp,.heic,.heif" />
 
-     <div class="profile-side-layout">
-      <app-side-menu></app-side-menu>
-    </div> 
+              <div class="avatar-container">
+                <div class="avatar-wrapper" (click)="fileInput.click()">
+                  <img [src]="profilePhotoUrl" alt="Imagen de perfil" class="profile-avatar"
+                    [class.loading]="isUploadingPhoto" />
 
-    <div class="profile-info-container">
+                  <div class="avatar-overlay" *ngIf="isUploadingPhoto">
+                    <div class="spinner"></div>
+                  </div>
+                </div>
 
-      <div class="profile-row">
-        <div class="profile-section image">
-          <input type="file" #fileInput style="display: none" (change)="onPhotoSelected($event)"
-            accept=".jpg,.jpeg,.png,.webp,.heic,.heif" />
+                <button class="add-photo-btn" (click)="fileInput.click()">
+                  <span class="material-symbols-outlined">add</span>
+                </button>
+              </div>
 
-          <div class="avatar-container">
-            <div class="avatar-wrapper" (click)="fileInput.click()">
-              <img [src]="profilePhotoUrl" alt="Imagen de perfil" class="profile-avatar"
-                [class.loading]="isUploadingPhoto" />
+              <small *ngIf="errorMessages['profilePhoto']" class="error-message">
+                {{ errorMessages["profilePhoto"] }}
+              </small>
+            </div>
 
-              <div class="avatar-overlay" *ngIf="isUploadingPhoto">
-                <div class="spinner"></div>
+            <div class="profile-section names">
+              <div class="profile-row">
+                <div class="profile-section half">
+                  <label for="name">Nombre completo</label>
+                  <input id="name" type="text" placeholder="Mi nombre" [(ngModel)]="name" (blur)="validate()"
+                    [ngClass]="{ 'input-error': errorMessages['name'] }" />
+                  <small *ngIf="errorMessages['name']" class="error-message">{{ errorMessages["name"] }}</small>
+                </div>
+
+                <div class="profile-section half">
+                  <label for="surname">Apellido</label>
+                  <input id="surname" type="text" placeholder="Mis apellidos" [(ngModel)]="surname" (blur)="validate()"
+                    [ngClass]="{ 'input-error': errorMessages['surname'] }" />
+                  <small *ngIf="errorMessages['surname']" class="error-message">{{ errorMessages["surname"] }}</small>
+                </div>
+              </div>
+
+              <div class="name-field">
+                <label for="username">Username</label>
+                <input id="username" type="text" placeholder="@username" [(ngModel)]="username" (blur)="validate()"
+                  [ngClass]="{ 'input-error': errorMessages['username'] }" />
+                <small *ngIf="errorMessages['username']" class="error-message">{{ errorMessages["username"] }}</small>
               </div>
             </div>
-
-            <button class="add-photo-btn" (click)="fileInput.click()">
-              <span class="material-symbols-outlined">add</span>
-            </button>
           </div>
 
-          <small *ngIf="errorMessages['profilePhoto']" class="error-message">
-            {{ errorMessages["profilePhoto"] }}
-          </small>
-        </div>
+          <div class="profile-section about">
+            <label for="about">Sobre mí</label>
+            <textarea id="about" placeholder="Escribe algo sobre ti..." [(ngModel)]="description"></textarea>
+          </div>
 
-        <div class="profile-section names">
           <div class="profile-row">
             <div class="profile-section half">
-              <label for="name">Nombre completo</label>
-              <input id="name" type="text" placeholder="Mi nombre" [(ngModel)]="name" (blur)="validate()"
-                [ngClass]="{ 'input-error': errorMessages['name'] }" />
-              <small *ngIf="errorMessages['name']" class="error-message">{{ errorMessages["name"] }}</small>
+              <label for="email">Correo electrónico</label>
+              <input class="disable" id="email" type="email" placeholder="email@ejemplo.com" [(ngModel)]="email"
+                (blur)="validate()" [ngClass]="{ 'input-error': errorMessages['email'] }" disabled />
+              <small *ngIf="errorMessages['email']" class="error-message">{{ errorMessages["email"] }}</small>
             </div>
 
             <div class="profile-section half">
-              <label for="surname">Apellido</label>
-              <input id="surname" type="text" placeholder="Mis apellidos" [(ngModel)]="surname" (blur)="validate()"
-                [ngClass]="{ 'input-error': errorMessages['surname'] }" />
-              <small *ngIf="errorMessages['surname']" class="error-message">{{ errorMessages["surname"] }}</small>
+              <label for="birthdate">Fecha de nacimiento</label>
+              <input id="birthdate" type="date" [(ngModel)]="birthDate" (blur)="validate()"
+                [ngClass]="{ 'input-error': errorMessages['birthDate'] }" />
+              <small *ngIf="errorMessages['birthDate']" class="error-message">{{ errorMessages["birthDate"] }}</small>
             </div>
           </div>
 
-          <div class="name-field">
-            <label for="username">Username</label>
-            <input id="username" type="text" placeholder="@username" [(ngModel)]="username" (blur)="validate()"
-              [ngClass]="{ 'input-error': errorMessages['username'] }" />
-            <small *ngIf="errorMessages['username']" class="error-message">{{ errorMessages["username"] }}</small>
+          <div class="profile-row">
+            <div class="profile-section half">
+              <label for="location">Ubicación</label>
+              <app-location-search [placeholder]="location"
+                (locationSelected)="onLocationSelected($event)"></app-location-search>
+              <small *ngIf="errorMessages['location']" class="error-message">{{ errorMessages["location"] }}</small>
+            </div>
+
+            <div class="profile-section half">
+              <label for="gender">Género</label>
+              <select id="gender" [(ngModel)]="gender" (blur)="validate()" [class.error]="errorMessages['gender']">
+                <option value="masculino" selected>Hombre</option>
+                <option value="femenino">Mujer</option>
+                <option value="otro">Otro</option>
+                <option value="no_especificar">Prefiero no decirlo</option>
+              </select>
+              <small *ngIf="errorMessages['gender']" class="error-message">{{ errorMessages["gender"] }}</small>
+            </div>
           </div>
-        </div>
-      </div>
 
-      <div class="profile-section about">
-        <label for="about">Sobre mí</label>
-        <textarea id="about" placeholder="Escribe algo sobre ti..." [(ngModel)]="description"></textarea>
-      </div>
+          <div class="button-row">
+            <app-discard-button (submit)="discard()"></app-discard-button>
+            <app-save-button (submit)="save()"></app-save-button>
+          </div>
+        </section>
 
-      <div class="profile-row">
-        <div class="profile-section half">
-          <label for="email">Correo electrónico</label>
-          <input class="disable" id="email" type="email" placeholder="email@ejemplo.com" [(ngModel)]="email"
-            (blur)="validate()" [ngClass]="{ 'input-error': errorMessages['email'] }" disabled />
-          <small *ngIf="errorMessages['email']" class="error-message">{{ errorMessages["email"] }}</small>
-        </div>
-
-        <div class="profile-section half">
-          <label for="birthdate">Fecha de nacimiento</label>
-          <input id="birthdate" type="date" [(ngModel)]="birthDate" (blur)="validate()"
-            [ngClass]="{ 'input-error': errorMessages['birthDate'] }" />
-          <small *ngIf="errorMessages['birthDate']" class="error-message">{{ errorMessages["birthDate"] }}</small>
-        </div>
-      </div>
-
-      <div class="profile-row">
-        <div class="profile-section half">
-          <label for="location">Ubicación</label>
-          <app-location-search [placeholder]="location"
-            (locationSelected)="onLocationSelected($event)"></app-location-search>
-          <small *ngIf="errorMessages['location']" class="error-message">{{ errorMessages["location"] }}</small>
-        </div>
-
-        <div class="profile-section half">
-          <label for="gender">Género</label>
-          <select id="gender" [(ngModel)]="gender" (blur)="validate()" [class.error]="errorMessages['gender']">
-            <option value="masculino" selected>Hombre</option>
-            <option value="femenino">Mujer</option>
-            <option value="otro">Otro</option>
-            <option value="no_especificar">Prefiero no decirlo</option>
-          </select>
-          <small *ngIf="errorMessages['gender']" class="error-message">{{ errorMessages["gender"] }}</small>
-        </div>
-      </div>
-
-      <div class="button-row">
-        <app-discard-button (submit)="discard()"></app-discard-button>
-        <app-save-button (submit)="save()"></app-save-button>
-      </div>
-
+        <section>
+          <app-skills-panel [SkillInput]="skills"></app-skills-panel>
+        </section>
+        
+        <section>
+          <app-interests-panel [InterestsInput]="interests"></app-interests-panel>
+        </section>
+      </main>
     </div>
-
   </div>
-
-  <div class="profile-panels-container">
-    <app-skills-panel class="profile-skills" [SkillInput]="skills"></app-skills-panel>
-    <app-interests-panel class="profile-interests" [InterestsInput]="interests"></app-interests-panel>
-  </div>
-
-</div>
 </div>

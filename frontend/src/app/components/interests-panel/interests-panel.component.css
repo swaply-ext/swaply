@@ -1,7 +1,9 @@
 .skills-panel-container {
-  flex: 1;
-  flex-basis: 0;
-  padding: 1.5rem 2rem;
+  width: fit-content; 
+  min-width: 18.75rem; 
+  max-width: 100%;
+  width: 100%;
+  padding: 1.5rem;
   backdrop-filter: blur(8px);
   box-shadow:
     0 0px 0px 0px rgba(0, 0, 0, 0),

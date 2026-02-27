@@ -1,4 +1,3 @@
-/* Contenedor Principal (Panel) */
 .interests-container {
   flex: 1;
   padding: 1.5rem 2rem;
@@ -13,7 +12,6 @@
   align-content: center;
 }
 
-/* Título Central */
 .interests-container h1 {
   margin-bottom: 2rem;
   font-size: 2rem;
@@ -27,7 +25,6 @@ p {
   text-align: center;
 }
 
-/* Bloque de Categoría */
 .category-block {
   margin-bottom: 1.5rem;
 }
@@ -44,19 +41,17 @@ p {
 .category-title {
   font-size: 1.2rem;
   font-weight: bold;
-  letter-spacing: 1px;
+  letter-spacing: 0.063rem;
 }
 
-/* Flecha de rotación */
 .arrow {
   transition: transform 0.3s ease;
 }
 
 .arrow.open {
-  transform: rotate(-90deg); /* Ajustado según tu SVG de flecha */
+  transform: rotate(-90deg); 
 }
 
-/* Grid de Skills (Chips) */
 .chips-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
@@ -67,11 +62,10 @@ p {
 }
 
 .chips-container.open {
-  max-height: 2000px; /* Suficiente para expandir */
+  max-height: 125rem; 
   padding: 2rem 1rem;
 }
 
-/* Acciones y Botón Guardar */
 .actions {
   display: flex;
   justify-content: center;
@@ -93,7 +87,7 @@ p {
 
 .save-btn:hover {
   background-color: var(--principal-color-2);
-  box-shadow: 0 0 15px var(--principal-color-2);
+  box-shadow: 0 0 0.938rem var(--principal-color-2);
   color: var(--principal-color-1);
 }
 
@@ -106,4 +100,11 @@ p {
 .skill-card-not-selected:hover {
   opacity: 1;
   filter: grayscale(0);
+}
+
+@media screen and (max-width: 56.25rem) {
+  .interests-container {
+    max-width: 60%;
+    margin-top: 3rem;
+  }
 }

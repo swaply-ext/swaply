@@ -1,6 +1,7 @@
 package com.swaply.backend.shared.UserCRUD;
 
 import java.text.Normalizer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.swaply.backend.application.auth.service.PasswordService;
 import com.swaply.backend.config.security.SecurityUser;
 import com.swaply.backend.shared.UserCRUD.Model.User;
+import com.swaply.backend.shared.UserCRUD.Model.UserSkills;
 import com.swaply.backend.shared.UserCRUD.dto.UserDTO;
 import com.swaply.backend.shared.UserCRUD.exception.UserNotFoundException;
 import java.util.regex.Pattern;
@@ -118,6 +120,10 @@ public class UserService {
 
         String passwordHash = passwordService.hash(dto.getPassword());
         newUser.setPassword(passwordHash);
+        List<UserSkills> emptySkills = new ArrayList<>();
+        List<UserSkills> emptyInterest =new ArrayList<>();
+        newUser.setSkills(emptySkills);
+        newUser.setInterests(emptyInterest);
 
         User savedUser = repository.save(newUser);
 
