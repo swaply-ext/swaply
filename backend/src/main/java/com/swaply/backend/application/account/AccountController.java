@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import com.swaply.backend.shared.storage.StorageService; 
+import com.swaply.backend.shared.storage.StorageService;
 import org.springframework.web.multipart.MultipartFile;
 import com.swaply.backend.application.account.dto.EditProfileDTO;
 import com.swaply.backend.application.account.dto.NavBarInformationDTO;
@@ -15,12 +15,9 @@ import com.swaply.backend.application.account.dto.SkillsDTO;
 import com.swaply.backend.application.account.service.AccountService;
 import com.swaply.backend.config.security.SecurityUser;
 
-
 @RestController
 @RequestMapping("/api/account")
 public class AccountController {
-
-    // Classe per rebre el JSON del frontend
 
     private final AccountService service;
     private final StorageService storageService;
@@ -29,8 +26,6 @@ public class AccountController {
         this.service = service;
         this.storageService = storageService;
     }
-
-    
 
     @GetMapping
     public ResponseEntity<ProfileDataDTO> getAccount(
@@ -74,7 +69,6 @@ public class AccountController {
         NavBarInformationDTO dto = service.navBarInformation(SecurityUser.getUsername());
         return ResponseEntity.ok(dto);
     }
-    
 
     @DeleteMapping("/deleteProfile")
     public ResponseEntity<Boolean> deleteProfile(@AuthenticationPrincipal SecurityUser SecurityUser) {
@@ -102,25 +96,24 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(true);
     }
 
-     @PostMapping("/upload-photo")
+    @PostMapping("/upload-photo")
     public ResponseEntity<String> uploadPhoto(@RequestParam("file") MultipartFile file) {
         try {
-            // valida formato de imagen
             String filename = file.getOriginalFilename();
             if (filename == null || !(filename.toLowerCase().endsWith(".jpg") ||
-                                     filename.toLowerCase().endsWith(".jpeg") ||
-                                     filename.toLowerCase().endsWith(".png") ||
-                                     filename.toLowerCase().endsWith(".webp") ||
-                                     filename.toLowerCase().endsWith(".heic") ||
-                                     filename.toLowerCase().endsWith(".heif"))) {
+                    filename.toLowerCase().endsWith(".jpeg") ||
+                    filename.toLowerCase().endsWith(".png") ||
+                    filename.toLowerCase().endsWith(".webp") ||
+                    filename.toLowerCase().endsWith(".heic") ||
+                    filename.toLowerCase().endsWith(".heif"))) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                    .body("Solo se permiten imágenes en formato JPG, PNG, WEBP, HEIC o HEIF.");
+                        .body("Solo se permiten imágenes en formato JPG, PNG, WEBP, HEIC o HEIF.");
             }
-            String signedUrl = storageService.uploadFile(file);            
+            String signedUrl = storageService.uploadFile(file);
             return ResponseEntity.ok(signedUrl);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                 .body("Error al subir imagen: " + e.getMessage());
+                    .body("Error al subir imagen: " + e.getMessage());
         }
     }
 
