@@ -13,9 +13,6 @@ export class AlertService {
   show(category: AlertCategory, type?: any, overrides?: Partial<AlertData>) {
     const categoryGroup = ALERT_LIBRARY[category];
     const defaults = categoryGroup[type] || categoryGroup['generic'];
-    console.log('category:', category);
-    console.log('type:', type);
-    console.log('defaults encontrados:', defaults);
     this.alertSignal.set({
       ...defaults,
       ...overrides,
