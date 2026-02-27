@@ -1,6 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { AppNavbarComponent } from '../../components/app-navbar/app-navbar.component';
 import { AccountService } from '../../services/account.service';
 import { SearchService } from '../../services/search.services';
@@ -12,6 +12,7 @@ import { map, switchMap } from 'rxjs';
 import { ValidateInputsService } from '../../services/validate-inputs.service';
 import { SkillsPanelComponent } from "../../components/skills-panel/skills-panel.component";
 import { InterestsPanelComponent } from "../../components/interests-panel/interests-panel.component";
+import { AlertService } from '../../services/alert.service';
 
 @Component({
   selector: 'app-swap',
@@ -44,7 +45,9 @@ export class SwapComponent implements OnInit {
     private router: Router,
     private accountService: AccountService,
     private searchService: SearchService,
-    public validateInputsService: ValidateInputsService
+    public validateInputsService: ValidateInputsService,
+    private alertService: AlertService,
+    private location: Location
   ) { }
 
   ngOnInit(): void {
@@ -125,6 +128,14 @@ export class SwapComponent implements OnInit {
             image: me.profilePhotoUrl || 'assets/default-avatar.png'
           });
         }
+
+        if (filteredTargetSkills.length === 0 || filteredMySkills.length === 0) {
+          this.alertService.show('warning', 'generic', {
+            title: 'Swap no disponible',
+            msg: 'No tenéis habilidades e intereses en común compatibles para hacer un intercambio.'
+          });
+          this.location.back();
+        }
       },
       error: (err) => {
         console.error('Error recuperando datos:', err);
@@ -204,10 +215,17 @@ export class SwapComponent implements OnInit {
 
     this.searchService.sendSwapRequest(payload).subscribe({
       next: (res) => {
+        this.alertService.show('success', 'generic', {
+          title: '¡Petición enviada!',
+          msg: `Has enviado una solicitud de Swap a @${targetUser.username}.`
+        });
         this.router.navigate(['/home']);
       },
       error: (err) => {
         console.error(err);
+        this.alertService.show('error', 'generic', {
+          msg: 'No se pudo enviar la solicitud de Swap. Inténtalo de nuevo.'
+        });
       }
     });
   }

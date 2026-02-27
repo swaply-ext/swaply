@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SkillCardComponent } from '../../components/skill-card/skill-card.component';
 import { AccountService, Account } from '../../services/account.service';
 import { SkillsService, SkillsModel } from '../../services/skills.service';
@@ -45,7 +45,9 @@ export class SkillsComponent {
   constructor(
     private skillsService: SkillsService,
     private accountService: AccountService,
-    private router: Router) { }
+    private router: Router,
+    private route: ActivatedRoute
+  ) { }
 
   ngOnInit(): void {
     this.getAllSkills();
@@ -149,7 +151,7 @@ export class SkillsComponent {
       .subscribe({
         next: response => {
           console.log('Resputesta del backend:', response);
-          this.router.navigate(['/myprofile']);
+          this.router.navigate(['/myprofile']);  
         },
         error: err => console.error('Error enviando skills:', err)
       });

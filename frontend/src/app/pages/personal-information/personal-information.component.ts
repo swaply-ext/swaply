@@ -11,6 +11,7 @@ import { GenderInputComponent } from '../../components/gender-input/gender-input
 import { LocationSearchComponent } from '../../components/location-search/location-search.component';
 import { NgIf } from '@angular/common';
 import { ValidateInputsService } from '../../services/validate-inputs.service'; 
+import { AlertService } from '../../services/alert.service';
 
 interface Location {
   placeId: string;
@@ -52,7 +53,8 @@ export class PersonalInformationComponent implements OnInit {
     private router: Router,
     private accountService: AccountService,
     private registerDataService: RegisterDataService,
-    private validateInputsService: ValidateInputsService
+    private validateInputsService: ValidateInputsService,
+    private alertService: AlertService
   ) { }
 
   ngOnInit() {
@@ -122,8 +124,8 @@ export class PersonalInformationComponent implements OnInit {
     this.registerDataService.personalInformation(allUserData).subscribe({
       next: (success) => {
         if (success) {
-          console.log('Información personal añadida con éxito.');
-          this.router.navigate(['/select-avatar']);
+          this.alertService.show('success', 'generic', { msg: 'Información guardada correctamente.' });
+          this.router.navigate(['/select-avatar']); 
         }
       },
       error: (err) => {
