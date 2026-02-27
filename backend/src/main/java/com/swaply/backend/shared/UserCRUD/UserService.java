@@ -2,7 +2,9 @@ package com.swaply.backend.shared.UserCRUD;
 
 import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -74,11 +76,10 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
     }
 
-        public String getProfilePhotoById(String id) {
+    public String getProfilePhotoById(String id) {
         return repository.findprofilePhotoUrlById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
     }
-
 
     public List<UserDTO> getAllUsers() {
         return repository.findAllUsers()
@@ -121,7 +122,7 @@ public class UserService {
         String passwordHash = passwordService.hash(dto.getPassword());
         newUser.setPassword(passwordHash);
         List<UserSkills> emptySkills = new ArrayList<>();
-        List<UserSkills> emptyInterest =new ArrayList<>();
+        List<UserSkills> emptyInterest = new ArrayList<>();
         newUser.setSkills(emptySkills);
         newUser.setInterests(emptyInterest);
 
@@ -160,14 +161,28 @@ public class UserService {
         return repository.existsUserByLocation(location);
     }
 
-    //metodo oara activar el premium de un usuario
+    // metodo oara activar el premium de un usuario
     public void activatePremium(String userId) {
         User user = repository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado con ID: " + userId));
-        
+
         user.setPremium(true);
         repository.save(user);
-}
+    }
+
+    public Map<String, UserDTO> getUsersInfoByIds(List<String> userIds) {
+        if (userIds == null || userIds.isEmpty()) {
+            return new HashMap<>();
+        }
+
+        // Busca todos los usuarios de la base de datos en una sola consulta
+        List<User> users = repository.findByIdIn(userIds);
+
+        // Los convierte a DTO y los agrupa en un Map usando el ID como clave
+        return users.stream()
+                .map(mapper::entityToDTO)
+                .collect(Collectors.toMap(UserDTO::getId, dto -> dto));
+    }
 
     public User findUserEntityById(String id) {
         return repository.findById(id)

@@ -112,42 +112,57 @@ public class ChatService {
 }
 
 
-    public SendChatRoomsDTO getChatRoomsByUserId(String userId) {
-        List<ChatRoom> rooms = chatRoomRepository.findRoomsByUserId(userId);
-        List<String> otherUsernames = new ArrayList<>();
-        List<String> otherProfilePhotos = new ArrayList<>();
-
-        for (ChatRoom room : rooms) {
-
-            if (room.getLastMessagePreview() != null) {
-                String decryptedPreview = encryptionService.decrypt(room.getLastMessagePreview());
-                room.setLastMessagePreview(decryptedPreview);
-            }
-
-            String otherUserId = room.getParticipants().stream()
+public SendChatRoomsDTO getChatRoomsByUserId(String userId) {
+    List<ChatRoom> rooms = chatRoomRepository.findRoomsByUserId(userId);
+    
+    // 1. Extraer todos los IDs de los otros usuarios en una sola pasada
+    List<String> otherUserIds = rooms.stream()
+            .map(room -> room.getParticipants().stream()
                     .filter(id -> !id.equals(userId))
                     .findFirst()
-                    .orElse(null);
+                    .orElse(null))
+            .filter(id -> id != null)
+            .toList();
 
-            if (otherUserId != null) {
-                String otherUsername = userService.getUsernameById(otherUserId);
-                String otherProfilePhoto = userService.getProfilePhotoById(otherUserId);
+    // 2. ¡EL TRUCO! Ir a la base de datos UNA SOLA VEZ para traer a todos
+    // (Tendrás que crear este método en tu UserService)
+    Map<String, UserDTO> usersDataMap = userService.getUsersInfoByIds(otherUserIds);
 
-                if (otherUsername != null) {
-                    otherUsernames.add(otherUsername);
-                    otherProfilePhotos.add(otherProfilePhoto);
-                } else {
-                    otherUsernames.add("Usuario Desconocido");
-                }
-            }
+    List<String> otherUsernames = new ArrayList<>();
+    List<String> otherProfilePhotos = new ArrayList<>();
+
+    // 3. Procesar las salas en memoria (súper rápido)
+    for (ChatRoom room : rooms) {
+        if (room.getLastMessagePreview() != null) {
+            String decryptedPreview = encryptionService.decrypt(room.getLastMessagePreview());
+            room.setLastMessagePreview(decryptedPreview);
         }
 
-        return SendChatRoomsDTO.builder()
-                .username(otherUsernames)
-                .chatRooms(rooms)
-                .partnerAvatar(otherProfilePhotos)
-                .build();
+        String otherUserId = room.getParticipants().stream()
+                .filter(id -> !id.equals(userId))
+                .findFirst()
+                .orElse(null);
+
+        if (otherUserId != null) {
+            // Leer del mapa en memoria, ¡NO de la base de datos!
+            UserDTO otherUser = usersDataMap.get(otherUserId);
+
+            if (otherUser != null && otherUser.getUsername() != null) {
+                otherUsernames.add(otherUser.getUsername());
+                otherProfilePhotos.add(otherUser.getProfilePhotoUrl()); 
+            } else {
+                otherUsernames.add("Usuario Desconocido");
+                otherProfilePhotos.add("assets/default-image.jpg");
+            }
+        }
     }
+
+    return SendChatRoomsDTO.builder()
+            .username(otherUsernames)
+            .chatRooms(rooms)
+            .partnerAvatar(otherProfilePhotos)
+            .build();
+}
 
     @Async
     public void updateRoomMetadataAsync(String roomId, ChatMessage message) {
