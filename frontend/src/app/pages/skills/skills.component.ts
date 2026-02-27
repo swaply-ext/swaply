@@ -150,13 +150,8 @@ export class SkillsComponent {
     this.accountService.updateSkills(selectedSkills)
       .subscribe({
         next: response => {
-          const source = this.route.snapshot.queryParamMap.get('source');
           console.log('Resputesta del backend:', response);
-          if (source === 'profile') {
-            this.router.navigate(['/myprofile']); // Si viene del perfil, vuelve al perfil
-          } else {
-            this.router.navigate(['/interests']);
-          }
+          this.router.navigate(['/myprofile']);  
         },
         error: err => console.error('Error enviando skills:', err)
       });

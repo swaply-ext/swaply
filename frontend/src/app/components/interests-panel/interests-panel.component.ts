@@ -34,7 +34,7 @@ export class InterestsPanelComponent {
   }
 
   goToInterests() {
-    this.router.navigate(['/interests'], { queryParams: { source: 'profile' } });
+    this.router.navigate(['/interests']);
   }
 
   handleLevelChange(newLevel: any, item: any) {

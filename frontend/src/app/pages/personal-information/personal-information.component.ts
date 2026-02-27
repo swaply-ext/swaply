@@ -125,7 +125,7 @@ export class PersonalInformationComponent implements OnInit {
       next: (success) => {
         if (success) {
           this.alertService.show('success', 'generic', { msg: 'Información guardada correctamente.' });
-          this.router.navigate(['/skills']);
+          this.router.navigate(['/select-avatar']); 
         }
       },
       error: (err) => {

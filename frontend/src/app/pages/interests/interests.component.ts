@@ -159,13 +159,7 @@ export class InterestsComponent {
       .subscribe({
         next: response => {
           console.log('Resputesta del backend:', response);
-          const source = this.route.snapshot.queryParamMap.get('source');
-          
-          if (source === 'profile') {
-            this.router.navigate(['/myprofile']); // Si viene del perfil, vuelve al perfil
-          } else {
-            this.router.navigate(['/select-avatar']); // Si es registro, va al siguiente paso
-          }
+          this.router.navigate(['/myprofile']);  
         },
         error: err => console.error('Error enviando interests:', err)
       });
